@@ -53,7 +53,6 @@
     
     if (!self.dataArray) {
         self.startLoading=YES;
-        //        [self refresh];
     }
 }
 
@@ -86,6 +85,7 @@
         switch (self.selectIndex) {
             case 2:
                 [self thinkTank];
+                break;
             default:
                 [self finialCommicuteList];
                 break;
@@ -114,12 +114,8 @@
             self.startLoading  =YES;
         }
         
-        if (self.selectIndex<2) {
-            NSString* srverUrl = [FINIAL_COMM stringByAppendingFormat:@"%d/%d/",self.selectIndex+1,self.currentPage];
-            [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
-        }else{
-            [self thinkTank];
-        }
+        NSString* srverUrl = [FINIAL_COMM stringByAppendingFormat:@"%d/%d/",self.selectIndex+1,self.currentPage];
+        [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
     }
 }
 
@@ -415,6 +411,10 @@
     
     if(jsonDic!=nil)
     {
+        if (self.dataArray) {
+            [[DialogUtil sharedInstance]showDlg:[UIApplication sharedApplication].windows[0] textOnly:[jsonDic valueForKey:@"msg"]];
+        }
+        
         int code = [[jsonDic valueForKey:@"code"] intValue];
         if (code>=0) {
             if (isRefresh) {
@@ -429,7 +429,6 @@
                 }
             }
         }
-        [[DialogUtil sharedInstance]showDlg:[UIApplication sharedApplication].windows[0] textOnly:[jsonDic valueForKey:@"msg"]];
         
         self.startLoading  =NO;
     }else{

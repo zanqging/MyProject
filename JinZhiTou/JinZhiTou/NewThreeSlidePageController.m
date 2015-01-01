@@ -807,7 +807,17 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
                 }
                 _titles = titles;
                 _viewControllerClasses  =controllerClasses;
-                 self.itemsWidths = @[@(100),@(100),@(100)]; // 这里可以设置不同的宽度
+                float width = WIDTH(self.view) / _titles.count;
+                if (width<70) {
+                    width = 70;
+                }
+                
+                NSMutableArray * arr = [NSMutableArray new];
+                for (int i = 0; i < _titles.count; i++) {
+                    [arr addObject:@(width)];
+
+                }
+                 self.itemsWidths = arr; // 这里可以设置不同的宽度
                 self.postNotification = YES;
                 [self reloadData];
                 [self postFullyDisplayedNotificationWithCurrentIndex:0];
