@@ -1,0 +1,161 @@
+//
+//  HBHttpRequestCache.m
+//  wq
+//
+//  Created by weqia on 13-8-15.
+//  Copyright (c) 2013年 Weqia. All rights reserved.
+//
+
+#import "HBHttpRequestCache.h"
+#import "HBHttpCacheData.h"
+
+@implementation HBHttpRequestCache
+
+-(id)init
+{
+    self=[super init];
+    if(self){
+        _dbHelper=[[LKDBHelper alloc]init];
+        [_dbHelper createTableWithModelClass:[HBHttpCacheData class]];
+        NSArray * paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSMutableString * path=[NSMutableString stringWithString:[paths objectAtIndex:0]];
+        [path appendFormat:@"/HBHttpCache"];
+        _cacheFilePath=path;
+        NSFileManager * manager=[NSFileManager defaultManager];
+        if(![manager fileExistsAtPath:_cacheFilePath])
+           [manager createDirectoryAtPath:_cacheFilePath withIntermediateDirectories:YES attributes:nil error:NULL];
+        
+        _memoryCache=[[NSCache alloc]init];
+        [_memoryCache setTotalCostLimit:5*1024*1024];
+    }
+    return self;
+}
+
+#pragma -mark  接口方法
+
+
++(HBHttpRequestCache*)shareCache
+{
+    static HBHttpRequestCache * server=nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        server=[[HBHttpRequestCache alloc]init];
+    });
+    return server;
+}
+
++(void)clearCache
+{
+    [LKDBHelper clearTableData:[HBHttpCacheData class]];
+}
+
+-(NSString *)replaceChar:(NSString*)resource
+{
+    NSMutableString * string=[NSMutableString stringWithString:resource];
+    NSRange range=[string rangeOfString:@"/"];
+    if(range.location!=NSNotFound){
+        [string replaceCharactersInRange:range withString:@"."];
+        range=[string rangeOfString:@"/"];
+    }
+    return string;
+}
+
+-(NSString*) getCacheTextWithUrl:(NSString*) url
+{
+    HBHttpCacheData * cache=[_dbHelper searchSingle:[HBHttpCacheData class] where:@{@"cacheUrl":url} orderBy:nil];
+    if(cache)
+        return cache.cacheText;
+    return nil;
+}
+-(UIImage*) getCacheImageWithUrl:(NSString*)url
+{
+    HBHttpCacheData * cache=[_dbHelper searchSingle:[HBHttpCacheData class] where:@{@"cacheUrl":url} orderBy:nil];
+    if(cache){
+        UIImage *image=[UIImage imageWithContentsOfFile:cache.cacheFileName];
+        return image;
+    }
+    return nil;
+}
+-(UIImage*) getMemoryCacheImage:(NSString*)key
+{
+    return [_memoryCache objectForKey:key];
+}
+
+-(UIImage*) getCacheImageWith:(NSString *)key  andUrl:(NSString*)url
+{
+    UIImage * image=[self getMemoryCacheImage:key];
+    if(image)
+        return image;
+    else{
+        return [self getCacheImageWithUrl:url];
+    }
+}
+
+-(BOOL) registerTextCache:(NSString*)text withUrl:(NSString*)url
+{
+    HBHttpCacheData * cache=[[HBHttpCacheData alloc]init];
+    cache.cacheText=text;
+    cache.cacheUrl=url;
+    int rowCount=[_dbHelper rowCount:[HBHttpCacheData class] where:@{@"cacheUrl":url}];
+    if(rowCount==0)
+        return [_dbHelper insertToDB:cache];
+    else
+        return NO;
+}
+-(BOOL) registerBitmapCache:(UIImage*)image withUrl:(NSString*)url
+{
+    NSMutableString * fileName=[NSMutableString stringWithString:_cacheFilePath];
+    [fileName appendFormat:@"/%@",[self replaceChar:url]];
+    HBHttpCacheData * cache=[[HBHttpCacheData alloc]init];
+    cache.cacheFileName=fileName;
+    cache.cacheUrl=url;
+    int rowCount=[_dbHelper rowCount:[HBHttpCacheData class] where:@{@"cacheUrl":url}];
+    if(rowCount==0){
+        if([_dbHelper insertToDB:cache]){
+            NSFileManager * manager=[NSFileManager defaultManager];
+            if(![manager createFileAtPath:fileName contents:UIImageJPEGRepresentation(image, 0.5) attributes:nil]){
+                [_dbHelper deleteToDB:cache];
+                return  NO;
+            }else{
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+-(BOOL) registerBitmapMemoryCache:(UIImage*)image forKey:(NSString*)key
+{
+    id object=[_memoryCache objectForKey:key];
+    if(object==nil){
+        [_memoryCache setObject:image forKey:key];
+        return YES;
+    }else
+        return NO;
+}
+
+-(BOOL) registerBitmapCache:(UIImage*)image withUrl:(NSString*)url  forKey:(NSString*)key
+{
+    if([self registerBitmapCache:image withUrl:url])
+        return [self registerBitmapMemoryCache:image forKey:key];
+    else
+        return  NO;
+}
+-(void) clearMemoryCache
+{
+    [_memoryCache removeAllObjects];
+}
+
+-(void) clearCache
+{
+    NSFileManager * manager=[NSFileManager defaultManager];
+    if(![manager fileExistsAtPath:_cacheFilePath]){
+        [manager removeItemAtPath:_cacheFilePath error:NULL];
+        [manager createDirectoryAtPath:_cacheFilePath withIntermediateDirectories:YES attributes:nil error:NULL];
+    }
+}
+-(void)setDirectoryAtPath:(NSString*) path
+{
+    _cacheFilePath=path;
+}
+
+@end

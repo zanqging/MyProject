@@ -1,0 +1,18 @@
+//
+//  HBHttpOperator.h
+//  MyTest
+//
+//  Created by weqia on 13-8-15.
+//  Copyright (c) 2013年 weqia. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "HBHttpRequest.h"
+
+@interface HBHttpOperator : NSObject
+{
+    void(^_process)(long long,NSUInteger);
+    void(^_complete)(BOOL, id);
+}
+
+@end

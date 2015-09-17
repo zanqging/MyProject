@@ -1,0 +1,21 @@
+//
+//  HBHttpServer.h
+//  MyTest
+//
+//  Created by weqia on 13-8-11.
+//  Copyright (c) 2013年 weqia. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "ASIFormDataRequest.h"
+#import "HBHttpRequest.h"
+
+
+@interface HBHttpServer : NSObject
++(HBHttpServer*) shareIntance;
+
+-(void) downBitmapWithIndirectURL:(NSString*)IndirectUrl  process:(SDWebImageDownloaderProgressBlock)process  complete:(SDWebImageCompletedWithFinishedBlock)complete;
+
+-(UIImage*) getMemoryCacheImage:(NSString*) key  withIndirectUrl:(NSString*) indirectUrl complete:(void(^)(UIImage*)) complete;
+
+@end

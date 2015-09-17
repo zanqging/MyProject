@@ -1,0 +1,83 @@
+//
+//  HBHttpServer.m
+//  MyTest
+//
+//  Created by weqia on 13-8-11.
+//  Copyright (c) 2013年 weqia. All rights reserved.
+//
+
+#import "HBHttpServer.h"
+
+@implementation HBHttpServer
+
+#pragma -mark 初始化方法
+-(id)init
+{
+    self=[super init];
+    if(self){
+    
+    }
+    return self;
+}
+
+
+#pragma -mark  接口方法
++(HBHttpServer*) shareIntance
+{
+    static HBHttpServer * server=nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        server=[[HBHttpServer alloc]init];
+    });
+    return server;
+}
+-(void) downBitmapWithIndirectURL:(NSString*)IndirectUrl  process:(SDWebImageDownloaderProgressBlock)process  complete:(SDWebImageCompletedWithFinishedBlock)complete
+{
+    dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+    dispatch_async(aQueue, ^{
+        HBHttpRequest*request=[HBHttpRequest newIntance];
+        [request setCache:[HBHttpRequestCache shareCache]];
+        UIImage * image=[request getBitmap:IndirectUrl process:process complete:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                complete(image,nil,SDImageCacheTypeDisk,YES);
+            });
+        }];
+        if(image!=nil)
+            dispatch_async(dispatch_get_main_queue(), ^{
+                complete(image,nil,SDImageCacheTypeDisk,YES);
+            });
+    });
+}
+
+                         
+                
+
+-(UIImage*) getMemoryCacheImage:(NSString*) key  withIndirectUrl:(NSString*) indirectUrl complete:(void(^)(UIImage*)) complete
+{
+    UIImage* imagem=[[HBHttpRequestCache shareCache] getMemoryCacheImage:key];
+    if(imagem!=nil)
+        return imagem;
+    else{
+        dispatch_queue_t aQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+        dispatch_async(aQueue, ^{
+            HBHttpRequest * request=[HBHttpRequest newIntance];
+            request.cache=[HBHttpRequestCache shareCache];
+           UIImage* image=[request getBitmap:indirectUrl process:nil complete:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                complete(image);
+                });
+               [[HBHttpRequestCache shareCache] registerBitmapMemoryCache:image forKey:key];
+           }];
+            if(image!=nil){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    complete(image);
+                });
+            [[HBHttpRequestCache shareCache] registerBitmapMemoryCache:image forKey:key];
+        }
+     });
+        return nil;
+    }
+}
+
+
+@end

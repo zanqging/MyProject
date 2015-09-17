@@ -1,0 +1,13 @@
+//
+//  HBHttpOperator.m
+//  MyTest
+//
+//  Created by weqia on 13-8-15.
+//  Copyright (c) 2013年 weqia. All rights reserved.
+//
+
+#import "HBHttpOperator.h"
+
+@implementation HBHttpOperator
+
+@end

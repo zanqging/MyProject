@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/weqia/!svn/ver/2345/ios/trunk/wq/wq/classes/component/HBHttp
+END
+HBHttpOperator.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/weqia/!svn/ver/2345/ios/trunk/wq/wq/classes/component/HBHttp/HBHttpOperator.h
+END
+HBHttpCacheData.h
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/weqia/!svn/ver/2345/ios/trunk/wq/wq/classes/component/HBHttp/HBHttpCacheData.h
+END
+HBHttpRequestCache.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/weqia/!svn/ver/2380/ios/trunk/wq/wq/classes/component/HBHttp/HBHttpRequestCache.m
+END
+HBHttpServer.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/weqia/!svn/ver/2380/ios/trunk/wq/wq/classes/component/HBHttp/HBHttpServer.m
+END
+HBHttpOperator.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/weqia/!svn/ver/2345/ios/trunk/wq/wq/classes/component/HBHttp/HBHttpOperator.m
+END
+HBHttpOperatorQueue.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/weqia/!svn/ver/2345/ios/trunk/wq/wq/classes/component/HBHttp/HBHttpOperatorQueue.h
+END
+HBHttpRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/weqia/!svn/ver/2397/ios/trunk/wq/wq/classes/component/HBHttp/HBHttpRequest.h
+END
+HBHttpCacheData.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/weqia/!svn/ver/2345/ios/trunk/wq/wq/classes/component/HBHttp/HBHttpCacheData.m
+END
+HBHttpOperatorQueue.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/weqia/!svn/ver/2345/ios/trunk/wq/wq/classes/component/HBHttp/HBHttpOperatorQueue.m
+END
+HBHttpRequest.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/weqia/!svn/ver/2397/ios/trunk/wq/wq/classes/component/HBHttp/HBHttpRequest.m
+END
+HBHttpRequestCache.h
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/weqia/!svn/ver/2380/ios/trunk/wq/wq/classes/component/HBHttp/HBHttpRequestCache.h
+END
+HBHttpServer.h
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/weqia/!svn/ver/2380/ios/trunk/wq/wq/classes/component/HBHttp/HBHttpServer.h
+END

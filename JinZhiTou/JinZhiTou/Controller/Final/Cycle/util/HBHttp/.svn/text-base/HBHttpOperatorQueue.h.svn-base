@@ -1,0 +1,22 @@
+//
+//  HBHttpOperatorQueue.h
+//  MyTest
+//
+//  Created by weqia on 13-8-15.
+//  Copyright (c) 2013年 weqia. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "HBHttpOperator.h"
+
+@interface HBHttpOperatorQueue : NSObject
+{
+    NSMutableArray * _operators ;    //维护了一个队列数组
+}
+/*从请求队列中获取某一次请求的 响应数据
+ *
+ *@prarm   http 请求
+ *
+ *@return   当队列中已包含所需请求并且请求已经完成  返回响应数据 否则返回nil
+ */
+@end

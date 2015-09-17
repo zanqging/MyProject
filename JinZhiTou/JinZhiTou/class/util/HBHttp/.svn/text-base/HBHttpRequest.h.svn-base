@@ -1,0 +1,37 @@
+//
+//  HBHttpRequest.h
+//  MyTest
+//
+//  Created by weqia on 13-8-15.
+//  Copyright (c) 2013年 weqia. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "UserService.h"
+#import "HBHttpRequestCache.h"
+#import "SDWebImageManager.h"
+#import "SDWebImageOperation.h"
+typedef enum {
+    HBHttpRequestTypeUploadFile=0,
+    HBHttpRequestTypeGetData,
+    HBHttpRequestTypeGetBimap
+}HBHttpRequestType;
+
+@interface HBHttpRequest : NSObject
+{
+    SDWebImageDownloaderProgressBlock _precess;
+    SDWebImageCompletedWithFinishedBlock _complete;
+    NSString * _indirectUrl;
+}
+
+@property(nonatomic,strong) HBHttpRequestCache * cache;
+
++(HBHttpRequest*)newIntance;
+
+/*
+ * 如果设置了 缓存，会先从缓存中寻找，如果缓存中没有需要的数据，再发送请求，并且请求到的数据写入缓存。如果没设置缓存，直接发送请求
+ *
+ */
+
+- (UIImage*) getBitmap:(NSString *)IndirectUrl process:(SDWebImageDownloaderProgressBlock)process complete:(SDWebImageCompletedWithFinishedBlock)complete;
+@end

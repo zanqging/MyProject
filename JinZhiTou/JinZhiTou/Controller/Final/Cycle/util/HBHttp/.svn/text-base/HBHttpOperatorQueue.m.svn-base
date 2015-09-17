@@ -1,0 +1,23 @@
+//
+//  HBHttpOperatorQueue.m
+//  MyTest
+//
+//  Created by weqia on 13-8-15.
+//  Copyright (c) 2013年 weqia. All rights reserved.
+//
+
+#import "HBHttpOperatorQueue.h"
+
+@implementation HBHttpOperatorQueue
+
+#pragma -mark 初始化方法
+-(id)init
+{
+    self=[super init];
+    if(self){
+        _operators=[[NSMutableArray alloc]init];
+    }
+    return self;
+}
+
+@end

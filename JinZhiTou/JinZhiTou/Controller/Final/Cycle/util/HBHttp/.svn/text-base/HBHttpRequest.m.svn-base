@@ -1,0 +1,103 @@
+//
+//  HBHttpRequest.m
+//  MyTest
+//
+//  Created by weqia on 13-8-15.
+//  Copyright (c) 2013年 weqia. All rights reserved.
+//
+
+#import "HBHttpRequest.h"
+#import "WeqiaAppDelegate.h"
+#import "ObjUrlData.h"
+
+@implementation HBHttpRequest
+
+@synthesize cache;
+-(id)init
+{
+    self=[super init];
+    if(self){
+       
+    }
+    return self;
+}
+#pragma -mark 接口方法 
+
+static  NSMutableArray * requests=nil;
+
++(HBHttpRequest*)newIntance
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        requests=[[NSMutableArray alloc]init];
+    });
+    HBHttpRequest * request=[[HBHttpRequest alloc]init];
+    [requests addObject:request];
+    return request;
+}
+
+- (UIImage*) getBitmap:(NSString *)IndirectUrl process:(SDWebImageDownloaderProgressBlock)process complete:(SDWebImageCompletedWithFinishedBlock)complete
+{
+    if(self.cache!=nil){
+        UIImage *image=[self.cache getCacheImageWithUrl:IndirectUrl];
+        if(image!=nil){
+            [requests removeObject:self];
+            return image;
+        }
+    }
+    _indirectUrl=IndirectUrl;
+    _precess=process;
+    _complete=complete;
+    if([NSStrUtil isEmptyOrNull:IndirectUrl])
+        return nil;
+    ServiceParam *param = [[ServiceParam alloc] initWithMid:[WeqiaAppDelegate App].mid withItype:10000 withRequestTag:10000];
+    [param put:@"urls" withValue:IndirectUrl];
+    [self  sendRequest:[[UserService sharedInstance] getFileUrl] withParam:param ];
+    return nil;
+}
+#pragma -mark 回调方法
+
+-(void)getBitmapUrlComplete:(ASIHTTPRequest* )request
+{
+    NSString *responseString = [request responseString];
+    if ([NSStrUtil notEmptyOrNull:responseString]) {
+        NSDictionary *dic = [responseString objectFromJSONString];
+        if (dic != nil) {
+            ResultEx *result = [[ResultEx alloc] initWithDictionary:dic];
+            if (result != nil) {
+                ObjUrlData *urlData = (ObjUrlData *)[result getDataObject:[ObjUrlData class]];
+                if (urlData != nil) {
+                    [[SDWebImageManager sharedManager] downloadWithURL:[NSURL URLWithString:urlData.url] options:SDWebImageRetryFailed progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished) {
+                        [[HBHttpRequestCache shareCache] registerBitmapCache:image withUrl:_indirectUrl];
+                        _complete(image,error,cacheType,finished);
+                    }];
+                }
+            }
+        }
+    }
+}
+-(void)error:(ASIHTTPRequest*)request
+{
+    
+}
+
+
+#pragma -mark 私有方法
+- (BOOL) sendRequest:(NSString *) urlPath  withParam: (ServiceParam *) param
+{
+    NSURL *url = [NSURL URLWithString: urlPath];
+    ASIFormDataRequest *asiFormRequest = [ASIFormDataRequest requestWithURL: url];
+    //判断请求参数
+    if (param == nil) {
+        return NO;
+    }
+    [[UserService sharedInstance] addParam:param toRequest:asiFormRequest];
+    asiFormRequest.delegate=self;
+    [asiFormRequest setDidFailSelector:@selector(error:)];
+    [asiFormRequest setDidFinishSelector:@selector(getBitmapUrlComplete:)];
+    [asiFormRequest startAsynchronous];
+    return YES;
+}
+
+
+@end

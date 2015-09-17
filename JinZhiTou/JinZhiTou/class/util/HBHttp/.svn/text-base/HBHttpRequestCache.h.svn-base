@@ -1,0 +1,49 @@
+//
+//  HBHttpRequestCache.h
+//  wq
+//
+//  Created by weqia on 13-8-15.
+//  Copyright (c) 2013年 Weqia. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "LKDBHelper.h"
+
+@interface HBHttpRequestCache : NSObject
+{
+    LKDBHelper * _dbHelper;
+    NSString *_cacheFilePath;
+    NSCache * _memoryCache;
+}
+
++(HBHttpRequestCache*)shareCache;
+
+/*
+ *获取对应url 的缓存内容
+ *
+ *@return  当不存在该缓存时 返回nil
+ *
+ */
+-(NSString*) getCacheTextWithUrl:(NSString*) url;
+
+-(UIImage*) getCacheImageWithUrl:(NSString*)url;
+
+-(UIImage*) getMemoryCacheImage:(NSString*)key;
+
+-(UIImage*) getCacheImageWith:(NSString *)key  andUrl:(NSString*)url;
+
+-(BOOL) registerTextCache:(NSString*)text withUrl:(NSString*)url;
+
+-(BOOL) registerBitmapCache:(UIImage*)image withUrl:(NSString*)url;
+
+-(BOOL) registerBitmapCache:(UIImage*)image withUrl:(NSString*)url  forKey:(NSString*)key;
+
+-(BOOL) registerBitmapMemoryCache:(UIImage*)image forKey:(NSString*)key;
+
+-(void) clearCache;
+
+-(void) clearMemoryCache;
+
+-(void)setDirectoryAtPath:(NSString*) path;
+
+@end
