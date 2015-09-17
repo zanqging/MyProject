@@ -154,7 +154,7 @@
                 [self.viewsArray addObject:imageView];
                 
                 NSURL* url =[NSURL URLWithString:[array[i] valueForKey:@"img"]];
-                [imageView sd_setImageWithURL:url placeholderImage:IMAGE(@"1", @"jpg")];
+                [imageView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading")];
             }
             self.bannerArray = array;
             

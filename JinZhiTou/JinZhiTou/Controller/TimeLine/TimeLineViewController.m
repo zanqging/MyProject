@@ -58,10 +58,12 @@
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
     [self.navView.leftButton addTarget:self action:@selector(userInfoAction:) forControlEvents:UIControlEventTouchUpInside];
     
+    [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
+    [self.navView.rightButton addTarget:self action:@selector(searchAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.navView];
     [self.view addSubview:self.navView];
     //头部
     [self loadNewsTag];
-    
 }
 
 -(void)searchAction:(id)sender
@@ -142,19 +144,20 @@
     }
     
     
-    NSString* str = [NEWS stringByAppendingFormat:@"%d/",currentpage];
+    NSString* str = [KNOWLEDGE stringByAppendingFormat:@"%d/",currentpage];
     [httpUtils getDataFromAPIWithOps:str postParam:nil type:0 delegate:self sel:@selector(requestNewsData:)];
     
 }
 
 -(void)loadNewsTag
 {
+    isRefresh = YES;
     //添加加载页面
     loadingView = [LoadingUtil shareinstance:self.view];
     [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
     
     //添加加载页面
-    [httpUtils getDataFromAPIWithOps:NEWS_TAG postParam:nil type:0 delegate:self sel:@selector(requestNewsTagData:)];
+    [httpUtils getDataFromAPIWithOps:KNOWLEDGE_TAG postParam:nil type:0 delegate:self sel:@selector(requestNewsTagData:)];
 }
 
 -(void)loadFinialData
@@ -178,8 +181,18 @@
     NSURL* url = [NSURL URLWithString:[dic valueForKey:@"href"]];
     controller.url = url;
     [self.navigationController pushViewController:controller animated:YES];
+    [self tableView:tableView didDeselectRowAtIndexPath:indexPath];
+    
+    //增加阅读量
+    NSString* serverUrl = [NEWS_READ_COUNT stringByAppendingFormat:@"%@/",[dic valueForKey:@"id"]];
+    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:0 sel:nil];
 }
 
+
+-(void)tableView:(UITableView*)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 150;
@@ -219,6 +232,11 @@
     }else{
         return self.dataFinialArray.count;
     }
+}
+
+- (void) viewWillAppear: (BOOL)inAnimated {
+    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
+    if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
 }
 
 
@@ -296,25 +314,30 @@
             NSMutableArray* array = [jsonDic valueForKey:@"data"];
             
             NSMutableArray* dataArray = [[NSMutableArray alloc]init];
-            NSMutableDictionary* dic;
-            for (int i=0; i<array.count; i++) {
-                dic = [[NSMutableDictionary alloc]init];
-                [dic setValue:@"创业" forKey:@"name"];
-                if(i==0){
-                    [dic setValue:@"Yes" forKey:@"isSelected"];
-                }
-                [dataArray addObject:dic];
-            }
             
-            typeShow = [[TypeShow alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 50) data:dataArray];
-            [self.view addSubview:typeShow];
+            if (array && array.count>0) {
+                
+                NSMutableDictionary* dic;
+                for (int i=0; i<array.count; i++) {
+                    dic = [[NSMutableDictionary alloc]init];
+                    [dic setValue:array[i] forKey:@"name"];
+                    if(i==0){
+                        [dic setValue:@"Yes" forKey:@"isSelected"];
+                    }
+                    [dataArray addObject:dic];
+                }
+                
+                
+                typeShow = [[TypeShow alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 50) data:dataArray];
+                [self.view addSubview:typeShow];
+            }
         }
         
         CGRect rect;
         if (typeShow) {
-            rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
+            rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView));
         }else{
-            rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
+            rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView));
         }
         self.tableView=[[UITableViewCustomView alloc]initWithFrame:rect style:UITableViewStyleGrouped];
         self.tableView.bounces=YES;
@@ -338,6 +361,7 @@
         
     }
 }
+
 
 
 

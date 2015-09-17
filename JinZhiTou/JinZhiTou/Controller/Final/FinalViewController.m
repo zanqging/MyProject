@@ -360,8 +360,8 @@
         }
         NSInteger row = indexPath.row;
         NSDictionary* dic = currentArray[row];
-        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"project_img"]];
-        [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGE(@"1", @"jpg")];
+        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"thumbnail"]];
+        [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading")];
         cellInstance.title = [dic valueForKey:@"company_name"];
         NSMutableArray* arry  =[dic valueForKey:@"industry_type"];
         cellInstance.content = [dic valueForKey:@"project_summary"];
@@ -529,9 +529,6 @@
                     self.finishedFinialDataArray = [jsonDic valueForKey:@"data"];
                 }
             }
-            if ([status intValue] ==-1) {
-                [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
-            }
         }
         [LoadingUtil closeLoadingView:loadingView];
         if (isRefresh) {
@@ -564,9 +561,6 @@
                 }
                
             }
-            if ([status intValue] ==-1) {
-                [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
-            }
         }
         [LoadingUtil closeLoadingView:loadingView];
         if (isRefresh) {
@@ -597,9 +591,6 @@ self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
                     self.thinkTankFinialDataArray = [jsonDic valueForKey:@"data"];
                 }
                 
-            }
-            if ([status intValue] ==-1) {
-                [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
         [LoadingUtil closeLoadingView:loadingView];
@@ -632,9 +623,6 @@ self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
                     self.recommendFinialDataArray = [jsonDic valueForKey:@"data"];
                 }
                 
-            }
-            if ([status intValue] ==-1) {
-                [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
         [LoadingUtil closeLoadingView:loadingView];

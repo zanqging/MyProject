@@ -269,7 +269,7 @@
     
     NSDictionary* dic = self.dataArray[indexPath.row];
     
-    [cell.imgview sd_setImageWithURL:[dic valueForKey:@"project_img"] placeholderImage:IMAGE(@"1", @"jpg")];
+    [cell.imgview sd_setImageWithURL:[dic valueForKey:@"thumbnail"] placeholderImage:IMAGENAMED(@"loading")];
     cell.titleLabel.text = [dic valueForKey:@"company_name"];
     cell.desclabel.text = [dic valueForKey:@"project_summary"];
     

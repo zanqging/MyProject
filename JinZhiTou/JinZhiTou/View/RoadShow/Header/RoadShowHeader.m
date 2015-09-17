@@ -26,8 +26,7 @@
     if (self=[super initWithFrame:frame]) {
         //图片
         introduceImgview=[[UIImageView alloc]initWithFrame:CGRectMake(10, 10, WIDTH(self)-20, 150)];
-        introduceImgview.image =IMAGE(@"1", @"jpg");
-        introduceImgview.backgroundColor = ColorTheme;
+        introduceImgview.image =IMAGENAMED(@"loading");
         [self addSubview:introduceImgview];
         
         //播放按钮

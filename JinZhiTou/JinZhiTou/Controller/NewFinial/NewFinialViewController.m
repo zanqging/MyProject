@@ -151,6 +151,7 @@
 
 -(void)loadNewsTag
 {
+    isRefresh = YES;
     //添加加载页面
     loadingView = [LoadingUtil shareinstance:self.view];
     [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
@@ -180,6 +181,8 @@
     NSURL* url = [NSURL URLWithString:[dic valueForKey:@"href"]];
     controller.url = url;
     [self.navigationController pushViewController:controller animated:YES];
+    NSString* serverUrl = [NEWS_READ_COUNT stringByAppendingFormat:@"%@/",[dic valueForKey:@"id"]];
+    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:0 sel:nil];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -221,6 +224,12 @@
     }else{
         return self.dataFinialArray.count;
     }
+}
+
+
+- (void) viewWillAppear: (BOOL)inAnimated {
+    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
+    if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
 }
 
 
@@ -298,25 +307,30 @@
             NSMutableArray* array = [jsonDic valueForKey:@"data"];
             
             NSMutableArray* dataArray = [[NSMutableArray alloc]init];
-            NSMutableDictionary* dic;
-            for (int i=0; i<array.count; i++) {
-                 dic = [[NSMutableDictionary alloc]init];
-                [dic setValue:@"创业" forKey:@"name"];
-                if(i==0){
-                    [dic setValue:@"Yes" forKey:@"isSelected"];
-                }
-                [dataArray addObject:dic];
-            }
             
-            typeShow = [[TypeShow alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 50) data:dataArray];
-            [self.view addSubview:typeShow];
+            if (array && array.count>0) {
+                
+                NSMutableDictionary* dic;
+                for (int i=0; i<array.count; i++) {
+                    dic = [[NSMutableDictionary alloc]init];
+                    [dic setValue:array[i] forKey:@"name"];
+                    if(i==0){
+                        [dic setValue:@"Yes" forKey:@"isSelected"];
+                    }
+                    [dataArray addObject:dic];
+                }
+                
+                
+                typeShow = [[TypeShow alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 50) data:dataArray];
+                [self.view addSubview:typeShow];
+            }
         }
         
         CGRect rect;
         if (typeShow) {
-            rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
+            rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView));
         }else{
-            rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
+            rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView));
         }
         self.tableView=[[UITableViewCustomView alloc]initWithFrame:rect style:UITableViewStyleGrouped];
         self.tableView.bounces=YES;

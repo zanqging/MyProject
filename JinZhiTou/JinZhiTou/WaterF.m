@@ -292,6 +292,7 @@
                     [dic setValue:[dictionary valueForKey:@"color"] forKey:@"color"];
                     [dic setValue:[dictionary valueForKey:@"stage"] forKey:@"stage"];
                     [dic setValue:[dictionary valueForKey:@"project_img"] forKey:@"project_img"];
+                    [dic setValue:[dictionary valueForKey:@"thumbnail"] forKey:@"thumbnail"];
                     [dic setValue:[dictionary valueForKey:@"company_name"] forKey:@"company_name"];
                     [dic setValue:[dictionary valueForKey:@"roadshow_start_datetime"] forKey:@"roadshow_start_datetime"];
                     [arrayData addObject:dic];
@@ -315,7 +316,7 @@
                         [dateArray addObject:[dic valueForKey:@"roadshow_start_datetime"]];
                         
                         UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, WIDTH(self.view)-20, 150)];
-                        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"project_img"]];
+                        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"thumbnail"]];
                         [imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage * image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                             [self.collectionView reloadData];
                         }];

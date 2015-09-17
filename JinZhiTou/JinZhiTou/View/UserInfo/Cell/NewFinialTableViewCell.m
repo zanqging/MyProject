@@ -63,32 +63,26 @@
     w=WIDTH(self)/3;
     h=height;
     
+    self.colletcteLabel =[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-90, Y(imgaeView)+5, 70, 30)];
+    self.colletcteLabel.contentMode = UIViewContentModeScaleAspectFill;
+    self.colletcteLabel.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
+    [view addSubview:self.colletcteLabel];
     
-    for (int i =0; i<2; i++) {
-        
-        w+=w*i;
-        if (i==0) {
-            self.colletcteLabel =[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-140, Y(imgaeView)+5, 30, 30)];
-            self.colletcteLabel.contentMode = UIViewContentModeScaleAspectFill;
-            [view addSubview:self.colletcteLabel];
-            
-            self.collecteImage = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.colletcteLabel)-30, Y(self.colletcteLabel)+3, 20, 20)];
-           
-            [self.collecteImage setImage:IMAGENAMED(@"shoucang")];
-            [view addSubview:self.collecteImage];
-            
-            
-            self.priseImage = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.colletcteLabel)+20, Y(self.colletcteLabel)+3, 20, 20)];
-            [self.priseImage setImage:IMAGENAMED(@"dianzan")];
-            [view addSubview:self.priseImage];
-            
-            self.priseLabel =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.priseImage)+5, Y(self.priseImage)-3, 70, 30)];
-            self.priseLabel.textAlignment = NSTextAlignmentLeft;
-            self.priseLabel.contentMode = UIViewContentModeScaleAspectFill;
-            [view addSubview:self.priseLabel];
-        }
-       
-    }
+    self.collecteImage = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.colletcteLabel)-30, Y(self.colletcteLabel)+3, 20, 20)];
+    
+    [self.collecteImage setImage:IMAGENAMED(@"shoucang")];
+    [view addSubview:self.collecteImage];
+    
+    
+    self.priseImage = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.collecteImage)+40, Y(self.colletcteLabel)+3, 20, 20)];
+    [self.priseImage setImage:IMAGENAMED(@"dianzan")];
+    [view addSubview:self.priseImage];
+    
+    self.priseLabel =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.priseImage)+5, Y(self.priseImage)-3, 70, 30)];
+    self.priseLabel.textAlignment = NSTextAlignmentLeft;
+    self.priseLabel.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
+    self.priseLabel.contentMode = UIViewContentModeScaleAspectFill;
+    [view addSubview:self.priseLabel];
 }
 
 @end

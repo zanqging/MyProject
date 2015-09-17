@@ -127,7 +127,7 @@
         
         NSDictionary* dic = self.dataArray[indexPath.row];
         
-        [cell.imgview sd_setImageWithURL:[dic valueForKey:@"project_img"] placeholderImage:IMAGE(@"1", @"jpg")];
+        [cell.imgview sd_setImageWithURL:[dic valueForKey:@"thumbnail"] placeholderImage:IMAGENAMED(@"loading")];
         cell.titleLabel.text = [dic valueForKey:@"company_name"];
         cell.desclabel.text = [dic valueForKey:@"project_summary"];
         
@@ -295,9 +295,11 @@
             }
             self.dataArray = tempArray;
             [LoadingUtil closeLoadingView:loadingView];
+        }else{
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         }
         [self.searchBarWithoutDelegate changeStateIfPossible:nil];
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+        
         self.tableView.content = [jsonDic valueForKey:@"msg"];
     }
 }
@@ -319,9 +321,10 @@
             self.dataArray =[jsonDic valueForKey:@"data"];
             isSearch = YES;
             [LoadingUtil closeLoadingView:loadingView];
+        }else{
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         }
         self.tableView.content = [jsonDic valueForKey:@"msg"];
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
     }
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
