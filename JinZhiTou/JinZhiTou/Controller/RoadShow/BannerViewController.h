@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface BannerViewController : UIViewController
+@property(retain,nonatomic)NSDictionary* dic;
 @property(retain,nonatomic)UIWebView* webView;
 @property(retain,nonatomic)NSURL* url;
-
+@property(assign,nonatomic)int type;
 @end

@@ -66,10 +66,15 @@
 -(void)setType:(int)type
 {
     self->_type = type;
-    if (self.type == 0) {
+    if (self.type == 1) {
         [self.btnFunction setTitle:@"来现场" forState:UIControlStateNormal];
-    }else{
+    }else if(self.type==2){
         [self.btnFunction setTitle:@"我要投资" forState:UIControlStateNormal];
+    }else{
+        self.btnFunction.enabled = NO;
+        [self.btnFunction setBackgroundColor:BACKGROUND_COLOR];
+        [self.btnFunction setTitleColor:WriteColor forState:UIControlStateNormal];
+        [self.btnFunction setTitle:@"融资已结束" forState:UIControlStateNormal];
     }
 }
 

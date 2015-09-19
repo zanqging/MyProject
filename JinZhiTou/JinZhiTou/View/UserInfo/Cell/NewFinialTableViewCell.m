@@ -9,6 +9,7 @@
 #import "NewFinialTableViewCell.h"
 #import "UConstants.h"
 #import "GlobalDefine.h"
+#import <QuartzCore/QuartzCore.h>
 @implementation NewFinialTableViewCell
 
 -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -27,7 +28,7 @@
         [view addSubview:self.titleLabel];
         
         self.desclabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel), WIDTH(self.titleLabel), 21)];
-        self.desclabel.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
+        self.desclabel.textColor = ColorTheme;
         self.desclabel.font = SYSTEMFONT(12);
         [view addSubview:self.desclabel];
 
@@ -39,6 +40,8 @@
         [view addSubview:self.typeLabel];
         
         self.imgview = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)-90, 10, 70, 70)];
+        self.imgview.contentMode = UIViewContentModeScaleAspectFit;
+        self.imgview.layer.masksToBounds  =YES;
         [view addSubview:self.imgview];
         
         

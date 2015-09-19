@@ -104,6 +104,9 @@
         NSString* url = [SHARE_PROJECT stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
 
         [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestShare:)];
+    }else if(self.type == 3){
+        NSString* url = [NEWS_SHARE stringByAppendingFormat:@"%d/",self.projectId];
+        [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestShare:)];
     }else{
         [httpUtils getDataFromAPIWithOps:SHARE_APP postParam:nil type:0 delegate:self sel:@selector(requestShare:)];
     }
@@ -121,7 +124,13 @@
         
         message.title =[NSString stringWithFormat: @"【%@】",[dataDic valueForKey:@"title"]];
         message.description = content;
-        NSURL* url =[NSURL URLWithString:[dataDic valueForKey:@"img"]];
+        NSURL* url;
+        if (self.type==3) {
+            url =[NSURL URLWithString:[dataDic valueForKey:@"src"]];
+        }else{
+            url =[NSURL URLWithString:[dataDic valueForKey:@"img"]];
+        }
+        
         NSLog(@"url:%@",url);
         NSData* imgData = [NSData dataWithContentsOfURL:url];
         UIImage* image = [UIImage imageWithData:imgData scale:0.5];
@@ -133,7 +142,13 @@
         [message setThumbImage:image];
         
         WXWebpageObject *ext = [WXWebpageObject object];
-        ext.webpageUrl =[dataDic valueForKey:@"url"];
+        
+        if (self.type==3) {
+            ext.webpageUrl =[dataDic valueForKey:@"href"];
+        }else{
+            ext.webpageUrl =[dataDic valueForKey:@"url"];
+        }
+        
         
         message.mediaObject = ext;
         message.mediaTagName = @"WECHAT_TAG_JUMP_SHOWRANK";
@@ -147,7 +162,13 @@
         message.title =[NSString stringWithFormat: @"【%@】",[dataDic valueForKey:@"title"]];
         message.title = [message.title stringByAppendingString:content];
         message.description = @"";
-        NSURL* url =[NSURL URLWithString:[dataDic valueForKey:@"img"]];
+        NSURL* url;
+        if (self.type==3) {
+            url =[NSURL URLWithString:[dataDic valueForKey:@"src"]];
+        }else{
+            url =[NSURL URLWithString:[dataDic valueForKey:@"img"]];
+        }
+
         NSData* imgData = [NSData dataWithContentsOfURL:url];
         UIImage* image = [UIImage imageWithData:imgData scale:0.5];
         CGSize size=image.size;
@@ -158,7 +179,13 @@
         [message setThumbImage:image];
         
         WXWebpageObject *ext = [WXWebpageObject object];
-        ext.webpageUrl =[dataDic valueForKey:@"url"];
+        
+        if (self.type==3) {
+            ext.webpageUrl =[dataDic valueForKey:@"href"];
+        }else{
+            ext.webpageUrl =[dataDic valueForKey:@"url"];
+        }
+        
         message.mediaObject = ext;
         message.mediaTagName = @"WECHAT_TAG_JUMP_SHOWRANK";
         
@@ -178,13 +205,27 @@
     NSLog(@"%@",auth);
     
     //分享跳转URL
-    NSString *urlStr = [dataDic valueForKey:@"url"];
+    NSString *urlStr;
+    if (self.type==3) {
+        urlStr =[dataDic valueForKey:@"href"];
+    }else{
+        urlStr =[dataDic valueForKey:@"url"];
+    }
+
     //分享图预览图URL地址
     NSString* content =[NSString stringWithFormat: @"%@",[dataDic valueForKey:@"content"]];
     NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"1.jpg"];
     NSData* data = [NSData dataWithContentsOfFile:path];
-    NSURL* url =[NSURL URLWithString:urlStr];
-    QQApiNewsObject *newsObj =[QQApiNewsObject objectWithURL:url title:[dataDic valueForKey:@"title"] description:content previewImageData:data];
+    NSURL* url;
+    
+    if (self.type==3) {
+        url =[NSURL URLWithString:[dataDic valueForKey:@"src"]];
+    }else{
+        url =[NSURL URLWithString:[dataDic valueForKey:@"img"]];
+    }
+    data = [NSData dataWithContentsOfURL:url];
+    
+    QQApiNewsObject *newsObj =[QQApiNewsObject objectWithURL:[NSURL URLWithString:urlStr] title:[dataDic valueForKey:@"title"] description:content previewImageData:data];
     SendMessageToQQReq *req = [SendMessageToQQReq reqWithContent:newsObj];
     //将内容分享到qq
     QQApiSendResultCode sent = [QQApiInterface sendReq:req];
@@ -252,6 +293,26 @@
 }
 
 -(void)isOnlineResponse:(NSDictionary *)response
+{
+    
+}
+
+-(void)tencentDidLogin
+{
+    
+}
+
+-(void)tencentDidLogout
+{
+    
+}
+
+-(void)tencentDidNotLogin:(BOOL)cancelled
+{
+    
+}
+
+-(void)tencentDidNotNetWork
 {
     
 }

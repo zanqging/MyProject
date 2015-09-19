@@ -45,6 +45,7 @@
     RoadShowFooter* footer ;
     MenuPopView* menuPopView;
     LoadingView * loadingView;
+    RoadShowBottom* bottomView;
     
     
     NSDictionary* dataDic;
@@ -101,18 +102,14 @@
 
     
     float height =450;
-    if (self.type==0) {
-        height =450;
-    }
     header = [[RoadShowHeader alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), height)];
     [self.tableView setTableHeaderView:header];
     [header.introduceImgview setUserInteractionEnabled: YES];
     [header.introduceImgview addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playMedia:)]];
     self.view.backgroundColor = ColorTheme;
     
-    RoadShowBottom* bottomView = [[RoadShowBottom alloc]initWithFrame:CGRectMake(0, HEIGHT(self.view)-50, WIDTH(self.view), 50)];
+    bottomView = [[RoadShowBottom alloc]initWithFrame:CGRectMake(0, HEIGHT(self.view)-50, WIDTH(self.view), 50)];
     [bottomView.btnFunction addTarget:self action:@selector(goRoadShow:) forControlEvents:UIControlEventTouchUpInside];
-    bottomView.type = self.type;
     [self.view addSubview:bottomView];
     
     
@@ -349,11 +346,6 @@
     [contentArray addObject:dic];
     
     dic = [[NSMutableDictionary alloc]init];
-    [dic setValue:@"img3" forKey:@"img"];
-    [dic setValue:@"产品服务" forKey:@"title"];
-    [contentArray addObject:dic];
-    
-    dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"img4" forKey:@"img"];
     [dic setValue:@"商业模式" forKey:@"title"];
     [contentArray addObject:dic];
@@ -404,12 +396,9 @@
             content = [dataDic valueForKey:@"company_profile"];
             break;
         case 1:
-            content = [dataDic valueForKey:@"main_business"];
+            content = [dataDic valueForKey:@"business"];
             break;
         case 2:
-            content = [dataDic valueForKey:@"product_service"];
-            break;
-        case 3:
             content = [dataDic valueForKey:@"business_model"];
             break;
         default:
@@ -421,7 +410,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 4;
+    return contentArray.count;
 }
 
 -(void)teamShowAction:(NSDictionary*)dic
@@ -563,7 +552,8 @@
             }else{
                 header.type = 0;
             }
-            
+            self.type =[[stageDic valueForKey:@"flag"] intValue];
+            bottomView.type = self.type;
             
             float currentAmount = [[dataDic valueForKey:@"invest_amount_sum"] floatValue];
             float totalAmount = [[dataDic valueForKey:@"plan_finance"] floatValue];

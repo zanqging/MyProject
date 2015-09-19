@@ -16,5 +16,6 @@
     UIView* view;
 }
 @property(assign,nonatomic)int type;
+@property(assign,nonatomic)NSInteger projectId;
 @property(retain,nonatomic)NSMutableDictionary* dic;
 @end

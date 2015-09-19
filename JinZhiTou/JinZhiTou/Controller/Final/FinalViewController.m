@@ -98,7 +98,21 @@
     loadingView = [LoadingUtil shareinstance:self.view];
     currentSelectIndex = 0;
     loadingView.isTransparent = NO;
+    
+    //添加监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
    
+    
+}
+
+
+-(void)userInteractionEnabled:(NSDictionary*)dic
+
+{
+    
+    BOOL isUserInteractionEnabled = [[[dic valueForKey:@"userInfo"] valueForKey:@"userInteractionEnabled"] boolValue];
+    
+    self.view.userInteractionEnabled = isUserInteractionEnabled;
     
 }
 

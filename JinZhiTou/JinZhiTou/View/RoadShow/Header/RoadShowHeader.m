@@ -10,7 +10,7 @@
 #import "GlobalDefine.h"
 #import "UConstants.h"
 #import "ProgressTraceView.h"
-
+#import <QuartzCore/QuartzCore.h>
 @interface RoadShowHeader()
 {
     CGRect imgFrame;
@@ -27,6 +27,8 @@
         //图片
         introduceImgview=[[UIImageView alloc]initWithFrame:CGRectMake(10, 10, WIDTH(self)-20, 150)];
         introduceImgview.image =IMAGENAMED(@"loading");
+        introduceImgview.layer.masksToBounds = YES;
+        introduceImgview.contentMode = UIViewContentModeCenter;
         [self addSubview:introduceImgview];
         
         //播放按钮
@@ -161,7 +163,7 @@
         imageView = [[UIImageView alloc] initWithFrame:CGRectMake(w*3/2-40, h, 25, 25)];
         imageView.tag = 10005;
         imageView.userInteractionEnabled=YES;
-        imageView.image=IMAGENAMED(@"Team");
+        imageView.image=IMAGENAMED(@"team");
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         [imageView addGestureRecognizer:recognizer];
         [self addSubview:imageView];

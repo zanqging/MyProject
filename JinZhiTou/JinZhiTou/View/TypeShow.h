@@ -7,6 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+@class TypeShow;
+@protocol TypeShowDelegate <NSObject>
+
+-(void)typeShow:(TypeShow*)typeShow selectedIndex:(NSInteger)selectedIndex didSelectedString:(NSString*)resultString;
+
+@end
 
 @interface TypeShow : UIView
 {
@@ -14,6 +20,7 @@
 }
 
 @property(retain,nonatomic)NSMutableArray* dataArray;
+@property(retain,nonatomic)id <TypeShowDelegate> delegate;
 @property(retain,nonatomic)NSDictionary* currentSelectedDic;
 
 -(id)initWithFrame:(CGRect)frame data:(NSMutableArray*)dataArray;

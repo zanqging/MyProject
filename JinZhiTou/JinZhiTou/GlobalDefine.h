@@ -335,7 +335,7 @@
 //新三板咨询列表
 #define NEWS @"news/"
 //新三板标签
-#define NEWS_TAG @"newstag/"
+#define NEWS_TYPE @"newstype/"
 //知识库
 #define KNOWLEDGE @"knowledge/"
 //知识库标签

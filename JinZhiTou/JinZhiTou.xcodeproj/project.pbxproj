@@ -180,6 +180,7 @@
 		4581155C1B80150C006EEBBC /* ThinkTankViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4581155B1B80150C006EEBBC /* ThinkTankViewController.m */; };
 		458115631B8034DA006EEBBC /* ProjectFinanceDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 458115611B8034DA006EEBBC /* ProjectFinanceDetailViewController.m */; };
 		458115681B803F7D006EEBBC /* ProgressTraceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 458115671B803F7D006EEBBC /* ProgressTraceView.m */; };
+		4584DAB21BAAB87200560724 /* ProjectShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4584DAB11BAAB87200560724 /* ProjectShareView.m */; };
 		458631F31B65C6C500F06688 /* FinalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 458631F21B65C6C500F06688 /* FinalViewController.m */; };
 		458631F71B65C98D00F06688 /* FinalKindTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 458631F61B65C98D00F06688 /* FinalKindTableViewCell.m */; };
 		458631FA1B66226000F06688 /* FinalContentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 458631F91B66226000F06688 /* FinalContentTableViewCell.m */; };
@@ -639,6 +640,8 @@
 		458115651B80352B006EEBBC /* ProjectFinanceDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectFinanceDetailViewController.h; path = Controller/RoadShow/ProjectFinanceDetailViewController.h; sourceTree = "<group>"; };
 		458115661B803F7D006EEBBC /* ProgressTraceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgressTraceView.h; path = View/ProgressTraceView.h; sourceTree = "<group>"; };
 		458115671B803F7D006EEBBC /* ProgressTraceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProgressTraceView.m; path = View/ProgressTraceView.m; sourceTree = "<group>"; };
+		4584DAB01BAAB87200560724 /* ProjectShareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectShareView.h; path = View/ProjectShareView.h; sourceTree = "<group>"; };
+		4584DAB11BAAB87200560724 /* ProjectShareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProjectShareView.m; path = View/ProjectShareView.m; sourceTree = "<group>"; };
 		458631F11B65C6C500F06688 /* FinalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FinalViewController.h; path = Controller/Final/FinalViewController.h; sourceTree = "<group>"; };
 		458631F21B65C6C500F06688 /* FinalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FinalViewController.m; path = Controller/Final/FinalViewController.m; sourceTree = "<group>"; };
 		458631F51B65C98D00F06688 /* FinalKindTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FinalKindTableViewCell.h; path = Controller/Final/TableViewCell/FinalKindTableViewCell.h; sourceTree = "<group>"; };
@@ -1169,6 +1172,7 @@
 		451F48A01B5368D800C91B4A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				4584DAAF1BAAB84A00560724 /* ProjectShare */,
 				45DED88D1BA0217800B4D393 /* IndustoryView */,
 				458A337A1B7AFA3F00381963 /* LoadingView */,
 				4517CD611B78585E00EFBB6A /* AddressAutoView */,
@@ -1597,6 +1601,15 @@
 				4581154E1B7FA4DF006EEBBC /* APService.h */,
 			);
 			name = Push;
+			sourceTree = "<group>";
+		};
+		4584DAAF1BAAB84A00560724 /* ProjectShare */ = {
+			isa = PBXGroup;
+			children = (
+				4584DAB01BAAB87200560724 /* ProjectShareView.h */,
+				4584DAB11BAAB87200560724 /* ProjectShareView.m */,
+			);
+			name = ProjectShare;
 			sourceTree = "<group>";
 		};
 		458631F41B65C93D00F06688 /* TableViewCell */ = {
@@ -2299,6 +2312,7 @@
 			files = (
 				4565A2051B9D41CF00FA040A /* TypeShow.m in Sources */,
 				4501400A1B943024000F8A97 /* MMDrawerVisualState.m in Sources */,
+				4584DAB21BAAB87200560724 /* ProjectShareView.m in Sources */,
 				45D49D761B8228AB00EC529F /* ModifyViewController.m in Sources */,
 				45FCD0531B75E216009AD6E3 /* SDWebImageDecoder.m in Sources */,
 				450D7E6C1B913E1D001781C4 /* WeiboViewControlle.m in Sources */,

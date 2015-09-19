@@ -16,6 +16,5 @@
 @property (nonatomic,assign)BOOL isEndOfPageSize;
 @property (strong, nonatomic)UITableViewCustomView *tableView;
 @property(retain,nonatomic)NSMutableArray* dataCreateArray;
-@property(retain,nonatomic)NSMutableArray* dataFinialArray;
 
 @end

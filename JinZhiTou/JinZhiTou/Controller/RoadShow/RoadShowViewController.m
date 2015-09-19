@@ -22,6 +22,7 @@
 #import "CycleScrollView.h"
 #import "UIImageView+WebCache.h"
 #import "BannerViewController.h"
+#import <QuartzCore/QuartzCore.h>
 #import "RoadShowDetailViewController.h"
 @interface RoadShowViewController ()<UIScrollViewDelegate,LoadingViewDelegate,WaterFDelegate>
 {
@@ -70,12 +71,19 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(RoadShowProject:) name:@"RoadShowProject" object:nil];
     
     
+    //添加监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
     //提示框
     dialogView = [[DialogView alloc]initWithFrame:self.view.frame];
     
     
 }
 
+-(void)userInteractionEnabled:(NSDictionary*)dic
+{
+    BOOL isUserInteractionEnabled = [[[dic valueForKey:@"userInfo"] valueForKey:@"userInteractionEnabled"] boolValue];
+    self.view.userInteractionEnabled = isUserInteractionEnabled;
+}
 -(void)loadBanner
 {
     //网络初始化
@@ -117,7 +125,6 @@
 {
     NSMutableDictionary* dataDic = [[dic valueForKey:@"userInfo"] valueForKey:@"data"];
     RoadShowDetailViewController* controller=[[RoadShowDetailViewController alloc]init];
-    controller.type=0;
     controller.title = navView.title;
     controller.dic =dataDic;
     [self.navigationController pushViewController:controller animated:YES];
@@ -149,12 +156,19 @@
             NSMutableArray* array = [jsonDic valueForKey:@"data"];
             for (int  i =0; i<array.count; i++) {
                 UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 150)];
+                imageView.backgroundColor = WriteColor;
+                imageView.contentMode = UIViewContentModeScaleAspectFit;
+                imageView.layer.masksToBounds = YES;
+                
                 NSString* fileName=[NSString stringWithFormat:@"%d",i+1];
                 imageView.image =IMAGE(fileName, @"jpg");
                 [self.viewsArray addObject:imageView];
                 
                 NSURL* url =[NSURL URLWithString:[array[i] valueForKey:@"img"]];
-                [imageView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading")];
+                [imageView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+                    imageView.contentMode = UIViewContentModeScaleAspectFill;
+                    imageView.layer.masksToBounds = NO;
+                }];
             }
             self.bannerArray = array;
             

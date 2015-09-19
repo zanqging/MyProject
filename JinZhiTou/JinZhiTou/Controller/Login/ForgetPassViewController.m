@@ -273,8 +273,8 @@
             [self.drawerController setShowsShadow:NO];
             [self.drawerController setRestorationIdentifier:@"MMDrawer"];
             [self.drawerController setMaximumLeftDrawerWidth:280.0];
-            [self.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeBezelPanningCenterView];
-            [self.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeBezelPanningCenterView];
+            [self.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
+            [self.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
             
             [self.drawerController
              setDrawerVisualStateBlock:^(MMDrawerController *drawerController, MMDrawerSide drawerSide, CGFloat percentVisible) {

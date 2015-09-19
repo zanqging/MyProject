@@ -64,6 +64,21 @@
     [self.view addSubview:self.navView];
     //头部
     [self loadNewsTag];
+    
+    //添加监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
+}
+
+
+
+-(void)userInteractionEnabled:(NSDictionary*)dic
+
+{
+    
+    BOOL isUserInteractionEnabled = [[[dic valueForKey:@"userInfo"] valueForKey:@"userInteractionEnabled"] boolValue];
+    
+    self.view.userInteractionEnabled = isUserInteractionEnabled;
+    
 }
 
 -(void)searchAction:(id)sender
@@ -179,11 +194,10 @@
     controller.title = self.navView.title;
     NSDictionary* dic  = self.dataCreateArray[indexPath.row];
     NSURL* url = [NSURL URLWithString:[dic valueForKey:@"href"]];
+    controller.type = 3;
     controller.url = url;
+    controller.dic = dic;
     [self.navigationController pushViewController:controller animated:YES];
-    [self tableView:tableView didDeselectRowAtIndexPath:indexPath];
-    
-    //增加阅读量
     NSString* serverUrl = [NEWS_READ_COUNT stringByAppendingFormat:@"%@/",[dic valueForKey:@"id"]];
     [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:0 sel:nil];
 }

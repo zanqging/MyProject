@@ -248,9 +248,12 @@
         [self.view addSubview:menuBackView];
         sphereMenu.selected=YES;
         
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"userInteractionEnabled" object:nil userInfo:[NSDictionary dictionaryWithObject:@"NO" forKey:@"userInteractionEnabled"]];
+        
     }else{
         if (menuBackView) {
             [menuBackView removeFromSuperview];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"userInteractionEnabled" object:nil userInfo:[NSDictionary dictionaryWithObject:@"Yes" forKey:@"userInteractionEnabled"]];
         }
     }
 }
