@@ -165,8 +165,6 @@
         }];
         
         [_moviePlayer.moviePlayer setContentURL:url];
-    }else{
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"暂无相关视频"];
     }
 }
 

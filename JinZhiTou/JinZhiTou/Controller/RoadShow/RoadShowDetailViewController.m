@@ -81,23 +81,14 @@
     self.tableViewCustom.bounces=NO;
     self.tableViewCustom.dataSource=self;
     self.tableViewCustom.delegate=self;
-    self.tableViewCustom.allowsSelection=NO;
+    self.tableViewCustom.allowsSelection=YES;
     self.tableViewCustom.delaysContentTouches=NO;
     self.tableViewCustom.showsVerticalScrollIndicator=NO;
     self.tableViewCustom.showsHorizontalScrollIndicator=NO;
     self.tableViewCustom.backgroundColor=[UIColor clearColor];
     self.tableViewCustom.contentSize = CGSizeMake(WIDTH(self.view), HEIGHT(self.view)+50);
     self.tableViewCustom.separatorStyle=UITableViewCellSeparatorStyleNone;
-    
-//    if ([self.tableViewCustom respondsToSelector:@selector(setSeparatorInset:)]) {
-//        [self.tableViewCustom setSeparatorInset:UIEdgeInsetsZero];
-//    }
-//    
-//    if ([self.tableViewCustom respondsToSelector:@selector(setLayoutMargins:)]) {
-//        
-//        [self.tableViewCustom setLayoutMargins:UIEdgeInsetsZero];
-//        
-//    }
+
     
     [self.view addSubview:self.tableViewCustom];
 
@@ -283,9 +274,7 @@
         self.moviePlayer.moviePlayer.fullscreen = YES;
         self.moviePlayer.moviePlayer.controlStyle =MPMovieControlStyleFullscreen;
         [self.moviePlayer.moviePlayer play];
-    }else{
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"暂无相关视频"];
-    } 
+    }
 }
 //收藏
 -(void)collect:(NSDictionary*)dic
@@ -362,6 +351,29 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSInteger row = indexPath.row;
+    RoadShowTableViewCell* prototypeCell = (RoadShowTableViewCell*)[tableView cellForRowAtIndexPath:indexPath];
+    NSString* flag;
+    if (prototypeCell.isExpand) {
+        flag = @"false";
+    }else{
+        flag = @"true";
+    }
+    
+    switch (row) {
+        case 0:
+            [dataDic setValue:flag forKey:@"company_profile_lines_flag"];
+            break;
+        case 1:
+            [dataDic setValue:flag forKey:@"business_lines_flag"];
+            break;
+        case 2:
+            [dataDic setValue:flag forKey:@"business_model_lines_flag"];
+            break;
+        default:
+            break;
+    }
+    [self.tableViewCustom reloadData];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -369,14 +381,18 @@
     if (dataDic) {
         CGFloat height;
         NSInteger lines;
+        BOOL flag;
         switch (indexPath.row) {
             case 0:
+                flag = [[dataDic valueForKey:@"company_profile_lines_flag"] boolValue];
                 lines = [[dataDic valueForKey:@"company_profile_lines"] integerValue];
                 break;
             case 1:
+                flag = [[dataDic valueForKey:@"business_lines_flag"] boolValue];
                 lines = [[dataDic valueForKey:@"business_lines"] integerValue];
                 break;
             case 2:
+                flag = [[dataDic valueForKey:@"business_model_lines_flag"] boolValue];
                 lines = [[dataDic valueForKey:@"business_model_lines"] integerValue];
                 break;
             default:
@@ -384,13 +400,16 @@
                 break;
         }
         
-        if (lines==0) {
-            lines = 1;
-        }else if (lines>4){
-            lines =4;
+        if (!flag) {
+            if (lines==0) {
+                lines = 1;
+            }else if (lines>4){
+                lines =4;
+            }
         }
         
-        if (height>4) {
+        
+        if (height>4 && !flag) {
             height = 80;
         }else{
             height = lines*20+30;
@@ -406,19 +425,20 @@
         //声明静态字符串对象，用来标记重用单元格
         static NSString* RoadTableDataIdentifier=@"C1dsfds";
         //用TableDataIdentifier标记重用单元格
-        self.prototypeCell=(RoadShowTableViewCell*)[tableView dequeueReusableCellWithIdentifier:RoadTableDataIdentifier];
+        RoadShowTableViewCell* prototypeCell=(RoadShowTableViewCell*)[tableView dequeueReusableCellWithIdentifier:RoadTableDataIdentifier];
         //如果单元格未创建，则需要新建
-        if (!self.prototypeCell) {
-            self.prototypeCell = [[RoadShowTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:RoadTableDataIdentifier];
-            CGFloat height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
-            [self.prototypeCell lauyoutResetLayout:CGRectMake(0, 0, WIDTH(self.tableViewCustom), height)];
+        if (!prototypeCell) {
+            prototypeCell = [[RoadShowTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:RoadTableDataIdentifier];
         }
+        
+         CGFloat height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
+        [prototypeCell lauyoutResetLayout:CGRectMake(0, 0, WIDTH(self.tableViewCustom), height)];
         
         NSInteger row = indexPath.row;
         
         NSDictionary* dic = contentArray[row];
-        self.prototypeCell.titleLabel.text= [dic valueForKey:@"title"];
-        self.prototypeCell.titleImgView.image = IMAGENAMED([dic valueForKey:@"img"]);
+        prototypeCell.titleLabel.text= [dic valueForKey:@"title"];
+        prototypeCell.titleImgView.image = IMAGENAMED([dic valueForKey:@"img"]);
         NSString* content=@"";
         switch (row) {
             case 0:
@@ -451,12 +471,13 @@
         }
         
         if (lines<4) {
-            self.prototypeCell.isLimit = YES;
+            prototypeCell.isLimit = YES;
+            prototypeCell.userInteractionEnabled = NO;
         }
         
-        self.prototypeCell.content = content;
-        NSLog(@"%@",NSStringFromCGRect(self.prototypeCell.frame));
-        return self.prototypeCell;
+        prototypeCell.content = content;
+        prototypeCell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return prototypeCell;
     }else{
         return [UITableViewCell new];
     }
@@ -577,14 +598,15 @@
             NSDictionary* dic = [dataDic valueForKey:@"project_event"];
             NSString* event = [dic valueForKey:@"event_detail"];
             if (event.class != NSNull.class) {
-                footer = [[RoadShowFooter alloc]initWithFrame:CGRectMake(0, 5, WIDTH(self.view), 350)];
-                [self.tableViewCustom setTableFooterView:footer];
+                footer = [[RoadShowFooter alloc]initWithFrame:CGRectMake(0, 5, WIDTH(self.view), 700)];
                 //新闻名称
                 [footer.titleLabel  setText:[dic valueForKey:@"event_title"]];
                 //日期
                 [footer.dateTimeLabel  setText:[dic valueForKey:@"event_date"]];
                 //公司重大新闻
                 [footer setContent:[dic valueForKey:@"event_detail"]];
+                
+                [self.tableViewCustom setTableFooterView:footer];
             }
             
             NSDictionary* stageDic = [dataDic valueForKey:@"stage"];
@@ -605,7 +627,7 @@
             [self.tableViewCustom setTableHeaderView:header];
             [header.introduceImgview setUserInteractionEnabled: YES];
             [header.introduceImgview addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playMedia:)]];
-            
+           
             //公司简介项目图片
             [header setIntroduceImage:[dataDic valueForKey:@"project_img"]];
             
@@ -616,6 +638,12 @@
             
             
             header.type = index;
+            
+            //点赞数
+            [header setPriserNum:[[dataDic valueForKey:@"like_sum"] integerValue]];
+            //收藏数
+            [header setCollecteNum:[[dataDic valueForKey:@"collect_sum"] integerValue]];
+            
             [header setLeftNum:[dataDic valueForKey:@"participator2plan"]];
             if ([[stageDic valueForKey:@"flag"] intValue]!=1) {
                 //融资中或者融资结束

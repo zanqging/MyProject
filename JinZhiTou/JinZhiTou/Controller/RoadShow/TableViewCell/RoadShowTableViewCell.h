@@ -16,6 +16,7 @@
 @property (retain, nonatomic) UIImageView *titleImgView;
 @property (retain, nonatomic) UIImageView *expandImgView;
 @property(assign,nonatomic)BOOL isLimit;
+@property(assign,nonatomic)BOOL isExpand;
 
 -(void)lauyoutResetLayout:(CGRect)frame;
 @end

@@ -33,10 +33,10 @@
         [self addSubview:introduceImgview];
         
         //播放按钮
-        UIImageView* imgPlay = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(introduceImgview)/2-10, HEIGHT(introduceImgview)/2-10, 40, 40)];
-        imgPlay.image = IMAGENAMED(@"bofang");
-        imgPlay.contentMode = UIViewContentModeScaleAspectFill;
-        [self addSubview:imgPlay];
+        self.imgPlay = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(introduceImgview)/2-10, HEIGHT(introduceImgview)/2-10, 40, 40)];
+        self.imgPlay.image = IMAGENAMED(@"bofang");
+        self.imgPlay.contentMode = UIViewContentModeScaleAspectFill;
+        [self addSubview:self.imgPlay];
         
         
         //介绍状态
@@ -78,26 +78,26 @@
         UILabel* lbl=[[UILabel alloc]initWithFrame:CGRectMake(X(introduceImgview), POS_Y(introduceImgview)+10, 50, 21)];
         lbl.textAlignment=NSTextAlignmentLeft;
         lbl.tag = 30001;
-        lbl.font=SYSTEMFONT(12);
+        lbl.font=SYSTEMFONT(14);
         [self addSubview:lbl];
         //内容
         industryLabel=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(lbl), Y(lbl), 80, HEIGHT(lbl))];
         industryLabel.textColor=ColorTheme;
         industryLabel.textAlignment=NSTextAlignmentLeft;
-        industryLabel.font=SYSTEMFONT(12);
+        industryLabel.font=SYSTEMFONT(14);
         industryLabel.adjustsFontSizeToFitWidth = YES;
         [self addSubview:industryLabel];
         //预路演时间
         lbl=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(industryLabel), Y(industryLabel), 80, HEIGHT(lbl))];
         lbl.tag = 30002;
-        lbl.font=SYSTEMFONT(12);
+        lbl.font=SYSTEMFONT(14);
         lbl.textAlignment=NSTextAlignmentLeft;
-        lbl.font=[UIFont fontWithName:@"Arial" size:12];
+        lbl.font=SYSTEMFONT(14);
         [self addSubview:lbl];
         //内容
         showTimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(lbl), Y(lbl), 100, 21)];
         showTimeLabel.font=lbl.font;
-        showTimeLabel.font = SYSTEMFONT(12);
+        showTimeLabel.font = SYSTEMFONT(14);
         showTimeLabel.textColor=ColorTheme;
         industryLabel.adjustsFontSizeToFitWidth = YES;
         showTimeLabel.textAlignment=NSTextAlignmentLeft;
@@ -109,14 +109,15 @@
         //剩余人数
         leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(traceView)+10, 100, 21)];
         leftLabel.textAlignment=NSTextAlignmentLeft;
-        leftLabel.font=SYSTEMFONT(12);
+        leftLabel.font=SYSTEMFONT(14);
         leftLabel.text=@"剩余人数";
         [self addSubview:leftLabel];
         
         //点赞收藏
         UITapGestureRecognizer* recognizer =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(collect:)];
-        currentPriseLabel=[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-40, POS_Y(leftLabel)+5, 20, 21)];
+        currentPriseLabel=[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-60, POS_Y(leftLabel)+5, 40, 21)];
         currentPriseLabel.text=@"44";
+        currentPriseLabel.adjustsFontSizeToFitWidth =YES;
         currentPriseLabel.font=SYSTEMFONT(14);
         currentPriseLabel.userInteractionEnabled  = YES;
         [currentPriseLabel addGestureRecognizer:recognizer];
@@ -124,7 +125,7 @@
         [self addSubview:currentPriseLabel];
         
         recognizer =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(collect:)];
-        UIImageView*  imageView=[[UIImageView alloc]initWithFrame:CGRectMake(X(currentPriseLabel)-20, Y(currentPriseLabel), 15, 15)];
+        UIImageView*  imageView=[[UIImageView alloc]initWithFrame:CGRectMake(X(currentPriseLabel)-20, Y(currentPriseLabel), 21, 21)];
         imageView.tag = 60001;
         imageView.image=IMAGENAMED(@"dianzan");
         imageView.userInteractionEnabled  = YES;
@@ -133,16 +134,17 @@
         
         //收藏
         recognizer =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(prise:)];
-        currentColllectLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(imageView)-50, Y(imageView), 60, 21)];
-        currentColllectLabel.font=SYSTEMFONT(14);
+        currentColllectLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(imageView)-60, Y(imageView), 40, 21)];
         currentColllectLabel.text=@"34";
+        currentColllectLabel.font=SYSTEMFONT(14);
         currentColllectLabel.userInteractionEnabled  = YES;
+        currentColllectLabel.adjustsFontSizeToFitWidth = YES;
         [currentColllectLabel addGestureRecognizer:recognizer];
         currentColllectLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:currentColllectLabel];
         
         recognizer =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(prise:)];
-        imageView=[[UIImageView alloc]initWithFrame:CGRectMake(X(currentColllectLabel)-25, Y(currentColllectLabel), 15, 15)];
+        imageView=[[UIImageView alloc]initWithFrame:CGRectMake(X(currentColllectLabel)-25, Y(currentColllectLabel), 21, 21)];
         imageView.tag =60002;
         imageView.image=IMAGENAMED(@"shoucang");
         imageView.userInteractionEnabled  = YES;
@@ -207,7 +209,7 @@
         UILabel* lbl=[[UILabel alloc]initWithFrame:CGRectMake(X(introduceImgview), POS_Y(introduceImgview)+10, 50, 21)];
         lbl.textAlignment=NSTextAlignmentLeft;
         lbl.tag = 30001;
-        lbl.font=SYSTEMFONT(12);
+        lbl.font=SYSTEMFONT(14);
         [self addSubview:lbl];
         //内容
         industryLabel=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(lbl)+5, Y(lbl), 80, HEIGHT(lbl))];
@@ -218,9 +220,9 @@
         //预路演时间
         lbl=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(industryLabel), Y(industryLabel), 90, HEIGHT(lbl))];
         lbl.tag = 30002;
-        lbl.font=SYSTEMFONT(12);
+        lbl.font=SYSTEMFONT(14);
         lbl.textAlignment=NSTextAlignmentLeft;
-        lbl.font=[UIFont fontWithName:@"Arial" size:12];
+        lbl.font= SYSTEMFONT(14);
         [self addSubview:lbl];
         //内容
         showTimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(lbl)-15, Y(lbl), 100, 21)];
@@ -278,16 +280,16 @@
         
         //点赞收藏
         UITapGestureRecognizer* recognizer =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(collect:)];
-        currentPriseLabel=[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-40, POS_Y(leftLabel)+15, 20, 21)];
-        currentPriseLabel.text=@"44";
+        currentPriseLabel=[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-60, POS_Y(leftLabel)+15, 40, 21)];
         currentPriseLabel.font=SYSTEMFONT(14);
         currentPriseLabel.userInteractionEnabled  = YES;
+        currentPriseLabel.adjustsFontSizeToFitWidth  =YES;
         [currentPriseLabel addGestureRecognizer:recognizer];
         currentPriseLabel.textAlignment = NSTextAlignmentRight;
         [self addSubview:currentPriseLabel];
         
         recognizer =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(collect:)];
-        UIImageView* imageView=[[UIImageView alloc]initWithFrame:CGRectMake(X(currentPriseLabel)-20, Y(currentPriseLabel), 15, 15)];
+        UIImageView* imageView=[[UIImageView alloc]initWithFrame:CGRectMake(X(currentPriseLabel)-20, Y(currentPriseLabel), 21, 21)];
         imageView.tag = 60001;
         imageView.image=IMAGENAMED(@"dianzan");
         imageView.userInteractionEnabled  = YES;
@@ -296,16 +298,16 @@
         
         //收藏
         recognizer =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(prise:)];
-        currentColllectLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(imageView)-50, Y(imageView), 60, 21)];
-        currentColllectLabel.text=@"34";
+        currentColllectLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(imageView)-60, Y(imageView), 40, 21)];
         currentColllectLabel.font=SYSTEMFONT(14);
+        currentColllectLabel.adjustsFontSizeToFitWidth  =YES;
         currentColllectLabel.userInteractionEnabled  = YES;
         [currentColllectLabel addGestureRecognizer:recognizer];
         currentColllectLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:currentColllectLabel];
         
         recognizer =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(prise:)];
-        imageView=[[UIImageView alloc]initWithFrame:CGRectMake(X(currentColllectLabel)-25, Y(currentColllectLabel), 15, 15)];
+        imageView=[[UIImageView alloc]initWithFrame:CGRectMake(X(currentColllectLabel)-25, Y(currentColllectLabel), 21, 21)];
         imageView.tag =60002;
         imageView.image=IMAGENAMED(@"shoucang");
         imageView.userInteractionEnabled  = YES;
@@ -573,9 +575,31 @@
     
     [UIView commitAnimations];
 }
+
+-(void)setMediaUrl:(NSString *)mediaUrl
+{
+    self->_mediaUrl = mediaUrl;
+    
+    if (mediaUrl && ![mediaUrl isEqualToString:@""]) {
+        self.imgPlay.alpha = 1;
+    }else{
+        self.imgPlay.alpha=0;
+    }
+}
 -(void)didStopAnimation
 {
-    NSLog(@"动画执行完毕!");
     [imgSelectView setFrame:imgFrame];
+}
+
+-(void)setPriserNum:(NSInteger)priserNum
+{
+    self->_priserNum = priserNum;
+    currentPriseLabel.text = [NSString stringWithFormat:@"%ld",(long)priserNum];
+}
+
+-(void)setCollecteNum:(NSInteger)collecteNum
+{
+    self->_collecteNum = collecteNum;
+    currentColllectLabel.text = [NSString stringWithFormat:@"%ld",(long)collecteNum];
 }
 @end

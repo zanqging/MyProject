@@ -33,9 +33,10 @@
 @property(retain,nonatomic)NSString* mediaUrl; //视频播放url
 @property(retain,nonatomic)NSString* leftName; //标签一
 @property(retain,nonatomic)NSString* rightName; //标签一
-@property(assign,nonatomic)NSInteger* priserNum;//点赞数
-@property(assign,nonatomic)NSInteger* collecteNum;//收藏数
+@property(assign,nonatomic)NSInteger priserNum;//点赞数
+@property(assign,nonatomic)NSInteger collecteNum;//收藏数
 @property(retain,nonatomic)NSString* investAmout; //已获取融资
 @property(retain,nonatomic)NSString* introduceImage;
+@property(retain,nonatomic)UIImageView* imgPlay; //播放
 @property(retain,nonatomic)UIImageView* introduceImgview;  //项目简介图片
 @end

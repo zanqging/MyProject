@@ -80,13 +80,19 @@
     
         //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
     
-        [paragraphStyle setLineSpacing:2.f];//调整行间距
+        [paragraphStyle setLineSpacing:10.f];//调整行间距
+        [paragraphStyle setAlignment:NSTextAlignmentJustified];
+        [paragraphStyle setHeadIndent:-50];
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
         [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
     
         textView.attributedText = attributedString;//ios 6
         
         [textView sizeToFit];
+        
+        [self setFrame:CGRectMake(0, 0, WIDTH(self), POS_Y(textView)+50)];
+        
+        NSLog(@"%@",NSStringFromCGRect(self.frame));
     
     }
 }
