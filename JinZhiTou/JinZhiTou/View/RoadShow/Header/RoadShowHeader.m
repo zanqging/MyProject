@@ -7,8 +7,9 @@
 //
 
 #import "RoadShowHeader.h"
-#import "GlobalDefine.h"
+#import "TDUtil.h"
 #import "UConstants.h"
+#import "GlobalDefine.h"
 #import "ProgressTraceView.h"
 #import <QuartzCore/QuartzCore.h>
 @interface RoadShowHeader()
@@ -77,21 +78,19 @@
         UILabel* lbl=[[UILabel alloc]initWithFrame:CGRectMake(X(introduceImgview), POS_Y(introduceImgview)+10, 50, 21)];
         lbl.textAlignment=NSTextAlignmentLeft;
         lbl.tag = 30001;
-        lbl.text=@"报名截止时间";
-        lbl.font=[UIFont fontWithName:@"Arial" size:12];
+        lbl.font=SYSTEMFONT(12);
         [self addSubview:lbl];
         //内容
-        industryLabel=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(lbl)+5, Y(lbl), 80, HEIGHT(lbl))];
-        industryLabel.text = @"2015-08-23";
+        industryLabel=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(lbl), Y(lbl), 80, HEIGHT(lbl))];
         industryLabel.textColor=ColorTheme;
         industryLabel.textAlignment=NSTextAlignmentLeft;
         industryLabel.font=SYSTEMFONT(12);
+        industryLabel.adjustsFontSizeToFitWidth = YES;
         [self addSubview:industryLabel];
         //预路演时间
         lbl=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(industryLabel), Y(industryLabel), 80, HEIGHT(lbl))];
-        lbl.text=@"路演时间";
         lbl.tag = 30002;
-        lbl.font=SYSTEMFONT(14);
+        lbl.font=SYSTEMFONT(12);
         lbl.textAlignment=NSTextAlignmentLeft;
         lbl.font=[UIFont fontWithName:@"Arial" size:12];
         [self addSubview:lbl];
@@ -100,11 +99,11 @@
         showTimeLabel.font=lbl.font;
         showTimeLabel.font = SYSTEMFONT(12);
         showTimeLabel.textColor=ColorTheme;
-        showTimeLabel.text = @"2015年8月1日";
+        industryLabel.adjustsFontSizeToFitWidth = YES;
         showTimeLabel.textAlignment=NSTextAlignmentLeft;
         [self addSubview:showTimeLabel];
         
-        traceView = [[ProgressTraceView alloc]initWithFrame:CGRectMake(20, POS_Y(showTimeLabel), WIDTH(self)-40, 50)];
+        traceView = [[ProgressTraceView alloc]initWithFrame:CGRectMake(20, POS_Y(showTimeLabel), WIDTH(self)-40, 30)];
         [self addSubview:traceView];
         
         //剩余人数
@@ -116,7 +115,7 @@
         
         //点赞收藏
         UITapGestureRecognizer* recognizer =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(collect:)];
-        currentPriseLabel=[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-40, POS_Y(leftLabel)+20, 20, 21)];
+        currentPriseLabel=[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-40, POS_Y(leftLabel)+5, 20, 21)];
         currentPriseLabel.text=@"44";
         currentPriseLabel.font=SYSTEMFONT(14);
         currentPriseLabel.userInteractionEnabled  = YES;
@@ -151,12 +150,12 @@
         [self addSubview:imageView];
         
         
-        UIImageView* imgview = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(imageView)+20, WIDTH(self), 1)];
+        UIImageView* imgview = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(imageView)+5, WIDTH(self), 1)];
         imgview.backgroundColor = BackColor;
         [self addSubview:imgview];
         
         float w =WIDTH(self)/4;
-        float h =POS_Y(imgview)+25;
+        float h =POS_Y(imgview)+10;
 
         recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(teamShowAction:)];
         //核心团队
@@ -208,34 +207,31 @@
         UILabel* lbl=[[UILabel alloc]initWithFrame:CGRectMake(X(introduceImgview), POS_Y(introduceImgview)+10, 50, 21)];
         lbl.textAlignment=NSTextAlignmentLeft;
         lbl.tag = 30001;
-        lbl.text=@"众筹时间";
-        lbl.font=[UIFont fontWithName:@"Arial" size:12];
+        lbl.font=SYSTEMFONT(12);
         [self addSubview:lbl];
         //内容
         industryLabel=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(lbl)+5, Y(lbl), 80, HEIGHT(lbl))];
-        industryLabel.text = @"2015-08-24";
         industryLabel.textColor=ColorTheme;
         industryLabel.textAlignment=NSTextAlignmentLeft;
-        industryLabel.font=SYSTEMFONT(14);
+        industryLabel.font=SYSTEMFONT(10);
         [self addSubview:industryLabel];
         //预路演时间
         lbl=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(industryLabel), Y(industryLabel), 90, HEIGHT(lbl))];
         lbl.tag = 30002;
-        lbl.text=@"众筹截止时间";
-        lbl.font=SYSTEMFONT(14);
+        lbl.font=SYSTEMFONT(12);
         lbl.textAlignment=NSTextAlignmentLeft;
         lbl.font=[UIFont fontWithName:@"Arial" size:12];
         [self addSubview:lbl];
         //内容
         showTimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(lbl)-15, Y(lbl), 100, 21)];
         showTimeLabel.font=lbl.font;
-        showTimeLabel.font = SYSTEMFONT(14);
+        showTimeLabel.font = SYSTEMFONT(10);
         showTimeLabel.textColor=ColorTheme;
-        showTimeLabel.text = @"2015年8月1日";
         showTimeLabel.textAlignment=NSTextAlignmentLeft;
         [self addSubview:showTimeLabel];
         
-        traceView = [[ProgressTraceView alloc]initWithFrame:CGRectMake(20, POS_Y(showTimeLabel), WIDTH(self)-40, 50)];
+        
+        traceView = [[ProgressTraceView alloc]initWithFrame:CGRectMake(20, POS_Y(showTimeLabel), WIDTH(self)-40, 30)];
         [self addSubview:traceView];
         
         //已获取融资
@@ -444,7 +440,9 @@
 {
     self->_industry = industry;
     if (self.industry) {
-        industryLabel.text = self.industry;
+        UILabel* label = (UILabel*)[self viewWithTag:30001];
+        [TDUtil label:industryLabel font:industryLabel.font content:industry alignLabel:label];
+        //industryLabel.text = self.industry;
     }
 }
 
@@ -452,7 +450,9 @@
 {
     self->_showTime = showTime;
     if (self.showTime) {
-        showTimeLabel.text = self.showTime;
+        //showTimeLabel.text = self.showTime;
+        UILabel* label = (UILabel*)[self viewWithTag:30002];
+        [TDUtil label:showTimeLabel font:industryLabel.font content:showTime alignLabel:label];
     }
 }
 
@@ -460,14 +460,14 @@
 {
     self->_leftName = leftName;
     UILabel* label = (UILabel*)[self viewWithTag:30001];
-    label.text = self.leftName;
+    [TDUtil label:label font:label.font content:leftName alignLabel:nil];
 }
 
 -(void)setRightName:(NSString *)rightName
 {
     self->_rightName = rightName;
      UILabel* label = (UILabel*)[self viewWithTag:30002];
-    label.text = self.rightName;
+    [TDUtil label:label font:label.font content:rightName alignLabel:nil];
 }
 
 -(void)setProcess:(float)process
@@ -539,6 +539,16 @@
     
     imgView.image = IMAGENAMED(fileName);
     
+}
+
+-(void)setLeftNum:(NSString *)leftNum
+{
+    if (self.type==0) {
+        if (leftNum) {
+            self->_leftName  = leftNum;
+            leftLabel.text = [NSString stringWithFormat:@"剩余人数:%@人",leftNum];
+        }
+    }
 }
 
 -(void)viewAnimation:(UIView*)view salce:(float)scale

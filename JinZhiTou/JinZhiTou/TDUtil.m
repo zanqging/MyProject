@@ -1139,4 +1139,48 @@
     collectionView.footer = footer;
 }
 
++(void)label:(UILabel *)label font:(UIFont *)font content:(NSString *)content alignLabel:(UILabel *)lb
+{
+    NSDictionary *attributes = @{NSFontAttributeName:font};
+    CGSize labelsize = [content sizeWithAttributes:attributes];
+    CGRect rect;
+    if (lb) {
+        rect =CGRectMake(POS_X(lb)+5, Y(lb), labelsize.width,HEIGHT(lb));
+    }else{
+        rect =CGRectMake(X(label), Y(label), labelsize.width, labelsize.height );
+    }
+    label.frame =rect;
+    label.text = content;
+    label.font = font;
+    
+//    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+//    
+//    //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
+//    
+//    [paragraphStyle setLineSpacing:0.f];//调整行间距
+//    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+//    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+//    
+//    label.attributedText = attributedString;//ios 6
+//    
+//    [label sizeToFit];
+    
+}
+
++  (int)convertToInt:(NSString*)strtemp {
+    int strlength = 0;
+    // 这里一定要使用gbk的编码方式，网上有很多用Unicode的，但是混合的时候都不行
+    NSStringEncoding gbkEncoding =CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000);
+    char* p = (char*)[strtemp cStringUsingEncoding:gbkEncoding];
+    for (int i=0 ; i<[strtemp lengthOfBytesUsingEncoding:gbkEncoding] ;i++) {
+        if (p) {
+            p++;
+            strlength++;
+        }
+        else {
+            p++;
+        }
+    }
+    return strlength/2;
+}
 @end

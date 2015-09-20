@@ -295,7 +295,7 @@
 //关键词
 #define KEYWORD @"keyword/"
 //搜索
-#define SEARCH @"search/"
+#define PROJECT_SEARCH @"projectsearch/"
 //反馈
 #define  FEEDBACK @"feedback/"
 //分享
@@ -343,7 +343,7 @@
 //咨询标签搜索
 #define NEWS_TAG_SEARCH  @"newstagsearch/"
 //咨询标题搜索
-#define NEWS_TITLE_SEARCH @"newstitlesearch/"
+#define NEWS_SEARCH @"newssearch/"
 //咨询点赞
 #define NEWS_LIKE @"newslike/"
 //咨询阅读量

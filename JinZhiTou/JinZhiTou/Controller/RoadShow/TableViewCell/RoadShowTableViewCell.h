@@ -9,8 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @interface RoadShowTableViewCell : UITableViewCell
+@property(retain,nonatomic)UIImageView* imgView;
+@property(retain,nonatomic)NSString* content;
+@property (retain, nonatomic) UILabel *textView;
 @property (retain, nonatomic) UILabel *titleLabel;
 @property (retain, nonatomic) UIImageView *titleImgView;
-@property (retain, nonatomic) UITextView *textView;
+@property (retain, nonatomic) UIImageView *expandImgView;
+@property(assign,nonatomic)BOOL isLimit;
 
+-(void)lauyoutResetLayout:(CGRect)frame;
 @end

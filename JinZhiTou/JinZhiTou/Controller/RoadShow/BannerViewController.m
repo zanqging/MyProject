@@ -17,7 +17,6 @@
 #import "GlobalDefine.h"
 #import "NSString+SBJSON.h"
 #import "ASIHTTPRequest.h"
-#import "ProjectShareView.h"
 @interface BannerViewController ()<UIWebViewDelegate,ASIHTTPRequestDelegate>
 {
     NavView* navView;
@@ -47,6 +46,11 @@
     [navView.leftButton setTitle:@"微路演" forState:UIControlStateNormal];
     [navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
     [navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    
+    if (self.type == 3) {
+        [navView.rightButton setImage:IMAGENAMED(@"share") forState:UIControlStateNormal];
+        [navView.rightButton addTarget:self action:@selector(ShareAction) forControlEvents:UIControlEventTouchUpInside];
+    }
     [self.view addSubview:navView];
     
     self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView))];
@@ -91,12 +95,6 @@
 -(void)setType:(int)type
 {
     self->_type = type;
-    if (self.type==3) {
-        ProjectShareView* projectShareView = [[ProjectShareView alloc]initWithFrame:CGRectMake(0, POS_Y(self.view)-kBottomBarHeight, WIDTH(self.view), kBottomBarHeight)];
-        [projectShareView.favouiteImgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(likeAction:)]];
-        [projectShareView.shareImgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(ShareAction)]];
-        [self.view addSubview:projectShareView];
-    }
 }
 
 

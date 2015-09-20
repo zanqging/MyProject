@@ -12,32 +12,39 @@
 #import <QuartzCore/QuartzCore.h>
 @implementation RoadShowTableViewCell
 
--(id)initWithFrame:(CGRect)frame
+-(void)lauyoutResetLayout:(CGRect)frame
 {
-    if (self=[super initWithFrame:frame]) {
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 70, 21)];
-        self.titleLabel.font = SYSTEMFONT(14);
-        [self addSubview:self.titleLabel];
-        
-
-        UIImageView* imageView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.titleLabel)+10, 0, 2, frame.size.height-POS_Y(self.titleImgView))];
-        imageView.backgroundColor = ColorCompanyTheme;
-        [self addSubview:imageView];
-        
-        
-        self.textView = [[UITextView alloc]initWithFrame:CGRectMake(POS_X(imageView)+10, 0, frame.size.width-POS_X(imageView)-20, HEIGHT(imageView)-20)];
-        self.textView.font = SYSTEMFONT(14);
-        self.textView.editable = NO;
-        [self addSubview:self.textView];
-        
-        self.titleImgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.titleLabel)-1, 10, 25, 25)];
-        self.titleImgView.image = IMAGENAMED(@"company");
-        self.titleImgView.layer.cornerRadius = 10;
-        self.titleImgView.layer.masksToBounds = YES;
-        [self addSubview:self.titleImgView];
-        
-    }
-    return self;
+    self.backgroundColor = BackColor;
+    self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 70, 21)];
+    self.titleLabel.font = SYSTEMFONT(14);
+    [self.contentView addSubview:self.titleLabel];
+    
+    
+    self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.titleLabel)+10, 0, 1, frame.size.height)];
+    self.imgView.backgroundColor = ColorCompanyTheme;
+    [self.contentView addSubview:self.imgView];
+    
+    
+    self.textView = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+20, 10, frame.size.width-POS_X(self.imgView)-35,frame.size.height-10)];
+    self.textView.font = SYSTEMFONT(12);
+    self.textView.numberOfLines=4;
+    self.textView.lineBreakMode  =NSLineBreakByWordWrapping;
+    [self.contentView addSubview:self.textView];
+    
+    self.titleImgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.titleLabel)-1, 10, 25, 25)];
+    self.titleImgView.image = IMAGENAMED(@"company");
+    self.titleImgView.layer.cornerRadius = 10;
+    self.titleImgView.layer.masksToBounds = YES;
+    [self.contentView addSubview:self.titleImgView];
+    
+    
+    
+    self.expandImgView  = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)-50,frame.size.height-15, 10, 10)];
+    self.expandImgView.contentMode = UIViewContentModeScaleAspectFill;
+    self.expandImgView.image  = IMAGENAMED(@"zhankai");
+    [self.contentView addSubview:self.expandImgView];
+    
+    NSLog(@"%@",NSStringFromCGRect(self.frame));
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
@@ -45,4 +52,32 @@
     // Configure the view for the selected state
 }
 
+-(void)setContent:(NSString *)content
+{
+    self->_content = content;
+    if (self.content) {
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        
+        //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
+        
+        [paragraphStyle setLineSpacing:1.f];//调整行间距
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+        
+        self.textView.attributedText = attributedString;//ios 6
+        
+        [self.textView sizeToFit];
+    }
+    
+}
+
+-(void)setIsLimit:(BOOL)isLimit
+{
+    self->_isLimit = isLimit;
+    if (isLimit) {
+        self.expandImgView.alpha = 0;
+    }else{
+        self.expandImgView.alpha = 1;
+    }
+}
 @end

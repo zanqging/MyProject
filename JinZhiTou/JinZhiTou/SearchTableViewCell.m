@@ -28,10 +28,17 @@
 -(void)setDataDic:(NSMutableDictionary *)dataDic
 {
     self->_dataDic = dataDic;
+    
+    NSString* key;
+    if (self.type==0) {
+        key=@"word";
+    }else{
+        key = @"value";
+    }
     NSMutableArray* array = [dataDic valueForKey:@"data"];
     UILabel* label;
     NSInteger count =array.count;
-    float w = WIDTH(self)/count;
+    float w = WIDTH(self)/3;
     for (int i = 0; i<count; i++) {
         label = [[UILabel alloc]initWithFrame:CGRectMake(10+w*i, 10, w-20, HEIGHT(self))];
         label.layer.borderWidth = 1;
@@ -39,7 +46,7 @@
         label.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
         label.userInteractionEnabled = YES;
         label.backgroundColor = WriteColor;
-        label.text = [array[i] valueForKey:@"word"];
+        label.text = [array[i] valueForKey:key];
         label.textAlignment = NSTextAlignmentCenter;
         [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchResult:)]];
         label.layer.borderColor = BackColor.CGColor;

@@ -34,7 +34,8 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "WeiboViewControlle.h"
 #import "movieViewController.h"
-@interface RoadShowDetailViewController ()<ASIHTTPRequestDelegate,btnActionDelegate>
+#define LIMIT_FONT_NUMBER 16
+@interface RoadShowDetailViewController ()<ASIHTTPRequestDelegate,btnActionDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     NSString* checkIndex; //权限监测
     bool isPriseSelected;
@@ -76,36 +77,30 @@
     
     [self.view addSubview:self.navView];
     
-    self.tableView=[[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-kTopBarHeight-kStatusBarHeight-20) style:UITableViewStylePlain];
-    self.tableView.bounces=NO;
-    self.tableView.delegate=self;
-    self.tableView.dataSource=self;
-    self.tableView.allowsSelection=NO;
-    self.tableView.delaysContentTouches=NO;
-    self.tableView.showsVerticalScrollIndicator=NO;
-    self.tableView.showsHorizontalScrollIndicator=NO;
-    self.tableView.backgroundColor=[UIColor clearColor];
-    self.tableView.contentSize = CGSizeMake(WIDTH(self.view), HEIGHT(self.view)+50);
-    self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+ self.tableViewCustom=[[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-kTopBarHeight-kStatusBarHeight-20)];
+    self.tableViewCustom.bounces=NO;
+    self.tableViewCustom.dataSource=self;
+    self.tableViewCustom.delegate=self;
+    self.tableViewCustom.allowsSelection=NO;
+    self.tableViewCustom.delaysContentTouches=NO;
+    self.tableViewCustom.showsVerticalScrollIndicator=NO;
+    self.tableViewCustom.showsHorizontalScrollIndicator=NO;
+    self.tableViewCustom.backgroundColor=[UIColor clearColor];
+    self.tableViewCustom.contentSize = CGSizeMake(WIDTH(self.view), HEIGHT(self.view)+50);
+    self.tableViewCustom.separatorStyle=UITableViewCellSeparatorStyleNone;
     
-    if ([self.tableView respondsToSelector:@selector(setSeparatorInset:)]) {
-        [self.tableView setSeparatorInset:UIEdgeInsetsZero];
-    }
+//    if ([self.tableViewCustom respondsToSelector:@selector(setSeparatorInset:)]) {
+//        [self.tableViewCustom setSeparatorInset:UIEdgeInsetsZero];
+//    }
+//    
+//    if ([self.tableViewCustom respondsToSelector:@selector(setLayoutMargins:)]) {
+//        
+//        [self.tableViewCustom setLayoutMargins:UIEdgeInsetsZero];
+//        
+//    }
     
-    if ([self.tableView respondsToSelector:@selector(setLayoutMargins:)]) {
-        
-        [self.tableView setLayoutMargins:UIEdgeInsetsZero];
-        
-    }
-    
-    [self.view addSubview:self.tableView];
+    [self.view addSubview:self.tableViewCustom];
 
-    
-    float height =450;
-    header = [[RoadShowHeader alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), height)];
-    [self.tableView setTableHeaderView:header];
-    [header.introduceImgview setUserInteractionEnabled: YES];
-    [header.introduceImgview addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playMedia:)]];
     self.view.backgroundColor = ColorTheme;
     
     bottomView = [[RoadShowBottom alloc]initWithFrame:CGRectMake(0, HEIGHT(self.view)-50, WIDTH(self.view), 50)];
@@ -371,41 +366,100 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 100;
+    if (dataDic) {
+        CGFloat height;
+        NSInteger lines;
+        switch (indexPath.row) {
+            case 0:
+                lines = [[dataDic valueForKey:@"company_profile_lines"] integerValue];
+                break;
+            case 1:
+                lines = [[dataDic valueForKey:@"business_lines"] integerValue];
+                break;
+            case 2:
+                lines = [[dataDic valueForKey:@"business_model_lines"] integerValue];
+                break;
+            default:
+                lines = 1;
+                break;
+        }
+        
+        if (lines==0) {
+            lines = 1;
+        }else if (lines>4){
+            lines =4;
+        }
+        
+        if (height>4) {
+            height = 80;
+        }else{
+            height = lines*20+30;
+        }
+        return height;
+    }
+    return 0;
 }
+
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    //声明静态字符串对象，用来标记重用单元格
-    NSString* TableDataIdentifier=@"RoadShowTableViewCell";
-    //用TableDataIdentifier标记重用单元格
-    RoadShowTableViewCell* cell=(RoadShowTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
-    //如果单元格未创建，则需要新建
-    if (cell==nil) {
-        cell = [[RoadShowTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 100)];
+    if (dataDic) {
+        //声明静态字符串对象，用来标记重用单元格
+        static NSString* RoadTableDataIdentifier=@"C1dsfds";
+        //用TableDataIdentifier标记重用单元格
+        self.prototypeCell=(RoadShowTableViewCell*)[tableView dequeueReusableCellWithIdentifier:RoadTableDataIdentifier];
+        //如果单元格未创建，则需要新建
+        if (!self.prototypeCell) {
+            self.prototypeCell = [[RoadShowTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:RoadTableDataIdentifier];
+            CGFloat height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
+            [self.prototypeCell lauyoutResetLayout:CGRectMake(0, 0, WIDTH(self.tableViewCustom), height)];
+        }
+        
+        NSInteger row = indexPath.row;
+        
+        NSDictionary* dic = contentArray[row];
+        self.prototypeCell.titleLabel.text= [dic valueForKey:@"title"];
+        self.prototypeCell.titleImgView.image = IMAGENAMED([dic valueForKey:@"img"]);
+        NSString* content=@"";
+        switch (row) {
+            case 0:
+                content = [dataDic valueForKey:@"company_profile"];
+                break;
+            case 1:
+                content = [dataDic valueForKey:@"business"];
+                break;
+            case 2:
+                content = [dataDic valueForKey:@"business_model"];
+                break;
+            default:
+                break;
+        }
+        
+        NSInteger lines;
+        switch (indexPath.row) {
+            case 0:
+                lines = [[dataDic valueForKey:@"company_profile_lines"] integerValue];
+                break;
+            case 1:
+                lines = [[dataDic valueForKey:@"business_lines"] integerValue];
+                break;
+            case 2:
+                lines = [[dataDic valueForKey:@"business_model_lines"] integerValue];
+                break;
+            default:
+                lines = 0;
+                break;
+        }
+        
+        if (lines<4) {
+            self.prototypeCell.isLimit = YES;
+        }
+        
+        self.prototypeCell.content = content;
+        NSLog(@"%@",NSStringFromCGRect(self.prototypeCell.frame));
+        return self.prototypeCell;
+    }else{
+        return [UITableViewCell new];
     }
-    
-    NSInteger row = indexPath.row;
-    
-    NSDictionary* dic = contentArray[row];
-    cell.titleLabel.text= [dic valueForKey:@"title"];
-    cell.titleImgView.image = IMAGENAMED([dic valueForKey:@"img"]);
-    NSString* content=@"";
-    switch (row) {
-        case 0:
-            content = [dataDic valueForKey:@"company_profile"];
-            break;
-        case 1:
-            content = [dataDic valueForKey:@"business"];
-            break;
-        case 2:
-            content = [dataDic valueForKey:@"business_model"];
-            break;
-        default:
-            break;
-    }
-    cell.textView.text = content;
-    return cell;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -509,11 +563,22 @@
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0 || [status intValue] == -1) {
             dataDic = [jsonDic valueForKey:@"data"];
+            NSString* content = [dataDic valueForKey:@"company_profile"];
+            NSInteger length = [TDUtil convertToInt:content];
+            
+            [dataDic setValue:[NSString stringWithFormat:@"%ld",length/LIMIT_FONT_NUMBER] forKey:@"company_profile_lines"];
+            content = [dataDic valueForKey:@"business"];
+            length = [TDUtil convertToInt:content];
+            [dataDic setValue:[NSString stringWithFormat:@"%ld",length/LIMIT_FONT_NUMBER] forKey:@"business_lines"];
+            content = [dataDic valueForKey:@"business_model"];
+            length = [TDUtil convertToInt:content];
+            [dataDic setValue:[NSString stringWithFormat:@"%ld",length/LIMIT_FONT_NUMBER] forKey:@"business_model_lines"];
+            
             NSDictionary* dic = [dataDic valueForKey:@"project_event"];
             NSString* event = [dic valueForKey:@"event_detail"];
             if (event.class != NSNull.class) {
                 footer = [[RoadShowFooter alloc]initWithFrame:CGRectMake(0, 5, WIDTH(self.view), 350)];
-                [self.tableView setTableFooterView:footer];
+                [self.tableViewCustom setTableFooterView:footer];
                 //新闻名称
                 [footer.titleLabel  setText:[dic valueForKey:@"event_title"]];
                 //日期
@@ -522,37 +587,55 @@
                 [footer setContent:[dic valueForKey:@"event_detail"]];
             }
             
+            NSDictionary* stageDic = [dataDic valueForKey:@"stage"];
+            int index;
+            if ([[stageDic valueForKey:@"flag"] intValue]!=1) {
+                index =1;
+            }else{
+                index =0;
+            }
+            self.type =[[stageDic valueForKey:@"flag"] intValue];
+            float height;
+            if (index!=0) {
+                height = 430;
+            }else{
+                height = 350;
+            }
+            header = [[RoadShowHeader alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), height)];
+            [self.tableViewCustom setTableHeaderView:header];
+            [header.introduceImgview setUserInteractionEnabled: YES];
+            [header.introduceImgview addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playMedia:)]];
             
             //公司简介项目图片
             [header setIntroduceImage:[dataDic valueForKey:@"project_img"]];
+            
             NSInteger colorHex = [[self.dic valueForKey:@"color"] integerValue];
             NSString* hexNumber = [TDUtil ToHex:colorHex];
             UIColor* color = [TDUtil colorWithHexString:hexNumber];
             header.tinColor = color;
             
+            
+            header.type = index;
+            [header setLeftNum:[dataDic valueForKey:@"participator2plan"]];
+            if ([[stageDic valueForKey:@"flag"] intValue]!=1) {
+                //融资中或者融资结束
+                header.investAmout = [[dataDic valueForKey:@"invest_amount_sum"] stringValue];
+                header.amout = [[dataDic valueForKey:@"plan_finance"] stringValue];
+            }
+            
             //状态
-            NSDictionary* stageDic = [dataDic valueForKey:@"stage"];
             NSString* mediaUrl = [dataDic valueForKey:@"project_video"];
             
             NSDictionary* dicStage = [stageDic valueForKey:@"start"];
             
-            header.industry = [dicStage valueForKey:@"datetime"];
             header.leftName = [dicStage valueForKey:@"name"];
+            header.industry = [dicStage valueForKey:@"datetime"];
             
             dicStage = [stageDic valueForKey:@"end"];
-            header.showTime = [dicStage valueForKey:@"datetime"];
             header.rightName = [dicStage valueForKey:@"name"];
+            header.showTime = [dicStage valueForKey:@"datetime"];
             
-            if ([[stageDic valueForKey:@"flag"] intValue]!=1) {
-                header.type = 1;
-                //融资中或者融资结束
-                header.investAmout = [[dataDic valueForKey:@"invest_amount_sum"] stringValue];
-                header.amout = [[dataDic valueForKey:@"plan_finance"] stringValue];
-                
-            }else{
-                header.type = 0;
-            }
-            self.type =[[stageDic valueForKey:@"flag"] intValue];
+            
             bottomView.type = self.type;
             
             float currentAmount = [[dataDic valueForKey:@"invest_amount_sum"] floatValue];
@@ -576,6 +659,8 @@
             header.isCollect = isCollect;
             header.status = [stageDic valueForKey:@"status"];
             [LoadingUtil closeLoadingView:loadingView];
+            
+            [self.tableViewCustom reloadData];
         }
         
     }
@@ -650,6 +735,14 @@
                 controller.titleStr = self.navView.title;
                 controller.projectId = [[self.dic valueForKey:@"id"] integerValue];
                 [self.navigationController pushViewController:controller animated:YES];
+            }
+        }else{
+            [LoadingUtil close:loadingView];
+            if ([status intValue] == -9) {
+                
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"取消",@"cancel",@"去认证",@"sure",checkIndex,@"type", nil]];
+            }else{
+                [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
     }

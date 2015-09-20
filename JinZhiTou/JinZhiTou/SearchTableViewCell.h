@@ -14,6 +14,7 @@
 @end
 
 @interface SearchTableViewCell : UITableViewCell
+@property(assign,nonatomic)NSInteger type;
 @property(retain,nonatomic)NSMutableDictionary* dataDic;
 @property(retain,nonatomic)id <searchTableViewCellDelegate> delegate;
 @end

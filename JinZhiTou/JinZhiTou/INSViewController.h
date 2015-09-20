@@ -15,4 +15,5 @@
 }
 @property(retain,nonatomic)UITableViewCustomView* tableView;
 @property(retain,nonatomic)NSMutableArray* dataArray;
+@property(assign,nonatomic)NSInteger type;
 @end

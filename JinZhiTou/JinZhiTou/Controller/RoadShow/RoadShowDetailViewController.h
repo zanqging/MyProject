@@ -10,11 +10,12 @@
 #import "NavView.h"
 #import "RoadShowTableViewCell.h"
 
-@interface RoadShowDetailViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
+@interface RoadShowDetailViewController : UIViewController
 @property(assign,nonatomic)int type;
-@property (strong, nonatomic)NavView *navView;
+@property (retain, nonatomic)NavView *navView;
 @property(retain,nonatomic)NSString* backTitle;
 @property(retain,nonatomic)NSMutableDictionary * dic;
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic, retain) RoadShowTableViewCell *prototypeCell;
+@property (retain, nonatomic)UITableView *tableViewCustom;
 
 @end

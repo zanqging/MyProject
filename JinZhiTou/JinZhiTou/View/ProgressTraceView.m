@@ -37,28 +37,14 @@
     
     [progressView setFrame:frame];
     
-    UIImageView* imgView;
     UILabel* label;
-    w = WIDTH(progressBackView)/4;
-    for (int i=0; i<5; i++) {
-        imgView =[[UIImageView alloc]initWithFrame:CGRectMake(w*i, Y(progressBackView)-3, 10, 10)];
-        imgView.layer.cornerRadius =5;
-        if (frame.size.width<w*i) {
-            imgView.backgroundColor = BACKGROUND_LIGHT_GRAY_COLOR;
-        }else{
-            imgView.backgroundColor = ColorTheme;
-        }
-        
-        label = [[UILabel alloc]initWithFrame:CGRectMake(w*i-2, POS_Y(imgView)+10, w, 10)];
-        label.textColor = ColorTheme;
-        NSString* str =  [NSString stringWithFormat:@"%d",i*25];
-        str = [str stringByAppendingString:@"%"];
-        label.text = str;
-        label.font =SYSTEMFONT(10);
-        
-        [self addSubview:label];
-        [self addSubview:imgView];
-    }
-
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(w*progress+5, Y(progressView)-10, w, 10)];
+    label.textColor = ColorTheme;
+    NSString* str = [NSString stringWithFormat:@"%.1f",progress*100];
+    str = [str stringByAppendingString:@"%"];
+    label.text = str;
+    label.font =SYSTEMFONT(10);
+    [self addSubview:label];
 }
 @end

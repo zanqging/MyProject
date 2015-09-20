@@ -12,7 +12,7 @@
 #import "GlobalDefine.h"
 @implementation RoadShowFooter
 {
-    UITextView* textView;
+    UILabel* textView;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -61,9 +61,10 @@
         self.dateTimeLabel.textAlignment  = NSTextAlignmentCenter;
         [self addSubview:self.dateTimeLabel];
         
-        textView = [[UITextView alloc]initWithFrame:CGRectMake(10, POS_Y(self.dateTimeLabel)+10, WIDTH(self)-20, HEIGHT(self)-100)];
-        textView.editable = NO;
+        textView = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(self.dateTimeLabel)+10, WIDTH(self)-20, HEIGHT(self)-100)];
         textView.font = SYSTEMFONT(14);
+        textView.numberOfLines = 0;
+        textView.lineBreakMode = NSLineBreakByWordWrapping;
         [self addSubview:textView];
         
         self.backgroundColor = WriteColor;
@@ -74,7 +75,19 @@
 -(void)setContent:(NSString *)content
 {
     if (content.class !=NSNull.class) {
-         textView.text = content;
+        
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    
+        //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
+    
+        [paragraphStyle setLineSpacing:2.f];//调整行间距
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+    
+        textView.attributedText = attributedString;//ios 6
+        
+        [textView sizeToFit];
+    
     }
 }
 @end

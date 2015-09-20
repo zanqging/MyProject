@@ -376,4 +376,21 @@
  *  @return
  */
 +(BOOL)isHasObserver:(NSString*)observer;
+
+/**
+ *  UILabel自适应宽度和高度
+ *
+ *  @param label UILabel
+ *  @param font  字体样式
+ *  @param content  内容
+ */
++(void)label:(UILabel*)label font:(UIFont*)font content:(NSString*)content alignLabel:(UILabel*)lb;
+/**
+ *  计算文本长度
+ *
+ *  @param strtemp 文本
+ *
+ *  @return 长度
+ */
++  (int)convertToInt:(NSString*)strtemp;
 @end

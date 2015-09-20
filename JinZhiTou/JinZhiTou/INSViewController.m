@@ -18,8 +18,10 @@
 #import "GlobalDefine.h"
 #import "NSString+SBJSON.h"
 #import "ASIFormDataRequest.h"
+#import "BannerViewController.h"
 #import "SearchTableViewHeader.h"
 #import "UserInfoTableViewCell.h"
+#import "NewFinialTableViewCell.h"
 #import "UserCollecteTableViewCell.h"
 #import "RoadShowDetailViewController.h"
 @interface INSViewController () <INSSearchBarDelegate,ASIHTTPRequestDelegate>
@@ -27,7 +29,7 @@
     NavView* navView;
     HttpUtils* httpUtils;
     LoadingView* loadingView;
-    
+    NSInteger currentPage;
     SearchTableViewHeader* header;
     
     BOOL isSearch;
@@ -80,8 +82,10 @@
     header.title =@"待融资项目搜索热词";
     [self.tableView setTableHeaderView:header];
     
-    //加载关键词
-    [self loadKeyWord];
+    if (self.type==0) {
+        //加载关键词
+        [self loadKeyWord];
+    }
     
 }
 
@@ -99,16 +103,35 @@
 {
     NSInteger row = indexPath.row;
     NSMutableDictionary* dic = self.dataArray[row];
-    RoadShowDetailViewController* controller =[[RoadShowDetailViewController alloc]init];
-    controller.dic = dic;
-    controller.title = navView.title;
-    [self.navigationController pushViewController:controller animated:YES];
+    
+    if (self.type ==0) {
+        RoadShowDetailViewController* controller =[[RoadShowDetailViewController alloc]init];
+        controller.dic = dic;
+        controller.title = navView.title;
+        [self.navigationController pushViewController:controller animated:YES];
+    }else{
+        BannerViewController* controller =[[BannerViewController alloc]init];
+        controller.title = navView.title;
+        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"href"]];
+        controller.type = 3;
+        controller.url = url;
+        controller.dic = dic;
+        [self.navigationController pushViewController:controller animated:YES];
+        NSString* serverUrl = [NEWS_READ_COUNT stringByAppendingFormat:@"%@/",[dic valueForKey:@"id"]];
+        [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:0 sel:nil];
+    }
+    
+    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (isSearch) {
-        return 190;
+        if (self.type==0) {
+            return 190;
+        }else{
+            return 150;
+        }
     }
     return 60;
 }
@@ -116,37 +139,62 @@
 {
     
     if (isSearch) {
-        //声明静态字符串对象，用来标记重用单元格
-        NSString* TableDataIdentifier=@"UserCollecteViewCell";
-        //用TableDataIdentifier标记重用单元格
-        UserCollecteTableViewCell* cell=(UserCollecteTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
-        //如果单元格未创建，则需要新建
-        if (cell==nil) {
-            cell =[[UserCollecteTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
+        if (self.type==0) {
+            //声明静态字符串对象，用来标记重用单元格
+            NSString* TableDataIdentifier=@"UserCollecteViewCell";
+            //用TableDataIdentifier标记重用单元格
+            UserCollecteTableViewCell* cell=(UserCollecteTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
+            //如果单元格未创建，则需要新建
+            if (cell==nil) {
+                cell =[[UserCollecteTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
+            }
+            
+            NSDictionary* dic = self.dataArray[indexPath.row];
+            
+            [cell.imgview sd_setImageWithURL:[dic valueForKey:@"thumbnail"] placeholderImage:IMAGENAMED(@"loading")];
+            cell.titleLabel.text = [dic valueForKey:@"company_name"];
+            cell.desclabel.text = [dic valueForKey:@"project_summary"];
+            
+            NSArray* arr = [dic valueForKey:@"industry_type"];
+            NSString* str =@"";
+            for (int i = 0; i<arr.count; i++) {
+                str = [str stringByAppendingFormat:@"%@/",arr[i]];
+                tableView.separatorStyle  =UITableViewCellSeparatorStyleSingleLine;
+            }
+            
+            cell.typeLabel.text = str;
+            cell.votelabel.text = [[dic valueForKey:@"vote_sum"] stringValue];
+            cell.priseLabel.text = [[dic valueForKey:@"like_sum"] stringValue];
+            cell.colletcteLabel.text = [[dic valueForKey:@"collect_sum"] stringValue];
+            cell.timeLabel.text = [dic valueForKey:@"roadshow_start_datetime"];
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            tableView.contentSize = CGSizeMake(WIDTH(tableView), 190*self.dataArray.count+100);
+            return cell;
+        }else{
+            //声明静态字符串对象，用来标记重用单元格
+            NSString* TableDataIdentifier=@"UsefFinialViewCell";
+            //用TableDataIdentifier标记重用单元格
+            NewFinialTableViewCell* cell=(NewFinialTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
+            //如果单元格未创建，则需要新建
+            if (cell==nil) {
+                cell =[[NewFinialTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
+            }
+            
+            NSDictionary* dic = self.dataArray[indexPath.row];
+            NSURL* url = [dic valueForKey:@"src"];
+            [cell.imgview sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading")];
+            cell.titleLabel.text = [dic valueForKey:@"title"];
+            cell.desclabel.text = [dic valueForKey:@"source"];
+            cell.typeLabel.text = [dic valueForKey:@"content"];
+            cell.colletcteLabel.text = [[dic valueForKey:@"like"] stringValue];
+            cell.priseLabel.text = [[dic valueForKey:@"readcount"] stringValue];
+            cell.backgroundColor = WriteColor;
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+            
+            tableView.contentSize = CGSizeMake(WIDTH(tableView), 150*self.dataArray.count+80);
+            return cell;
         }
-        
-        NSDictionary* dic = self.dataArray[indexPath.row];
-        
-        [cell.imgview sd_setImageWithURL:[dic valueForKey:@"thumbnail"] placeholderImage:IMAGENAMED(@"loading")];
-        cell.titleLabel.text = [dic valueForKey:@"company_name"];
-        cell.desclabel.text = [dic valueForKey:@"project_summary"];
-        
-        NSArray* arr = [dic valueForKey:@"industry_type"];
-        NSString* str =@"";
-        for (int i = 0; i<arr.count; i++) {
-            str = [str stringByAppendingFormat:@"%@/",arr[i]];
-            tableView.separatorStyle  =UITableViewCellSeparatorStyleSingleLine;
-        }
-        
-        cell.typeLabel.text = str;
-        cell.votelabel.text = [[dic valueForKey:@"vote_sum"] stringValue];
-        cell.priseLabel.text = [[dic valueForKey:@"like_sum"] stringValue];
-        cell.colletcteLabel.text = [[dic valueForKey:@"collect_sum"] stringValue];
-        cell.timeLabel.text = [dic valueForKey:@"roadshow_start_datetime"];
-        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        tableView.contentSize = CGSizeMake(WIDTH(tableView), 190*self.dataArray.count+100);
-        return cell;
     }else{
         //声明静态字符串对象，用来标记重用单元格
         NSString* TableDataIdentifier=@"UserInfoViewCell";
@@ -156,6 +204,7 @@
         if (searchTableViewCell==nil) {
             searchTableViewCell = [[SearchTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 100)];
             searchTableViewCell.delegate  = self;
+            searchTableViewCell.type = self.type;
             tableView.separatorStyle  =UITableViewCellSeparatorStyleNone;
         }
         NSMutableDictionary* dic = self.dataArray[indexPath.row];
@@ -226,8 +275,16 @@
     header.title =[NSString stringWithFormat:@"包含\"%@\"的搜索结果",searchBar.searchField.text];
     loadingView.isTransparent = YES;
     [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
-    
-    [httpUtils getDataFromAPIWithOps:SEARCH postParam:[NSDictionary dictionaryWithObject:searchBar.searchField.text forKey:@"word"] type:0 delegate:self sel:@selector(requestSearch:)];
+    NSString* url;
+    if (self.type==0) {
+        url= [PROJECT_SEARCH stringByAppendingFormat:@"%d/%ld/",0,currentPage];
+    }else{
+        url= [NEWS_SEARCH stringByAppendingFormat:@"%d/%ld/",0,currentPage];
+    }
+    if(!httpUtils){
+        httpUtils = [[HttpUtils alloc]init];
+    }
+    [httpUtils getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:searchBar.searchField.text forKey:@"value"] type:0 delegate:self sel:@selector(requestSearch:)];
 }
 
 - (void)searchBarTextDidChange:(INSSearchBar *)searchBar
@@ -245,8 +302,15 @@
     SearchTableViewCell* cell = (SearchTableViewCell*)[label superview];
     NSDictionary* dic;
     NSArray* array = [cell.dataDic valueForKey:@"data"];
+    
+    NSString* key;
+    if (self.type==0) {
+        key  =@"word";
+    }else{
+        key = @"value";
+    }
     for (int  i =0; i<array.count; i++) {
-        if ([label.text isEqualToString:[array[i] valueForKey:@"word"]]) {
+        if ([label.text isEqualToString:[array[i] valueForKey:key]]) {
             dic = array[i];
         }
     }
@@ -254,8 +318,20 @@
     loadingView.isTransparent = YES;
     [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
     
-    NSString* index = [dic valueForKey:@"id"];
-    [httpUtils getDataFromAPIWithOps:SEARCH postParam:[NSDictionary dictionaryWithObject:index forKey:@"word"] type:0 delegate:self sel:@selector(requestSearch:)];
+    NSString* url;
+    if (self.type==0) {
+        key  =@"word";
+         url= [PROJECT_SEARCH stringByAppendingFormat:@"%@/%ld/",[dic valueForKey:@"id"],currentPage];
+    }else{
+        key = @"value";
+        url= [NEWS_SEARCH stringByAppendingFormat:@"%@/%ld/",[dic valueForKey:@"key"],currentPage];
+    }
+    
+    NSString* index = [dic valueForKey:key];
+    if (!httpUtils) {
+        httpUtils = [[HttpUtils alloc]init];
+    }
+    [httpUtils getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:index forKey:@"value"] type:0 delegate:self sel:@selector(requestSearch:)];
     
 }
 
@@ -290,6 +366,16 @@
                 }
                 
                 [array addObject:arr[i]];
+                
+                if (i==arr.count -1) {
+                    if (array.count>0) {
+                        dic = [[NSMutableDictionary alloc]init];
+                        [dic setValue:array forKey:@"data"];
+                        [tempArray addObject:dic];
+                        array = [[NSMutableArray alloc]init];
+                    }
+                }
+                
                 num++;
                 
             }
@@ -332,4 +418,11 @@
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);
 }
+
+
+- (void) viewWillAppear: (BOOL)inAnimated {
+    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
+    if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
+}
+
 @end

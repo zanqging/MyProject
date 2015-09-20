@@ -85,6 +85,40 @@
 {
     INSViewController* controller =[[INSViewController alloc]init];
     controller.title = self.navView.title;
+    
+    NSMutableArray* array = [[NSMutableArray alloc]init];
+    NSMutableArray* tempArray = [[NSMutableArray alloc]init];
+    NSMutableDictionary* dic = [[NSMutableDictionary alloc]init];
+    int num=0;
+    for (int i=0; i<typeShow.dataArray.count; i++) {
+        
+        if (num>=3) {
+            num = 0;
+            dic = [[NSMutableDictionary alloc]init];
+            [dic setValue:array forKey:@"data"];
+            [tempArray addObject:dic];
+            array = [[NSMutableArray alloc]init];
+            
+        }
+        
+        
+        [array addObject:typeShow.dataArray[i]];
+        
+        if (i==typeShow.dataArray.count -1) {
+            if (array.count>0) {
+                dic = [[NSMutableDictionary alloc]init];
+                [dic setValue:array forKey:@"data"];
+                [tempArray addObject:dic];
+                array = [[NSMutableArray alloc]init];
+            }
+        }
+        
+        num++;
+        
+    }
+    
+    controller.dataArray = tempArray;
+    controller.type=1;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -132,7 +166,6 @@
 }
 -(void)loadNewsData:(NSInteger)index
 {
-    
     //添加加载页面
     if (isRefresh) {
         loadingView.isTransparent = YES;
