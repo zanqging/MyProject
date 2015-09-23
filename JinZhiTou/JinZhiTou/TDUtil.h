@@ -11,6 +11,7 @@
 #import "NSData+AES.h"
 #import "PaddingView.h"
 #import "DialogView.h"
+#import "GlobalDefine.h"
 @interface TDUtil : UIView
 
 /**
@@ -393,4 +394,6 @@
  *  @return 长度
  */
 +  (int)convertToInt:(NSString*)strtemp;
+
++ ( CameraMoveDirection )determineCameraDirectionIfNeeded:( CGPoint )translation direction:(CameraMoveDirection)direction;
 @end

@@ -503,13 +503,15 @@
             [LoadingUtil closeLoadingView:loadingView];
             [[DialogUtil sharedInstance] showDlg:self.view textOnly:@"信息提交成功!"];
             
-            
             FinialSuccessViewController* controller =[[FinialSuccessViewController alloc]init];
+            controller.type=1;
+            controller.titleStr= @"投资结果";
+            controller.content =@"    尊敬的用户，您的投资申请已提交，48小时内会有工作人员与您联系，您也可以在“个人中心”－－“进度查看”中查看到审核进度。";
             [self.navigationController pushViewController:controller animated:YES];
             
         }else{
             [LoadingUtil closeLoadingView:loadingView];
-            [[DialogUtil sharedInstance] showDlg:self.view textOnly:@"信息提交失败!"];
+            [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         }
     }
 }

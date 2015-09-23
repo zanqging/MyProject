@@ -24,7 +24,7 @@
         [self addSubview:v];
         
         //中间区域
-        v = [[UIView alloc]initWithFrame:CGRectMake(40, 40, WIDTH(self)-80, HEIGHT(self)-50)];
+        v = [[UIView alloc]initWithFrame:CGRectMake(20, 40, WIDTH(self)-40, HEIGHT(self)-70)];
         v.backgroundColor = WriteColor;
         [self addSubview:v];
         

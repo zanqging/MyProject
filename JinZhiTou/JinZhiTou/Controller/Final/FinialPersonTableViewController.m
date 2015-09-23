@@ -41,7 +41,7 @@
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:@"项目详情" forState:UIControlStateNormal];
     [self.navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
-    [self.navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [self.navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [self.view addSubview:self.navView];
     
     self.tableView.dataSource = self;

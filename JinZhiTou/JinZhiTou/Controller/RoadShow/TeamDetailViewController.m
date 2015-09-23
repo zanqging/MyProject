@@ -45,9 +45,9 @@
     [self.view addSubview:navView];
     
     UIImageView* imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), 250)];
-    imageView.backgroundColor =WriteColor;
+    imageView.backgroundColor =BackColor;
     imageView.tag = 1001;
-    imageView.alpha=0.5;
+//    imageView.alpha=0.5;
     [self.view  addSubview:imageView];
     
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView))];
@@ -108,7 +108,7 @@
 -(void)loadTeamPersonDetail
 {
     httpUtils = [[HttpUtils alloc]init];
-    NSString* url = [TEAM_DETAIL stringByAppendingFormat:@"%ld/",(long)self.person_id];
+    NSString* url = [TEAM_DETAIL stringByAppendingFormat:@"%ld/",[[self.dataDic valueForKey:@"id"] longValue]];
     
     //加载视图
     loadingView = [LoadingUtil shareinstance:self.view];
@@ -172,6 +172,7 @@
             
             [LoadingUtil closeLoadingView:loadingView];
         }
+        
     }
 }
 

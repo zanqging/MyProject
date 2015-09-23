@@ -41,17 +41,17 @@
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:self.title forState:UIControlStateNormal];
     [self.navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
-    [self.navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [self.navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
     [self.view addSubview:self.navView];
-
+ 
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView))];
     scrollView.backgroundColor = BackColor;
     [self.view addSubview:scrollView];
     
     label = [[UILabel alloc]initWithFrame:CGRectMake(10, 20, WIDTH(self.view)-20, 150)];
     label.numberOfLines = 0;
-    label.backgroundColor  =WriteColor;
+    label.backgroundColor  =BackColor;
     label.lineBreakMode = NSLineBreakByWordWrapping;
     [scrollView addSubview:label];
     

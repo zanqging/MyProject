@@ -27,10 +27,15 @@
         self.titleLabel.textColor = BlackColor;
         [view addSubview:self.titleLabel];
         
-        self.desclabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel), WIDTH(self.titleLabel), 21)];
+        self.desclabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel), WIDTH(self.titleLabel)/2, 21)];
         self.desclabel.textColor = ColorTheme;
         self.desclabel.font = SYSTEMFONT(12);
         [view addSubview:self.desclabel];
+        
+        self.timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.desclabel), Y(self.desclabel), WIDTH(self.titleLabel)/2, 21)];
+        self.timeLabel.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
+        self.timeLabel.font = SYSTEMFONT(12);
+        [view addSubview:self.timeLabel];
 
         self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.desclabel), WIDTH(self.titleLabel), 50)];
         self.typeLabel.numberOfLines  =0 ;
@@ -58,7 +63,7 @@
 -(void)layoutNeed:(float)height
 {
     UIImageView* imgaeView;
-    imgaeView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.titleLabel), height, WIDTH(self)-2*X(self.titleLabel), 1)];
+    imgaeView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.titleLabel), height+5, WIDTH(self)-2*X(self.titleLabel), 1)];
     imgaeView.backgroundColor  =BackColor;
     [self addSubview:imgaeView];
     
@@ -84,7 +89,7 @@
     self.priseLabel =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.priseImage)+5, Y(self.priseImage)-3, 70, 30)];
     self.priseLabel.textAlignment = NSTextAlignmentLeft;
     self.priseLabel.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
-    self.priseLabel.contentMode = UIViewContentModeScaleAspectFill;
+    
     [view addSubview:self.priseLabel];
 }
 

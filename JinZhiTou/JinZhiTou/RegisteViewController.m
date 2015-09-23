@@ -42,7 +42,7 @@
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:@"登陆注册" forState:UIControlStateNormal];
     [self.navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
-    [self.navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [self.navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
     [self.view addSubview:self.navView];
     
@@ -211,7 +211,12 @@
     label.font = SYSTEMFONT(14);
     label.userInteractionEnabled = YES;
     label.textAlignment = NSTextAlignmentCenter;
-    label.text = @"点击“立即注册“意味着您同意 金指投用户协议";
+    NSString* content =@"点击“立即注册“意味着您同意 金指投用户协议";
+
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(14, [content length]-14)];
+    
+    label.attributedText = attributedString;//ios 6
     [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];
     [scrollView addSubview:label];
     
@@ -398,7 +403,7 @@
             [self.drawerController setShowsShadow:NO];
             [self.drawerController setRestorationIdentifier:@"MMDrawer"];
             [self.drawerController setMaximumLeftDrawerWidth:280.0];
-            [self.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
+            [self.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeBezelPanningCenterView];
             [self.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
             
             [self.drawerController

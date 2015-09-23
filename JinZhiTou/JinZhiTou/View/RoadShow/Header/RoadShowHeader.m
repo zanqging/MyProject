@@ -421,7 +421,10 @@
     if (self.introduceImage) {
         NSURL * url = [NSURL URLWithString:self.introduceImage];
         
-        [introduceImgview sd_setImageWithURL:url placeholderImage:introduceImgview.image];
+        [introduceImgview sd_setImageWithURL:url placeholderImage:introduceImgview.image completed:
+         ^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL *imageUrl){
+             [introduceImgview setContentMode:UIViewContentModeScaleAspectFill];
+         }];
     }
 }
 

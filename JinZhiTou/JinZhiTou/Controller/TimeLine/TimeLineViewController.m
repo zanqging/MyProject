@@ -10,6 +10,7 @@
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #import "TDUtil.h"
+#import "MobClick.h"
 #import "TypeShow.h"
 #import "HttpUtils.h"
 #import "MJRefresh.h"
@@ -62,6 +63,7 @@
     [self.navView.rightButton addTarget:self action:@selector(searchAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.navView];
     [self.view addSubview:self.navView];
+    
     //头部
     [self loadNewsTag];
     
@@ -209,7 +211,7 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 150;
+    return 160;
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -229,11 +231,13 @@
     cell.titleLabel.text = [dic valueForKey:@"title"];
     cell.desclabel.text = [dic valueForKey:@"source"];
     cell.typeLabel.text = [dic valueForKey:@"content"];
-    cell.colletcteLabel.text = [[dic valueForKey:@"like"] stringValue];
+    cell.timeLabel.text = [dic valueForKey:@"create_datetime"];
+    cell.colletcteLabel.text = [[dic valueForKey:@"sharecount"] stringValue];
     cell.priseLabel.text = [[dic valueForKey:@"readcount"] stringValue];
-    cell.backgroundColor = WriteColor;
+    cell.backgroundColor = BackColor;
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableView.contentSize = CGSizeMake(WIDTH(tableView), 150*self.dataCreateArray.count+80);
     return cell;
 }
@@ -248,10 +252,6 @@
     }
 }
 
-- (void) viewWillAppear: (BOOL)inAnimated {
-    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
-    if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
-}
 
 
 -(void)setDataCreateArray:(NSMutableArray *)dataCreateArray
@@ -349,9 +349,9 @@
         
         CGRect rect;
         if (typeShow) {
-            rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView));
+            rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
         }else{
-            rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView));
+            rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
         }
         self.tableView=[[UITableViewCustomView alloc]initWithFrame:rect style:UITableViewStyleGrouped];
         self.tableView.bounces=YES;
@@ -430,4 +430,17 @@
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
+
+- (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];
+    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
+    if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
+    
+    [MobClick beginLogPageView:self.navView.title];
+}
+
+- (void)viewWillDisappear:(BOOL)animated { [super viewWillDisappear:animated];
+    
+    [MobClick beginLogPageView:self.navView.title];
+}
+
 @end

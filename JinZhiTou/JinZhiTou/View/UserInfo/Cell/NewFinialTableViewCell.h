@@ -15,6 +15,7 @@
 @property (strong, nonatomic) UIImageView *imgview;
 @property (strong, nonatomic) UILabel *titleLabel;
 @property (strong, nonatomic) UILabel *desclabel;
+@property (strong, nonatomic) UILabel *timeLabel;
 @property (strong, nonatomic) UILabel *typeLabel;
 @property (strong, nonatomic) UIImageView *collecteImage;
 @property (strong, nonatomic) UILabel *colletcteLabel;

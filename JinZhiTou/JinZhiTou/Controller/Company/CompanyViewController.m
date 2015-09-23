@@ -42,7 +42,7 @@
     //设置标题
     navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     navView.imageView.alpha=1;
-    [navView setTitle:@"公司信息"];
+    [navView setTitle:@"添加公司"];
     navView.titleLable.textColor=WriteColor;
     
     [navView.leftButton setImage:nil forState:UIControlStateNormal];

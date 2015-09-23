@@ -10,6 +10,7 @@
 #import "Cell.h"
 #import "TDUtil.h"
 #import "NavView.h"
+#import "MJRefresh.h"
 #import "HttpUtils.h"
 #import "UConstants.h"
 #import "LineLayout.h"
@@ -17,13 +18,15 @@
 #import "NSString+SBJSON.h"
 #import "ASIFormDataRequest.h"
 #import "TeamDetailViewController.h"
-@interface TeamShowViewController ()<UICollectionViewDelegate , UICollectionViewDataSource , UICollectionViewDelegateFlowLayout,ASIHTTPRequestDelegate>
+#import "ThinkTankTableViewCell.h"
+@interface TeamShowViewController ()<UITableViewDataSource , UITableViewDelegate,ASIHTTPRequestDelegate>
 {
     BOOL isResetPosition;
+    BOOL isRefresh;
+    int currentPage;
     HttpUtils* httpUtils;
     NavView * navView;
     NSString* _identify;
-    UICollectionView* collectionView ;
 }
 
 @end
@@ -45,20 +48,22 @@
     [navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [self.view addSubview:navView];
     
-    //图片浏览
-    LineLayout * layOut=[[LineLayout alloc]init];
-    layOut.lineSpacing=50;
-    layOut.direction=1;
-    layOut.size=CGSizeMake(200, 300);
-    collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)) collectionViewLayout:layOut];
-    collectionView.dataSource = self;
-    collectionView.delegate = self;
-    collectionView.backgroundColor =BackColor;
+    self.tableView=[[UITableViewCustomView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView)) style:UITableViewStyleGrouped];
+    self.tableView.bounces=YES;
+    self.tableView.delegate=self;
+    self.tableView.dataSource=self;
+    self.tableView.allowsSelection=YES;
+    self.tableView.delaysContentTouches=NO;
+    self.tableView.showsVerticalScrollIndicator=NO;
+    self.tableView.showsHorizontalScrollIndicator=NO;
+    self.tableView.backgroundColor=BackColor;
+    self.tableView.contentInset = UIEdgeInsetsMake(-25, 0, 0, 0);
+    self.tableView.separatorStyle=UITableViewCellSeparatorStyleSingleLine;
+    [self.tableView removeFromSuperview];
+    [self.view addSubview:self.tableView];
     
-    //注册单元格
-    _identify = @"PhotoCell";
-    [collectionView registerClass:[Cell class] forCellWithReuseIdentifier:_identify];
-    [self.view addSubview:collectionView];
+    [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
+
     
     //初始化网络对象
     httpUtils = [[HttpUtils alloc]init];
@@ -66,41 +71,84 @@
     [self loadData];
 }
 
+-(void)refreshProject
+{
+    isRefresh =YES;
+    currentPage = 0;
+    [self loadData];
+}
+
+-(void)loadProject
+{
+    isRefresh =NO;
+    if (!self.isEndOfPageSize) {
+        currentPage++;
+        [self loadData];
+    }else{
+        isRefresh =NO;
+    }
+}
+
+
 
 -(void)loadData
 {
-    NSString* url = [COREMEMBER stringByAppendingFormat:@"%d/",self.projectId];
+    NSString* url = [COREMEMBER stringByAppendingFormat:@"%ld/",(long)self.projectId];
     [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestCoreMember:)];
 }
-- (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section;
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return self.dataArray.count;
-}
-- (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
-{
-    Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:_identify forIndexPath:indexPath];
-    NSInteger row = indexPath.item;
-    NSDictionary* dic = self.dataArray[row];
-    cell.title = [dic  valueForKey:@"name"];
-    cell.desc = [dic valueForKey:@"title"];
-    NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
-    [cell.imageView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"coremember")];
-    if (row>0 && !isResetPosition) {
-        NSIndexPath* index = [NSIndexPath indexPathForRow:1 inSection:0];
-        [collectionView selectItemAtIndexPath:index animated:YES scrollPosition:UICollectionViewScrollPositionCenteredHorizontally];
-        isResetPosition = YES;
-    }
-    return cell;
+    NSInteger row = indexPath.row;
+    [self loadProjectDetail:row];
 }
 
--(void)collectionView:(UICollectionView *)cv didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    TeamDetailViewController* controller  = [[TeamDetailViewController alloc ]init];
-    NSInteger row = indexPath.row;
-    NSDictionary* dic = self.dataArray[row];
+-(void)loadProjectDetail:(NSInteger)index
+{
+    TeamDetailViewController* controller = [[TeamDetailViewController alloc]init];
+    NSMutableDictionary* dic = self.dataArray[index];
     controller.dataDic = dic;
-    controller.person_id = [[dic valueForKey:@"id"] integerValue];
+    controller.title = @"成员详情";
     [self.navigationController pushViewController:controller animated:YES];
 }
+
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
+    return 150;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+   
+    return self.dataArray.count;
+}
+
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger row =indexPath.row;
+    static NSString *reuseIdetify = @"FinialThinkView";
+    ThinkTankTableViewCell *cellInstance = (ThinkTankTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
+    if (!cellInstance) {
+        float height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
+        cellInstance = [[ThinkTankTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), height)];
+    }
+    NSDictionary* dic = self.dataArray[row];
+    NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
+    __block ThinkTankTableViewCell* cell = cellInstance;
+    [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+        if (image) {
+            cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+        }
+    }];
+    cellInstance.title = [dic valueForKey:@"name"];
+    cellInstance.content = [dic valueForKey:@"company"];
+    cellInstance.typeDescription =  [dic valueForKey:@"title"];;
+    cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    return cellInstance;
+}
+
 
 -(void)back:(id)sender
 {
@@ -111,7 +159,7 @@
 -(void)setDataArray:(NSMutableArray *)dataArray
 {
     self->_dataArray = dataArray;
-    [collectionView reloadData];
+    [self.tableView reloadData];
 }
 #pragma ASIHttpRequest
 -(void)requestCoreMember:(ASIHTTPRequest *)request
@@ -124,6 +172,13 @@
         int status = [[jsonDic valueForKey:@"status"] intValue];
         if (status==0 || status == -1) {
             self.dataArray = [jsonDic valueForKey:@"data"];
+        }
+        
+        if (self.tableView.header.isRefreshing) {
+            [self.tableView.header endRefreshing];
+        }
+        if (self.tableView.footer.isRefreshing) {
+            [self.tableView.footer endRefreshing];
         }
     }
 }

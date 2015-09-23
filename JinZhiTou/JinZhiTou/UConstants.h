@@ -96,7 +96,7 @@
 #define BOLDSYSTEMFONT(FONTSIZE)[UIFont boldSystemFontOfSize:FONTSIZE]
 //#define SYSTEMFONT(FONTSIZE)    [UIFont systemFontOfSize:FONTSIZE]
 
-#define SYSTEMFONT(FONTSIZE)    [UIFont fontWithName:@"HiraginoSansGB-W3" size:(FONTSIZE)]
+#define SYSTEMFONT(FONTSIZE)    [UIFont fontWithName:@"YouYuan" size:(FONTSIZE)]
 
 #define FONT(NAME, FONTSIZE)    [UIFont fontWithName:(NAME) size:(FONTSIZE)]
 

@@ -70,14 +70,14 @@
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:self.title forState:UIControlStateNormal];
     [self.navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
-    [self.navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [self.navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
-    [self.navView.rightButton setImage:IMAGENAMED(@"more") forState:UIControlStateNormal];
-    [self.navView.rightButton addTarget:self action:@selector(actionMore:) forControlEvents:UIControlEventTouchUpInside];
+    [self.navView.rightButton setImage:IMAGENAMED(@"share") forState:UIControlStateNormal];
+    [self.navView.rightButton addTarget:self action:@selector(doShare) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.navView];
     
- self.tableViewCustom=[[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-kTopBarHeight-kStatusBarHeight-20)];
+    self.tableViewCustom=[[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-kTopBarHeight-kStatusBarHeight-20)];
     self.tableViewCustom.bounces=NO;
     self.tableViewCustom.dataSource=self;
     self.tableViewCustom.delegate=self;
@@ -88,10 +88,10 @@
     self.tableViewCustom.backgroundColor=[UIColor clearColor];
     self.tableViewCustom.contentSize = CGSizeMake(WIDTH(self.view), HEIGHT(self.view)+50);
     self.tableViewCustom.separatorStyle=UITableViewCellSeparatorStyleNone;
-
+    
     
     [self.view addSubview:self.tableViewCustom];
-
+    
     self.view.backgroundColor = ColorTheme;
     
     bottomView = [[RoadShowBottom alloc]initWithFrame:CGRectMake(0, HEIGHT(self.view)-50, WIDTH(self.view), 50)];
@@ -118,70 +118,70 @@
 {
     NSLog(@"%@",aNotification.userInfo);
     
-//    MPMoviePlayerController *moviePlayer = (MPMoviePlayerController *)[aNotification object];
-//    if (moviePlayer.fullscreen) {
-//        moviePlayer.fullscreen = NO;
-//    }
-//    if (_moviePlayer.moviePlayer.playbackState==MPMoviePlaybackStateStopped) {
-//        NSString* url  =header.mediaUrl;
-//        [_moviePlayer.moviePlayer setContentURL:[NSURL URLWithString:url]];
-//        [_moviePlayer.moviePlayer play];
-//        [self.navigationController presentMoviePlayerViewControllerAnimated:_moviePlayer];
-//    }
+    //    MPMoviePlayerController *moviePlayer = (MPMoviePlayerController *)[aNotification object];
+    //    if (moviePlayer.fullscreen) {
+    //        moviePlayer.fullscreen = NO;
+    //    }
+    //    if (_moviePlayer.moviePlayer.playbackState==MPMoviePlaybackStateStopped) {
+    //        NSString* url  =header.mediaUrl;
+    //        [_moviePlayer.moviePlayer setContentURL:[NSURL URLWithString:url]];
+    //        [_moviePlayer.moviePlayer play];
+    //        [self.navigationController presentMoviePlayerViewControllerAnimated:_moviePlayer];
+    //    }
 }
 
--(void)actionMore:(id)sender
-{
-    if (!menuPopView) {
-        NSMutableArray* dataArray = [[NSMutableArray alloc]init];
-        NSMutableDictionary* dic = [[NSMutableDictionary alloc]init];
-        [dic setValue:@"share_normal" forKey:@"img"];
-        [dic setValue:@"分享" forKey:@"title"];
-        [dic setValue:@"1" forKey:@"action"];
-        [dataArray addObject:dic];
-        
-        dic = [[NSMutableDictionary alloc]init];
-        [dic setValue:@"toupiao_normal" forKey:@"img"];
-        [dic setValue:@"投票" forKey:@"title"];
-        [dic setValue:@"2" forKey:@"action"];
-        [dataArray addObject:dic];
-        
-        menuPopView = [[MenuPopView alloc]initWithFrame:CGRectMake(WIDTH(self.view)-75, POS_Y(self.navView), 70, 90)];
-        menuPopView.dataArray =dataArray;
-        menuPopView.delegate = self;
-    }
-    
-    if (!menuPopView.isSelected) {
-        [self.view addSubview:menuPopView];
-        menuPopView.isSelected = YES;
-    }else{
-        [menuPopView removeFromSuperview];
-        menuPopView.isSelected = NO;
-    }
-    
-}
-
-/**
- *  代理方法 popMenu
- *
- *  @param button 触发事件UIButton
- *  @param data   数据信息
- */
--(void)button:(UIButton *)button data:(NSDictionary*)data
-{
-    int index = [[data valueForKey:@"action"] intValue];
-    switch (index) {
-        case 1:
-            [self doShare];
-            break;
-        case 2:
-            [self doVote];
-            break;
-        default:
-            [self doShare];
-            break;
-    }
-}
+//-(void)actionMore:(id)sender
+//{
+//    if (!menuPopView) {
+//        NSMutableArray* dataArray = [[NSMutableArray alloc]init];
+//        NSMutableDictionary* dic = [[NSMutableDictionary alloc]init];
+//        [dic setValue:@"share_normal" forKey:@"img"];
+//        [dic setValue:@"分享" forKey:@"title"];
+//        [dic setValue:@"1" forKey:@"action"];
+//        [dataArray addObject:dic];
+//        
+////        dic = [[NSMutableDictionary alloc]init];
+////        [dic setValue:@"toupiao_normal" forKey:@"img"];
+////        [dic setValue:@"投票" forKey:@"title"];
+////        [dic setValue:@"2" forKey:@"action"];
+////        [dataArray addObject:dic];
+//        
+//        menuPopView = [[MenuPopView alloc]initWithFrame:CGRectMake(WIDTH(self.view)-75, POS_Y(self.navView), 70, 90)];
+//        menuPopView.dataArray =dataArray;
+//        menuPopView.delegate = self;
+//    }
+//    
+//    if (!menuPopView.isSelected) {
+//        [self.view addSubview:menuPopView];
+//        menuPopView.isSelected = YES;
+//    }else{
+//        [menuPopView removeFromSuperview];
+//        menuPopView.isSelected = NO;
+//    }
+//    
+//}
+//
+///**
+// *  代理方法 popMenu
+// *
+// *  @param button 触发事件UIButton
+// *  @param data   数据信息
+// */
+//-(void)button:(UIButton *)button data:(NSDictionary*)data
+//{
+//    int index = [[data valueForKey:@"action"] intValue];
+//    switch (index) {
+//        case 1:
+//            [self doShare];
+//            break;
+//        case 2:
+//            [self doVote];
+//            break;
+//        default:
+//            [self doShare];
+//            break;
+//    }
+//}
 
 
 -(void)doShare
@@ -209,8 +209,8 @@
     CGRect frame1;
     CGRect frame2;
     if (isiPhone4) {
-         frame1 = CGRectMake(-kTopBarHeight-kStatusBarHeight-16, kTopBarHeight+kStatusBarHeight+16, HEIGHT(self.view), WIDTH(self.view));
-         frame2 = CGRectMake(0,0,WIDTH(self.view),HEIGHT(self.view));
+        frame1 = CGRectMake(-kTopBarHeight-kStatusBarHeight-16, kTopBarHeight+kStatusBarHeight+16, HEIGHT(self.view), WIDTH(self.view));
+        frame2 = CGRectMake(0,0,WIDTH(self.view),HEIGHT(self.view));
     }else if (isiPhone5){
         frame1 = CGRectMake(-kTopBarHeight-kStatusBarHeight-60, kTopBarHeight+kStatusBarHeight+60, HEIGHT(self.view), WIDTH(self.view));
         frame2 = CGRectMake(0,0,WIDTH(self.view),HEIGHT(self.view));
@@ -256,7 +256,7 @@
         _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
         _moviePlayer.view.transform = CGAffineTransformMakeRotation(0);
     }
-
+    
     
 }
 -(void)playMedia:(id)sender
@@ -270,7 +270,7 @@
         [_moviePlayer.moviePlayer prepareToPlay];
         [self presentMoviePlayerViewControllerAnimated:_moviePlayer];
         
-//        [self.moviePlayer.moviePlayer setContentURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"test" ofType:@"mp4"]]];
+        //        [self.moviePlayer.moviePlayer setContentURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"test" ofType:@"mp4"]]];
         self.moviePlayer.moviePlayer.fullscreen = YES;
         self.moviePlayer.moviePlayer.controlStyle =MPMovieControlStyleFullscreen;
         [self.moviePlayer.moviePlayer play];
@@ -342,7 +342,7 @@
         
         [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
     }
-   
+    
 }
 -(void)setBackTitle:(NSString *)backTitle
 {
@@ -431,7 +431,7 @@
             prototypeCell = [[RoadShowTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:RoadTableDataIdentifier];
         }
         
-         CGFloat height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
+        CGFloat height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
         [prototypeCell lauyoutResetLayout:CGRectMake(0, 0, WIDTH(self.tableViewCustom), height)];
         
         NSInteger row = indexPath.row;
@@ -499,7 +499,7 @@
         NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
         BOOL isAnimous = [[data valueForKey:@"isAnimous"] boolValue];
         if (isAnimous) {
-           [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未登录，请先登录",@"msg",@"取消",@"cancel",@"去登录",@"sure",@"3",@"type", nil]];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未登录，请先登录",@"msg",@"取消",@"cancel",@"去登录",@"sure",@"3",@"type", nil]];
         }else{
             TeamShowViewController* controller = [[TeamShowViewController alloc]init];
             controller.projectId =  [[self.dic valueForKey:@"id"] integerValue];
@@ -516,7 +516,7 @@
     NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
     BOOL isAnimous = [[data valueForKey:@"isAnimous"] boolValue];
     if (isAnimous) {
-         [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未登录，请先登录",@"msg",@"取消",@"cancel",@"去登录",@"sure",@"3",@"type", nil]];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未登录，请先登录",@"msg",@"取消",@"cancel",@"去登录",@"sure",@"3",@"type", nil]];
     }else{
         loadingView.isTransparent = YES;
         [LoadingUtil show:loadingView];
@@ -539,7 +539,7 @@
     NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
     BOOL isAnimous = [[data valueForKey:@"isAnimous"] boolValue];
     if (isAnimous) {
-         [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未登录，请先登录",@"msg",@"取消",@"cancel",@"去登录",@"sure",@"3",@"type", nil]];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未登录，请先登录",@"msg",@"取消",@"cancel",@"去登录",@"sure",@"3",@"type", nil]];
     }else{
         checkIndex=@"1";
         //监测是否是投资人
@@ -556,10 +556,10 @@
     if (isAnimous) {
         [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未登录，请先登录",@"msg",@"取消",@"cancel",@"去登录",@"sure",@"3",@"type", nil]];
     }else{
-         checkIndex=@"2";
+        checkIndex=@"2";
         //监测是否是投资人
         [httpUtils getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestInvestCheck:)];
-        }
+    }
 }
 -(void)back:(id)sender
 {
@@ -627,11 +627,11 @@
             [self.tableViewCustom setTableHeaderView:header];
             [header.introduceImgview setUserInteractionEnabled: YES];
             [header.introduceImgview addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playMedia:)]];
-           
+            
             //公司简介项目图片
             [header setIntroduceImage:[dataDic valueForKey:@"project_img"]];
             
-            NSInteger colorHex = [[self.dic valueForKey:@"color"] integerValue];
+            NSInteger colorHex = [[stageDic valueForKey:@"color"] integerValue];
             NSString* hexNumber = [TDUtil ToHex:colorHex];
             UIColor* color = [TDUtil colorWithHexString:hexNumber];
             header.tinColor = color;
@@ -754,7 +754,7 @@
     {
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0 || [status intValue] == -1) {
-            if (self.type ==0) {
+            if (self.type ==1) {
                 NSString* url = [JOIN_ROADSHOW stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
                 [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestJoinroadShow:)];
             }else{
@@ -765,7 +765,6 @@
                 [self.navigationController pushViewController:controller animated:YES];
             }
         }else{
-            [LoadingUtil close:loadingView];
             if ([status intValue] == -9) {
                 
                 [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"取消",@"cancel",@"去认证",@"sure",checkIndex,@"type", nil]];
@@ -773,6 +772,7 @@
                 [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
+        [LoadingUtil close:loadingView];
     }
 }
 
@@ -795,21 +795,21 @@
                 FinialPlanViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinancePlanViewController"];
                 controller.projectId =[[self.dic valueForKey:@"id"] integerValue];
                 [self.navigationController pushViewController:controller animated:YES];
-
+                
             }else{
                 UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
                 FinialPersonTableViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinanceListViewController"];
                 controller.projectId = [[self.dic valueForKey:@"id"] integerValue];
                 [self.navigationController pushViewController:controller animated:YES];
             }
-                   }else{
+        }else{
             if ([status intValue] == -9) {
-               
+                
                 [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"取消",@"cancel",@"去认证",@"sure",checkIndex,@"type", nil]];
-            }else{
-                [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
+    }else{
+        [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
     }
 }
 
@@ -825,8 +825,12 @@
         if ([status intValue] == 0 || [status intValue] == -1) {
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             FinialSuccessViewController * controller =[[FinialSuccessViewController alloc]init];
+            controller.titleStr =@"来现场报名";
+            controller.content = @"    尊敬的用户，您的来现场申请已提交，48小时内会有工作人员与您联系，您也可以在“个人中心”－－“进度查看”中查看到审核进度。";
             [self.navigationController pushViewController:controller animated:YES];
             
+        }else{
+            [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         }
         [LoadingUtil close:loadingView];
     }

@@ -20,31 +20,32 @@
         //项目图片
         self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 100, 100)];
         self.imgView.image = IMAGENAMED(@"loading");
+        self.imgView.contentMode = UIViewContentModeScaleAspectFit;
+        self.imgView.layer.masksToBounds = YES;
         [view addSubview:self.imgView];
         [self addSubview:view];
         //名称
         self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, Y(self.imgView), 130, 21)];
         self.titleLabel.font = SYSTEMFONT(14);
-        self.titleLabel.text = @"国联质检";
+        self.titleLabel.textColor = ColorTheme;
         [view addSubview:self.titleLabel];
         
         //描述
-        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.titleLabel)+5, WIDTH(self.titleLabel), 21)];
+        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.titleLabel)+15, WIDTH(self.titleLabel), 21)];
         self.contentLabel.font = SYSTEMFONT(14);
-        self.contentLabel.text = @"关注环保，质量检测";
         [view addSubview:self.contentLabel];
         
         //描述
-        self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.contentLabel)+5, WIDTH(self.contentLabel), 21)];
+        self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.contentLabel)+15, WIDTH(self.contentLabel), 21)];
         self.typeLabel.font = SYSTEMFONT(14);
-        self.typeLabel.text = @"西安／能源";
+        self.typeLabel.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
         [view addSubview:self.typeLabel];
         
-        UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(self.typeLabel)+40, frame.size.width-20, 1)];
+        UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(self.typeLabel)+20, frame.size.width-20, 1)];
         imgView.backgroundColor = BackColor;
         [view addSubview:imgView];
         
-        self.collecteImgView = [[UIButton alloc]initWithFrame:CGRectMake(20, POS_Y(self.typeLabel)+60, 20, 20)];
+        self.collecteImgView = [[UIButton alloc]initWithFrame:CGRectMake(20, POS_Y(imgView)+15, 20, 20)];
         [self.collecteImgView setImage:IMAGENAMED(@"shoucang") forState:UIControlStateNormal];
         [self.collecteImgView addTarget:self action:@selector(collecteAction:) forControlEvents:UIControlEventTouchUpInside];
         [view addSubview:self.collecteImgView];
@@ -61,7 +62,7 @@
         [view addSubview:imageView];
         
         
-        self.priseImgView = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(imageView)+10, POS_Y(self.typeLabel)+60, 20, 20)];
+        self.priseImgView = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(imageView)+10, POS_Y(imgView)+15, 20, 20)];
         [self.priseImgView setImage:IMAGENAMED(@"dianzan") forState:UIControlStateNormal];
         [self.priseImgView addTarget:self action:@selector(priseAction:) forControlEvents:UIControlEventTouchUpInside];
         [view addSubview:self.priseImgView];
@@ -72,12 +73,12 @@
         self.priseDataLabel.font  =SYSTEMFONT(14);
         [view addSubview:self.priseDataLabel];
         
-        imageView =[[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.priseDataLabel)+5, Y(self.priseDataLabel)-5, 1, 30)];
+        imageView =[[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.priseDataLabel)+5, Y(imageView), 1, 30)];
         imageView.alpha = 0.3;
         imageView.backgroundColor = BACKGROUND_LIGHT_GRAY_COLOR;
         [view addSubview:imageView];
         
-        self.voteImgView = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(imageView)+20, POS_Y(self.typeLabel)+60, 20, 20)];
+        self.voteImgView = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(imageView)+20, POS_Y(imgView)+15, 20, 20)];
         [self.voteImgView setImage:IMAGENAMED(@"toupiao") forState:UIControlStateNormal];
         [self.voteImgView addTarget:self action:@selector(doActionPrise:) forControlEvents:UIControlEventTouchUpInside];
         [view addSubview:self.voteImgView];
@@ -93,21 +94,6 @@
         self.layer.masksToBounds = YES;
     }
     return self;
-}
--(void)doActionPrise:(id)sender
-{
-    NSLog(@"跳转");
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"vote" object:nil];
-}
-
-- (IBAction)collecteAction:(id)sender {
-    NSLog(@"收藏");
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"collecte" object:nil];
-}
-
-- (IBAction)priseAction:(id)sender {
-    NSLog(@"点赞");
-     [[NSNotificationCenter defaultCenter]postNotificationName:@"prise" object:nil];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

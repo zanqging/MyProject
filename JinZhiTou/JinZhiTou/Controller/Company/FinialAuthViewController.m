@@ -147,7 +147,7 @@
     scrollViewPerson.delegate=self;
     scrollViewPerson.bounces = NO;
     scrollViewPerson.backgroundColor=BackColor;
-    scrollViewPerson.contentSize = CGSizeMake(WIDTH(scrollViewPerson), HEIGHT(scrollViewPerson)+500);
+    scrollViewPerson.contentSize = CGSizeMake(WIDTH(scrollViewPerson), HEIGHT(scrollViewPerson)+300);
     [self.view addSubview:scrollViewPerson];
     
     UITapGestureRecognizer* recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doAddCompanyAction:)];
@@ -276,7 +276,12 @@
     label.userInteractionEnabled = YES;
     [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];
     label.textAlignment = NSTextAlignmentCenter;
-    label.text = @"我已经认真阅读并同意 《投资风险提示书》";
+    NSString* content =@"我已经认真阅读并同意 《投资风险提示书》";
+    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(10, [content length]-10)];
+    
+    label.attributedText = attributedString;//ios 6
     [scrollViewPerson addSubview:label];
     
     UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(20, POS_Y(view)+10, 15, 15)];
@@ -312,7 +317,7 @@
     scrollViewFinial.delegate=self;
     scrollViewFinial.bounces = NO;
     scrollViewFinial.backgroundColor=BackColor;
-    scrollViewFinial.contentSize = CGSizeMake(WIDTH(scrollViewFinial), HEIGHT(scrollViewFinial)+650);
+    scrollViewFinial.contentSize = CGSizeMake(WIDTH(scrollViewFinial), HEIGHT(scrollViewFinial)+350);
     [self.view addSubview:scrollViewFinial];
     
     UITapGestureRecognizer* recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doAction:)];
@@ -469,10 +474,18 @@
     imgView.contentMode = UIViewContentModeScaleAspectFill;
     [scrollViewFinial addSubview:imgView];
     
-    label = [[UILabel alloc]initWithFrame:CGRectMake(0, Y(imgView)-3, WIDTH(scrollViewFinial), 20)];
+    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, Y(imgView)-3, WIDTH(scrollViewFinial)-POS_X(imgView)-10, 20)];
     label.font = SYSTEMFONT(12);
-    label.textAlignment = NSTextAlignmentCenter;
-    label.text = @"我已经认真阅读并同意 《投资风险提示书》";
+    label.textAlignment = NSTextAlignmentLeft;
+    label.userInteractionEnabled = YES;
+    [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];
+    NSString* content =@"我已经认真阅读并同意 《投资风险提示书》";
+    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(10, [content length]-10)];
+    
+    label.attributedText = attributedString;//ios 6
+    
     [scrollViewFinial addSubview:label];
     
     

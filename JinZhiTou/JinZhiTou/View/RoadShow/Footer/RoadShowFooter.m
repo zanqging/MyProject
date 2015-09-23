@@ -87,12 +87,9 @@
         [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
     
         textView.attributedText = attributedString;//ios 6
-        
         [textView sizeToFit];
         
         [self setFrame:CGRectMake(0, 0, WIDTH(self), POS_Y(textView)+50)];
-        
-        NSLog(@"%@",NSStringFromCGRect(self.frame));
     
     }
 }

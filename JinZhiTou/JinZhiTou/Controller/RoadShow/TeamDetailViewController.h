@@ -9,6 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface TeamDetailViewController : UIViewController
-@property(assign,nonatomic)NSInteger person_id;
 @property(retain,nonatomic)NSDictionary* dataDic;
 @end

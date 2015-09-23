@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "WXApi.h"
 #import "Reachability.h"
+#import "GlobalDefine.h"
 #import "MMDrawerController.h"
 #import "MMDrawerVisualState.h"
 #import "MMExampleDrawerVisualStateManager.h"
@@ -17,7 +18,7 @@
     Reachability  *hostReach;
    
 }
-
+@property(readwrite)CameraMoveDirection direction;
 @property (strong, nonatomic) UIWindow *window;
 @property (retain,nonatomic) UINavigationController *iNav;
 @property(retain,nonatomic)MMDrawerController * drawerController;

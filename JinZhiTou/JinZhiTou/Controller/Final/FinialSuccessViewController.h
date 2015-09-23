@@ -9,5 +9,11 @@
 #import <UIKit/UIKit.h>
 
 @interface FinialSuccessViewController : UIViewController
-
+{
+    UILabel* label;
+}
+@property(retain,nonatomic)NSString* titleStr;
+@property(retain,nonatomic)NSString* content;
+@property(assign,nonatomic)int type; //0:来现场报名,1:投资报名
 @end
+

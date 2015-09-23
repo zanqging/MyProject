@@ -15,7 +15,6 @@
     
 }
 @property(retain,nonatomic)NSMutableArray* array;
-@property(retain,nonatomic) UICollectionView* collectionView;
 @property (strong, nonatomic) IBOutlet UITableView *finalFunTableView;
 @property (strong, nonatomic)UITableViewCustomView *finalContentTableView;
 

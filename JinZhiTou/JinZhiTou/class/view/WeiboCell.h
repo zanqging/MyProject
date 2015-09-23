@@ -7,24 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HBCoreLabel.h"
 #import "WeiboData.h"
 #import "WeiboViewControlle.h"
 #import <QuickLook/QuickLook.h>
 #import "UIImageView+WebCache.h"
 #define REPLY_BACK_COLOR 0xd5d5d5
 
-
-@interface ReplyCell : UITableViewCell
-@property(nonatomic,retain) IBOutlet HBCoreLabel * label;
-@property (retain, nonatomic) IBOutlet UILabel *nameLabel;
-@property (retain, nonatomic) IBOutlet UIButton *btnReply;
-@property (retain, nonatomic) IBOutlet UIImageView *headerImgView;
-
-@end
-
 @class WeiboViewControlle;
-@interface WeiboCell : UITableViewCell<UIActionSheetDelegate,UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
+@interface WeiboCell : UITableViewCell<UIActionSheetDelegate,UIAlertViewDelegate>
 {
     WeiboData * _weibo;
     
@@ -40,29 +30,22 @@
     
     int replyCount;
 }
+@property(retain,nonatomic)NSString* topicId;
+@property(retain,nonatomic)NSString* content;
+@property(retain,nonatomic)NSString* titleStr;
+@property(assign,nonatomic)BOOL isInvestor;
 @property(nonatomic,retain) IBOutlet UILabel * time;
 @property(nonatomic,retain) IBOutlet UILabel *  title;
 @property(nonatomic,retain) IBOutlet UIView * lockView;
 @property(nonatomic,retain) IBOutlet UIImageView * back;
-@property(nonatomic,retain) IBOutlet UIButton * btnShare;
-@property(nonatomic,retain) IBOutlet UIImageView * mLogo;
 @property(nonatomic,retain) IBOutlet UIImageView * logo;
+@property(nonatomic,retain) IBOutlet UIImageView * mLogo;
 @property(nonatomic,retain) IBOutlet UIButton *btnDelete;
+@property(nonatomic,retain) IBOutlet UIButton * btnShare;
 @property (retain, nonatomic) IBOutlet UIButton *btnReply;
-//@property(nonatomic,weak) IBOutlet UILabel * replyCount;
-@property(nonatomic,retain) IBOutlet UIView * replyContent;
-@property(nonatomic,retain) IBOutlet HBCoreLabel * content;
-@property(nonatomic,retain) IBOutlet UIImageView* authenImgView;
-@property(nonatomic,retain) IBOutlet UITableView * tableReply;
 @property(nonatomic,retain) WeiboViewControlle * controller;
-
--(void)setCellContent:(WeiboData *)data;
-
-+(float)getHeightByContent:(WeiboData*)data;
-
-+(float) heightForReply:(NSArray*)replys;
-
--(void)loadReply;
+@property(nonatomic,retain) IBOutlet UILabel * contentLabel;
+@property(nonatomic,retain) IBOutlet UIImageView* authenImgView;
 
 
 @end

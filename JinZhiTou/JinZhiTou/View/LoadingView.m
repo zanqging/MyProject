@@ -14,7 +14,7 @@
 -(id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-60, HEIGHT(self)/2-100, 120, 120)];
+        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-35, HEIGHT(self)/2-35, 70, 70)];
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:imageView];
         
@@ -98,7 +98,7 @@
         [labelMessage removeFromSuperview];
         [refreshButton removeFromSuperview];
         
-        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-60, 100, 120, 120)];
+        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-35, HEIGHT(self)/2-35, 70, 70)];
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:imageView];
         [self loadImages];

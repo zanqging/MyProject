@@ -46,7 +46,7 @@
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:@"登陆注册" forState:UIControlStateNormal];
     [self.navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
-    [self.navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [self.navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
     [self.view addSubview:self.navView];
 
@@ -265,7 +265,7 @@
             [self.drawerController setShowsShadow:NO];
             [self.drawerController setRestorationIdentifier:@"MMDrawer"];
             [self.drawerController setMaximumLeftDrawerWidth:280.0];
-            [self.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
+            [self.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeBezelPanningCenterView];
             [self.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
             
             [self.drawerController

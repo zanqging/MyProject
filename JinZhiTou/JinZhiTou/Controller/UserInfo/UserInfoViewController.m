@@ -20,6 +20,7 @@
 #import "ASIFormDataRequest.h"
 #import "PECropViewController.h"
 #import "UserInfoTableViewCell.h"
+#import "UserTraceViewController.h"
 #import "UserInfoSettingViewController.h"
 #import "CustomImagePickerController.h"
 @interface UserInfoViewController ()<UITableViewDataSource,UITableViewDelegate,CustomImagePickerControllerDelegate>
@@ -133,7 +134,7 @@
     
     dic =[[NSMutableDictionary alloc]init];
     [dic setValue:@"4" forKey:@"index"];
-    [dic setValue:@"投资人认证" forKey:@"title"];
+    [dic setValue:@"进度查看" forKey:@"title"];
     [dic setValue:@"false" forKey:@"isBedEnable"];
     [dic setValue:@"Investment" forKey:@"imageName"];
     [array addObject:dic];
@@ -384,6 +385,12 @@
 {
     
 }
+
+- (void) viewWillAppear: (BOOL)inAnimated {
+    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
+    if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
+}
+
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];

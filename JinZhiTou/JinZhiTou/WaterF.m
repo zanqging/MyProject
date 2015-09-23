@@ -149,11 +149,12 @@
    //状态
     NSDictionary* dic =dataArray[indexPath.item];
 
-    NSInteger colorHex = [[dic valueForKey:@"color"] integerValue];
+    NSDictionary* stage = [dic valueForKey:@"stage"];
+    NSInteger colorHex = [[stage valueForKey:@"color"] integerValue];
     NSString* hexNumber = [TDUtil ToHex:colorHex];
     UIColor* color = [TDUtil colorWithHexString:hexNumber];
     self.cell.tinColor = color;
-    self.cell.title = [dic valueForKey:@"stage"];
+    self.cell.title = [stage valueForKey:@"status"];
     //获取文字高度
     [self getTextViewHeight:indexPath];
     self.cell.lblProjectName.frame = CGRectMake(10, imageView.image.size.height*aFloat+15, self.imagewidth, 21);
@@ -165,7 +166,7 @@
     //底部标签
     CGRect  frame=self.cell.lblProjectName.frame;
     self.cell.lblRoadShowTime.frame = CGRectMake(10, frame.size.height+frame.origin.y, self.imagewidth, 21);
-    self.cell.lblRoadShowTime.text =[NSString stringWithFormat:@"路演时间:%@",self.datesArr[indexPath.item]];
+    self.cell.lblRoadShowTime.text =[NSString stringWithFormat:@"路演时间:%@",[[stage valueForKey:@"start"] valueForKey:@"datetime"]];
 
     return self.cell;
 }
@@ -289,12 +290,9 @@
                     dic =[[NSMutableDictionary alloc]init];
                     dictionary = array[i];
                     [dic setValue:[dictionary valueForKey:@"id"] forKey:@"id"];
-                    [dic setValue:[dictionary valueForKey:@"color"] forKey:@"color"];
                     [dic setValue:[dictionary valueForKey:@"stage"] forKey:@"stage"];
-                    [dic setValue:[dictionary valueForKey:@"project_img"] forKey:@"project_img"];
                     [dic setValue:[dictionary valueForKey:@"thumbnail"] forKey:@"thumbnail"];
                     [dic setValue:[dictionary valueForKey:@"company_name"] forKey:@"company_name"];
-                    [dic setValue:[dictionary valueForKey:@"roadshow_start_datetime"] forKey:@"roadshow_start_datetime"];
                     [arrayData addObject:dic];
                 }
                 
@@ -313,8 +311,6 @@
                     for (int i =0; i<dataArray.count; i++) {
                         dic = dataArray[i];
                         [textArray addObject:[dic valueForKey:@"company_name"]];
-                        [dateArray addObject:[dic valueForKey:@"roadshow_start_datetime"]];
-                        
                         UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, WIDTH(self.view)-20, 150)];
                         NSURL* url = [NSURL URLWithString:[dic valueForKey:@"thumbnail"]];
                         [imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage * image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){

@@ -23,6 +23,7 @@
 @property(retain,nonatomic)UIButton* leftButton;
 @property(retain,nonatomic)UIButton* rightButton;
 @property(retain,nonatomic)UIImageView* imageView;
+@property(retain,nonatomic)UIView* backView;
 
 -(void)setNavAnimation:(NSString*)type offset:(CGPoint)offset;
 @end

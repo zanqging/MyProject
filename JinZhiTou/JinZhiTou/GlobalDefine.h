@@ -351,6 +351,13 @@
 //咨询分享
 #define NEWS_SHARE  @"newsshare/"
 
+//我的路演申请
+#define MY_ROADSHOW_APPLY @"myroadshow/"
+//来现场
+#define MY_PARTICATE  @"myparticipate/"
+//我的认证
+#define MY_AUTH @"myinvestorauthentication/"
+
 //用户下载头像
 //http://weini.im/upload//menuinfo//_EN_8427.jpg
 /***===================================================================================**
@@ -552,5 +559,21 @@
 //按钮
 #define BTN_CANCEL @"取消"
 #define BTN_CONFIRM @"确定"
+
+#define gestureMinimumTranslation  20.0
+
+typedef enum : NSInteger {
+    
+    kCameraMoveDirectionNone,
+    
+    kCameraMoveDirectionUp,
+    
+    kCameraMoveDirectionDown,
+    
+    kCameraMoveDirectionRight,
+    
+    kCameraMoveDirectionLeft
+    
+} CameraMoveDirection ;
 
 #endif

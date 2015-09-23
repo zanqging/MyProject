@@ -18,20 +18,20 @@
     if (self=[super initWithFrame:frame]) {
         //透明背景
         self.backgroundColor=[UIColor clearColor];
-        
+        self.backView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 25, HEIGHT(self))];
+        [self addSubview:self.backView];
         //返回箭头
         self.imageView=[[UIImageView alloc]initWithFrame:CGRectMake(10, (frame.size.height-25)/2, 10, 25)];
         self.imageView.image=[UIImage imageNamed:@"ic_back"];
         self.imageView.contentMode=UIViewContentModeScaleAspectFit;
         self.imageView.userInteractionEnabled=YES;
-        [self addSubview:self.imageView];
+        [self.backView addSubview:self.imageView];
         
         //左边日历
         leftButton = [[UIButton alloc]initWithFrame:leftButtonRect];
-        leftButton.contentHorizontalAlignment=UIControlContentHorizontalAlignmentLeft;
-        leftButton.contentEdgeInsets = UIEdgeInsetsMake(0,0, 0, 0);
         [leftButton setImage:[UIImage imageNamed:@"ic_toolbar_calendar"]forState:UIControlStateNormal];
-        [leftButton.titleLabel setFont:[UIFont fontWithName:@"Arial" size:16.0f]];
+        leftButton.contentHorizontalAlignment=UIControlContentHorizontalAlignmentLeft;
+        [leftButton.titleLabel setFont:SYSTEMFONT(16)];
         [self addSubview:leftButton];
         
         //标题

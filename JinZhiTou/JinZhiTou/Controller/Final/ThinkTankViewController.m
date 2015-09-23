@@ -61,6 +61,7 @@
     
     UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, WIDTH(scrollView)-20, 150)];
     [imgView sd_setImageWithURL:[self.dic valueForKey:@"img"] placeholderImage:IMAGENAMED(@"coremember")];
+    [imgView setContentMode:UIViewContentModeScaleAspectFit];
     [view addSubview:imgView];
     UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, POS_Y(view)-40, 90, 40)];
     label.font = SYSTEMFONT(16);

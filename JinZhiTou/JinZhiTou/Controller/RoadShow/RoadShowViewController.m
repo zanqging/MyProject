@@ -8,6 +8,7 @@
 
 #import "RoadShowViewController.h"
 #import "TDUtil.h"
+#import "MobClick.h"
 #import "NavView.h"
 #import "HttpUtils.h"
 #import "DialogUtil.h"
@@ -211,5 +212,16 @@
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+
+- (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];
+    
+    [MobClick beginLogPageView:navView.title];
+}
+
+- (void)viewWillDisappear:(BOOL)animated { [super viewWillDisappear:animated];
+
+    [MobClick beginLogPageView:navView.title];
 }
 @end

@@ -1,3 +1,4 @@
+
 //
 //  AuthTraceTableViewCell.m
 //  JinZhiTou
@@ -38,14 +39,13 @@
         imgView.image = IMAGENAMED(@"zhong");
         [viewTrace addSubview:imgView];
         
-        label = [[ UILabel alloc]initWithFrame:CGRectMake(POS_Y(imgView)-10, 50, 210, 70)];
-        label.numberOfLines  = 0;
-        label.lineBreakMode = NSLineBreakByWordWrapping;
-        label.font  =SYSTEMFONT(16);
-        label.text = @"    尊敬的用户，您的认证申请需要2-3天时间进行审核，请您耐心等待，审核通过后会以短信／App推送消息方式通知宁，请注意查收！";
-        [viewTrace addSubview:label];
+        self.labelContent = [[ UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, Y(imgView), WIDTH(self)-POS_X(imgView)-20, 20)];
+        self.labelContent.numberOfLines  = 0;
+        self.labelContent.lineBreakMode = NSLineBreakByWordWrapping;
+        self.labelContent.font  =SYSTEMFONT(14);
+        [viewTrace addSubview:self.labelContent];
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(label)+10, WIDTH(self)/3, 21)];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(self.labelContent)+60, WIDTH(self)/3, 21)];
         label.textAlignment = NSTextAlignmentCenter;
         label.font = SYSTEMFONT(16);
         label.text =@"提交认证申请";
@@ -91,28 +91,40 @@
         [viewTrace addSubview:imgView];
         
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(imgView)+10, WIDTH(self)/3, 21)];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(X(viewTrace), POS_Y(imgView)+10, WIDTH(self)/3, 21)];
         label.textAlignment = NSTextAlignmentCenter;
-        label.text=@"10:30";
+        label.tag = 10002;
         label.font =SYSTEMFONT(14);
         [viewTrace addSubview:label];
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(label), WIDTH(self)/3, 21)];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(X(viewTrace), POS_Y(label), WIDTH(self)/3, 21)];
         label.textAlignment = NSTextAlignmentCenter;
-        label.text=@"2015-08-01";
+        label.tag = 10003;
         label.font =SYSTEMFONT(14);
         [viewTrace addSubview:label];
         
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)/3, POS_Y(imgView)+10, WIDTH(self)/3, 21)];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(viewTrace)/3, POS_Y(imgView)+10, WIDTH(self)/3, 21)];
         label.textAlignment = NSTextAlignmentCenter;
-        label.text=@"13:30";
+        label.tag = 10004;
         label.font =SYSTEMFONT(14);
         [viewTrace addSubview:label];
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)/3, POS_Y(label), WIDTH(self)/3, 21)];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(viewTrace)/3, POS_Y(label), WIDTH(self)/3, 21)];
         label.textAlignment = NSTextAlignmentCenter;
-        label.text=@"2015-08-01";
+         label.tag = 10005;
+        label.font =SYSTEMFONT(14);
+        [viewTrace addSubview:label];
+        
+        label = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(viewTrace)*2/3, POS_Y(imgView)+10, WIDTH(self)/3, 21)];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.tag = 10006;
+        label.font =SYSTEMFONT(14);
+        [viewTrace addSubview:label];
+        
+        label = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(viewTrace)*2/3, POS_Y(label), WIDTH(self)/3, 21)];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.tag = 10007;
         label.font =SYSTEMFONT(14);
         [viewTrace addSubview:label];
     }
@@ -185,6 +197,71 @@
             label.text = self.title;
         }
     }
+    
+}
+
+-(void)setContent:(NSString *)content
+{
+    self->_content  =content;
+    
+    if (self.content) {
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        
+        //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
+        
+        [paragraphStyle setLineSpacing:8.f];//调整行间距
+        [paragraphStyle setAlignment:NSTextAlignmentJustified];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+        
+        self.labelContent.attributedText = attributedString;//ios 6
+        [self.labelContent sizeToFit];
+    }
+
+}
+
+-(void)setCreateDateTime:(NSString *)createDateTime
+{
+    self->_createDateTime = createDateTime;
+    if (self.createDateTime && ![self.createDateTime isEqualToString:@""]) {
+        NSString* timeStart = [createDateTime substringWithRange:NSMakeRange(11, 8)];
+        UILabel* label =(UILabel*)[viewTrace viewWithTag:10002];
+        label.text = timeStart;
+        
+        timeStart = [createDateTime substringWithRange:NSMakeRange(0, 10)];
+        label =(UILabel*)[viewTrace viewWithTag:10003];
+        label.text = timeStart;
+    }
+}
+
+-(void)setHandleDateTime:(NSString *)handleDateTime
+{
+    self->_handleDateTime = handleDateTime;
+    if (self.handleDateTime && ![self.handleDateTime isEqualToString:@""]) {
+        NSString* timeStart = [handleDateTime substringWithRange:NSMakeRange(11, 8)];
+        UILabel* label =(UILabel*)[viewTrace viewWithTag:10004];
+        label.text = timeStart;
+        
+        timeStart = [handleDateTime substringWithRange:NSMakeRange(0, 10)];
+        label =(UILabel*)[viewTrace viewWithTag:10005];
+        label.text = timeStart;
+    }
+
+}
+
+-(void)setAuditDateTime:(NSString *)auditDateTime
+{
+    self->_auditDateTime =auditDateTime;
+    if (self.auditDateTime && ![self.auditDateTime isEqualToString:@""]) {
+        NSString* timeStart = [auditDateTime substringWithRange:NSMakeRange(11, 8)];
+        UILabel* label =(UILabel*)[viewTrace viewWithTag:10006];
+        label.text = timeStart;
+        
+        timeStart = [auditDateTime substringWithRange:NSMakeRange(0, 10)];
+        label =(UILabel*)[viewTrace viewWithTag:10007];
+        label.text = timeStart;   
+    }
+    
     
 }
 @end

@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "TDUtil.h"
+#import "MobClick.h"
 #import "AlertView.h"
 #import "APService.h"
 #import "HttpUtils.h"
@@ -49,7 +50,7 @@
             [self.drawerController setShowsShadow:NO];
             [self.drawerController setRestorationIdentifier:@"MMDrawer"];
             [self.drawerController setMaximumLeftDrawerWidth:280.0];
-            [self.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeAll];
+            [self.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeBezelPanningCenterView];
             [self.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
             [self.drawerController
              setDrawerVisualStateBlock:^(MMDrawerController *drawerController, MMDrawerSide drawerSide, CGFloat percentVisible) {
@@ -61,6 +62,8 @@
                  }
                  
              }];
+            
+            //////自定义抽屉手势   结束///////////
             self.iNav = [[UINavigationController alloc]initWithRootViewController:self.drawerController];
         }else{
             
@@ -102,7 +105,8 @@
     
     //向微信注册
     [WXApi registerApp:@"wx33aa0167f6a81dac" withDescription:@"jinzht"];
-    //向QQ注册
+    //友盟统计
+    [MobClick startWithAppkey:@"55c7684de0f55a0d0d0042a8" reportPolicy:BATCH   channelId:nil];
     
     // 监测网络情况
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -279,16 +283,17 @@ fetchCompletionHandler:(void
             index = i;
         }
     }
+
     if (index!=-1) {
         switch (index) {
             case 0:
-                [self loadProjectDetail:[[dic valueForKey:@"pid"] integerValue]];
+                [self loadProjectDetail:[[dic valueForKey:@"_id"] integerValue]];
                 break;
             case 1:
-                [self loadMsgDetail:[[dic valueForKey:@"pid"] integerValue]];
+                [self loadMsgDetail:[[dic valueForKey:@"_id"] integerValue]];
                 break;
             case 2:
-                [self loadSystemMsgDetail:[[dic valueForKey:@"pid"] integerValue]];
+                [self loadSystemMsgDetail:[[dic valueForKey:@"_id"] integerValue]];
                 break;
             case 3:
                 [self loadWebViewDetail:[NSURL URLWithString:[dic valueForKey:@"url"]]];

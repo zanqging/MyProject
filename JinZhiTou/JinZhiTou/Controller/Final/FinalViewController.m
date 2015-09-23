@@ -10,6 +10,7 @@
 #import "Cell.h"
 #import "TDUtil.h"
 #import "NavView.h"
+#import "MobClick.h"
 #import "HttpUtils.h"
 #import "MJRefresh.h"
 #import "LineLayout.h"
@@ -22,10 +23,11 @@
 #import "INSViewController.h"
 #import "ASIFormDataRequest.h"
 #import "VoteViewController.h"
+#import "ThinkTankTableViewCell.h"
 #import "ThinkTankViewController.h"
 #import "RoadShowDetailViewController.h"
 
-@interface FinalViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,ASIHTTPRequestDelegate>
+@interface FinalViewController ()
 {
     NavView* navView;
     HttpUtils* httpUtils;
@@ -74,6 +76,10 @@
     self.finalContentTableView.backgroundColor  =WriteColor;
     [self.view addSubview:self.finalContentTableView];
     
+    //分割线
+    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(50, POS_Y(navView), 1, HEIGHT(self.finalContentTableView))];
+    imgView.backgroundColor = BACKGROUND_LIGHT_GRAY_COLOR;
+    [self.view addSubview:imgView];
     
     self.finalFunTableView.tag=100001;
     self.finalContentTableView.tag=100002;
@@ -162,7 +168,6 @@
         }
     }else{
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"已加载全部"];
-        [self.collectionView.footer endRefreshing];
         isRefresh =NO;
     }
 }
@@ -207,11 +212,18 @@
 
 -(void)loadProjectDetail:(NSMutableDictionary*)dic
 {
-    RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
-    controller.dic = dic;
-    controller.type=1;
-    controller.title = navView.title;
-    [self.navigationController pushViewController:controller animated:YES];
+    if (currentSelectIndex!=2) {
+        RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
+        controller.dic = dic;
+        controller.type=1;
+        controller.title = navView.title;
+        [self.navigationController pushViewController:controller animated:YES];
+    }else{
+        ThinkTankViewController* controller = [[ThinkTankViewController alloc]init];
+        controller.dic = dic;
+        controller.title = navView.title;
+        [self.navigationController pushViewController:controller animated:YES];
+    }
     
 }
 
@@ -270,19 +282,16 @@
                 if (!self.waitFinialDataArray) {
                     [self loadWaitFinaceData];
                 }else{
-                    loadingView.isTransparent = YES;
-                     [LoadingUtil showLoadingView:self.finalContentTableView withLoadingView:loadingView];
                     currentArray = self.waitFinialDataArray;
                     [self.finalContentTableView reloadData];
                 }
                 break;
             case 1:
                 if (!self.finishedFinialDataArray) {
-                    currentArray = self.waitFinialDataArray;
-                    [self.finalContentTableView reloadData];
+                    [self loadFinishData];
                 }else{
                     isRefresh = YES;
-                    [self loadFinishData];
+                    currentArray = self.finishedFinialDataArray;
                     [self.finalContentTableView reloadData];
                 }
                 break;
@@ -291,7 +300,7 @@
                     [self loadThinkTank];
                 }else{
                     currentArray = self.thinkTankFinialDataArray;
-                    [self.collectionView reloadData];
+                    [self.finalContentTableView reloadData];
                 }
                 break;
             case 3:
@@ -311,11 +320,6 @@
                 }
                 break;
         }
-        if (row!=2) {
-            [self LinerLayout:NO];
-        }else{
-            [self LinerLayout:YES];
-        }
         
     }else{
         //此处获取项目id
@@ -326,7 +330,10 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView.tag!=100001) {
-        return 190;
+        if (currentSelectIndex!=2) {
+            return 190;
+        }
+        return 150;
     }
     return 60;
 }
@@ -367,118 +374,64 @@
         return Cell;
         
     }else{
-        static NSString *reuseIdetify = @"FinialListView";
-        FinalContentTableViewCell *cellInstance = (FinalContentTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
-        if (!cellInstance) {
-            cellInstance = [[FinalContentTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.finalContentTableView), 190)];
-        }
-        NSInteger row = indexPath.row;
-        NSDictionary* dic = currentArray[row];
-        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"thumbnail"]];
-        [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading")];
-        cellInstance.title = [dic valueForKey:@"company_name"];
-        NSMutableArray* arry  =[dic valueForKey:@"industry_type"];
-        cellInstance.content = [dic valueForKey:@"project_summary"];
-        cellInstance.priseData = [[dic valueForKey:@"like_sum"] integerValue];
-        cellInstance.voteData = [[dic valueForKey:@"vote_sum"] integerValue];
-        cellInstance.collectionData = [[dic valueForKey:@"collect_sum"] integerValue];
-        
-        NSString* str=@"";
-        for (int i = 0; i< arry.count; i++) {
-            str = [str stringByAppendingFormat:@"%@/",arry[i]];
-        }
-        
-        cellInstance.typeDescription = str;
-        cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
-        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        return cellInstance;
-    }
-    
-}
-
-
--(void)LinerLayout:(BOOL)flag
-{
-    if (flag) {
-        if (!self.collectionView) {
-            //图片浏览
-            LineLayout * layOut=[[LineLayout alloc]init];
-            layOut.lineSpacing=50;
-            layOut.direction=0;
-            layOut.size=CGSizeMake(220, 300);
-            self.collectionView = [[UICollectionView alloc]initWithFrame:self.finalContentTableView.frame collectionViewLayout:layOut];
-            self.collectionView.tag =100003;
-            self.collectionView.delegate = self;
-            self.collectionView.dataSource = self;
-            self.collectionView.backgroundColor =BackColor;
+        NSInteger row =indexPath.row;
+        if (currentSelectIndex!=2) {
+            static NSString *reuseIdetify = @"FinialListView";
+            FinalContentTableViewCell *cellInstance = (FinalContentTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
+            if (!cellInstance) {
+                cellInstance = [[FinalContentTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.finalContentTableView), 190)];
+            }
+            NSDictionary* dic = currentArray[row];
+            NSURL* url = [NSURL URLWithString:[dic valueForKey:@"thumbnail"]];
+            __block FinalContentTableViewCell* cell = cellInstance;
+            [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+                if (image) {
+                    cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+                }
+            }];
+            cellInstance.title = [dic valueForKey:@"company_name"];
+            NSMutableArray* arry  =[dic valueForKey:@"industry_type"];
+            cellInstance.content = [dic valueForKey:@"project_summary"];
+            cellInstance.priseData = [[dic valueForKey:@"like_sum"] integerValue];
+            cellInstance.voteData = [[dic valueForKey:@"vote_sum"] integerValue];
+            cellInstance.collectionData = [[dic valueForKey:@"collect_sum"] integerValue];
             
-            //注册单元格
-            _identify = @"PhotoCell";
-            [self.collectionView registerClass:[Cell class] forCellWithReuseIdentifier:_identify];
-            
-            [TDUtil collectView:self.collectionView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
-        }
-        
-        [self.view addSubview:self.collectionView];
-        
-        //移除tableView
-        //UITableView* tableView = (UITableView*)[self.view viewWithTag:100002];
-        //        if (tableView) {
-        //            [self.finalContentTableView removeFromSuperview];
-        //        }
-        
-    }else{
-        if (self.collectionView) {
-            UICollectionView* collectionView = (UICollectionView*)[self.view viewWithTag:100003];
-            if(collectionView){
-                [self.collectionView removeFromSuperview];
+            NSString* str=@"";
+            for (int i = 0; i< arry.count; i++) {
+                str = [str stringByAppendingFormat:@"%@/",arry[i]];
             }
             
-            //            UITableView* tableView = (UITableView*)[self.view viewWithTag:100002];
-            //            if (!tableView) {
-            //                [self.view addSubview:self.finalContentTableView];
-            //                [self.finalContentTableView reloadData];
-            //            }
-            
+            cellInstance.typeDescription = str;
+            cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+            tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+            return cellInstance;
+
+        }else{
+            static NSString *reuseIdetify = @"FinialThinkView";
+            ThinkTankTableViewCell *cellInstance = (ThinkTankTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
+            if (!cellInstance) {
+                float height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
+                cellInstance = [[ThinkTankTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.finalContentTableView), height)];
+            }
+            NSDictionary* dic = currentArray[row];
+            NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
+            __block ThinkTankTableViewCell* cell = cellInstance;
+            [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+                if (image) {
+                    cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+                }
+            }];
+            cellInstance.title = [dic valueForKey:@"name"];
+            cellInstance.content = [dic valueForKey:@"company"];
+            cellInstance.typeDescription =  [dic valueForKey:@"title"];;
+            cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+            tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+            return cellInstance;
+
         }
-    }
-    
-}
 
-- (NSInteger)collectionView:(UICollectionView *)view numberOfItemsInSection:(NSInteger)section;
-{
-    if (currentArray.count==0) {
-        self.finalContentTableView.isNone =YES;
-    }else{
-        self.finalContentTableView.isNone =NO;
     }
-    return currentArray.count;
-}
-- (UICollectionViewCell *)collectionView:(UICollectionView *)cv cellForItemAtIndexPath:(NSIndexPath *)indexPath;
-{
-    Cell *cell = [cv dequeueReusableCellWithReuseIdentifier:_identify forIndexPath:indexPath];
-    NSInteger row = indexPath.row;
-    NSDictionary* dic = currentArray[row];
-    NSURL* url = [dic valueForKey:@"img"];
     
-    cell.title = [dic valueForKey:@"name"];
-    cell.desc = [dic valueForKey:@"title"];
-    [cell.imageView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"coremember")];
-    
-    if (row>0 && !isResetPosition) {
-        NSIndexPath* index = [NSIndexPath indexPathForRow:1 inSection:0];
-        [self.collectionView selectItemAtIndexPath:index animated:YES scrollPosition:UICollectionViewScrollPositionCenteredVertically];
-        isResetPosition = YES;
-    }
-    return cell;
-}
-
--(void)collectionView:(UICollectionView *)cv didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    NSDictionary* dic = currentArray[indexPath.row];
-    
-    ThinkTankViewController * controller  = [[ThinkTankViewController alloc ]init];
-    controller.dic = dic;
-    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -513,7 +466,7 @@
 {
     self->_thinkTankFinialDataArray = thinkTankFinialDataArray;
     currentArray = self.thinkTankFinialDataArray;
-    [self.collectionView reloadData];
+    [self.finalContentTableView reloadData];
 }
 
 -(void)setRecommendFinialDataArray:(NSMutableArray *)recommendFinialDataArray
@@ -534,14 +487,18 @@
         NSString* status =[jsonDic valueForKey:@"status"];
         if([status intValue] == 0 || [status intValue] ==-1){
             if (isRefresh) {
-                self.finishedFinialDataArray = [jsonDic valueForKey:@"data"];
+                self.waitFinialDataArray = [jsonDic valueForKey:@"data"];
             }else{
-                if (self.finishedFinialDataArray) {
-                    [self.finishedFinialDataArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
+                if (self.waitFinialDataArray) {
+                    [self.waitFinialDataArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
                     [self.finalContentTableView reloadData];
                 }else{
-                    self.finishedFinialDataArray = [jsonDic valueForKey:@"data"];
+                    self.waitFinialDataArray = [jsonDic valueForKey:@"data"];
                 }
+            }
+            
+            if ([status intValue] == -1 ){
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
         [LoadingUtil closeLoadingView:loadingView];
@@ -575,6 +532,9 @@
                 }
                
             }
+            if ([status intValue] == -1 ){
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+            }
         }
         [LoadingUtil closeLoadingView:loadingView];
         if (isRefresh) {
@@ -600,18 +560,20 @@ self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
             }else{
                 if (self.thinkTankFinialDataArray) {
                     [self.thinkTankFinialDataArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
-                    [self.collectionView reloadData];
+                    [self.finalContentTableView reloadData];
                 }else{
                     self.thinkTankFinialDataArray = [jsonDic valueForKey:@"data"];
                 }
-                
+            }
+            if ([status intValue] == -1 ){
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
         [LoadingUtil closeLoadingView:loadingView];
         if (isRefresh) {
-            [self.collectionView.header endRefreshing];
+            [self.finalContentTableView.header endRefreshing];
         }else{
-            [self.collectionView.footer endRefreshing];
+            [self.finalContentTableView.footer endRefreshing];
         }
         
 self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
@@ -637,6 +599,9 @@ self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
                     self.recommendFinialDataArray = [jsonDic valueForKey:@"data"];
                 }
                 
+            }
+            if ([status intValue] == -1 ){
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
         [LoadingUtil closeLoadingView:loadingView];
@@ -682,4 +647,17 @@ self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
+
+
+
+- (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];
+    
+    [MobClick beginLogPageView:navView.title];
+}
+
+- (void)viewWillDisappear:(BOOL)animated { [super viewWillDisappear:animated];
+    
+    [MobClick beginLogPageView:navView.title];
+}
+
 @end

@@ -23,7 +23,7 @@
 #import "AboutUsViewController.h"
 #import "FinialAuthViewController.h"
 #import "UserFinialViewController.h"
-#import "FinialAuthTraceViewController.h"
+#import "UserTraceViewController.h"
 #import "UserInfoSettingViewController.h"
 @interface HomeTabBarViewController ()<SphereMenuDelegate,MFMessageComposeViewControllerDelegate,ASIHTTPRequestDelegate,UIAlertViewDelegate>
 {
@@ -106,6 +106,29 @@
     //检测更新
     [self checkUpdate];
     
+    
+//    NSArray *array = [UIFont familyNames];
+//    
+//    NSString *familyName ;
+//    
+//    NSMutableArray *fontNames = [[NSMutableArray alloc] init];
+//    
+//    
+//    
+//    for(familyName in array)
+//        
+//    {
+//        
+//        NSArray *names = [UIFont fontNamesForFamilyName:familyName];
+//        
+//        [fontNames addObjectsFromArray:names];
+//        
+//    }
+//     NSLog(@"%@", fontNames);
+//     NSLog(@"完毕");
+    
+    
+   
     
 }
 
@@ -309,7 +332,7 @@
     }
     UIViewController* controller;
     if (index==4) {
-        controller=[[FinialAuthTraceViewController alloc]init];
+        controller=[[UserTraceViewController alloc]init];
     }else if (index ==6){
         controller = [[AboutUsViewController alloc]init];
     }else{
@@ -511,7 +534,7 @@
             if (data) {
                 BOOL force = [data valueForKey:@"force"];
                 if (force) {
-                    if (![[data valueForKey:@"edition"] isEqualToString:version]) {
+                    if ([[data valueForKey:@"edition"] compare:version]==NSOrderedDescending) {
                         UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"金指投%@更新",[data valueForKey:@"edition"]] message:[data valueForKey:@"item"] delegate:self cancelButtonTitle:@"更新" otherButtonTitles:nil, nil];
                         alertView.delegate = self;
                         [alertView show];

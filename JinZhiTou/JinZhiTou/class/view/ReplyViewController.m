@@ -13,6 +13,7 @@
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #import "TDUtil.h"
+#import "DialogUtil.h"
 #import "NSString+SBJSON.h"
 #import "ASIFormDataRequest.h"
 #import <QuartzCore/QuartzCore.h>
@@ -45,7 +46,7 @@
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:@"投融资" forState:UIControlStateNormal];
     [self.navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
-    [self.navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [self.navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [self.view addSubview:self.navView];
 
     UIView* view  = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView))];
@@ -77,7 +78,7 @@
 
 -(void)btnAction:(id)sender
 {
-    NSString* url  =[TOPIC stringByAppendingFormat:@"%d/",self.project_id];
+    NSString* url  =[TOPIC stringByAppendingFormat:@"%ld/",(long)self.project_id];
     [httpUtils getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:textView.text forKey:@"content"] type:0 delegate:self sel:@selector(requestSubmmit:)];
 }
 
@@ -96,9 +97,10 @@
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0) {
             loadingView.isError = NO;
-        }else{
-            NSLog(@"请求失败!");
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+            [self back:nil];
         }
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
     }
 }
 

@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "UITableViewCustomView.h"
 @interface TeamShowViewController : UIViewController
 @property(assign,nonatomic)NSInteger projectId;
+@property(assign,nonatomic)BOOL isEndOfPageSize;
 @property(retain,nonatomic)NSMutableArray* dataArray;
+@property(retain,nonatomic)UITableViewCustomView* tableView;
 @end

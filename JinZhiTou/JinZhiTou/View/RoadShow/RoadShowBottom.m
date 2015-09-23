@@ -72,9 +72,9 @@
         [self.btnFunction setTitle:@"我要投资" forState:UIControlStateNormal];
     }else{
         self.btnFunction.enabled = NO;
-        [self.btnFunction setBackgroundColor:BACKGROUND_COLOR];
+        [self.btnFunction setBackgroundColor:BACKGROUND_LIGHT_GRAY_COLOR];
         [self.btnFunction setTitleColor:WriteColor forState:UIControlStateNormal];
-        [self.btnFunction setTitle:@"融资已结束" forState:UIControlStateNormal];
+        [self.btnFunction setTitle:@"融资完毕" forState:UIControlStateNormal];
     }
 }
 
