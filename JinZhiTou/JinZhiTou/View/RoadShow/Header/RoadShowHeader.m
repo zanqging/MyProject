@@ -79,26 +79,28 @@
         lbl.textAlignment=NSTextAlignmentLeft;
         lbl.tag = 30001;
         lbl.font=SYSTEMFONT(14);
+        lbl.textColor = FONT_COLOR_GRAY;
         [self addSubview:lbl];
         //内容
         industryLabel=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(lbl), Y(lbl), 80, HEIGHT(lbl))];
-        industryLabel.textColor=ColorTheme;
-        industryLabel.textAlignment=NSTextAlignmentLeft;
+        industryLabel.textColor=FONT_COLOR_RED;
         industryLabel.font=SYSTEMFONT(14);
+        industryLabel.textAlignment=NSTextAlignmentLeft;
         industryLabel.adjustsFontSizeToFitWidth = YES;
         [self addSubview:industryLabel];
         //预路演时间
         lbl=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(industryLabel), Y(industryLabel), 80, HEIGHT(lbl))];
         lbl.tag = 30002;
         lbl.font=SYSTEMFONT(14);
-        lbl.textAlignment=NSTextAlignmentLeft;
         lbl.font=SYSTEMFONT(14);
+        lbl.textColor = FONT_COLOR_GRAY;
+        lbl.textAlignment=NSTextAlignmentLeft;
         [self addSubview:lbl];
         //内容
         showTimeLabel=[[UILabel alloc]initWithFrame:CGRectMake(POS_X(lbl), Y(lbl), 100, 21)];
         showTimeLabel.font=lbl.font;
         showTimeLabel.font = SYSTEMFONT(14);
-        showTimeLabel.textColor=ColorTheme;
+        showTimeLabel.textColor=FONT_COLOR_RED;
         industryLabel.adjustsFontSizeToFitWidth = YES;
         showTimeLabel.textAlignment=NSTextAlignmentLeft;
         [self addSubview:showTimeLabel];
@@ -109,8 +111,9 @@
         //剩余人数
         leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(traceView)+10, 100, 21)];
         leftLabel.textAlignment=NSTextAlignmentLeft;
-        leftLabel.font=SYSTEMFONT(14);
         leftLabel.text=@"剩余人数";
+        leftLabel.font=SYSTEMFONT(14);
+        leftLabel.textColor = FONT_COLOR_GRAY;
         [self addSubview:leftLabel];
         
         //点赞收藏
@@ -239,7 +242,7 @@
         //已获取融资
         leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(traceView)+20, WIDTH(self)/3, 21)];
         leftLabel.textAlignment=NSTextAlignmentCenter;
-        leftLabel.font=SYSTEMFONT(14);
+        leftLabel.font=SYSTEMFONT(13);
         leftLabel.text=@"0万";
         leftLabel.tag = 5001;
         [self addSubview:leftLabel];
@@ -253,7 +256,7 @@
         //融资状态
         leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)/3, POS_Y(traceView)+20, WIDTH(self)/3, 21)];
         leftLabel.textAlignment=NSTextAlignmentCenter;
-        leftLabel.font=SYSTEMFONT(14);
+        leftLabel.font=SYSTEMFONT(13);
         leftLabel.text=@"融资中";
         leftLabel.tag = 5002;
         [self addSubview:leftLabel];
@@ -267,7 +270,7 @@
         //预融资总额
         leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)*2/3, POS_Y(traceView)+20, WIDTH(self)/3, 21)];
         leftLabel.textAlignment=NSTextAlignmentCenter;
-        leftLabel.font=SYSTEMFONT(14);
+        leftLabel.font=SYSTEMFONT(13);
         leftLabel.text=@"0万";
         leftLabel.tag = 5003;
         [self addSubview:leftLabel];

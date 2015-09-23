@@ -26,19 +26,20 @@
         [self addSubview:view];
         //名称
         self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, 30, 130, 21)];
-        self.titleLabel.font = SYSTEMFONT(14);
-        self.titleLabel.textColor = ColorTheme;
+        self.titleLabel.font = SYSTEMFONT(18);
+        self.titleLabel.textColor = FONT_COLOR_RED;
         [view addSubview:self.titleLabel];
         
         //描述
         self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.titleLabel)+5, WIDTH(self.titleLabel), 21)];
         self.contentLabel.font = SYSTEMFONT(14);
+        self.contentLabel.textColor = FONT_COLOR_BLACK;
         [view addSubview:self.contentLabel];
         
         //描述
         self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.contentLabel)+5, WIDTH(self.contentLabel), 21)];
-        self.typeLabel.font = SYSTEMFONT(14);
-        self.typeLabel.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
+        self.typeLabel.font = SYSTEMFONT(12);
+        self.typeLabel.textColor = FONT_COLOR_GRAY;
         [view addSubview:self.typeLabel];
         //
         self.backgroundColor = BackColor;

@@ -166,7 +166,8 @@
     //底部标签
     CGRect  frame=self.cell.lblProjectName.frame;
     self.cell.lblRoadShowTime.frame = CGRectMake(10, frame.size.height+frame.origin.y, self.imagewidth, 21);
-    self.cell.lblRoadShowTime.text =[NSString stringWithFormat:@"路演时间:%@",[[stage valueForKey:@"start"] valueForKey:@"datetime"]];
+    self.cell.lblRoadShowTime.text =[NSString stringWithFormat:@"%@:%@",[[stage valueForKey:@"start"] valueForKey:@"name"],[[stage valueForKey:@"start"] valueForKey:@"datetime"]];
+
 
     return self.cell;
 }

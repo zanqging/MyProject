@@ -15,6 +15,7 @@
 }
 @property(retain,nonatomic)NSString* title;
 @property(assign,nonatomic)BOOL isFinished;
+@property(assign,nonatomic)BOOL isScuesssed;
 @property(retain,nonatomic)UILabel* labelContent;
 @property(retain,nonatomic)NSString* content;
 @property(retain,nonatomic)NSString* createDateTime;

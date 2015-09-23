@@ -53,14 +53,14 @@
 - (void)setupTextView
 {
     self.lblProjectName = [[UILabel alloc] initWithFrame:CGRectMake(0,10,0,0)];
-    self.lblProjectName.font=[UIFont fontWithName:@"Arial" size:14];
-    self.lblProjectName.textColor=[UIColor blackColor];
+    self.lblProjectName.font=SYSTEMFONT(13);
+    self.lblProjectName.textColor=FONT_COLOR_BLACK;
     self.lblProjectName.backgroundColor = [UIColor clearColor];
     [self addSubview:self.lblProjectName];
     
     self.lblRoadShowTime = [[UILabel alloc] initWithFrame:CGRectMake(0,0,0,0)];
-    self.lblRoadShowTime.textColor=[UIColor blackColor];
-    self.lblRoadShowTime.font=[UIFont fontWithName:@"Arial" size:12];
+    self.lblRoadShowTime.textColor=FONT_COLOR_BLACK;
+    self.lblRoadShowTime.font=SYSTEMFONT(13);
     self.lblRoadShowTime.backgroundColor = [UIColor clearColor];
     [self addSubview:self.lblRoadShowTime];
 }

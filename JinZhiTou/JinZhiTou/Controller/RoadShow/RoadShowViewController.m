@@ -183,11 +183,22 @@
             
             __block RoadShowViewController* roadShow=self;
             self.mainScorllView.TapActionBlock = ^(NSInteger pageIndex){
-                //NSLog(@"点击了第%ld个",(long)pageIndex);
-                BannerViewController* controller =[[BannerViewController alloc]init];
-                NSString* urlStr =[roadShow.bannerArray[pageIndex] valueForKey:@"url"];
-                controller.url =[NSURL URLWithString:urlStr];
-                [roadShow.navigationController pushViewController:controller animated:YES];
+                NSString* projectId =[roadShow.bannerArray[pageIndex] valueForKey:@"project"];
+                if ([projectId isKindOfClass:NSNull.class]) {
+                    BannerViewController* controller =[[BannerViewController alloc]init];
+                    NSString* urlStr =[roadShow.bannerArray[pageIndex] valueForKey:@"url"];
+                    if (urlStr && ![urlStr isEqualToString:@""]) {
+                        controller.url =[NSURL URLWithString:urlStr];
+                        [roadShow.navigationController pushViewController:controller animated:YES];
+                    }
+                    
+                }else{
+                    RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
+                    NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:projectId forKey:@"id"];
+                    controller.dic = dic;
+                    controller.title =@"微路演";
+                    [roadShow.navigationController pushViewController:controller animated:YES];
+                }
             };
             self.waterfall.headerView=self.mainScorllView;
         }else{

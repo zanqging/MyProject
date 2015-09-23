@@ -161,15 +161,16 @@
 -(void)refreshData:(id)sender
 {
     isRefresh = YES;
-    if (self.isEndOfPageSize) {
-        currentPage = 0;
-    }
+    currentPage = 0;
     [self loadData];
 }
 
 -(void)loadData:(id)sender
 {
     isRefresh = NO;
+    if (self.isEndOfPageSize) {
+        currentPage = 0;
+    }
     [self loadData];
 }
 

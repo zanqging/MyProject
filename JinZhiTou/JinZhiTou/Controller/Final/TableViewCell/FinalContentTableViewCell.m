@@ -26,19 +26,20 @@
         [self addSubview:view];
         //名称
         self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, Y(self.imgView), 130, 21)];
-        self.titleLabel.font = SYSTEMFONT(14);
-        self.titleLabel.textColor = ColorTheme;
+        self.titleLabel.font = SYSTEMFONT(16);
+        self.titleLabel.textColor = FONT_COLOR_RED;
         [view addSubview:self.titleLabel];
         
         //描述
         self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.titleLabel)+15, WIDTH(self.titleLabel), 21)];
         self.contentLabel.font = SYSTEMFONT(14);
+        self.contentLabel.textColor =FONT_COLOR_BLACK;
         [view addSubview:self.contentLabel];
         
         //描述
         self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.contentLabel)+15, WIDTH(self.contentLabel), 21)];
         self.typeLabel.font = SYSTEMFONT(14);
-        self.typeLabel.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
+        self.typeLabel.textColor = FONT_COLOR_GRAY;
         [view addSubview:self.typeLabel];
         
         UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(self.typeLabel)+20, frame.size.width-20, 1)];
@@ -47,7 +48,6 @@
         
         self.collecteImgView = [[UIButton alloc]initWithFrame:CGRectMake(20, POS_Y(imgView)+15, 20, 20)];
         [self.collecteImgView setImage:IMAGENAMED(@"shoucang") forState:UIControlStateNormal];
-        [self.collecteImgView addTarget:self action:@selector(collecteAction:) forControlEvents:UIControlEventTouchUpInside];
         [view addSubview:self.collecteImgView];
         
         self.collectDataLabelView = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.collecteImgView), Y(self.collecteImgView)-5, 40, 30)];
@@ -64,7 +64,6 @@
         
         self.priseImgView = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(imageView)+10, POS_Y(imgView)+15, 20, 20)];
         [self.priseImgView setImage:IMAGENAMED(@"dianzan") forState:UIControlStateNormal];
-        [self.priseImgView addTarget:self action:@selector(priseAction:) forControlEvents:UIControlEventTouchUpInside];
         [view addSubview:self.priseImgView];
         
         self.priseDataLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.priseImgView), Y(self.priseImgView)-5, 40, 30)];
@@ -80,7 +79,6 @@
         
         self.voteImgView = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(imageView)+20, POS_Y(imgView)+15, 20, 20)];
         [self.voteImgView setImage:IMAGENAMED(@"toupiao") forState:UIControlStateNormal];
-        [self.voteImgView addTarget:self action:@selector(doActionPrise:) forControlEvents:UIControlEventTouchUpInside];
         [view addSubview:self.voteImgView];
         
         self.voteDataLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.voteImgView), Y(self.voteImgView)-5, 40, 30)];

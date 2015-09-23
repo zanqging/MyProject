@@ -20,6 +20,7 @@
 #import "ASIFormDataRequest.h"
 #import "AuthTraceTableViewCell.h"
 #import "FinialAuthViewController.h"
+#import "RoadShowApplyViewController.h"
 #import "UserCollecteTableViewCell.h"
 #import "RoadShowDetailViewController.h"
 @interface UserTraceViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,ASIHTTPRequestDelegate,LoadingViewDelegate>
@@ -66,6 +67,7 @@
     [self.tableView removeFromSuperview];
     [self.view addSubview:self.tableView];
     
+    currentSelected =1000;
     [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
     
     [self loadData];
@@ -230,9 +232,15 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row ==self.dataArray.count) {
-        FinialAuthViewController* controller = [[FinialAuthViewController alloc]init];
-        controller.titleStr = self.navView.title;
-        [self.navigationController pushViewController:controller animated:YES];
+        if (currentSelected!=1000) {
+            FinialAuthViewController* controller = [[FinialAuthViewController alloc]init];
+            controller.titleStr = self.navView.title;
+            [self.navigationController pushViewController:controller animated:YES];
+        }else{
+            RoadShowApplyViewController* controller = [[RoadShowApplyViewController alloc]init];
+            controller.title = self.navView.title;
+            [self.navigationController pushViewController:controller animated:YES];
+        }
     }
 }
 
@@ -242,11 +250,28 @@
     
     if (row<self.dataArray.count) {
         NSDictionary* dic = self.dataArray[row];
-        BOOL is_qualified = [[dic valueForKey:@"is_qualified"] boolValue];
-        if (is_qualified) {
-            return 150;
+        if(currentSelected==1002){
+            NSString* is_qualified = [dic valueForKey:@"valid"];
+            if ([is_qualified isKindOfClass:NSNull.class]) {
+                is_qualified = @"false";
+                [dic setValue:is_qualified forKey:@"is_qualified"];
+            }
+            if ([is_qualified boolValue]) {
+                return 150;
+            }
+            return 250;
+        }else{
+            NSString* is_qualified = [dic valueForKey:@"is_qualified"];
+            if ([is_qualified isKindOfClass:NSNull.class]) {
+                is_qualified = @"false";
+                [dic setValue:is_qualified forKey:@"is_qualified"];
+            }
+            if ([is_qualified boolValue]) {
+                return 150;
+            }
+            return 250;
         }
-        return 250;
+        
     }else{
         return 70;
     }
@@ -268,29 +293,40 @@
         NSInteger row =indexPath.row;
         NSDictionary* dic = self.dataArray[row];
         
-        if (currentSelected==1001) {
-            NSString* is_qualified = [dic valueForKey:@"valid"];
-            if (![is_qualified isKindOfClass:NSNull.class] && is_qualified) {
-                [cellInstance setIsFinished:YES];
+      if(currentSelected==1002){
+            NSString* is_qualified = [dic valueForKey:@"is_qualified"];
+            if ([is_qualified isKindOfClass:NSNull.class]) {
+                is_qualified = false;
+                [dic setValue:@"false" forKey:@"is_qualified"];
             }
-            
+          
+          
             cellInstance.title = [dic valueForKey:@"company"];
-            cellInstance.content = [dic valueForKey:@"reason"];
-            cellInstance.createDateTime = [dic valueForKey:@"create_datetime"];
-            cellInstance.handleDateTime = [dic valueForKey:@"handle_datetime"];
-            cellInstance.auditDateTime = [dic valueForKey:@"audit_datetime"];
-        }else if(currentSelected==1002){
-            BOOL is_qualified = [[dic valueForKey:@"is_qualified"] boolValue];
-            if (is_qualified) {
-                [cellInstance setIsFinished:YES];
-                cellInstance.title = [dic valueForKey:@"company"];
-            }
-            
             cellInstance.content = [dic valueForKey:@"reject_reason"];
             cellInstance.createDateTime = [dic valueForKey:@"apply_for_certificate_datetime"];
             cellInstance.handleDateTime = [dic valueForKey:@"certificate_datetime"];
             cellInstance.auditDateTime = [dic valueForKey:@"audit_date"];
-        }
+          if ([is_qualified boolValue]) {
+              [cellInstance setIsFinished:YES];
+          }
+      }else{
+          
+          
+              cellInstance.title = [dic valueForKey:@"company"];
+              cellInstance.content = [dic valueForKey:@"reason"];
+              cellInstance.createDateTime = [dic valueForKey:@"create_datetime"];
+              cellInstance.handleDateTime = [dic valueForKey:@"handle_datetime"];
+              cellInstance.auditDateTime = [dic valueForKey:@"audit_datetime"];
+          
+          NSString* is_qualified = [dic valueForKey:@"valid"];
+          if (![is_qualified isKindOfClass:NSNull.class]) {
+              if (currentSelected!=1000) {
+                  [cellInstance setIsScuesssed:[is_qualified boolValue]];
+              }else{
+                  [cellInstance setIsFinished:[is_qualified boolValue]];
+              }
+          }
+      }
         
         
         
@@ -302,21 +338,33 @@
         //用TableDataIdentifier标记重用单元格
         UITableViewCell* cell=(UITableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
         //如果单元格未创建，则需要新建
+        UIView * view;
         if (cell==nil) {
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
             cell.backgroundColor = BackColor;
-            UIView * view = [[UIView alloc]initWithFrame:cell.frame];
+            view = [[UIView alloc]initWithFrame:cell.frame];
             view.backgroundColor = BackColor;
+            view.tag=20001;
             UIImageView* imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(cell)/2-70, HEIGHT(cell)/2, 30, 30)];
             imageView.image = IMAGENAMED(@"shangchuan");
             [view addSubview:imageView];
             UILabel* lable = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imageView)+5, HEIGHT(cell)/2-5, WIDTH(cell)/2, HEIGHT(cell))];
+            lable.tag=20002;
             lable.textAlignment = NSTextAlignmentLeft;
-            lable.text = @"点击添加新的认证";
             lable.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
             lable.font = SYSTEMFONT(16);
             [view addSubview:lable];
             [cell addSubview:view];
+        }
+        if (!view) {
+            view = [cell viewWithTag:20001];
+        }
+        UILabel* label =(UILabel*)[view viewWithTag:20002];
+        
+        if (currentSelected==1000) {
+            label.text = @"我要申请项目路演";
+        }else{
+            label.text = @"添加新的身份认证";
         }
         return cell;
     }
@@ -325,7 +373,10 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (self.dataArray.count>0) {
-         return self.dataArray.count+1;
+        if (currentSelected !=1001) {
+            return self.dataArray.count+1;
+        }
+        return self.dataArray.count;
     }
     
     return 0;
@@ -364,6 +415,7 @@
         NSString* status =[jsonDic valueForKey:@"status"];
         if([status intValue] == 0 || [status intValue] ==-1){
             [LoadingUtil closeLoadingView:loadingView];
+            self.dataArray= nil;
             self.dataArray = [jsonDic valueForKey:@"data"];
             
             if ([status integerValue] == -1) {
@@ -395,6 +447,12 @@
     loadingView.content = @"网络请求失败!";
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
+    
+    if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
+}
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];

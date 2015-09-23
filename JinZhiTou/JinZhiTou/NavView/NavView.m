@@ -39,12 +39,12 @@
         titleLable.textColor=WriteColor;
         titleLable.userInteractionEnabled=YES;
         titleLable.textAlignment=NSTextAlignmentCenter;
-        titleLable.font=[UIFont fontWithName:@"Arial" size:18.0f];
+        titleLable.font=SYSTEMFONT(18);
         [self addSubview:titleLable];
         
         //右边个人中心
         rightButton = [[UIButton alloc]initWithFrame:rightButtonRect];
-        [rightButton.titleLabel setFont:[UIFont fontWithName:@"Arial" size:18.0f]];
+        [rightButton.titleLabel setFont:SYSTEMFONT(18)];
         [rightButton setImage:[UIImage imageNamed:@"ic_toolbar_profile"]forState:UIControlStateNormal];
         [self addSubview:rightButton];
     }

@@ -163,23 +163,69 @@
         rect.origin.x+=10;
         UILabel* label = [[UILabel alloc]initWithFrame:rect];
         label.tag = 10001;
+        label.text =self.title;
         label.font = SYSTEMFONT(14);
         label.textColor = WriteColor;
         label.textAlignment = NSTextAlignmentLeft;
         [v addSubview:label];
         
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-30, POS_Y(label)+5, 60, 60)];
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-30, POS_Y(label)+35, 60, 60)];
         imgView.image = IMAGENAMED(@"touziren");
         imgView.contentMode =UIViewContentModeScaleAspectFill;
         [v addSubview:imgView];
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(imgView)+5, WIDTH(self), 21)];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(imgView)+30, WIDTH(self), 21)];
         label.font = SYSTEMFONT(16);
-        label.text=@"尊敬的用户，您的审核已经审核通过!";
+        label.text=self.content;
         label.textAlignment = NSTextAlignmentCenter;
         [v addSubview:label];
-        
     }
+}
+
+-(void)setIsScuesssed:(BOOL)isScuesssed
+{
+    self->_isScuesssed  =isScuesssed;
+
+    CGRect frame = self.frame;
+    frame.size.height = 170;
+    [self setFrame:frame ];
+    
+    UIView* v = [[UIView alloc]initWithFrame:viewTrace.frame];
+    v.tag =20001;
+    v.backgroundColor = WriteColor;
+    //移除
+    [viewTrace removeFromSuperview];
+    [self addSubview:v];
+    
+    //状态图片
+    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 10, 150, 30)];
+    imgView.backgroundColor = ColorTheme;
+    [v addSubview:imgView];
+    //标签
+    CGRect rect =imgView.frame;
+    rect.origin.x+=10;
+    UILabel* label = [[UILabel alloc]initWithFrame:rect];
+    label.tag = 10001;
+    label.text =self.title;
+    label.font = SYSTEMFONT(14);
+    label.textColor = WriteColor;
+    label.textAlignment = NSTextAlignmentLeft;
+    [v addSubview:label];
+    
+    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-30, POS_Y(label)+35, 60, 60)];
+     if (isScuesssed) {
+         imgView.image = IMAGENAMED(@"application-success");
+     }else{
+         imgView.image = IMAGENAMED(@"application-fails");
+     }
+    imgView.contentMode =UIViewContentModeScaleAspectFill;
+    [v addSubview:imgView];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(imgView)+30, WIDTH(self), 21)];
+    label.font = SYSTEMFONT(16);
+    label.text=self.content;
+    label.textAlignment = NSTextAlignmentCenter;
+    [v addSubview:label];
 }
 
 -(void)setTitle:(NSString *)title

@@ -21,7 +21,7 @@ static const float HEIGHT = 25;
         //标签
         self.titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(self.imageView)-15, WIDTH(self), HEIGHT)];
         self.titleLabel.textAlignment=NSTextAlignmentCenter;
-        self.titleLabel.font=[UIFont fontWithName:@"Arial" size:12];
+        self.titleLabel.font=SYSTEMFONT(12);
         [self addSubview:self.imageView];
         [self addSubview:self.titleLabel];
                                                                                

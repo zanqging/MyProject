@@ -273,8 +273,6 @@
     NSLog(@"搜索：%@",searchBar.searchField.text);
     
     header.title =[NSString stringWithFormat:@"包含\"%@\"的搜索结果",searchBar.searchField.text];
-    loadingView.isTransparent = YES;
-    [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
     NSString* url;
     if (self.type==0) {
         url= [PROJECT_SEARCH stringByAppendingFormat:@"%d/%ld/",0,currentPage];
@@ -284,7 +282,12 @@
     if(!httpUtils){
         httpUtils = [[HttpUtils alloc]init];
     }
-    [httpUtils getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:searchBar.searchField.text forKey:@"value"] type:0 delegate:self sel:@selector(requestSearch:)];
+    NSString* value =searchBar.searchField.text;
+    if ([TDUtil isValidString:value]) {
+        loadingView.isTransparent = YES;
+        [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
+        [httpUtils getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:value forKey:@"value"] type:0 delegate:self sel:@selector(requestSearch:)];
+    }
 }
 
 - (void)searchBarTextDidChange:(INSSearchBar *)searchBar
@@ -326,6 +329,7 @@
         key = @"value";
         url= [NEWS_SEARCH stringByAppendingFormat:@"%@/%ld/",[dic valueForKey:@"key"],currentPage];
     }
+    
     
     NSString* index = [dic valueForKey:key];
     if (!httpUtils) {

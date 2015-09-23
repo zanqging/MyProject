@@ -134,6 +134,15 @@
 //字体名称
 #define FONT_NAME @"STHeitiSC-Light"
 
+//红色字体
+#define FONT_COLOR_RED [UIColor colorWithRed:233.0/255 green:72.0/255 blue:25.0/255 alpha:1]
+
+//红色字体
+#define FONT_COLOR_BLACK [UIColor colorWithRed:64.0/255 green:64.0/255 blue:64.0/255 alpha:1]
+
+//红色字体
+#define FONT_COLOR_GRAY [UIColor colorWithRed:114.0/255 green:114.0/255 blue:114.0/255 alpha:1]
+
 //溯源背景颜色数组
 #define ORINGINL_COLORS [NSMutableArray arrayWithObjects:ORINGINL_MORNING,ORINGINL_TAKEN,ORINGINL_FRESH,ORINGINL_COOKING,ORINGINL_DISPATCH,ORINGINL_DISPATCH,ORINGINL_COOKING,ORINGINL_COOKING,nil]
 #define ClearColor [UIColor clearColor]
@@ -349,7 +358,7 @@
 //咨询阅读量
 #define NEWS_READ_COUNT @"newsreadcount/"
 //咨询分享
-#define NEWS_SHARE  @"newsshare/"
+#define NEWS_SHARE  @"sharenews/"
 
 //我的路演申请
 #define MY_ROADSHOW_APPLY @"myroadshow/"

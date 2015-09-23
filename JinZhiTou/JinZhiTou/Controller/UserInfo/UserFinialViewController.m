@@ -156,11 +156,12 @@
     
     if (switchView.tag  == 1000) {
         selectedIndex = 0;
+        self.dataCreateArray =nil;
+        [self loadCreateData];
     }else{
-        selectedIndex = 1;
-        if (!self.dataFinialArray) {
-            [self loadFinialData];
-        }
+        selectedIndex = 0;
+        self.dataFinialArray =nil;
+        [self loadFinialData];
         
     }
 }
@@ -207,6 +208,11 @@
 {
     RoadShowDetailViewController* controller =[[RoadShowDetailViewController alloc]init];
     controller.title = self.navView.title;
+    if (selectedIndex==0) {
+        controller.dic = self.dataCreateArray[indexPath.row];
+    }else{
+        controller.dic = self.dataFinialArray[indexPath.row];
+    }
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -225,18 +231,39 @@
     if (cell==nil) {
         cell =[[UserCollecteTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
     }
-    cell.imgview.image = IMAGENAMED(@"loading");
-    cell.titleLabel.text = @"国联质检";
-    cell.desclabel.text = @"关注环境，质量检测20年";
-    cell.typeLabel.text = @"西安/互联网/IT";
-    cell.timeLabel.text = @"预路演时间:2015-0-01 10:00";
-    cell.colletcteLabel.text = @"104";
-    cell.priseLabel.text = @"1024";
-    cell.votelabel.text = @"234";
-    cell.backgroundColor = WriteColor;
-    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
+    if (selectedIndex==0) {
+        NSDictionary* dic  =self.dataCreateArray[indexPath.row];
+        NSDictionary* dicStage = [[dic valueForKey:@"stage"] valueForKey:@"start"];
+        [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"thumbnail"]] placeholderImage:IMAGENAMED(@"loading")];
+        cell.titleLabel.text = [dic valueForKey:@"company_name"];
+        cell.desclabel.text = [dic valueForKey:@"project_summary"];
+        cell.typeLabel.text = [NSString stringWithFormat:@"%@/%@/%@",[dic valueForKey:@"province"],[dic valueForKey:@"city"],[dic valueForKey:@"industry_type"][0]];
+        cell.timeLabel.text = [NSString stringWithFormat:@"%@:%@",[dicStage valueForKey:@"name"],[dicStage valueForKey:@"datetime"]];
+        cell.colletcteLabel.text = [[dic valueForKey:@"collect_sum"] stringValue];
+        cell.priseLabel.text = [[dic valueForKey:@"like_sum"] stringValue];
+        cell.votelabel.text = [[dic valueForKey:@"vote_sum"] stringValue];
+        cell.backgroundColor = WriteColor;
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+    }else{
+        NSDictionary* dic  =self.dataFinialArray[indexPath.row];
+        NSDictionary* dicStage = [[dic valueForKey:@"stage"] valueForKey:@"start"];
+        [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"thumbnail"]] placeholderImage:IMAGENAMED(@"loading")];
+        cell.titleLabel.text = [dic valueForKey:@"company_name"];
+        cell.desclabel.text = [dic valueForKey:@"project_summary"];
+        cell.typeLabel.text = [NSString stringWithFormat:@"%@/%@/%@",[dic valueForKey:@"province"],[dic valueForKey:@"city"],[dic valueForKey:@"industry_type"][0]];
+        cell.timeLabel.text = [NSString stringWithFormat:@"%@:%@",[dicStage valueForKey:@"name"],[dicStage valueForKey:@"datetime"]];
+        cell.colletcteLabel.text = [[dic valueForKey:@"collect_sum"] stringValue];
+        cell.priseLabel.text = [[dic valueForKey:@"like_sum"] stringValue];
+        cell.votelabel.text = [[dic valueForKey:@"vote_sum"] stringValue];
+        cell.backgroundColor = WriteColor;
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableView.contentSize = CGSizeMake(WIDTH(tableView), 190*self.dataCreateArray.count+80);
     return cell;
 }
@@ -291,9 +318,13 @@
             }else{
                 if (!self.dataCreateArray) {
                     self.dataCreateArray = [jsonDic valueForKey:@"data"];
+                }else{
+                    [self.dataCreateArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
+                    [self.tableView reloadData];
                 }
-                [self.dataCreateArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
-                [self.tableView reloadData];
+            }
+            if ([status intValue] ==-1) {
+                self.tableView.content = [jsonDic valueForKey:@"msg"];
             }
         }
         if (isRefresh) {
@@ -303,7 +334,6 @@
         }
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         
-        self.tableView.content = [jsonDic valueForKey:@"msg"];
         //关闭加载视图
         [LoadingUtil closeLoadingView:loadingView];
     }
@@ -323,9 +353,14 @@
             }else{
                 if (!self.dataFinialArray) {
                     self.dataFinialArray = [jsonDic valueForKey:@"data"];
+                }else{
+                    [self.dataFinialArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
+                    [self.tableView reloadData];
                 }
-                [self.dataFinialArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
-                [self.tableView reloadData];
+            }
+            
+            if ([status intValue] ==-1) {
+                 self.tableView.content = [jsonDic valueForKey:@"msg"];
             }
             
         }
@@ -334,7 +369,7 @@
         }else{
             [self.tableView.footer endRefreshing];
         }
-        self.tableView.content = [jsonDic valueForKey:@"msg"];
+       
         //关闭加载视图
         [LoadingUtil closeLoadingView:loadingView];
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
@@ -359,5 +394,10 @@
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+- (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];
+    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
+    if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
 }
 @end

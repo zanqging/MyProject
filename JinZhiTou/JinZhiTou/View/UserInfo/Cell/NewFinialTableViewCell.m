@@ -23,23 +23,23 @@
         [self addSubview:view];
         
         self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 190, 25)];
-        self.titleLabel.font  =SYSTEMFONT(14);
-        self.titleLabel.textColor = BlackColor;
+        self.titleLabel.font  =SYSTEMFONT(18);
+        self.titleLabel.textColor = FONT_COLOR_BLACK;
         [view addSubview:self.titleLabel];
         
         self.desclabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel), WIDTH(self.titleLabel)/2, 21)];
-        self.desclabel.textColor = ColorTheme;
+        self.desclabel.textColor = FONT_COLOR_RED;
         self.desclabel.font = SYSTEMFONT(12);
         [view addSubview:self.desclabel];
         
         self.timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.desclabel), Y(self.desclabel), WIDTH(self.titleLabel)/2, 21)];
-        self.timeLabel.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
+        self.timeLabel.textColor = FONT_COLOR_GRAY;
         self.timeLabel.font = SYSTEMFONT(12);
         [view addSubview:self.timeLabel];
 
         self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.desclabel), WIDTH(self.titleLabel), 50)];
-        self.typeLabel.numberOfLines  =0 ;
-        self.typeLabel.textColor  =BACKGROUND_LIGHT_GRAY_COLOR;
+        self.typeLabel.numberOfLines  =3 ;
+        self.typeLabel.textColor  =FONT_COLOR_GRAY;
         self.typeLabel.font = SYSTEMFONT(12);
         self.typeLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [view addSubview:self.typeLabel];

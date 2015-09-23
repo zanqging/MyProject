@@ -26,7 +26,7 @@
         
         UILabel * lbl = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imageView)+10, Y(imageView), WIDTH(self)-POS_X(imageView), 30)];
         lbl.textAlignment = NSTextAlignmentLeft;
-        lbl.font = SYSTEMFONT(16);
+        lbl.font = SYSTEMFONT(17);
         lbl.text = @"公司重大新闻";
         [self addSubview:lbl];
         
@@ -52,7 +52,8 @@
         imageView1.image = UIGraphicsGetImageFromCurrentImageContext();
         
         self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(imageView1)+20, WIDTH(self), 25)];
-        self.titleLabel.font  =SYSTEMFONT(18);
+        self.titleLabel.font  =SYSTEMFONT(14);
+        self.titleLabel.textColor = FONT_COLOR_BLACK;
         self.titleLabel.textAlignment  = NSTextAlignmentCenter;
         [self addSubview:self.titleLabel];
         
@@ -62,7 +63,8 @@
         [self addSubview:self.dateTimeLabel];
         
         textView = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(self.dateTimeLabel)+10, WIDTH(self)-20, HEIGHT(self)-100)];
-        textView.font = SYSTEMFONT(14);
+        textView.font = SYSTEMFONT(16);
+        textView.textColor = FONT_COLOR_GRAY;
         textView.numberOfLines = 0;
         textView.lineBreakMode = NSLineBreakByWordWrapping;
         [self addSubview:textView];

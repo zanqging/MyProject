@@ -7,6 +7,7 @@
 //
 
 #import "SlideViewStartPage.h"
+#import "UConstants.h"
 #import "GlobalDefine.h"
 #import <QuartzCore/QuartzCore.h>
 @implementation SlideViewStartPage
@@ -29,7 +30,7 @@
         btnStart.backgroundColor =ColorTheme;
         btnStart.layer.borderColor =ColorTheme.CGColor;
         [btnStart setTitle:@"即刻开启" forState:UIControlStateNormal];
-        [btnStart.titleLabel setFont:[UIFont fontWithName:@"Arial" size:22]];
+        [btnStart.titleLabel setFont:SYSTEMFONT(22)];
         [btnStart setImageEdgeInsets:UIEdgeInsetsMake(0,frame.size.width/3+30, 0, 0)];
         [btnStart setTitleColor:WriteColor forState:UIControlStateNormal];
         [self addSubview:btnStart];
