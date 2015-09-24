@@ -32,7 +32,8 @@
 {
     self->_isBedgesEnabled = isBedgesEnabled;
     if (self.isBedgesEnabled) {
-        BedgesView* be = [[BedgesView alloc]initWithFrame:CGRectMake(WIDTH(self)-50, HEIGHT(self)/2-10, 20, 20)];
+        BedgesView* be = [[BedgesView alloc]initWithFrame:CGRectMake(WIDTH(self)-70, HEIGHT(self)/2-8, 35, 20)];
+        be.number = self.messageCount;
         be.tinColor = ColorTheme;
         [be setNeedsDisplay];
         [self addSubview:be];

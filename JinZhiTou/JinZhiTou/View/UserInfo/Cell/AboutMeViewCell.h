@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "BedgesView.h"
 @interface AboutMeViewCell : UITableViewCell
+@property(retain,nonatomic)NSString* messageCount;
 @property (strong, nonatomic) IBOutlet UIImageView *imgview;
 
 @property (strong, nonatomic) IBOutlet UILabel *titleLabel;

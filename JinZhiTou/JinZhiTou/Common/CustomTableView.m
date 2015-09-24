@@ -179,11 +179,15 @@
     if ([_delegate respondsToSelector:@selector(didDeleteCellAtIndexpath:IndexPath:FromView:)]) {
         [_delegate didDeleteCellAtIndexpath:self.homeTableView IndexPath:vIndex FromView:self];
     }
-    [self.homeTableView deleteRowsAtIndexPaths:@[vIndex,] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 #pragma mark 点击更多
 -(void)didCellClickedMoreButton:(id)aSender{
+    self.canCustomEdit = NO;
+    NSIndexPath *vIndex = [self.homeTableView indexPathForCell:aSender];
+    if ([_delegate respondsToSelector:@selector(didMoreCellAtIndexpath:IndexPath:FromView:)]) {
+        [_delegate didMoreCellAtIndexpath:self.homeTableView IndexPath:vIndex FromView:self];
+    }
 }
 
 @end

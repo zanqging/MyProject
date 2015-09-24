@@ -72,13 +72,31 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(RoadShowProject:) name:@"RoadShowProject" object:nil];
     
     
+    
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
     //提示框
     dialogView = [[DialogView alloc]initWithFrame:self.view.frame];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
     
+    
+    [self updateNewMessage:nil];
     
 }
+
+-(void)updateNewMessage:(NSDictionary*)dic
+{
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    NSInteger newMessageCount = [[dataStore valueForKey:@"NewMessageCount"] integerValue];
+    NSInteger systemMessageCount = [[dataStore valueForKey:@"SystemMessageCount"] integerValue];
+    if (newMessageCount+systemMessageCount>0) {
+        [navView setIsHasNewMessage:YES];
+    }else{
+        [navView setIsHasNewMessage:NO];
+    }
+
+}
+
 
 -(void)userInteractionEnabled:(NSDictionary*)dic
 {

@@ -37,7 +37,7 @@
     menuContetnView.hidden = YES;
     menuContetnView.tag = 100;
     
-    UIButton *vDeleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    vDeleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [vDeleteButton setBackgroundColor:BackColor];
     [vDeleteButton setTitle:@"删除" forState:UIControlStateNormal];
     [vDeleteButton setImage:[UIImage imageNamed:@"shanchu"] forState:UIControlStateNormal];
@@ -45,7 +45,7 @@
     [vDeleteButton addTarget:self action:@selector(deleteButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [vDeleteButton setTag:1001];
     
-    UIButton *vMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    vMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [vMoreButton setBackgroundColor:BackColor];
     [vMoreButton setTitle:@"回复" forState:UIControlStateNormal];
     [vMoreButton setImage:[UIImage imageNamed:@"huifu"] forState:UIControlStateNormal];
@@ -69,9 +69,9 @@
     UIView *vMenuView = [self.contentView viewWithTag:100];
     vMenuView.frame =CGRectMake(self.frame.size.width - DELETE_BUTTON_WIDHT - MORE_BUTTON_WIDTH, 0, DELETE_BUTTON_WIDHT + MORE_BUTTON_WIDTH, self.frame.size.height);
     
-    UIView *vDeleteButton = [self.contentView viewWithTag:1001];
+    vDeleteButton = [self.contentView viewWithTag:1001];
     vDeleteButton.frame = CGRectMake(MORE_BUTTON_WIDTH, 0, DELETE_BUTTON_WIDHT, self.frame.size.height);
-    UIView *vMoreButton = [self.contentView viewWithTag:1002];
+    vMoreButton = [self.contentView viewWithTag:1002];
     vMoreButton.frame = CGRectMake(0, 0, MORE_BUTTON_WIDTH, self.frame.size.height);
 }
 
@@ -219,6 +219,12 @@
     if ([_delegate respondsToSelector:@selector(didCellClickedDeleteButton:)]) {
         [_delegate didCellClickedDeleteButton:self];
     }
+}
+
+-(void)hiddenMoreButton
+{
+    [vMoreButton setEnabled:NO];
+    [vMoreButton setAlpha:0];
 }
 
 @end

@@ -3,7 +3,7 @@
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 #define IS_IOS7 SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")
 
-#import "MessageController.h"
+#import "MessageViewController.h"
 #import "TDUtil.h"
 #import "HttpUtils.h"
 #import "UConstants.h"
@@ -14,7 +14,7 @@
 #import "NSString+SBJSON.h"
 #import "MyTableViewCell.h"
 #import "ASIFormDataRequest.h"
-@interface MessageController ()<ASIHTTPRequestDelegate>
+@interface MessageViewController ()<ASIHTTPRequestDelegate>
 {
     NSInteger rowCount;
     BOOL isRefresh;
@@ -25,7 +25,7 @@
 }
 @end
 
-@implementation MessageController
+@implementation MessageViewController
 
 - (void)viewDidLoad
 {
@@ -120,21 +120,47 @@
     self->_dataArray  = dataArray;
     if (self.dataArray.count>0) {
          rowCount  =self.dataArray.count;
-        [self.customTableView.homeTableView reloadData];
+    }else{
+        [self.customTableView.homeTableView setContent:@"暂无数据"];
     }
+    [self.customTableView.homeTableView reloadData];
 }
 
 -(float)heightForRowAthIndexPath:(UITableView *)aTableView IndexPath:(NSIndexPath *)aIndexPath FromView:(CustomTableView *)aView{
-    return 150;
+    
+    NSInteger row  = aIndexPath.row;
+    NSDictionary* dic  =self.dataArray[row];
+    NSString* content =[dic valueForKey:@"content"];
+    
+    NSInteger lenght = [TDUtil convertToInt:content];
+    NSInteger lines = lenght / 16;
+    if (lines<=0) {
+        lines = 1;
+    }
+    float height = lines *20;
+    return height+80;
 }
 
 -(void)didSelectedRowAthIndexPath:(UITableView *)aTableView IndexPath:(NSIndexPath *)aIndexPath FromView:(CustomTableView *)aView{
 }
 
 -(void)didDeleteCellAtIndexpath:(UITableView *)aTableView IndexPath:(NSIndexPath *)aIndexPath FromView:(CustomTableView *)aView{
-    rowCount--;
+    NSLog(@"删除");
+    NSDictionary* dic =self.dataArray[aIndexPath.row];
+    NSString* serverUrl;
+    if (self.type==0) {
+        serverUrl= [settopicread stringByAppendingFormat:@"%@/",[dic valueForKey:@"id"]];
+    }else{
+        serverUrl= [deletemsgread stringByAppendingFormat:@"%@/",[dic valueForKey:@"id"]];
+    }
+    
+    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
 }
 
+-(void)didMoreCellAtIndexpath:(UITableView *)aTableView IndexPath:(NSIndexPath *)aIndexPath FromView:(CustomTableView *)aView
+{
+     NSLog(@"更多");
+}
 
 -(NSInteger)numberOfRowsInTableView:(UITableView *)aTableView InSection:(NSInteger)section FromView:(CustomTableView *)aView{
     return self.dataArray.count;
@@ -146,11 +172,14 @@
     MyTableViewCell *vCell = [aTableView dequeueReusableCellWithIdentifier:vCellIdentify];
     if (vCell == nil) {
         vCell = [[MyTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:vCellIdentify];
+        if (self.type!=0) {
+            [vCell hiddenMoreButton];
+        }
     }
     NSInteger row  = aIndexPath.row;
     NSDictionary* dic  =self.dataArray[row];
-    vCell.nameLabel.text = [dic valueForKey:@"name"];
-    vCell.contextLabel.text  = [dic valueForKey:@"content"];
+    [vCell setName: [dic valueForKey:@"name"]];
+    [vCell setContent:[dic valueForKey:@"content"]];
     vCell.timeLabel.text = [dic valueForKey:@"create_datetime"];
     
     NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
@@ -163,8 +192,29 @@
 {
     
 }
+
+-(void)loadData:(void (^)(int))complete FromView:(CustomTableView *)aView
+{
+    
+}
 - (IBAction)touched:(UIButton *)sender {
 
+}
+
+-(void)requestFinished:(ASIHTTPRequest *)request{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        NSString* status = [jsonDic valueForKey:@"status"];
+        if ([status intValue] == 0 || [status intValue] == -1) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"updateStatus" object:nil];
+        }
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+        [self refreshProject];
+    }
 }
 
 -(void)requestTopicList:(ASIHTTPRequest *)request{
@@ -176,8 +226,22 @@
     {
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0 || [status intValue] == -1) {
-            self.dataArray = [jsonDic valueForKey:@"data"];
+            if (isRefresh) {
+                self.dataArray =nil;
+                self.dataArray = [jsonDic valueForKey:@"data"];
+            }else{
+                if (!self.dataArray) {
+                    self.dataArray = [jsonDic valueForKey:@"data"];
+                }else{
+                    [self.dataArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
+                    [self.customTableView.homeTableView reloadData];
+                }
+            }
             [LoadingUtil close:loadingView];
+            
+            if ([status integerValue]==-1) {
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+            }
         }
     }
 }

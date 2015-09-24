@@ -18,12 +18,13 @@
 }
 
 @property(assign,nonatomic)BOOL isLocation;
+@property(retain,nonatomic)UIView* backView;
 @property(retain,nonatomic)NSString* title;
 @property(retain,nonatomic)UILabel* titleLable;
 @property(retain,nonatomic)UIButton* leftButton;
+@property(assign,nonatomic)BOOL isHasNewMessage;
 @property(retain,nonatomic)UIButton* rightButton;
 @property(retain,nonatomic)UIImageView* imageView;
-@property(retain,nonatomic)UIView* backView;
 
 -(void)setNavAnimation:(NSString*)type offset:(CGPoint)offset;
 @end

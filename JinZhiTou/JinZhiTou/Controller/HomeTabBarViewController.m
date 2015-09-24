@@ -44,17 +44,6 @@
     [self.tabBar insertSubview:view atIndex:0];
     self.tabBar.opaque = YES;
     
-    
-    for (int i =0; i<self.tabBar.items.count; i++) {
-        UITabBarItem*  item = self.tabBar.items[i];
-        [item setTitlePositionAdjustment:UIOffsetMake(0, -5)];
-        
-        //处理第三个按钮
-        if (i==2) {
-            item.enabled = NO;
-        }
-    }
-    
     //添加TabBar中间＋号视图
     NSMutableArray* dataArray=[[NSMutableArray alloc]init];
     DataModel* model=[[DataModel alloc]init];
@@ -103,6 +92,11 @@
     //发送短信
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(alert:) name:@"alert" object:nil];
     
+    //发送短信
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadRegistrationID) name:@"uploadRegistrationID" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateStatus) name:@"updateStatus" object:nil];
+    
+    
     //检测更新
     [self checkUpdate];
     
@@ -127,11 +121,50 @@
 //     NSLog(@"%@", fontNames);
 //     NSLog(@"完毕");
     
+    [self updateStatus];
     
-   
     
 }
 
+-(void)updateStatus
+{
+    //新消息
+    [self hasNewMessage];
+    [self hasNewSystemMessage];
+    
+    //新三板更新数据
+    [self NewFinialUpdateInfo];
+    //知识库更新数据
+    [self KnowledgeUpdateInfo];
+    
+}
+
+-(void)updateTabBarStatus
+{
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    for (int i =0; i<self.tabBar.items.count; i++) {
+        UITabBarItem*  item = self.tabBar.items[i];
+        [item setTitlePositionAdjustment:UIOffsetMake(0, -5)];
+        
+        //处理第三个按钮
+        if (i==2) {
+            item.enabled = NO;
+        }else if (i==3){
+                NSString* newFinialCount = [[dataStore valueForKey:@"NewFinialCount"] stringValue];
+                if ([newFinialCount integerValue]>0) {
+                    [item setBadgeValue:newFinialCount];
+                }
+            
+        }else if (i==4){
+            NSString* newFinialCount = [[dataStore valueForKey:@"KnowledgeCount"] stringValue];
+            if ([newFinialCount integerValue]>0) {
+                [item setBadgeValue:newFinialCount];
+            }
+        }
+    }
+    
+    
+}
 -(void)alert:(NSDictionary*)dic
 {
     
@@ -420,9 +453,102 @@
 }
 
 
+-(void)hasNewMessage
+{
+    [httpUtils getDataFromAPIWithOps:hasnewtopic postParam:nil type:0 delegate:self sel:@selector(requestNewMessage:)];
+}
+
+-(void)hasNewSystemMessage
+{
+    [httpUtils getDataFromAPIWithOps:hasnewmsg postParam:nil type:0 delegate:self sel:@selector(requestSystemMessage:)];
+}
+
+-(void)NewFinialUpdateInfo
+{
+    [httpUtils getDataFromAPIWithOps:latestnewscount postParam:nil type:0 delegate:self sel:@selector(requestNewFinialUpdateInfo:)];
+}
+
+-(void)KnowledgeUpdateInfo
+{
+    [httpUtils getDataFromAPIWithOps:latestknowledgecount postParam:nil type:0 delegate:self sel:@selector(requestKnowledgeUpdateInfo:)];
+}
+
 
 #pragma ASIHttpRequester
 //===========================================================网络请求=====================================
+-(void)requestNewMessage:(ASIHTTPRequest *)request{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        NSString* status = [jsonDic valueForKey:@"status"];
+        if ([status intValue] == 0) {
+            NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+            NSDictionary* data = [jsonDic valueForKey:@"data"];
+            [dataStore setValue:[data valueForKey:@"count"] forKey:@"NewMessageCount"];
+            [dataStore setValue:[TDUtil CurrentDate] forKey:@"NewUpdateTime"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"updateMessageStatus" object:nil];
+        }
+    }
+}
+
+-(void)requestSystemMessage:(ASIHTTPRequest *)request{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        NSString* status = [jsonDic valueForKey:@"status"];
+        if ([status intValue] == 0) {
+            NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+            NSDictionary* data = [jsonDic valueForKey:@"data"];
+            [dataStore setValue:[data valueForKey:@"count"] forKey:@"SystemMessageCount"];
+            [dataStore setValue:[TDUtil CurrentDate] forKey:@"NewUpdateTime"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"updateMessageStatus" object:nil];
+        }
+    }
+}
+
+-(void)requestNewFinialUpdateInfo:(ASIHTTPRequest *)request{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        NSString* status = [jsonDic valueForKey:@"status"];
+        if ([status intValue] == 0) {
+            NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+            NSDictionary* data = [jsonDic valueForKey:@"data"];
+            [dataStore setValue:[data valueForKey:@"count"] forKey:@"NewFinialCount"];
+            [dataStore setValue:[TDUtil CurrentDate] forKey:@"NewFinialUpdateTime"];
+            [self updateTabBarStatus];
+        }
+    }
+}
+
+-(void)requestKnowledgeUpdateInfo:(ASIHTTPRequest *)request{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        NSString* status = [jsonDic valueForKey:@"status"];
+        if ([status intValue] == 0) {
+            NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+            NSDictionary* data = [jsonDic valueForKey:@"data"];
+            [dataStore setValue:[data valueForKey:@"count"] forKey:@"KnowledgeCount"];
+            [dataStore setValue:[TDUtil CurrentDate] forKey:@"KnowledgeUpdateTime"];
+            
+            [self updateTabBarStatus];
+        }
+    }
+}
+
 -(void)requestUploadTokean:(ASIHTTPRequest *)request{
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);

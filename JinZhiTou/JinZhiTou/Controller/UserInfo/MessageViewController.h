@@ -14,9 +14,9 @@
 #import "NavView.h"
 #import "CustomTableView.h"
 
-@interface MessageController : UIViewController<CustomTableViewDataSource,CustomTableViewDelegate>
+@interface MessageViewController : UIViewController<CustomTableViewDataSource,CustomTableViewDelegate>
 @property (nonatomic,retain) CustomTableView *customTableView;
-@property(assign,nonatomic)int type;
+@property(assign,nonatomic)NSInteger type;
 @property(retain,nonatomic)NavView* navView;
 @property(retain,nonatomic)NSString* titleStr;
 @property(assign,nonatomic)BOOL isEndOfPageSize;

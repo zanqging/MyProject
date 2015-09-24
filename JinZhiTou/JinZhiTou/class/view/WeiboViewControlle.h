@@ -37,4 +37,6 @@
 @property (retain, nonatomic) UIButton *btnReplay;
 @property(nonatomic,retain) UITableViewCustomView * tableView;
 
+-(void)loadData;
+
 @end

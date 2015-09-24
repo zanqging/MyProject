@@ -20,7 +20,7 @@
 #import "StartPageViewController.h"
 #import "RoadShowDetailViewController.h"
 #import <TencentOpenAPI/TencentOAuth.h>
-#import "MessageController.h"
+#import "MessageViewController.h"
 
 @interface AppDelegate ()<UIAlertViewDelegate>
 {
@@ -146,8 +146,6 @@
          categories:nil];
     }
     [APService setupWithOption:launchOptions];
-
-    
     return YES;
 }
 
@@ -269,6 +267,10 @@ fetchCompletionHandler:(void
     [APService handleRemoteNotification:userInfo];
     completionHandler(UIBackgroundFetchResultNewData);
     
+    
+    //更新状态
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"updateStatus" object:nil];
+    
 }
 
 -(void)notification:(NSDictionary*)dic
@@ -302,6 +304,7 @@ fetchCompletionHandler:(void
                 break;
         }
     }
+    
 
 }
 
@@ -326,14 +329,18 @@ fetchCompletionHandler:(void
 -(void)loadMsgDetail:(NSInteger)index
 {
     UIStoryboard* storyBorard =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    MessageController* controller =(MessageController*)[storyBorard instantiateViewControllerWithIdentifier:@"ResplyMessage"];
+    MessageViewController* controller =(MessageViewController*)[storyBorard instantiateViewControllerWithIdentifier:@"ResplyMessage"];
+    controller.type=0;
+    controller.titleStr = @"消息回复";
     [self.iNav pushViewController:controller animated:YES];
 }
 
 -(void)loadSystemMsgDetail:(NSInteger)index
 {
     UIStoryboard* storyBorard =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    MessageController* controller =(MessageController*)[storyBorard instantiateViewControllerWithIdentifier:@"ResplyMessage"];
+    MessageViewController* controller =(MessageViewController*)[storyBorard instantiateViewControllerWithIdentifier:@"ResplyMessage"];
+     controller.type=1;
+    controller.titleStr = @"系统通知";
     [self.iNav pushViewController:controller animated:YES];
 }
 

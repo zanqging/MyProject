@@ -11,6 +11,7 @@
 @interface UserInfoTableViewCell : UITableViewCell
 @property(assign,nonatomic)BOOL isBedgesEnabled;
 
+@property(retain,nonatomic)NSString* messageCount;
 @property (strong, nonatomic) IBOutlet UIImageView *imgview;
 @property (strong, nonatomic) IBOutlet UILabel *titleLabel;
 @property (strong, nonatomic) IBOutlet UILabel *rightLabel;

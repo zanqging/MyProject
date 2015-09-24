@@ -16,6 +16,7 @@
 #import "DialogUtil.h"
 #import "NSString+SBJSON.h"
 #import "ASIFormDataRequest.h"
+#import "WeiboViewControlle.h"
 #import <QuartzCore/QuartzCore.h>
 @interface ReplyViewController ()<UITextViewDelegate,ASIHTTPRequestDelegate,UITextViewDelegate>
 {
@@ -73,6 +74,12 @@
 
 -(void)back:(id)sender
 {
+    for (UIViewController* v in self.navigationController.childViewControllers) {
+        if ([v isKindOfClass:WeiboViewControlle.class]) {
+            WeiboViewControlle* controller = (WeiboViewControlle*)v;
+            [controller loadData];
+        }
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 

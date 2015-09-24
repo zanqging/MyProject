@@ -81,6 +81,7 @@
                                                                            toolBar.bounds.size.width - 20.0f - 68.0f,
                                                                            30.0f)];
     textView.delegate =self;
+    textView.font =SYSTEMFONT(18);
     textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [toolBar addSubview:textView];
     
@@ -133,12 +134,19 @@
 }
 -(void)submmit:(NSDictionary* )userInfo
 {
-    NSString* url  =[TOPIC stringByAppendingFormat:@"%ld/",(long)self.project_id];
-    NSMutableDictionary* dic  =[[NSMutableDictionary alloc]init];
-    [dic setValue:textView.text forKey:@"content"];
-    [dic setValue:atTopId forKey:@"at_topic"];
+    NSString* str = textView.text;
     
-    [httpUtils getDataFromAPIWithOps:url postParam:dic type:0 delegate:self sel:@selector(requestSubmmit:)];
+    if ([TDUtil isValidString:str]) {
+        NSString* url  =[TOPIC stringByAppendingFormat:@"%ld/",(long)self.project_id];
+        NSMutableDictionary* dic  =[[NSMutableDictionary alloc]init];
+        [dic setValue:textView.text forKey:@"content"];
+        [dic setValue:atTopId forKey:@"at_topic"];
+        
+        [httpUtils getDataFromAPIWithOps:url postParam:dic type:0 delegate:self sel:@selector(requestSubmmit:)];
+    }else{
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请先输入内容"];
+    }
+    
 }
 
 -(void)loadData
@@ -185,10 +193,6 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-}
 
 #pragma mark - Table view data source
 
@@ -360,7 +364,15 @@
         if ([status intValue] == 0) {
             loadingView.isError = NO;
             self.tableView.content = [jsonDic valueForKey:@"msg"];
+            
+            currentPage = 0;
+            [self loadData];
         }
+        
+        //隐藏键盘
+        [self hiddeKeyboard:nil];
+        //清空数据
+        textView.text =@"";
         
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
     }

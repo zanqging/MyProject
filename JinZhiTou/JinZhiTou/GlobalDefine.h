@@ -316,9 +316,9 @@
 //回复
 #define TOPIC @"topic/"
 //我的消息回复
-#define MY_TOPIC_LIST @"mytopic/"
+#define MY_TOPIC_LIST @"topicread/"
 //我的系统通知
-#define MY_SYSTEM_LIST @"systeminformlist/"
+#define MY_SYSTEM_LIST @"systeminform/"
 //关于路演
 #define aboutroadshow @"aboutroadshow/"
 //风险
@@ -366,6 +366,29 @@
 #define MY_PARTICATE  @"myparticipate/"
 //我的认证
 #define MY_AUTH @"myinvestorauthentication/"
+
+
+//消息推送
+//是否有新的系统通知
+#define hasnewmsg @"hassysteminform/"
+//系统通知列表
+#define msgread @"msgread/"
+//设置消息已读
+#define setmsgread @"setsysteminform/"
+//删除系统通知消息
+#define deletemsgread @"deletesysteminform/"
+//是否有消息回复
+#define hasnewtopic @"hasnewtopic/"
+//消息回复列表
+#define topicread @"topicread/"
+//设置已读
+#define settopicread @"settopicread/"
+
+//新三板更新数据
+#define latestnewscount @"latestnewscount/"
+//知识库更新数据
+#define latestknowledgecount @"latestknowledgecount/"
+
 
 //用户下载头像
 //http://weini.im/upload//menuinfo//_EN_8427.jpg

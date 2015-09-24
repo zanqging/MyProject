@@ -26,6 +26,8 @@
 {
     CGFloat startLocation;
     BOOL    hideMenuView;
+    UIButton *vDeleteButton;
+    UIButton *vMoreButton;
 }
 
 
@@ -36,4 +38,5 @@
 
 -(void)hideMenuView:(BOOL)aHide Animated:(BOOL)aAnimate;
 -(void)addControl;
+-(void)hiddenMoreButton;
 @end

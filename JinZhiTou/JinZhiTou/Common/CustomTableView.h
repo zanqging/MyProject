@@ -26,6 +26,7 @@
 
 @optional
 -(void)didDeleteCellAtIndexpath:(UITableView *)aTableView IndexPath:(NSIndexPath *)aIndexPath FromView:(CustomTableView *)aView;
+-(void)didMoreCellAtIndexpath:(UITableView *)aTableView IndexPath:(NSIndexPath *)aIndexPath FromView:(CustomTableView *)aView;
 //- (void)tableViewWillBeginDragging:(UIScrollView *)scrollView;
 //- (void)tableViewDidScroll:(UIScrollView *)scrollView;
 ////- (void)tableViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;

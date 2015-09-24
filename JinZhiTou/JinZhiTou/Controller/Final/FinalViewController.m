@@ -107,7 +107,23 @@
     
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
+    //添加监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
+    
+    
+    [self updateNewMessage:nil];
    
+    
+}
+
+-(void)updateNewMessage:(NSDictionary*)dic
+{
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    NSInteger newMessageCount = [[dataStore valueForKey:@"NewMessageCount"] integerValue];
+    NSInteger systemMessageCount = [[dataStore valueForKey:@"SystemMessageCount"] integerValue];
+    if (newMessageCount+systemMessageCount>0) {
+        [navView setIsHasNewMessage:YES];
+    }
     
 }
 

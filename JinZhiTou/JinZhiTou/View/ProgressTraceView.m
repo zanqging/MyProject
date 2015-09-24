@@ -39,12 +39,17 @@
     
     UILabel* label;
     
-    label = [[UILabel alloc]initWithFrame:CGRectMake(w*progress+5, Y(progressView)-10, w, 10)];
+    label = [[UILabel alloc]initWithFrame:CGRectMake(w*progress+5, Y(progressView)-2.5, w, 10)];
     label.textColor = ColorTheme;
     NSString* str = [NSString stringWithFormat:@"%.1f",progress*100];
     str = [str stringByAppendingString:@"%"];
     label.text = str;
-    label.font =SYSTEMFONT(10);
+    label.font =SYSTEMFONT(12);
     [self addSubview:label];
+    
+    frame = progressBackView.frame;
+    frame.origin.x = POS_X(progressView)+30;
+    frame.size.width = frame.size.width-frame.origin.x;
+    [progressBackView setFrame:frame];
 }
 @end

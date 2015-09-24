@@ -170,4 +170,24 @@
         }
     }
 }
+
+-(void)setIsHasNewMessage:(BOOL)isHasNewMessage
+{
+    self->_isHasNewMessage = isHasNewMessage;
+    UIImageView* v = (UIImageView*)[self viewWithTag:40001];
+    if (self.isHasNewMessage) {
+        if (!v) {
+            UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.imageView)+25, Y(leftButton)+18, 7, 7)];
+            imgView.tag =40001;
+            imgView.backgroundColor = [UIColor whiteColor];
+            imgView.layer.cornerRadius = 3.5;
+            imgView.layer.masksToBounds = YES;
+            [self addSubview:imgView];
+        }
+    }else{
+        if (v) {
+            [v removeFromSuperview];
+        }
+    }
+}
 @end

@@ -285,6 +285,11 @@
                 [self.tableView reloadData];
             }
             
+            
+            NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+            [dataStore setValue:@"0" forKey:@"NewFinialCount"];
+            [dataStore setValue:[TDUtil CurrentDate] forKey:@"NewFinialUpdateTime"];
+            [self.tabBarItem setBadgeValue:nil];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         }
@@ -348,8 +353,26 @@
         
         selectedIndex = index;
         [self loadNewsData:index];
+        
+        //添加监听
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
+        
+        
+        [self updateNewMessage:nil];
 
     }
+    
+}
+
+-(void)updateNewMessage:(NSDictionary*)dic
+{
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    NSInteger newMessageCount = [[dataStore valueForKey:@"NewMessageCount"] integerValue];
+    NSInteger systemMessageCount = [[dataStore valueForKey:@"SystemMessageCount"] integerValue];
+    if (newMessageCount+systemMessageCount>0) {
+        [self.navView setIsHasNewMessage:YES];
+    }
+    
 }
 
 -(void)requestFailed:(ASIHTTPRequest *)request

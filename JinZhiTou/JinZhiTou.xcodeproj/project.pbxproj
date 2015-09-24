@@ -228,7 +228,7 @@
 		45E189E11B79DEB10082225E /* RelpyMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E189E01B79DEB10082225E /* RelpyMessageViewController.m */; };
 		45E189E41B79E0500082225E /* ReplyMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E189E31B79E0500082225E /* ReplyMessageTableViewCell.m */; };
 		45E18A1C1B79FC1E0082225E /* MyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E18A1B1B79FC1E0082225E /* MyTableViewCell.m */; };
-		45E18A1F1B79FC290082225E /* MessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E18A1E1B79FC290082225E /* MessageController.m */; };
+		45E18A1F1B79FC290082225E /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E18A1E1B79FC290082225E /* MessageViewController.m */; };
 		45E18A301B79FD250082225E /* CustomTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E18A221B79FD250082225E /* CustomTableView.m */; };
 		45E18A311B79FD250082225E /* HitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E18A241B79FD250082225E /* HitView.m */; };
 		45E18A321B79FD250082225E /* LoadMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E18A261B79FD250082225E /* LoadMoreCell.m */; };
@@ -728,8 +728,8 @@
 		45E189E31B79E0500082225E /* ReplyMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReplyMessageTableViewCell.m; path = View/UserInfo/Cell/ReplyMessageTableViewCell.m; sourceTree = "<group>"; };
 		45E18A1A1B79FC1E0082225E /* MyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyTableViewCell.h; path = Controller/UserInfo/MyTableViewCell.h; sourceTree = "<group>"; };
 		45E18A1B1B79FC1E0082225E /* MyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyTableViewCell.m; path = Controller/UserInfo/MyTableViewCell.m; sourceTree = "<group>"; };
-		45E18A1D1B79FC290082225E /* MessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageController.h; path = Controller/UserInfo/MessageController.h; sourceTree = "<group>"; };
-		45E18A1E1B79FC290082225E /* MessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageController.m; path = Controller/UserInfo/MessageController.m; sourceTree = "<group>"; };
+		45E18A1D1B79FC290082225E /* MessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageViewController.h; path = Controller/UserInfo/MessageViewController.h; sourceTree = "<group>"; };
+		45E18A1E1B79FC290082225E /* MessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageViewController.m; path = Controller/UserInfo/MessageViewController.m; sourceTree = "<group>"; };
 		45E18A211B79FD250082225E /* CustomTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableView.h; sourceTree = "<group>"; };
 		45E18A221B79FD250082225E /* CustomTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableView.m; sourceTree = "<group>"; };
 		45E18A231B79FD250082225E /* HitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitView.h; sourceTree = "<group>"; };
@@ -1806,8 +1806,8 @@
 				45E18A201B79FD240082225E /* Common */,
 				45E18A1A1B79FC1E0082225E /* MyTableViewCell.h */,
 				45E18A1B1B79FC1E0082225E /* MyTableViewCell.m */,
-				45E18A1D1B79FC290082225E /* MessageController.h */,
-				45E18A1E1B79FC290082225E /* MessageController.m */,
+				45E18A1D1B79FC290082225E /* MessageViewController.h */,
+				45E18A1E1B79FC290082225E /* MessageViewController.m */,
 			);
 			name = Message;
 			sourceTree = "<group>";
@@ -2203,6 +2203,9 @@
 						DevelopmentTeam = FS28DNM2QR;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 0;
 							};
 						};
@@ -2434,7 +2437,7 @@
 				4508762D1B8F644E006EFC1A /* SlideView.m in Sources */,
 				4532718E1B74A5360044F8C1 /* UserInfoSettingViewController.m in Sources */,
 				45495BD01B60DA02007A17FD /* UIImage+Cut.m in Sources */,
-				45E18A1F1B79FC290082225E /* MessageController.m in Sources */,
+				45E18A1F1B79FC290082225E /* MessageViewController.m in Sources */,
 				45FCD02C1B75E15A009AD6E3 /* SBJsonWriter.m in Sources */,
 				4581155C1B80150C006EEBBC /* ThinkTankViewController.m in Sources */,
 				45495C151B60DA91007A17FD /* PinYinForObjc.m in Sources */,
@@ -2560,6 +2563,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2584,6 +2588,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "c1ca01b9-cce3-46d2-ac66-ef0b8575d8a6";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -2605,6 +2610,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2621,6 +2627,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "c1ca01b9-cce3-46d2-ac66-ef0b8575d8a6";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2648,7 +2655,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1264b681-7bfc-423d-8e28-2da41ee455b7";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -2675,7 +2682,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1264b681-7bfc-423d-8e28-2da41ee455b7";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

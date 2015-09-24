@@ -69,9 +69,23 @@
     
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
+    //添加监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
+    
+    
+    [self updateNewMessage:nil];
 }
 
-
+-(void)updateNewMessage:(NSDictionary*)dic
+{
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    NSInteger newMessageCount = [[dataStore valueForKey:@"NewMessageCount"] integerValue];
+    NSInteger systemMessageCount = [[dataStore valueForKey:@"SystemMessageCount"] integerValue];
+    if (newMessageCount+systemMessageCount>0) {
+        [self.navView setIsHasNewMessage:YES];
+    }
+    
+}
 
 -(void)userInteractionEnabled:(NSDictionary*)dic
 
@@ -298,6 +312,10 @@
                 [self.dataCreateArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
                 [self.tableView reloadData];
             }
+            NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+            [dataStore setValue:@"0" forKey:@"KnowledgeCount"];
+            [dataStore setValue:[TDUtil CurrentDate] forKey:@"KnowledgeUpdateTime"];
+            [self.tabBarItem setBadgeValue:nil];
             
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
@@ -398,6 +416,10 @@
                 [self.tableView reloadData];
             }
             
+            NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+            [dataStore setValue:@"0" forKey:@"KnowledgeCount"];
+            [dataStore setValue:[TDUtil CurrentDate] forKey:@"KnowledgeUpdateTime"];
+            [self.tabBarItem setBadgeValue:nil];
         }
         if (isRefresh) {
             [self.tableView.header endRefreshing];

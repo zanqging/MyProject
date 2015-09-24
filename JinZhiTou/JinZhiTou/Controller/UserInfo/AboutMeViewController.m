@@ -10,7 +10,7 @@
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #import "AboutMeViewCell.h"
-#import "MessageController.h"
+#import "MessageViewController.h"
 @interface AboutMeViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 @end
@@ -43,10 +43,18 @@
     self.tableView.showsHorizontalScrollIndicator=NO;
     self.tableView.backgroundColor=BackColor;
     self.tableView.separatorStyle=UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [self.view addSubview:self.tableView];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateStatus) name:@"updateMessageStatus" object:nil];
+    
     [self loadData];
     
+}
+
+-(void)updateStatus
+{
+    [self loadData];
 }
 
 -(void)back:(id)sender
@@ -71,7 +79,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UIStoryboard* storyBorard =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    MessageController* controller =(MessageController*)[storyBorard instantiateViewControllerWithIdentifier:@"ResplyMessage"];
+    MessageViewController* controller =(MessageViewController*)[storyBorard instantiateViewControllerWithIdentifier:@"ResplyMessage"];
     NSInteger row = indexPath.row;
     NSDictionary* dic =self.dataArray[row];
     controller.titleStr = [dic valueForKey:@"title"];
@@ -85,7 +93,6 @@
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     //声明静态字符串对象，用来标记重用单元格
     NSString* TableDataIdentifier=@"aboutMeInfoViewCell";
     //用TableDataIdentifier标记重用单元格
@@ -93,6 +100,22 @@
     //如果单元格未创建，则需要新建
     if (cell==nil) {
         cell = [[AboutMeViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 100)];
+    }
+    
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    if (indexPath.row==0) {
+        NSInteger newMessageCount = [[dataStore valueForKey:@"NewMessageCount"] integerValue];
+        if (newMessageCount>0) {
+            cell.messageCount = [NSString stringWithFormat:@"%ld",newMessageCount];
+            [cell setIsBedgesEnabled:YES];
+        }
+    }else{
+        NSInteger systemMessageCount = [[dataStore valueForKey:@"SystemMessageCount"] integerValue];
+        if (systemMessageCount>0) {
+            cell.messageCount = [NSString stringWithFormat:@"%ld",systemMessageCount];
+            [cell setIsBedgesEnabled:YES];
+        }
+
     }
     NSDictionary* dic =self.dataArray[indexPath.row];
     [cell setImageWithName:[dic valueForKey:@"imageName"] setTitle:[dic valueForKey:@"title"]];
@@ -122,11 +145,15 @@
         if (!self.navigationController.interactivePopGestureRecognizer.enabled) {
             self.navigationController.interactivePopGestureRecognizer.enabled = YES;
         }
-        
     }
 }
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+- (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];
+    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
+    if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
 }
 @end

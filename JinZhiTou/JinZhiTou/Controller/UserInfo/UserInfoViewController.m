@@ -75,11 +75,16 @@
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(modifyUserInfo:) name:@"modifyUserInfo" object:nil];
         //发送短信
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(upLoad:) name:@"upLoad" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateStatus) name:@"updateMessageStatus" object:nil];
     }else{
         self.isAmious = YES;
     }
 }
 
+-(void)updateStatus
+{
+    [self.tableView reloadData];
+}
 -(void)upLoad:(id)sender
 {
     [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"上传头像"];
@@ -181,6 +186,17 @@
     //如果单元格未创建，则需要新建
     if (cell==nil) {
         cell = [[UserInfoTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(tableView), 50)];
+    }
+    if (indexPath.row==0) {
+        NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+        NSInteger newMessageCount = [[dataStore valueForKey:@"NewMessageCount"] integerValue];
+        NSInteger systemMessageCount = [[dataStore valueForKey:@"SystemMessageCount"] integerValue];
+        NSInteger count =newMessageCount+systemMessageCount;
+        if (count>0) {
+            cell.messageCount = [NSString stringWithFormat:@"%ld",count];
+            [cell setIsBedgesEnabled:YES];
+        }
+
     }
 
     NSInteger row =indexPath.row;
