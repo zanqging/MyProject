@@ -65,6 +65,8 @@
         [btnAction addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
         [v addSubview:btnAction];
         
+        self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+        
     }
     return self;
 }

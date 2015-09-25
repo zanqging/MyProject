@@ -22,8 +22,8 @@
         
         [self addSubview:view];
         
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 190, 25)];
-        self.titleLabel.font  =SYSTEMFONT(18);
+        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10,WIDTH(self)-100, 25)];
+        self.titleLabel.font  =SYSTEMBOLDFONT(16);
         self.titleLabel.textColor = FONT_COLOR_BLACK;
         [view addSubview:self.titleLabel];
         
@@ -44,7 +44,7 @@
         self.typeLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [view addSubview:self.typeLabel];
         
-        self.imgview = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)-90, 10, 70, 70)];
+        self.imgview = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)-90, 10, 80, 80)];
         self.imgview.contentMode = UIViewContentModeScaleAspectFit;
         self.imgview.layer.masksToBounds  =YES;
         [view addSubview:self.imgview];

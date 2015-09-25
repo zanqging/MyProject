@@ -195,6 +195,8 @@
         req.scene = WXSceneTimeline;
     }
     [WXApi sendReq:req];
+    
+    [self closeView:nil];
 }
 
 -(void)shareQQ

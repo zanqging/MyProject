@@ -21,6 +21,4 @@
 @property (strong, nonatomic) UILabel *colletcteLabel;
 @property (strong, nonatomic) UIImageView *priseImage;
 @property (strong, nonatomic) UILabel *priseLabel;
-@property (strong, nonatomic) UIImageView *voteImage;
-@property (strong, nonatomic) UILabel *votelabel;
 @end

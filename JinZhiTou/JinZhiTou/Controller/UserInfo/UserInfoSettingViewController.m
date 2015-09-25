@@ -97,7 +97,8 @@
         if (indexPath.row==0) {
             PrivacyViewController* controller =[[PrivacyViewController alloc]init];
             controller.serverUrl = privacy;
-            controller.title = self.navView.title;
+            controller.title = @"返回";
+            controller.titleStr =@"隐私政策";
             [self.navigationController pushViewController:controller animated:YES];
         }else{
             FeedBackViewController* controller =[[FeedBackViewController alloc]init];

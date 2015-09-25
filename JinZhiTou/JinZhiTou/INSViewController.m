@@ -163,7 +163,6 @@
             }
             
             cell.typeLabel.text = str;
-            cell.votelabel.text = [[dic valueForKey:@"vote_sum"] stringValue];
             cell.priseLabel.text = [[dic valueForKey:@"like_sum"] stringValue];
             cell.colletcteLabel.text = [[dic valueForKey:@"collect_sum"] stringValue];
             cell.timeLabel.text = [dic valueForKey:@"roadshow_start_datetime"];

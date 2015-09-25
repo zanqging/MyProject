@@ -10,7 +10,7 @@
 #import "NavView.h"
 #import "UITableViewCustomView.h"
 @interface UserFinialViewController : UIViewController
-
+@property(assign,nonatomic)int selectedIndex;
 @property(assign,nonatomic)BOOL isBackHome;
 @property(retain,nonatomic)NSString* navTitle;
 @property (strong, nonatomic)NavView *navView;

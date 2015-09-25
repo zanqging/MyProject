@@ -9,7 +9,6 @@
 #import "RoadShowApplyViewController.h"
 #import "TDUtil.h"
 #import "NavView.h"
-#import "QiniuSDK.h"
 #import "HttpUtils.h"
 //#import "LoadVideo.h"
 #import "DialogUtil.h"
@@ -22,6 +21,7 @@
 #import "PrivacyViewController.h"
 #import "CompanyViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "UserTraceViewController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 @interface RoadShowApplyViewController ()<UIScrollViewDelegate,ASIHTTPRequestDelegate,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
@@ -152,7 +152,7 @@
     scrollView.delegate=self;
     scrollView.bounces = NO;
     scrollView.backgroundColor=BackColor;
-    scrollView.contentSize = CGSizeMake(WIDTH(scrollView), HEIGHT(scrollView)+100);
+    scrollView.contentSize = CGSizeMake(WIDTH(scrollView), HEIGHT(scrollView)+150);
     [self.view addSubview:scrollView];
     
     UIImageView* imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, WIDTH(scrollView), 170)];
@@ -176,51 +176,63 @@
 //    [scrollView addSubview:loadingVideView];
     
     //填写信息
-    UIView* view = [[UIView alloc]initWithFrame:CGRectMake(20, POS_Y(label)+10, WIDTH(self.view)-40, 150)];
+    UIView* view = [[UIView alloc]initWithFrame:CGRectMake(20, POS_Y(label)+10, WIDTH(self.view)-40, 160)];
     view.tag = 30001;
     view.backgroundColor  =WriteColor;
     [scrollView addSubview:view];
     
     //姓名
-    label = [[UILabel alloc]initWithFrame:CGRectMake(20, 30, 80, 21)];
+    label = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, 80, 30)];
     label.textAlignment = NSTextAlignmentLeft;
     label.text = @"联系人姓名";
-    label.font = SYSTEMFONT(16);
+    label.font = SYSTEMFONT(14);
     [view addSubview:label];
     
     //输入姓名
-    userNameTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(scrollView)*2/3-40, 21)];
+    userNameTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(scrollView)*2/3-40, 30)];
     userNameTextField.tag = 1001;
     userNameTextField.delegate = self;
     userNameTextField.placeholder = @"请输入联系人姓名";
-    userNameTextField.font  =SYSTEMFONT(14);
+    userNameTextField.font  =SYSTEMFONT(16);
+    userNameTextField.returnKeyType = UIReturnKeyDone;
+    userNameTextField.layer.borderColor =ColorTheme.CGColor;
+    userNameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    userNameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    userNameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:userNameTextField];
     
-    UIImageView* lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(userNameTextField), WIDTH(view), 1)];
+    UIImageView* lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(userNameTextField)+10, WIDTH(view), 1)];
     lineImgView.backgroundColor = BackColor;
     [view addSubview:lineImgView];
     
     //职位
-    label = [[UILabel alloc]initWithFrame:CGRectMake(X(label), POS_Y(label)+10, WIDTH(label), 21)];
+    label = [[UILabel alloc]initWithFrame:CGRectMake(X(label), POS_Y(lineImgView)+10, WIDTH(label), 30)];
     label.textAlignment = NSTextAlignmentLeft;
     label.text = @"联系人手机";
     label.font = SYSTEMFONT(14);
     [view addSubview:label];
     
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
     //输入职位
-    userPhoneTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(userNameTextField), 21)];
+    userPhoneTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(userNameTextField), 30)];
     userPhoneTextField.tag = 1002;
-    userPhoneTextField.font  =SYSTEMFONT(14);
+    userPhoneTextField.text = [dataStore valueForKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
+    userPhoneTextField.font  =SYSTEMFONT(16);
     userPhoneTextField.placeholder = @"请输入联系人手机";
     userPhoneTextField.delegate = self;
+    userPhoneTextField.returnKeyType = UIReturnKeyDone;
+    userPhoneTextField.layer.borderColor =ColorTheme.CGColor;
+    userPhoneTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    userPhoneTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    userPhoneTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:userPhoneTextField];
     
-    lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(userPhoneTextField), WIDTH(view), 1)];
+    lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(userPhoneTextField)+10, WIDTH(view), 1)];
     lineImgView.backgroundColor = BackColor;
     [view addSubview:lineImgView];
     
     //公司
-    label = [[UILabel alloc]initWithFrame:CGRectMake(X(label), POS_Y(label)+10, WIDTH(label), 21)];
+    label = [[UILabel alloc]initWithFrame:CGRectMake(X(label), POS_Y(lineImgView)+10, WIDTH(label), 30)];
     label.textAlignment = NSTextAlignmentLeft;
     label.text = @"选择公司";
     label.font = SYSTEMFONT(14);
@@ -229,20 +241,22 @@
     
     
     //输入公司信息
-    userCompanyTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(userPhoneTextField)-25, 21)];
+    userCompanyTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(userPhoneTextField)-25, 30)];
     userCompanyTextField.placeholder = @"请选择或填写公司";
-    userCompanyTextField.font  =SYSTEMFONT(14);
+    userCompanyTextField.font  =SYSTEMFONT(16);
     userCompanyTextField.tag = 10001;
     userCompanyTextField.delegate = self;
+    userCompanyTextField.returnKeyType = UIReturnKeyDone;
+    userCompanyTextField.layer.borderColor =ColorTheme.CGColor;
+    userCompanyTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    userCompanyTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    userCompanyTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:userCompanyTextField];
     
-    lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(userCompanyTextField), WIDTH(view), 1)];
-    lineImgView.backgroundColor = BackColor;
-    [view addSubview:lineImgView];
     
     UITapGestureRecognizer* recognizer =[[ UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doAction:)];
     
-    imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)-30, Y(label), 20, 20)];
+    imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)-30, Y(userCompanyTextField)+5, 25, 25)];
     imageView.image = IMAGENAMED(@"tianjia");
     imageView.userInteractionEnabled = YES;
     [imageView addGestureRecognizer:recognizer];
@@ -250,50 +264,61 @@
     view.layer.cornerRadius = 5;
     
     //投资信息
-    view = [[UIView alloc]initWithFrame:CGRectMake(20, POS_Y(view)+10, WIDTH(self.view)-40, 110)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(20, POS_Y(view)+10, WIDTH(self.view)-40, 150)];
     view.tag = 30002;
     view.alpha = 0;
     view.backgroundColor  =WriteColor;
     [scrollView addSubview:view];
     
 
-    label = [[UILabel alloc]initWithFrame:CGRectMake(0, 10, 70, 21)];
+    label = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, WIDTH(scrollView)*1/3-20, 30)];
     label.textAlignment = NSTextAlignmentLeft;
     label.text = @"所属行业";
     label.font = SYSTEMFONT(14);
     [view addSubview:label];
     
     //姓名
-    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(scrollView)*2/3-20, 21)];
+    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(scrollView)*2/3-20, 30)];
     label.tag =20001;
+    label.textColor = FONT_COLOR_GRAY;
     label.font = SYSTEMFONT(14);
     label.textAlignment = NSTextAlignmentLeft;
     [view addSubview:label];
     
+    lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label)+10, WIDTH(view), 1)];
+    lineImgView.backgroundColor = BackColor;
+    [view addSubview:lineImgView];
     
-    label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(label), WIDTH(scrollView)*1/3, 21)];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(20, POS_Y(lineImgView)+10, WIDTH(scrollView)*1/3-20, 30)];
     label.textAlignment = NSTextAlignmentLeft;
-    label.text = @"公司注册地";
+    label.text = @"注册地址";
     label.font = SYSTEMFONT(14);
     [view addSubview:label];
     
 
-    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(scrollView)*2/3-20, 21)];
+    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(scrollView)*2/3-20, 30)];
     label.textAlignment = NSTextAlignmentLeft;
     label.tag =20002;
+    label.textColor = FONT_COLOR_GRAY;
     label.font = SYSTEMFONT(14);
     [view addSubview:label];
     
-    label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(label)+10, WIDTH(scrollView)*1/3, 21)];
+    lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label)+10, WIDTH(view), 1)];
+    lineImgView.backgroundColor = BackColor;
+    [view addSubview:lineImgView];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(20, POS_Y(lineImgView)+10, WIDTH(scrollView)*1/3-20, 21)];
     label.textAlignment = NSTextAlignmentLeft;
     label.text = @"公司状态";
     label.font = SYSTEMFONT(14);
     [view addSubview:label];
     
 
-    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(scrollView)*2/3-20, 21)];
+    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(scrollView)*2/3-20, 30)];
     label.tag =20003;
     label.font = SYSTEMFONT(14);
+    label.textColor = FONT_COLOR_GRAY;
     label.textAlignment = NSTextAlignmentLeft;
     [view addSubview:label];
     view.layer.cornerRadius = 5;
@@ -353,7 +378,8 @@
 {
     PrivacyViewController* controller = [[PrivacyViewController alloc]init];
     controller.serverUrl = aboutroadshow;
-    controller.title = navView.title;
+    controller.title = @"返回";
+    controller.titleStr =@"项目发起协议";
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -523,6 +549,19 @@
             
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
+            //进度查看
+            double delayInSeconds = 1.0;
+            //__block RoadShowDetailViewController* bself = self;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                UserTraceViewController* controller = [[UserTraceViewController alloc]init];
+                //来现场
+                controller.titleStr = navView.title;
+                controller.currentSelected = 1000;
+                [self.navigationController pushViewController:controller animated:YES];
+                
+                
+            });
         }
     }
 }
@@ -553,6 +592,11 @@
     if (textField.tag ==10001) {
         autoShowView.isHidden = NO;
         [textField resignFirstResponder];
+        [scrollView setContentOffset:CGPointMake(0, 300) animated:YES];
+    }else if (textField.tag == 1001){
+        [scrollView setContentOffset:CGPointMake(0, 200) animated:YES];
+    }else if (textField.tag == 1002){
+        [scrollView setContentOffset:CGPointMake(0, 300) animated:YES];
     }
 }
 
@@ -564,11 +608,17 @@
 -(void)textFieldDidEndEditing:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    if (textField.tag ==10001) {
+       [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+    }
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    if (textField.tag ==10001) {
+        [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+    }
     return YES;
 }
 

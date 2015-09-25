@@ -2,9 +2,11 @@
 
 #import "SlideTableViewCell.h"
 #import "GlobalDefine.h"
+#import "GlobalDefine.h"
+#import "UConstants.h"
 #define DELETE_BUTTON_WIDHT 80
 #define MORE_BUTTON_WIDTH   80
-#define BOUNENCE            30
+#define BOUNENCE            0
 
 @implementation SlideTableViewCell
 
@@ -14,7 +16,7 @@
     if (self) {
         // Initialization code
         if (_moveContentView == nil) {
-            _moveContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 10, self.frame.size.width, self.frame.size.height-10)];
+            _moveContentView = [[UIView alloc] initWithFrame:CGRectMake(0, 10, self.frame.size.width, self.frame.size.height-20)];
             _moveContentView.backgroundColor = [UIColor whiteColor];
         }
         [self.contentView addSubview:_moveContentView];
@@ -43,6 +45,8 @@
     [vDeleteButton setImage:[UIImage imageNamed:@"shanchu"] forState:UIControlStateNormal];
     [vDeleteButton setTitleColor:ColorTheme forState:UIControlStateNormal];
     [vDeleteButton addTarget:self action:@selector(deleteButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [vDeleteButton setShowsTouchWhenHighlighted:YES];
+    [vDeleteButton setContentMode:UIViewContentModeCenter];
     [vDeleteButton setTag:1001];
     
     vMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -53,6 +57,7 @@
     [vMoreButton addTarget:self action:@selector(moreButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [vMoreButton setTag:1002];
     
+    menuContetnView.backgroundColor =BackColor;
     [menuContetnView addSubview:vDeleteButton];
     [menuContetnView addSubview:vMoreButton];
     [self.contentView insertSubview:menuContetnView atIndex:0];
@@ -65,14 +70,19 @@
 - (void)layoutSubviews{
     [super layoutSubviews];
     NSLog(@"layoutSubviews:_moveContentView:%@",NSStringFromCGRect(self.contentView.frame));
-    [_moveContentView setFrame:CGRectMake(0, 10, self.frame.size.width, self.frame.size.height-10)];
+    [_moveContentView setFrame:CGRectMake(0, 10, self.frame.size.width, self.frame.size.height-20)];
+    
     UIView *vMenuView = [self.contentView viewWithTag:100];
     vMenuView.frame =CGRectMake(self.frame.size.width - DELETE_BUTTON_WIDHT - MORE_BUTTON_WIDTH, 0, DELETE_BUTTON_WIDHT + MORE_BUTTON_WIDTH, self.frame.size.height);
     
-    vDeleteButton = [self.contentView viewWithTag:1001];
+    vDeleteButton = (UIButton*)[self.contentView viewWithTag:1001];
     vDeleteButton.frame = CGRectMake(MORE_BUTTON_WIDTH, 0, DELETE_BUTTON_WIDHT, self.frame.size.height);
-    vMoreButton = [self.contentView viewWithTag:1002];
+    vMoreButton = (UIButton*)[self.contentView viewWithTag:1002];
     vMoreButton.frame = CGRectMake(0, 0, MORE_BUTTON_WIDTH, self.frame.size.height);
+    if (self.isHideMoreButtom) {
+        [vDeleteButton setFrame:CGRectMake(X(vMoreButton), Y(vDeleteButton), WIDTH(vMoreButton)+WIDTH(vMoreButton), HEIGHT(vDeleteButton))];
+        [vMoreButton removeFromSuperview];
+    }
 }
 
 //此方法和下面的方法很重要,对ios 5SDK 设置不被Helighted
@@ -133,7 +143,7 @@
     
     CGFloat vDuration = aAnimate? 0.4 : 0.0;
     vDestinaRect.origin.y=10;
-    vDestinaRect.size.height-=10;
+    vDestinaRect.size.height-=20;
     [UIView animateWithDuration:vDuration animations:^{
         _moveContentView.frame = vDestinaRect;
     } completion:^(BOOL finished) {
@@ -225,6 +235,7 @@
 {
     [vMoreButton setEnabled:NO];
     [vMoreButton setAlpha:0];
+    self.isHideMoreButtom =YES;
 }
 
 @end

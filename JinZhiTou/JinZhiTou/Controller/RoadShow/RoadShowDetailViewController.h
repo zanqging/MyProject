@@ -15,6 +15,5 @@
 @property (retain, nonatomic)NavView *navView;
 @property(retain,nonatomic)NSString* backTitle;
 @property(retain,nonatomic)NSMutableDictionary * dic;
-@property (retain, nonatomic)UITableView *tableViewCustom;
 
 @end

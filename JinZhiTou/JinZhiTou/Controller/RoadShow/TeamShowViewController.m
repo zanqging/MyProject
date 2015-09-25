@@ -142,8 +142,8 @@
         }
     }];
     cellInstance.title = [dic valueForKey:@"name"];
-    cellInstance.content = [dic valueForKey:@"company"];
-    cellInstance.typeDescription =  [dic valueForKey:@"title"];;
+    cellInstance.content =  [dic valueForKey:@"title"];;
+    cellInstance.typeDescription = [dic valueForKey:@"profile"];
     cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     return cellInstance;
@@ -159,7 +159,13 @@
 -(void)setDataArray:(NSMutableArray *)dataArray
 {
     self->_dataArray = dataArray;
-    [self.tableView reloadData];
+    if (self.dataArray && self.dataArray.count>0) {
+        self.tableView.isNone = NO;
+        [self.tableView reloadData];
+    }else{
+        self.tableView.isNone = YES;
+    }
+    
 }
 #pragma ASIHttpRequest
 -(void)requestCoreMember:(ASIHTTPRequest *)request
@@ -174,6 +180,7 @@
             self.dataArray = [jsonDic valueForKey:@"data"];
         }
         
+        self.tableView.content = [jsonDic valueForKey:@"msg"];
         if (self.tableView.header.isRefreshing) {
             [self.tableView.header endRefreshing];
         }

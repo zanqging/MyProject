@@ -19,7 +19,8 @@
         
         label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, 10, WIDTH(self)-POS_X(imgView)-70, 50)];
         label.numberOfLines = 0 ;
-        label.font = SYSTEMFONT(16);
+        label.font = SYSTEMFONT(14);
+        label.textColor =FONT_COLOR_GRAY;
         label.lineBreakMode = NSLineBreakByWordWrapping;
         
         

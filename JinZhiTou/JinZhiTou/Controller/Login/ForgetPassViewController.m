@@ -51,6 +51,7 @@
     self.configBtn.backgroundColor= ColorTheme;
     [self.configBtn addTarget:self action:@selector(doAction:) forControlEvents:UIControlEventTouchUpInside];
     self.configBtn.layer.cornerRadius = HEIGHT(self.configBtn)/2;
+    [self.configBtn.titleLabel setFont:SYSTEMFONT(16)];
     
     self.phoneTextField.layer.borderWidth = 1;
     self.phoneTextField.font  =SYSTEMFONT(14);
@@ -134,7 +135,8 @@
     if ([TDUtil isValidString:phoneNumber]) {
         if ([TDUtil validateMobile:phoneNumber]) {
 
-            [httpUtils getDataFromAPIWithOps:SEND_MESSAGE_CODE postParam:[NSDictionary dictionaryWithObjectsAndKeys:phoneNumber,@"telephone",@"1",@"flag", nil] type:0 delegate:self sel:@selector(requestSendeCode:)];
+             NSString* serverUrl = [SEND_MESSAGE_CODE stringByAppendingFormat:@"1/"];
+            [httpUtils getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:phoneNumber,@"telephone", nil] type:0 delegate:self sel:@selector(requestSendeCode:)];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"手机号码格式不正确"];
         }
@@ -238,6 +240,7 @@
             }
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             NSLog(@"验证码发送失败!");
+            [self.codeButton stop];
         }
     }
 }

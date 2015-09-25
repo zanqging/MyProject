@@ -42,7 +42,7 @@
     [self.view addSubview:view];
     
     UIImageView* imageView = [[UIImageView alloc]initWithFrame:CGRectMake( WIDTH(view)/2-50, 50, 100, 150)];
-    imageView.image =IMAGENAMED(@"About-logo");
+    imageView.image =IMAGENAMED(@"code");
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     [view addSubview:imageView];
     
@@ -51,12 +51,20 @@
     [view addSubview:imageView];
     
     UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(imageView)-10, WIDTH(view), 30)];
-    label.text = @"V2.0.0";
+    label.text =@"金指投";
+    label.font  =SYSTEMBOLDFONT(18);
+    label.textColor  = ColorTheme;
+    label.textAlignment = NSTextAlignmentCenter;
+    [view addSubview:label];
+    
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(label)-10, WIDTH(view), 30)];
+    NSString* version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    label.text =version;
     label.font  =SYSTEMFONT(16);
     label.textColor  = BACKGROUND_LIGHT_GRAY_COLOR;
     label.textAlignment = NSTextAlignmentCenter;
     [view addSubview:label];
-    
     imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0,POS_Y(label)+20, WIDTH(imageView), 1)];
     imageView.backgroundColor = BackColor;
     [view addSubview:imageView];

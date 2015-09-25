@@ -60,8 +60,11 @@
     [scrollView addSubview:view];
     
     UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, WIDTH(scrollView)-20, 150)];
-    [imgView sd_setImageWithURL:[self.dic valueForKey:@"img"] placeholderImage:IMAGENAMED(@"coremember")];
-    [imgView setContentMode:UIViewContentModeScaleAspectFit];
+    //[imgView setContentMode:UIViewContentModeScaleAspectFit];
+    [imgView sd_setImageWithURL:[self.dic valueForKey:@"img"] placeholderImage:IMAGENAMED(@"coremember") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+        //[imgView setContentMode:UIViewContentModeScaleAspectFill];
+    }];
+    
     [view addSubview:imgView];
     UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, POS_Y(view)-40, 90, 40)];
     label.font = SYSTEMFONT(16);
@@ -217,7 +220,7 @@
             [label sizeToFit];
             
             
-            imgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label)+20, WIDTH(view)/2-70, 2)];
+            imgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label)+20, WIDTH(view)/2-70, 1)];
             imgView.backgroundColor = ColorCompanyTheme;
             [view addSubview:imgView];
             
@@ -250,7 +253,7 @@
             
             
             
-            imgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label)+20, WIDTH(view)/2-70, 2)];
+            imgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label)+20, WIDTH(view)/2-70, 1)];
             imgView.backgroundColor = ColorCompanyTheme;
             [view addSubview:imgView];
             
@@ -281,7 +284,7 @@
             [label setAttributedText:attributedString1];
             [label sizeToFit];
            
-            scrollView.contentSize = CGSizeMake(WIDTH(scrollView), POS_Y(label)+HEIGHT(self.view));
+            scrollView.contentSize = CGSizeMake(WIDTH(scrollView), POS_Y(label)+HEIGHT(self.view)-200);
              [LoadingUtil closeLoadingView:loadingView];
         }
     }

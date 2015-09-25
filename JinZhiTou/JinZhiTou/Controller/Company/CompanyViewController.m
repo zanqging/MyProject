@@ -76,6 +76,11 @@
     textfield.delegate =self;
     textfield.tag = 10001;
     textfield.placeholder = @"请填写公司名称";
+    textfield.returnKeyType = UIReturnKeyDone;
+    textfield.layer.borderColor =ColorTheme.CGColor;
+    textfield.autocorrectionType = UITextAutocorrectionTypeNo;
+    textfield.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textfield.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:textfield];
     
     UIImageView* imageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, POS_Y(textfield)+10, WIDTH(view)-20, 1)];
@@ -95,6 +100,11 @@
     textfield.delegate =self;
     textfield.tag = 10002;
     textfield.placeholder = @"请选择公司所属行业";
+    textfield.returnKeyType = UIReturnKeyDone;
+    textfield.layer.borderColor =ColorTheme.CGColor;
+    textfield.autocorrectionType = UITextAutocorrectionTypeNo;
+    textfield.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textfield.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:textfield];
     
     imageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, POS_Y(textfield)+10, WIDTH(view)-20, 1)];
@@ -115,6 +125,11 @@
     textfield.delegate =self;
     textfield.tag = 10003;
     textfield.placeholder = @"请选择公司注册地址";
+    textfield.returnKeyType = UIReturnKeyDone;
+    textfield.layer.borderColor =ColorTheme.CGColor;
+    textfield.autocorrectionType = UITextAutocorrectionTypeNo;
+    textfield.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textfield.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:textfield];
     
     imageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, POS_Y(textfield)+10, WIDTH(view)-20, 1)];
@@ -380,6 +395,8 @@
         pickview.sender = textField;
         [pickview show];
     }else if (tag ==10002){
+        [textField resignFirstResponder];
+        
         if(!self.industoryView){
             self.industoryView = [[IndustoryView alloc]initWithFrame:self.view.frame];
             self.industoryView.controller =self;

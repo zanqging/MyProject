@@ -132,10 +132,24 @@
     [self hasNewMessage];
     [self hasNewSystemMessage];
     
-    //新三板更新数据
-    [self NewFinialUpdateInfo];
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    NSString* updateTime =[dataStore valueForKey:@"NewFinialUpdateTime"];
+    NSString* isUpdate =[dataStore valueForKey:@"IsNewFinialUpdate"];
+    if (![updateTime isEqualToString:[TDUtil CurrentDay]]) {
+        //新三板更新数据
+        if (isUpdate) {
+            [self NewFinialUpdateInfo];
+        }
+    }
+    updateTime = [dataStore valueForKey:@"KnowledgeUpdateTime"];
+    isUpdate =[dataStore valueForKey:@"IsKnowledgeUpdate"];
     //知识库更新数据
-    [self KnowledgeUpdateInfo];
+    if (![updateTime isEqualToString:[TDUtil CurrentDay]]) {
+        //新三板更新数据
+        if (isUpdate) {
+            [self KnowledgeUpdateInfo];
+        }
+    }
     
 }
 
@@ -488,7 +502,7 @@
             NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
             NSDictionary* data = [jsonDic valueForKey:@"data"];
             [dataStore setValue:[data valueForKey:@"count"] forKey:@"NewMessageCount"];
-            [dataStore setValue:[TDUtil CurrentDate] forKey:@"NewUpdateTime"];
+            [dataStore setValue:[TDUtil CurrentDay] forKey:@"NewUpdateTime"];
             [[NSNotificationCenter defaultCenter]postNotificationName:@"updateMessageStatus" object:nil];
         }
     }
@@ -506,7 +520,7 @@
             NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
             NSDictionary* data = [jsonDic valueForKey:@"data"];
             [dataStore setValue:[data valueForKey:@"count"] forKey:@"SystemMessageCount"];
-            [dataStore setValue:[TDUtil CurrentDate] forKey:@"NewUpdateTime"];
+            [dataStore setValue:[TDUtil CurrentDay] forKey:@"NewUpdateTime"];
             [[NSNotificationCenter defaultCenter]postNotificationName:@"updateMessageStatus" object:nil];
         }
     }
@@ -524,7 +538,7 @@
             NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
             NSDictionary* data = [jsonDic valueForKey:@"data"];
             [dataStore setValue:[data valueForKey:@"count"] forKey:@"NewFinialCount"];
-            [dataStore setValue:[TDUtil CurrentDate] forKey:@"NewFinialUpdateTime"];
+            [dataStore setValue:@"false" forKey:@"IsNewFinialUpdate"];
             [self updateTabBarStatus];
         }
     }
@@ -542,7 +556,7 @@
             NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
             NSDictionary* data = [jsonDic valueForKey:@"data"];
             [dataStore setValue:[data valueForKey:@"count"] forKey:@"KnowledgeCount"];
-            [dataStore setValue:[TDUtil CurrentDate] forKey:@"KnowledgeUpdateTime"];
+            [dataStore setValue:@"false" forKey:@"IsKnowledgeUpdate"];
             
             [self updateTabBarStatus];
         }
@@ -654,7 +668,7 @@
     {
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0) {
-            NSString* version = [NSString stringWithFormat:@"v%@", [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString*)kCFBundleVersionKey]];
+            NSString* version =[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
             
             NSDictionary* data =[jsonDic valueForKey:@"data"];
             if (data) {

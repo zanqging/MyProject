@@ -9,7 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface RoadShowFooter : UIView
+@property(assign,nonatomic)BOOL isExpand;
+
+@property(retain,nonatomic)NSString* content;
 @property(retain,nonatomic)UILabel* titleLabel;
 @property(retain,nonatomic)UILabel* dateTimeLabel;
--(void)setContent:(NSString*)content;
+@property(retain,nonatomic)UIImageView* expandImgView;
 @end

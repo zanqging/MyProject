@@ -21,6 +21,7 @@
 #import "RoadShowDetailViewController.h"
 #import <TencentOpenAPI/TencentOAuth.h>
 #import "MessageViewController.h"
+#import "UserTraceViewController.h"
 
 @interface AppDelegate ()<UIAlertViewDelegate>
 {
@@ -300,6 +301,21 @@ fetchCompletionHandler:(void
             case 3:
                 [self loadWebViewDetail:[NSURL URLWithString:[dic valueForKey:@"url"]]];
                 break;
+            case 4:
+                [self loadWebViewDetail:[NSURL URLWithString:[dic valueForKey:@"url"]]];
+                break;
+            case 5:
+                [self loadWebViewDetail:[NSURL URLWithString:[dic valueForKey:@"url"]]];
+                break;
+            case 6:
+                [self loadTraceInfo:1000];
+                break;
+            case 7:
+                [self loadTraceInfo:1001];
+                break;
+            case 8:
+                [self loadTraceInfo:1002];
+                break;
             default:
                 break;
         }
@@ -322,7 +338,7 @@ fetchCompletionHandler:(void
     NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:[NSString stringWithFormat:@"%ld",(long)index] forKey:@"id"];
     controller.type=1;
     controller.dic = dic;
-    controller.title = @"消息推送";
+    controller.title = @"首页";
     [self.iNav pushViewController:controller animated:YES];
 }
 
@@ -344,11 +360,21 @@ fetchCompletionHandler:(void
     [self.iNav pushViewController:controller animated:YES];
 }
 
+-(void)loadTraceInfo:(NSInteger)index
+{
+    UserTraceViewController* controller =[[UserTraceViewController alloc]init];
+    controller.currentSelected =index;
+    controller.titleStr = @"首页";
+    [self.iNav pushViewController:controller animated:YES];
+}
+
+
 -(void)loadWebViewDetail:(NSURL*)url
 {
     BannerViewController* controller = [[BannerViewController alloc]init];
    // NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:[NSString stringWithFormat:@"%d",index] forKey:@"id"];
-    controller.title = @"消息推送";
+    controller.titleStr = @"消息推送";
+     controller.title = @"首页";
     controller.url = url;
     [self.iNav pushViewController:controller animated:YES];
 }

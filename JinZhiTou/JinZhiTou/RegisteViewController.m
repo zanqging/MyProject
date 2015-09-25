@@ -48,6 +48,7 @@
     
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.navView), HEIGHT(self.view)-POS_Y(self.navView))];
     scrollView.backgroundColor = BackColor;
+    [scrollView setContentSize:CGSizeMake(WIDTH(scrollView), HEIGHT(scrollView)+100)];
     [self.view addSubview:scrollView];
     
     UIView* view =[[UIView alloc]initWithFrame:CGRectMake(0, 30, WIDTH(self.view), 230)];
@@ -71,7 +72,7 @@
     self.phoneTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), WIDTH(self.view)-POS_X(label)-5, 30)];
     self.phoneTextField.tag=1004;
     self.phoneTextField.delegate=self;
-    self.phoneTextField.font = SYSTEMFONT(16);
+    self.phoneTextField.font = SYSTEMBOLDFONT(18);
     self.phoneTextField.layer.borderWidth = 1;
     self.phoneTextField.placeholder = @"请输入您的手机号";
     self.phoneTextField.returnKeyType = UIReturnKeyDone;
@@ -105,7 +106,7 @@
     self.codeTextField.tag=1005;
     self.codeTextField.placeholder = @"请输入验证码";
     self.codeTextField.delegate=self;
-    self.codeTextField.font = SYSTEMFONT(16);
+    self.codeTextField.font = SYSTEMBOLDFONT(18);
     self.codeTextField.layer.borderWidth = 1;
     self.codeTextField.layer.shadowColor=WriteColor.CGColor;
     self.codeTextField.layer.borderColor = WriteColor.CGColor;
@@ -172,7 +173,7 @@
     self.passTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), WIDTH(self.view)-POS_X(label)-5, 30)];
     self.passTextField.tag=1004;
     self.passTextField.delegate=self;
-    self.passTextField.font = SYSTEMFONT(16);
+    self.passTextField.font = SYSTEMBOLDFONT(18);
     self.passTextField.placeholder = @"请输入密码";
     self.passTextField.layer.borderWidth = 1;
     self.passTextField.secureTextEntry = YES;
@@ -194,7 +195,7 @@
     self.passRepeatTextField.tag=1004;
     self.passRepeatTextField.delegate=self;
     self.passRepeatTextField.layer.borderWidth = 1;
-    self.passRepeatTextField.font = SYSTEMFONT(16);
+    self.passRepeatTextField.font = SYSTEMBOLDFONT(18);
     self.passRepeatTextField.secureTextEntry = YES;
     self.passRepeatTextField.placeholder = @"请重复密码";
     self.passRepeatTextField.layer.shadowColor=WriteColor.CGColor;
@@ -238,7 +239,8 @@
 {
     PrivacyViewController* controller = [[PrivacyViewController alloc]init];
     controller.serverUrl = useragreement;
-    controller.title = self.navView.title;
+    controller.title = @"返回";
+    controller.titleStr =@"金指投用户协议";
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -253,7 +255,8 @@
     NSString* phoneNumber =self.phoneTextField.text;
     if (phoneNumber) {
         if ([TDUtil validateMobile:phoneNumber]) {
-            [httpUtils getDataFromAPIWithOps:SEND_MESSAGE_CODE postParam:[NSDictionary dictionaryWithObjectsAndKeys:phoneNumber,@"telephone",@"0",@"flag", nil] type:0 delegate:self sel:@selector(requestSendeCode:)];
+            NSString* serverUrl = [SEND_MESSAGE_CODE stringByAppendingFormat:@"0/"];
+            [httpUtils getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:phoneNumber,@"telephone", nil] type:0 delegate:self sel:@selector(requestSendeCode:)];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"手机号码格式不正确"];
         }
@@ -372,6 +375,7 @@
         }else{
              [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             NSLog(@"验证码发送失败!");
+            [self.codeButton stop];
         }
     }
 }

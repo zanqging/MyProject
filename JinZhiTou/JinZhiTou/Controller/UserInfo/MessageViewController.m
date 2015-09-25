@@ -14,14 +14,16 @@
 #import "NSString+SBJSON.h"
 #import "MyTableViewCell.h"
 #import "ASIFormDataRequest.h"
-@interface MessageViewController ()<ASIHTTPRequestDelegate>
+#import "DAKeyboardControl.h"
+@interface MessageViewController ()<ASIHTTPRequestDelegate,UITextViewDelegate>
 {
     NSInteger rowCount;
     BOOL isRefresh;
     int currentPage;
-    
+    UITextView *textView;
     HttpUtils* httpUtils;
     LoadingView* loadingView;
+    NSString* atTopId;
 }
 @end
 
@@ -64,7 +66,84 @@
     [LoadingUtil show:loadingView];
     
     [self refreshProject];
+    
+    if (self.type==0) {
+        UIToolbar *toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f,
+                                                                         self.view.bounds.size.height - 40.0f,
+                                                                         self.view.bounds.size.width,
+                                                                         40.0f)];
+        toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+        [self.view addSubview:toolBar];
+        
+        textView = [[UITextView alloc] initWithFrame:CGRectMake(10.0f,
+                                                                6.0f,
+                                                                toolBar.bounds.size.width - 20.0f - 68.0f,
+                                                                30.0f)];
+        textView.delegate =self;
+        textView.font =SYSTEMFONT(18);
+        textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [toolBar addSubview:textView];
+        
+        UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [sendButton setTitle:@"发表" forState:UIControlStateNormal];
+        [sendButton addTarget:self action:@selector(submmit:) forControlEvents:UIControlEventTouchUpInside];
+        sendButton.frame = CGRectMake(toolBar.bounds.size.width - 68.0f,
+                                      6.0f,
+                                      58.0f,
+                                      29.0f);
+        [toolBar addSubview:sendButton];
+        
+        
+        self.view.keyboardTriggerOffset = toolBar.bounds.size.height;
+        
+        [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
+            CGRect toolBarFrame = toolBar.frame;
+            toolBarFrame.origin.y = keyboardFrameInView.origin.y - toolBarFrame.size.height;
+            toolBar.frame = toolBarFrame;
+        }];
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showyboard:) name:@"showKeyboard" object:nil];
+        
+        [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddeKeyboard:)]];
+    }
+    
 }
+
+-(void)showyboard:(id)sender
+{
+    if ([sender isKindOfClass:NSNotification.class]) {
+        NSDictionary* dic =  (NSDictionary* )sender;
+        atTopId = [[dic valueForKey:@"userInfo"] valueForKey:@"id"];
+        self.project_id =[[[dic valueForKey:@"userInfo"] valueForKey:@"pid"] integerValue];
+    }
+    [textView becomeFirstResponder];
+}
+
+-(void)hiddeKeyboard:(id)sender
+{
+    if ([textView isFirstResponder]) {
+        [textView resignFirstResponder];
+    }
+}
+
+-(void)submmit:(NSDictionary* )userInfo
+{
+    NSString* str = textView.text;
+    
+    if ([TDUtil isValidString:str]) {
+        NSString* url  =[TOPIC stringByAppendingFormat:@"%ld/",(long)self.project_id];
+        NSMutableDictionary* dic  =[[NSMutableDictionary alloc]init];
+        [dic setValue:textView.text forKey:@"content"];
+        [dic setValue:atTopId forKey:@"at_topic"];
+
+        [httpUtils getDataFromAPIWithOps:url postParam:dic type:0 delegate:self sel:@selector(requestSubmmit:)];
+    }else{
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请先输入内容"];
+    }
+    
+}
+
 
 -(void)refreshProject
 {
@@ -159,7 +238,8 @@
 
 -(void)didMoreCellAtIndexpath:(UITableView *)aTableView IndexPath:(NSIndexPath *)aIndexPath FromView:(CustomTableView *)aView
 {
-     NSLog(@"更多");
+    NSDictionary* dic  =self.dataArray[aIndexPath.row];
+    [[NSNotificationCenter  defaultCenter]postNotificationName:@"showKeyboard" object:nil userInfo:dic];
 }
 
 -(NSInteger)numberOfRowsInTableView:(UITableView *)aTableView InSection:(NSInteger)section FromView:(CustomTableView *)aView{
@@ -243,6 +323,31 @@
                 [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
+    }
+}
+
+-(void)requestSubmmit:(ASIHTTPRequest *)request{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        NSString* status = [jsonDic valueForKey:@"status"];
+        if ([status intValue] == 0) {
+            loadingView.isError = NO;
+            self.customTableView.homeTableView.content = [jsonDic valueForKey:@"msg"];
+            
+            currentPage = 0;
+            [self refreshProject];
+        }
+        
+        //隐藏键盘
+        [self hiddeKeyboard:nil];
+        //清空数据
+        textView.text =@"";
+        
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
     }
 }
 

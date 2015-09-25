@@ -35,7 +35,7 @@
 @property (retain, nonatomic) IBOutlet UIView *moveContentView;
 
 @property (nonatomic,assign) id<SlideTableViewCellDelegate> delegate;
-
+@property(assign,nonatomic)BOOL isHideMoreButtom;
 -(void)hideMenuView:(BOOL)aHide Animated:(BOOL)aAnimate;
 -(void)addControl;
 -(void)hiddenMoreButton;

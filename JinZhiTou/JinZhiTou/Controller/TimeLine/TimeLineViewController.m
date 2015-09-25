@@ -58,6 +58,7 @@
     self.navView.titleLable.textColor=WriteColor;
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
     [self.navView.leftButton addTarget:self action:@selector(userInfoAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     
     [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
     [self.navView.rightButton addTarget:self action:@selector(searchAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -311,10 +312,14 @@
                 }
                 [self.dataCreateArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
                 [self.tableView reloadData];
+                
             }
+            
             NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
-            [dataStore setValue:@"0" forKey:@"KnowledgeCount"];
-            [dataStore setValue:[TDUtil CurrentDate] forKey:@"KnowledgeUpdateTime"];
+            [dataStore setValue:nil forKey:@"KnowledgeCount"];
+            [dataStore setValue:@"true" forKey:@"IsNewFinialUpdate"];
+            [dataStore setValue:[TDUtil CurrentDay] forKey:@"KnowledgeUpdateTime"];
+            
             [self.tabBarItem setBadgeValue:nil];
             
         }else{
@@ -416,10 +421,7 @@
                 [self.tableView reloadData];
             }
             
-            NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
-            [dataStore setValue:@"0" forKey:@"KnowledgeCount"];
-            [dataStore setValue:[TDUtil CurrentDate] forKey:@"KnowledgeUpdateTime"];
-            [self.tabBarItem setBadgeValue:nil];
+           
         }
         if (isRefresh) {
             [self.tableView.header endRefreshing];

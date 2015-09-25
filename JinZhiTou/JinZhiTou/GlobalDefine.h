@@ -156,7 +156,8 @@
 
 //服务器域名地址
 //#define SERVICE_URL @"http://weini.im/"
-#define SERVICE_URL @"http://www.jinzht.com:8000/phone/"//服务器域名地址
+#define SERVICE_URL @"http://www.jinzht.com/phone3/"//服务器域名地址
+//#define SERVICE_URL @"http://www.jinzht.com:8000/phone/"//服务器域名地址
 //服务器域名地址
 //#define SERVICE_URL @"http://www.jinzht.com/phone/"//服务器域名地址
 //#define SERVICE_URL @"http://192.168.31.236:8080/weini/"
@@ -392,61 +393,9 @@
 
 //用户下载头像
 //http://weini.im/upload//menuinfo//_EN_8427.jpg
-/***===================================================================================**
- *                                          静态字符串常量
- *
- ***===================================================================================**/
-
-#define MENU_TYPE [NSMutableArray arrayWithObjects:@"鸡肉",@"猪肉",@"鱼肉",@"牛肉",@"纯素",nil]
-#define MENU_TYPE_WEST [NSMutableArray arrayWithObjects:@"咖喱饭",@"披萨",@"意大利面",nil]
-#define MENU_TYPE_ICO_NAME [NSMutableArray arrayWithObjects:@"ic_chicken",@"ic_pig",@"ic_fish",@"ic_beef",@"ic_vegetable",nil]
-#define MENU_TYPE_WEST_ICO_NAME [NSMutableArray arrayWithObjects:@"ic_west_gali",@"ic_west_pizza",@"ic_west_spaghetti",nil]
-
-#define MENU_KIND_COLORS [NSMutableArray arrayWithObjects:ColorChicken,ColorPig,ColorFish,ColorBeef,ColorVegeTable,nil]
-#define MENU_KIND_WEST_COLORS [NSMutableArray arrayWithObjects:ColorWest_Gali,ColorWest_Pizza,ColorWest_Spaghetti,nil]
-
-
-#define TRACK_TYPE_ICO_NAME [NSMutableArray arrayWithObjects:@"ic_timeline_source",@"ic_timeline_source",@"ic_timeline_car",@"ic_timeline_wash",@"ic_timeline_cooking",@"ic_timeline_pincai",@"ic_timeline_bike",@"ic_timeline_smile",nil]
-//常量
-#define VIEWWIDTH 320   //视图宽度
-#define VIEWSTART 0     //视图起始坐标x
-#define VIEWEND   320   //视图起始坐标y
-#define NUMBERTHIRTY 30
-#define NUMBERFORTY 40
-#define NUMBERHUNDRED 100
-
-//溯源起始时间
-#define ORIGIN_START_TIME @" 06:00:00"
-//溯源截至时间
-#define ORIGIN_END_TIME @" 12:30:00"
-//溯源显示今日订餐起始时间
-#define TODAY_MEAL_START_TIME @" 12:30:00"
-//溯源显示今日订餐结束时间
-#define TODAY_MEAL_END_TIME @" 14:00:00"
-//最迟订餐时间
-#define TODAY_MEAL_LATEST_TIME @" 10:30:00"
-//最迟订餐时间
-#define TODAY_TEMP_LATEST_TIME @" 01:00:00"
-
-
-//省id
-#define PROVINCE_ID 3
-//城市id
-#define CITY_ID 3
-/**
- orderStatus	订单状态（
- 0：待付款
- 1：取消订单
- 2：已付款，待发货
- 3：退款中
- 4：退款成功
- 5：已发货
- 6：消费成功**/
-#define ORDER_STATE [NSDictionary dictionaryWithObjectsAndKeys:@"体验中",@"0",@"已取消",@"1",@"已消费",@"2",@"待付款",@"3",@"退款中",@"4",@"已退款",@"5",@"退款失败",@"6",nil]
-#define BOXMODEL_NAME [NSDictionary dictionaryWithObjectsAndKeys:@"1天尝鲜套餐",@"1",@"3天品味套餐",@"3",@"5天生活套餐",@"5", nil]
 
 //支持区域
-#define ROMATE_MSG_TYPE [NSDictionary dictionaryWithObjectsAndKeys:@"projectdetail",@"0",@"msg",@"1",@"system",@"2",@"web",@"3",nil]
+#define ROMATE_MSG_TYPE [NSDictionary dictionaryWithObjectsAndKeys:@"projectdetail",@"0",@"msg",@"1",@"system",@"2",@"web",@"3",@"news",@"4",@"knowledge",@"5",@"roadshow",@"6",@"participate",@"7",@"investor",@"8",nil]
 
 /***===================================================================================**
  *                                          本地缓存静态变量
@@ -498,7 +447,6 @@
 //行政id
 #define STATIC_LOCATION_SUBLOCAITY_ID @"locationsublocaity"
 
-#define APP_PUBLIC_PASSWORD     @"WeiNi@0814"  //公钥
 
 #define APP_PRIVATE_KEY @"lindyang"
 
@@ -509,89 +457,6 @@
 #define NAVVIEW_HEIGHT 44
 #define NAVVIEW_POSITION_Y 20
 #define   IOS7_NAVI_SPACE   -10
-
-/***===================================================================================**
- *                                          静态字符串常量
- *
- ***===================================================================================**/
-
-//时间格式
-#define DATE_FORMAT_YMD @"YYYY-MM-DD"
-//个人纪录头部本月
-#define STRING_RECORD_MONTH_DAYS @"%ld days"
-//个人纪录头部月份日期
-#define STRING_RECORD_DATE @"%ld月，%ld"
-//停留时间
-#define   STRING_USER_COUNT_DAYS @"哇，味你已经陪伴你%@天了^_^"
-//更新提示
-#define UPDATE_MESSAGE @"发现新版本(%@),是否升级?"
-//检测更新标题
-#define UPDATE_TITLE @"检测更新：味你"
-//取消按钮标题
-#define BTN_CANCEL @"取消"
-//升级按钮
-#define BTN_UPDATE @"升级"
-//切换
-#define LOCATION_CHANGE @"区域定位已经改变，是否切换到%@"
-//提示
-#define MESSAGE_ALERT @"小味温馨提示"
-//切换
-#define BTN_CHANGE @"切换"
-/***===================================================================================**
- *                                          静态汉字常量
- *
- ***===================================================================================**/
-//个人纪录头部月份日期
-#define STRING_LOADING @"正在努力加载"
-#define STRING_FEEDBACK_CONTENT @"  请详细描述您在使用过程中所遇到的问题、意见、建议等"
-#define STRING_SHARE_CONTENT1 @"世界上最遥远的距离不是生与死，而是你在我嘴边，我却不知道你"
-#define STRING_SHARE_CONTENT2 @"吃还是不吃，这还真是一个问题"
-#define STRING_SHARE_CONTENT3 @"良辰美景奈何天,正午美食谁家院"
-#define STRING_SHARE_CONTENT4 @"Duang 我的午餐会特技 "
-#define STRING_SHARE_CONTENT5 @"午餐不止眼前的菜，还有记忆和远方"
-#define STRING_SHARE_CONTENT6 @"来看看资深吃货的午餐"
-#define STRING_SHARE_CONTENT7 @"5个工作日4种肉类12款蔬菜的承诺"
-#define STRING_SHARE_CONTENT8 @"味你午餐技能如何get√"
-#define STRING_SHARE_CONTENT9 @"谱写最美的菜单，只味你"
-#define STRING_SHARE_CONTENT10 @"表达了对事物的最高敬意"
-#define STRING_SHARE_CONTENT11 @"[黑兰]or[白金]"
-
-//字体大小
-#define FONT_16 [UIFont fontWithName:@"Arial" size:16]
-#define FONT_12 [UIFont fontWithName:@"Arial" size:12]
-#define FONT_18 [UIFont fontWithName:@"Arial" size:18]
-
-//加载页面文字
-#define STRING_LOADING_FAIL @"小味温馨提示：您的网络状态不佳！"
-//alertView 提示文字
-#define ALERTVIEW_TIP_TITLE @"小味温馨提示"
-
-//定位
-#define  LOCATION_NO_RESULT @"请先选择您当前所在商圈，是否手动选择？"
-//更新
-#define VERSION_UPDATE @"正在检查版本更新..."
-//送餐
-#define DISPATCH_ADDRESS @"选择送餐地址"
-//支付
-#define PAYTYPE @"选择支付方式"
-//提醒
-#define ALERT_CHOOSE @"请选择您当前所在商圈"
-
-
-#define STRING_SHARE_CONTENT_ARRAY [NSMutableArray arrayWithObjects:STRING_SHARE_CONTENT1,STRING_SHARE_CONTENT2,STRING_SHARE_CONTENT3,STRING_SHARE_CONTENT4,STRING_SHARE_CONTENT5,STRING_SHARE_CONTENT6,STRING_SHARE_CONTENT7,STRING_SHARE_CONTENT8,STRING_SHARE_CONTENT9,STRING_SHARE_CONTENT10,STRING_SHARE_CONTENT11,nil]
-
-//支持区域
-#define STRING_PERSIST_ARRAY [NSMutableArray arrayWithObjects:@"西电科技园",@"都市之门",nil]
-
-//默认中文字符
-#define STRING_GENDER @"性别"
-#define STRING_GENDER_MAN @"男"
-#define STRING_GENDER_MALE @"女"
-
-//按钮
-#define BTN_CANCEL @"取消"
-#define BTN_CONFIRM @"确定"
-
 #define gestureMinimumTranslation  20.0
 
 typedef enum : NSInteger {

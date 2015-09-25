@@ -116,6 +116,8 @@
 +(NSString*)currentDayString:(int)index;
 //返回当天日期
 +(NSInteger)currentDay;
+
++(NSString*)CurrentDay;
 //当前年
 +(NSInteger)currentYear;
 //当月
@@ -396,4 +398,7 @@
 +  (int)convertToInt:(NSString*)strtemp;
 
 + ( CameraMoveDirection )determineCameraDirectionIfNeeded:( CGPoint )translation direction:(CameraMoveDirection)direction;
+
++(BOOL)isValideTime:(NSString*)timeString;
+
 @end

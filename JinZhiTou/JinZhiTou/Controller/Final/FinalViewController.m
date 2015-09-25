@@ -65,6 +65,7 @@
     navView.titleLable.textColor=WriteColor;
     [navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
     [navView.leftButton addTarget:self action:@selector(userInfoAction:) forControlEvents:UIControlEventTouchUpInside];
+    [navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     
     [navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
     [navView.rightButton addTarget:self action:@selector(searchAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -409,10 +410,11 @@
             NSMutableArray* arry  =[dic valueForKey:@"industry_type"];
             cellInstance.content = [dic valueForKey:@"project_summary"];
             cellInstance.priseData = [[dic valueForKey:@"like_sum"] integerValue];
-            cellInstance.voteData = [[dic valueForKey:@"vote_sum"] integerValue];
             cellInstance.collectionData = [[dic valueForKey:@"collect_sum"] integerValue];
             
             NSString* str=@"";
+            str = [str stringByAppendingFormat:@"%@/",[dic valueForKey:@"province"]];
+            str = [str stringByAppendingFormat:@"%@/",[dic valueForKey:@"city"]];
             for (int i = 0; i< arry.count; i++) {
                 str = [str stringByAppendingFormat:@"%@/",arry[i]];
             }
@@ -430,7 +432,7 @@
                 cellInstance = [[ThinkTankTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.finalContentTableView), height)];
             }
             NSDictionary* dic = currentArray[row];
-            NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
+            NSURL* url = [NSURL URLWithString:[dic valueForKey:@"thumbnail"]];
             __block ThinkTankTableViewCell* cell = cellInstance;
             [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                 if (image) {

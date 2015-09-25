@@ -88,6 +88,16 @@
     
 }
 
++(NSString*)CurrentDay
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    [dateFormatter setDateFormat: @"yyyy-MM-dd"];
+    NSString *destDate= [dateFormatter stringFromDate:[NSDate new]];
+    return destDate;
+    
+}
+
 +(NSDate*) convertDateFromString:(NSString*)uiDate
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
@@ -232,20 +242,6 @@
     return components.day;
 }
 
-+(NSMutableArray*)dayWithOneWeek
-{
-    NSMutableArray* array=[[NSMutableArray alloc]init];
-    int count;
-    if ([TDUtil isArrivedTime:TODAY_MEAL_LATEST_TIME]) {
-        count=1;
-    }else{
-        count=0;
-    }
-    for (int i=count; i<count+7; i++) {
-        [array addObject:[NSString stringWithFormat:@"%ld",(long)[self dayWithNextNum:i]]];
-    }
-    return array;
-}
 
 +(NSInteger)weekWithNextNum:(int)num
 {
@@ -257,20 +253,6 @@
     return [comps weekday];
 }
 
-+(NSMutableArray*)weekWithOneWeek
-{
-    NSMutableArray* array=[[NSMutableArray alloc]init];
-    int count;
-    if ([TDUtil isArrivedTime:TODAY_MEAL_LATEST_TIME]) {
-        count=1;
-    }else{
-        count=0;
-    }
-    for (int i=count; i<count+7; i++) {
-        [array addObject:[NSString stringWithFormat:@"%ld",(long)[self weekWithNextNum:i]]];
-    }
-    return array;
-}
 
 +(NSInteger)maxNumOfMonth
 {
@@ -313,23 +295,6 @@
     }
 }
 
-//倒计时时间
-+(NSInteger)leftSecond
-{
-    //当前时间
-    NSDate* now =[NSDate new];
-    //周六周天
-    int num=[self BoxModelDaytime];
-    if (num==0) {
-        num=1;
-    }
-    NSString* dateStr=[self dateTimeWithOps:num startHourStr:ORIGIN_START_TIME];
-    //结束时间
-    NSDate* targetDate =[self dateFromString:dateStr];
-    //计算与指定时间秒数之差
-    NSInteger seconds = [targetDate timeIntervalSinceDate:now];
-    return seconds;
-}
 
 +(int)BoxModelDaytime
 {
@@ -744,24 +709,6 @@
     return base64String;
 }
 
-#pragma mark - AES加密
-//将string转成带密码的data
-+(NSData*)encryptAESData:(NSString*)string {
-    //将nsstring转化为nsdata
-    NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-    //使用密码对nsdata进行加密
-    NSData *encryptedData = [data AES256EncryptWithKey:APP_PUBLIC_PASSWORD];
-    return encryptedData;
-}
-
-//将带密码的data转成string
-+(NSString*)decryptAESData:(NSData*)data {
-    //使用密码对data进行解密
-    NSData *decryData = [data AES256DecryptWithKey:APP_PUBLIC_PASSWORD];
-    //将解了密码的nsdata转化为nsstring
-    NSString *string = [[NSString alloc] initWithData:decryData encoding:NSUTF8StringEncoding];
-    return string;
-}
 
 +(NSString*)encryptPhoneNum:(NSString *)phoneNum
 {
@@ -1224,6 +1171,15 @@
     }
     
     return direction;
+}
+
++(BOOL)isValideTime:(NSString *)timeString
+{
     
+    NSString *regex = @"^\\d{4}(\\-|\\/|\\.)\\d{1,2}\\1\\d{1,2}$";
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+    BOOL isValid = [predicate evaluateWithObject:timeString];
+    return isValid;
+
 }
 @end

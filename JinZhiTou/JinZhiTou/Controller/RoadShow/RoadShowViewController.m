@@ -58,6 +58,7 @@
     navView.titleLable.textColor=WriteColor;
     [navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
     [navView.leftButton addTarget:self action:@selector(userInfoAction:) forControlEvents:UIControlEventTouchUpInside];
+    [navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     [self.view addSubview:navView];
     
     self.viewsArray = [@[] mutableCopy];
@@ -70,8 +71,6 @@
     
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(RoadShowProject:) name:@"RoadShowProject" object:nil];
-    
-    
     
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
@@ -130,7 +129,7 @@
     self.waterfall.view.backgroundColor=[UIColor whiteColor];
     
     //重新布局
-    [self.waterfall.collectionView setFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView)-kBottomBarHeight-20)];
+    [self.waterfall.collectionView setFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView)-kBottomBarHeight-40)];
     [self.view addSubview:self.waterfall.collectionView];
 }
 

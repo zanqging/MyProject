@@ -97,7 +97,7 @@
 //#define SYSTEMFONT(FONTSIZE)    [UIFont systemFontOfSize:FONTSIZE]
 
 #define SYSTEMFONT(FONTSIZE)    [UIFont fontWithName:@"YouYuan" size:(FONTSIZE)]
-
+#define SYSTEMBOLDFONT(FONTSIZE)    [UIFont fontWithName:@"Helvetica-Bold" size:(FONTSIZE)]
 #define FONT(NAME, FONTSIZE)    [UIFont fontWithName:(NAME) size:(FONTSIZE)]
 
 // 颜色(RGB)

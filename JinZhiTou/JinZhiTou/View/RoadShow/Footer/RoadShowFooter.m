@@ -52,7 +52,7 @@
         imageView1.image = UIGraphicsGetImageFromCurrentImageContext();
         
         self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(imageView1)+20, WIDTH(self), 25)];
-        self.titleLabel.font  =SYSTEMFONT(14);
+        self.titleLabel.font  =SYSTEMBOLDFONT(18);
         self.titleLabel.textColor = FONT_COLOR_BLACK;
         self.titleLabel.textAlignment  = NSTextAlignmentCenter;
         [self addSubview:self.titleLabel];
@@ -65,19 +65,55 @@
         textView = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(self.dateTimeLabel)+10, WIDTH(self)-20, HEIGHT(self)-100)];
         textView.font = SYSTEMFONT(16);
         textView.textColor = FONT_COLOR_GRAY;
-        textView.numberOfLines = 0;
+        textView.numberOfLines = 4;
         textView.lineBreakMode = NSLineBreakByWordWrapping;
         [self addSubview:textView];
         
+        self.expandImgView  = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)-50,POS_Y(textView)+10, 10, 10)];
+        self.expandImgView.contentMode = UIViewContentModeScaleAspectFill;
+        self.expandImgView.image  = IMAGENAMED(@"zhankai");
+        [self addSubview:self.expandImgView];
+
+        
+        [self addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(expand)]];
         self.backgroundColor = WriteColor;
     }
     return self;
+}
+
+-(void)expand
+{
+    self.isExpand = !self.isExpand;
+}
+
+-(void)setIsExpand:(BOOL)isExpand
+{
+    self->_isExpand = isExpand;
+    
+    float angle;
+    if (self.isExpand) {
+        angle = M_PI;
+        textView.numberOfLines=0;
+    }else{
+        textView.numberOfLines=4;
+        angle = M_PI*2;
+    }
+    NSString* con = self.content;
+    if (con && ![con isEqualToString:@""]) {
+       self.content = con;
+    }
+    
+    
+    
+    CGAffineTransform transform = CGAffineTransformMakeRotation(angle);
+    self.expandImgView.transform = transform;
 }
 
 -(void)setContent:(NSString *)content
 {
     if (content.class !=NSNull.class) {
         
+        self->_content =content;
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     
         //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
@@ -91,8 +127,11 @@
         textView.attributedText = attributedString;//ios 6
         [textView sizeToFit];
         
-        [self setFrame:CGRectMake(0, 0, WIDTH(self), POS_Y(textView)+50)];
-    
+        [self setFrame:CGRectMake(X(self), Y(self), WIDTH(self), POS_Y(textView)+70)];
+        
+        [self.expandImgView setFrame:CGRectMake(WIDTH(self)-50,POS_Y(textView)+10, 10, 10)];
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"updateRoadShowLayout" object:nil];
     }
 }
 @end

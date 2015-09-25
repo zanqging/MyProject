@@ -39,11 +39,11 @@
     //设置标题
     navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     navView.imageView.alpha=1;
-    [navView setTitle:@"详情"];
+    [navView setTitle:self.titleStr];
     navView.titleLable.textColor=WriteColor;
     
     [navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [navView.leftButton setTitle:@"微路演" forState:UIControlStateNormal];
+    [navView.leftButton setTitle:self.title forState:UIControlStateNormal];
     [navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
     [navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     

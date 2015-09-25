@@ -22,12 +22,10 @@
 @property (retain, nonatomic)UIButton *collecteImgView;
 
 @property (retain, nonatomic)UIButton *priseImgView;
-@property (retain, nonatomic)UIButton *voteImgView;
 @property(retain,nonatomic)NSString* title;
 @property(retain,nonatomic)NSString* content;
 @property(retain,nonatomic)NSString* typeDescription;
 @property(assign,nonatomic)NSInteger collectionData;
 @property(assign,nonatomic)NSInteger priseData;
-@property(assign,nonatomic)NSInteger  voteData;
 @end
 

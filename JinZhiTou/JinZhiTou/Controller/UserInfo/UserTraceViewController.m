@@ -31,7 +31,6 @@
     bool isRefresh;
     BOOL isLastPage;
     NSInteger currentPage;
-    NSInteger currentSelected;
     UIScrollView* scrollView;
 }
 @end
@@ -67,7 +66,6 @@
     [self.tableView removeFromSuperview];
     [self.view addSubview:self.tableView];
     
-    currentSelected =1000;
     [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
     
     [self loadData];
@@ -80,14 +78,14 @@
     [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
     
     //加载数据
-    [self loadMyRoadShowData];
+    [self refreshProject];
 }
 
 -(void)refreshProject
 {
     isRefresh =YES;
     currentPage = 0;
-    switch (currentSelected) {
+    switch (self.currentSelected) {
         case 1000:
             [self loadMyRoadShowData];
             break;
@@ -109,7 +107,7 @@
     isRefresh =NO;
     if (!self.isEndOfPageSize) {
         currentPage++;
-        switch (currentSelected) {
+        switch (self.currentSelected) {
             case 1000:
                 [self loadMyRoadShowData];
                 break;
@@ -157,7 +155,7 @@
         //自然投资人
         SwitchSelect* switchView = [[SwitchSelect alloc]initWithFrame:CGRectMake(w*i, 0,w, 50)];
         switchView.tag =1000+i;
-        if (i==0) {
+        if (switchView.tag  == self.currentSelected) {
             switchView.isSelected = YES;
         }
         
@@ -184,12 +182,12 @@
         }
     }
     
-    if (currentSelected !=switchView.tag) {
-         currentSelected = switchView.tag;
+    if (self.currentSelected !=switchView.tag) {
+         self.currentSelected = switchView.tag;
         currentPage = 0;
         self.isEndOfPageSize= NO;
         isLastPage = false;
-        switch (currentSelected) {
+        switch (self.currentSelected) {
             case 1000:
                 [self loadMyRoadShowData];
                 break;
@@ -232,7 +230,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row ==self.dataArray.count) {
-        if (currentSelected!=1000) {
+        if (self.currentSelected!=1000) {
             FinialAuthViewController* controller = [[FinialAuthViewController alloc]init];
             controller.titleStr = self.navView.title;
             [self.navigationController pushViewController:controller animated:YES];
@@ -250,7 +248,7 @@
     
     if (row<self.dataArray.count) {
         NSDictionary* dic = self.dataArray[row];
-        if(currentSelected==1002){
+        if(self.currentSelected==1002){
             NSString* is_qualified = [dic valueForKey:@"valid"];
             if ([is_qualified isKindOfClass:NSNull.class]) {
                 is_qualified = @"false";
@@ -293,7 +291,7 @@
         NSInteger row =indexPath.row;
         NSDictionary* dic = self.dataArray[row];
         
-      if(currentSelected==1002){
+      if(self.currentSelected==1002){
             NSString* is_qualified = [dic valueForKey:@"is_qualified"];
             if ([is_qualified isKindOfClass:NSNull.class]) {
                 is_qualified = false;
@@ -320,7 +318,7 @@
           
           NSString* is_qualified = [dic valueForKey:@"valid"];
           if (![is_qualified isKindOfClass:NSNull.class]) {
-              if (currentSelected!=1000) {
+              if (self.currentSelected!=1000) {
                   [cellInstance setIsScuesssed:[is_qualified boolValue]];
               }else{
                   [cellInstance setIsFinished:[is_qualified boolValue]];
@@ -361,7 +359,7 @@
         }
         UILabel* label =(UILabel*)[view viewWithTag:20002];
         
-        if (currentSelected==1000) {
+        if (self.currentSelected==1000) {
             label.text = @"我要申请项目路演";
         }else{
             label.text = @"添加新的身份认证";
@@ -373,7 +371,7 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (self.dataArray.count>0) {
-        if (currentSelected !=1001) {
+        if (self.currentSelected !=1001) {
             return self.dataArray.count+1;
         }
         return self.dataArray.count;
@@ -468,5 +466,13 @@
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+-(void)setTitleStr:(NSString *)titleStr
+{
+    self->_titleStr  =titleStr;
+    if (self.titleStr) {
+        self.navView.title = self.titleStr;
+    }
 }
 @end

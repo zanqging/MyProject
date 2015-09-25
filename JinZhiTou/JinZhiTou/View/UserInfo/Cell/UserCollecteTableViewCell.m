@@ -56,11 +56,11 @@
 {
     
     float w,h;
-    w=WIDTH(self)/3;
+    w=WIDTH(self)/2;
     h=height;
     
     UIImageView* imgaeView;
-    for (int i =0; i<2; i++) {
+    for (int i =0; i<1; i++) {
         
         w+=w*i;
         imgaeView=[[UIImageView alloc]initWithFrame:CGRectMake(w, h, 1, 40)];
@@ -68,7 +68,7 @@
         [self addSubview:imgaeView];
         
         if (i==0) {
-            self.colletcteLabel =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgaeView)-40, Y(imgaeView)+5, 30, 30)];
+            self.colletcteLabel =[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)/4, Y(imgaeView)+5, 30, 30)];
             self.colletcteLabel.contentMode = UIViewContentModeScaleAspectFill;
             [self addSubview:self.colletcteLabel];
             
@@ -77,7 +77,7 @@
             [self addSubview:self.collecteImage];
             
             
-            self.priseImage = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(imgaeView)+20, Y(self.colletcteLabel)+3, 20, 20)];
+            self.priseImage = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)*3/4-20, Y(self.colletcteLabel)+3, 20, 20)];
             [self.priseImage setImage:IMAGENAMED(@"dianzan")];
             [self addSubview:self.priseImage];
             
@@ -85,18 +85,6 @@
             self.priseLabel.textAlignment = NSTextAlignmentLeft;
             self.priseLabel.contentMode = UIViewContentModeScaleAspectFill;
             [self addSubview:self.priseLabel];
-        }else{
-            
-            self.voteImage = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(imgaeView)+20, Y(self.colletcteLabel)+3, 20, 20)];
-            [self.voteImage setImage:IMAGENAMED(@"toupiao")];
-            [self addSubview:self.voteImage];
-            
-            
-            self.votelabel =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.voteImage)+5, Y(self.voteImage)-3, 70, 30)];
-            self.votelabel.contentMode = UIViewContentModeScaleAspectFill;
-            [self addSubview:self.votelabel];
-            
-            [view setFrame:CGRectMake(0, 0, WIDTH(self), POS_Y(self.votelabel)+20)];
         }
        
     }

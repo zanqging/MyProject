@@ -59,6 +59,7 @@
     self.navView.titleLable.textColor=WriteColor;
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
     [self.navView.leftButton addTarget:self action:@selector(userInfoAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     
     [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
     [self.navView.rightButton addTarget:self action:@selector(searchAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -287,8 +288,9 @@
             
             
             NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
-            [dataStore setValue:@"0" forKey:@"NewFinialCount"];
-            [dataStore setValue:[TDUtil CurrentDate] forKey:@"NewFinialUpdateTime"];
+            [dataStore setValue:nil forKey:@"NewFinialCount"];
+            [dataStore setValue:@"true" forKey:@"IsNewFinialUpdate"];
+            [dataStore setValue:[TDUtil CurrentDay] forKey:@"NewFinialUpdateTime"];
             [self.tabBarItem setBadgeValue:nil];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];

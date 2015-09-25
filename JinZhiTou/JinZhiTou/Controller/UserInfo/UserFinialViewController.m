@@ -24,7 +24,6 @@
 @interface UserFinialViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,ASIHTTPRequestDelegate>
 {
     BOOL isRefresh;
-    int selectedIndex;
     int currentpage;
     HttpUtils* httpUtils;
     LoadingView* loadingView;
@@ -70,14 +69,14 @@
     httpUtils = [[HttpUtils alloc]init];
     loadingView = [LoadingUtil shareinstance:self.view];
     
-    [self loadCreateData];
+    [self refreshProject];
 }
 
 -(void)refreshProject
 {
     isRefresh =YES;
     currentpage = 0;
-    switch (selectedIndex) {
+    switch (self.selectedIndex) {
         case 0:
             [self loadCreateData];
             break;
@@ -96,7 +95,7 @@
     isRefresh =NO;
     if (!self.isEndOfPageSize) {
         currentpage++;
-        switch (selectedIndex) {
+        switch (self.selectedIndex) {
             case 0:
                 [self loadCreateData];
                 break;
@@ -128,7 +127,7 @@
         //自然投资人
         SwitchSelect* switchView = [[SwitchSelect alloc]initWithFrame:CGRectMake(w*i, 0,w, 50)];
         switchView.tag =1000+i;
-        if (i==0) {
+        if (i == self.selectedIndex) {
             switchView.isSelected = YES;
         }
         
@@ -155,11 +154,11 @@
     }
     
     if (switchView.tag  == 1000) {
-        selectedIndex = 0;
+        self.selectedIndex = 0;
         self.dataCreateArray =nil;
         [self loadCreateData];
     }else{
-        selectedIndex = 0;
+        self.selectedIndex = 1;
         self.dataFinialArray =nil;
         [self loadFinialData];
         
@@ -208,7 +207,7 @@
 {
     RoadShowDetailViewController* controller =[[RoadShowDetailViewController alloc]init];
     controller.title = self.navView.title;
-    if (selectedIndex==0) {
+    if (self.selectedIndex==0) {
         controller.dic = self.dataCreateArray[indexPath.row];
     }else{
         controller.dic = self.dataFinialArray[indexPath.row];
@@ -232,7 +231,7 @@
         cell =[[UserCollecteTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
     }
     
-    if (selectedIndex==0) {
+    if (self.selectedIndex==0) {
         NSDictionary* dic  =self.dataCreateArray[indexPath.row];
         NSDictionary* dicStage = [[dic valueForKey:@"stage"] valueForKey:@"start"];
         [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"thumbnail"]] placeholderImage:IMAGENAMED(@"loading")];
@@ -242,7 +241,6 @@
         cell.timeLabel.text = [NSString stringWithFormat:@"%@:%@",[dicStage valueForKey:@"name"],[dicStage valueForKey:@"datetime"]];
         cell.colletcteLabel.text = [[dic valueForKey:@"collect_sum"] stringValue];
         cell.priseLabel.text = [[dic valueForKey:@"like_sum"] stringValue];
-        cell.votelabel.text = [[dic valueForKey:@"vote_sum"] stringValue];
         cell.backgroundColor = WriteColor;
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -257,7 +255,6 @@
         cell.timeLabel.text = [NSString stringWithFormat:@"%@:%@",[dicStage valueForKey:@"name"],[dicStage valueForKey:@"datetime"]];
         cell.colletcteLabel.text = [[dic valueForKey:@"collect_sum"] stringValue];
         cell.priseLabel.text = [[dic valueForKey:@"like_sum"] stringValue];
-        cell.votelabel.text = [[dic valueForKey:@"vote_sum"] stringValue];
         cell.backgroundColor = WriteColor;
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -270,7 +267,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (selectedIndex == 0) {
+    if (self.selectedIndex == 0) {
         return self.dataCreateArray.count;
     }else{
         return self.dataFinialArray.count;
@@ -313,6 +310,7 @@
     {
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0 || [status intValue] ==-1) {
+            [self.tableView setIsNone:NO];
             if (isRefresh) {
                 self.dataCreateArray = [jsonDic valueForKey:@"data"];
             }else{
@@ -348,6 +346,7 @@
     {
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0 || [status intValue] ==-1) {
+            [self.tableView setIsNone:NO];
             if (isRefresh) {
                 self.dataFinialArray = [jsonDic valueForKey:@"data"];
             }else{

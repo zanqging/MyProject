@@ -22,6 +22,7 @@
 #import "PrivacyViewController.h"
 #import "CompanyViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "UserTraceViewController.h"
 #import "FinialProctoTableViewCell.h"
 
 @interface FinialAuthViewController ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,CustomImagePickerControllerDelegate,ASIHTTPRequestDelegate,UITextFieldDelegate>
@@ -197,6 +198,11 @@
     textField.tag = 500001;
     textField.delegate = self;
     textField.placeholder = @"请输入您的真实姓名";
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.layer.borderColor =ColorTheme.CGColor;
+    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:textField];
     
     //职位
@@ -212,6 +218,11 @@
     textField.delegate = self;
     textField.font  =SYSTEMFONT(16);
     textField.placeholder = @"请输入您的职位";
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.layer.borderColor =ColorTheme.CGColor;
+    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:textField];
     
     //公司
@@ -227,6 +238,11 @@
     textField.delegate = self;
     textField.font  =SYSTEMFONT(16);
     textField.placeholder = @"请输入您的公司";
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.layer.borderColor =ColorTheme.CGColor;
+    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:textField];
     
     //header
@@ -242,7 +258,7 @@
     //tableView
     CGRect rect=CGRectMake(0, POS_Y(view)+10, WIDTH(scrollViewPerson),264);
     self.tableView=[[UITableView alloc]initWithFrame:rect style:UITableViewStylePlain];
-    self.tableView.bounces=YES;
+    self.tableView.bounces=NO;
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
     self.tableView.allowsSelection=YES;
@@ -305,7 +321,8 @@
 {
     PrivacyViewController* controller = [[PrivacyViewController alloc]init];
     controller.serverUrl = risk;
-    controller.title = navView.title;
+    controller.title = @"返回";
+    controller.titleStr =@"投资风险提示书";
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -407,6 +424,11 @@
     textField.delegate = self;
     textField.font  =SYSTEMFONT(16);
     textField.placeholder = @"请输入您的真实姓名";
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.layer.borderColor =ColorTheme.CGColor;
+    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:textField];
     
     //职位
@@ -422,6 +444,11 @@
     textField.delegate = self;
     textField.font  =SYSTEMFONT(16);
     textField.placeholder = @"请输入您的公司名称";
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.layer.borderColor =ColorTheme.CGColor;
+    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:textField];
     
     
@@ -447,6 +474,11 @@
     textField.delegate = self;
     textField.font  =SYSTEMFONT(16);
     textField.placeholder = @"请输入您所感兴趣的领域";
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.layer.borderColor =ColorTheme.CGColor;
+    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:textField];
     
     //基金规模
@@ -462,6 +494,11 @@
     textField.font  =SYSTEMFONT(16);
     textField.tag =500004;
     textField.delegate = self;
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.layer.borderColor =ColorTheme.CGColor;
+    textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:textField];
     
     
@@ -1078,11 +1115,23 @@
             NSString* data = [dic valueForKey:@"data"];
             [self uploadBuinessCard:data];
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
-            //返回
-            [self back:nil];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
         }
+        
+        //进度查看
+        double delayInSeconds = 1.0;
+        //__block RoadShowDetailViewController* bself = self;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            UserTraceViewController* controller = [[UserTraceViewController alloc]init];
+            //来现场
+            controller.titleStr = navView.title;
+            controller.currentSelected = 1002;
+            [self.navigationController pushViewController:controller animated:YES];
+            
+            
+        });
     }
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
@@ -1179,7 +1228,7 @@
 {
     [textField resignFirstResponder];
     if (selectedIndex ==0) {
-        [scrollViewPerson setContentOffset:CGPointMake(0, 0) animated:YES];
+        //[scrollViewPerson setContentOffset:CGPointMake(0, 0) animated:YES];
     }
     return YES;
 }

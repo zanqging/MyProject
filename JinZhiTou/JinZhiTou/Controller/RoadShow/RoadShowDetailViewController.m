@@ -8,6 +8,7 @@
 
 #import "RoadShowDetailViewController.h"
 #import "TDUtil.h"
+#import "FoldView.h"
 #import "ShareView.h"
 #import "HttpUtils.h"
 #import "DialogUtil.h"
@@ -34,9 +35,11 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "WeiboViewControlle.h"
 #import "movieViewController.h"
+#import "UserTraceViewController.h"
 #define LIMIT_FONT_NUMBER 16
-@interface RoadShowDetailViewController ()<ASIHTTPRequestDelegate,btnActionDelegate,UITableViewDataSource,UITableViewDelegate>
+@interface RoadShowDetailViewController ()<ASIHTTPRequestDelegate>
 {
+    UIScrollView* scrollView;
     NSString* checkIndex; //权限监测
     bool isPriseSelected;
     bool isCollectSelected;
@@ -48,9 +51,13 @@
     LoadingView * loadingView;
     RoadShowBottom* bottomView;
     
-    
     NSDictionary* dataDic;
     NSMutableArray* contentArray;
+    
+    
+    FoldView* mainbussinesView; //公司简介
+    FoldView* bussinessModelView; //公司简介
+    FoldView* companyIntroduceView; //公司简介
 }
 @property (nonatomic,strong) movieViewController * moviePlayer;//视频播放控制器
 @end
@@ -77,20 +84,10 @@
     
     [self.view addSubview:self.navView];
     
-    self.tableViewCustom=[[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-kTopBarHeight-kStatusBarHeight-20)];
-    self.tableViewCustom.bounces=NO;
-    self.tableViewCustom.dataSource=self;
-    self.tableViewCustom.delegate=self;
-    self.tableViewCustom.allowsSelection=YES;
-    self.tableViewCustom.delaysContentTouches=NO;
-    self.tableViewCustom.showsVerticalScrollIndicator=NO;
-    self.tableViewCustom.showsHorizontalScrollIndicator=NO;
-    self.tableViewCustom.backgroundColor=[UIColor clearColor];
-    self.tableViewCustom.contentSize = CGSizeMake(WIDTH(self.view), HEIGHT(self.view)+50);
-    self.tableViewCustom.separatorStyle=UITableViewCellSeparatorStyleNone;
+    scrollView =[[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-50)];
+    scrollView.backgroundColor = BackColor;
+    [self.view addSubview:scrollView];
     
-    
-    [self.view addSubview:self.tableViewCustom];
     
     self.view.backgroundColor = ColorTheme;
     
@@ -108,6 +105,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(myMovieFinishedCallback:)
                                                  name:MPMoviePlayerPlaybackDidFinishNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateLayout)
+                                                 name:@"updateRoadShowLayout"
                                                object:nil];
     
     //加载数据
@@ -373,7 +374,6 @@
         default:
             break;
     }
-    [self.tableViewCustom reloadData];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -432,7 +432,6 @@
         }
         
         CGFloat height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
-        [prototypeCell lauyoutResetLayout:CGRectMake(0, 0, WIDTH(self.tableViewCustom), height)];
         
         NSInteger row = indexPath.row;
         
@@ -481,11 +480,6 @@
     }else{
         return [UITableViewCell new];
     }
-}
-
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return contentArray.count;
 }
 
 -(void)teamShowAction:(NSDictionary*)dic
@@ -584,30 +578,6 @@
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0 || [status intValue] == -1) {
             dataDic = [jsonDic valueForKey:@"data"];
-            NSString* content = [dataDic valueForKey:@"company_profile"];
-            NSInteger length = [TDUtil convertToInt:content];
-            
-            [dataDic setValue:[NSString stringWithFormat:@"%ld",length/LIMIT_FONT_NUMBER] forKey:@"company_profile_lines"];
-            content = [dataDic valueForKey:@"business"];
-            length = [TDUtil convertToInt:content];
-            [dataDic setValue:[NSString stringWithFormat:@"%ld",length/LIMIT_FONT_NUMBER] forKey:@"business_lines"];
-            content = [dataDic valueForKey:@"business_model"];
-            length = [TDUtil convertToInt:content];
-            [dataDic setValue:[NSString stringWithFormat:@"%ld",length/LIMIT_FONT_NUMBER] forKey:@"business_model_lines"];
-            
-            NSDictionary* dic = [dataDic valueForKey:@"project_event"];
-            NSString* event = [dic valueForKey:@"event_detail"];
-            if (event.class != NSNull.class) {
-                footer = [[RoadShowFooter alloc]initWithFrame:CGRectMake(0, 5, WIDTH(self.view), 700)];
-                //新闻名称
-                [footer.titleLabel  setText:[dic valueForKey:@"event_title"]];
-                //日期
-                [footer.dateTimeLabel  setText:[dic valueForKey:@"event_date"]];
-                //公司重大新闻
-                [footer setContent:[dic valueForKey:@"event_detail"]];
-                
-                [self.tableViewCustom setTableFooterView:footer];
-            }
             
             NSDictionary* stageDic = [dataDic valueForKey:@"stage"];
             int index;
@@ -623,8 +593,7 @@
             }else{
                 height = 350;
             }
-            header = [[RoadShowHeader alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), height)];
-            [self.tableViewCustom setTableHeaderView:header];
+            header = [[RoadShowHeader alloc]initWithFrame:CGRectMake(0,0, WIDTH(self.view), height)];
             [header.introduceImgview setUserInteractionEnabled: YES];
             [header.introduceImgview addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playMedia:)]];
             
@@ -662,10 +631,17 @@
             dicStage = [stageDic valueForKey:@"end"];
             header.rightName = [dicStage valueForKey:@"name"];
             header.showTime = [dicStage valueForKey:@"datetime"];
-            
+           
             
             bottomView.type = self.type;
             
+            
+            if (![TDUtil isValideTime:header.industry]) {
+                bottomView.btnFunction.enabled = NO;
+                bottomView.btnFunction.backgroundColor = BACKGROUND_LIGHT_GRAY_COLOR;
+                [bottomView.btnFunction setTitle:@"尚未开始" forState:UIControlStateNormal];
+                
+            }
             float currentAmount = [[dataDic valueForKey:@"invest_amount_sum"] floatValue];
             float totalAmount = [[dataDic valueForKey:@"plan_finance"] floatValue];
             if (totalAmount>0) {
@@ -686,13 +662,83 @@
             header.mediaUrl = mediaUrl;
             header.isCollect = isCollect;
             header.status = [stageDic valueForKey:@"status"];
-            [LoadingUtil closeLoadingView:loadingView];
+            [scrollView addSubview:header];
             
-            [self.tableViewCustom reloadData];
+            
+            
+            companyIntroduceView = [[FoldView alloc]initWithFrame:CGRectMake(0, POS_Y(header)+1, WIDTH(self.view), 150)];
+            companyIntroduceView.imageView.image = IMAGENAMED(@"img1");
+            companyIntroduceView.labelTitle.text = @"公司简介";
+            [scrollView addSubview:companyIntroduceView];
+        
+            
+            mainbussinesView = [[FoldView alloc]initWithFrame:CGRectMake(0, POS_Y(companyIntroduceView)+1, WIDTH(self.view), 150)];
+            mainbussinesView.imageView.image = IMAGENAMED(@"img2");
+            mainbussinesView.labelTitle.text = @"主营业务";
+            [scrollView addSubview:mainbussinesView];
+            
+            
+            
+            
+            bussinessModelView = [[FoldView alloc]initWithFrame:CGRectMake(0, POS_Y(mainbussinesView)+1, WIDTH(self.view), 150)];
+            
+            bussinessModelView.labelTitle.text = @"商业模式";
+            bussinessModelView.imageView.image = IMAGENAMED(@"img4");
+            [scrollView addSubview:bussinessModelView];
+            
+            
+            
+            NSDictionary* dic = [dataDic valueForKey:@"project_event"];
+            NSString* event = [dic valueForKey:@"event_detail"];
+            if (event.class != NSNull.class) {
+                footer = [[RoadShowFooter alloc]initWithFrame:CGRectMake(0, POS_Y(bussinessModelView), WIDTH(self.view), 700)];
+                //新闻名称
+                [footer.titleLabel  setText:[dic valueForKey:@"event_title"]];
+                //日期
+                [footer.dateTimeLabel  setText:[dic valueForKey:@"event_date"]];
+                //公司重大新闻
+                [footer setContent:[dic valueForKey:@"event_detail"]];
+                //底部
+                [scrollView addSubview:footer];
+            }
+            //装配
+
+            [companyIntroduceView.nextViews addObject:mainbussinesView];
+            [companyIntroduceView.nextViews addObject:bussinessModelView];
+            
+            [mainbussinesView.nextViews addObject:bussinessModelView];
+            if (footer) {
+                [companyIntroduceView.nextViews addObject:footer];
+                [mainbussinesView.nextViews addObject:footer];
+                [bussinessModelView.nextViews addObject:footer];
+            }
+            
+            NSString* content = [dataDic valueForKey:@"company_profile"];
+            companyIntroduceView.content  =content;
+            content = [dataDic valueForKey:@"project_desc"];
+            mainbussinesView.content = content;
+            content = [dataDic valueForKey:@"business_model"];
+            bussinessModelView.content =content;
+            
+           
+            
+            [LoadingUtil close:loadingView];
+            //更新布局
+            [self updateLayout];
+            NSLog(@"%@",NSStringFromCGSize(scrollView.contentSize));
         }
         
     }
     
+}
+
+-(void)updateLayout
+{
+    if (footer) {
+        [scrollView setContentSize:CGSizeMake(WIDTH(self.view), POS_Y(footer)+20)];
+    }else{
+        [scrollView setContentSize:CGSizeMake(WIDTH(self.view), POS_Y(bussinessModelView)+60)];
+    }
 }
 
 
@@ -829,8 +875,23 @@
             controller.content = @"    尊敬的用户，您的来现场申请已提交，48小时内会有工作人员与您联系，您也可以在“个人中心”－－“进度查看”中查看到审核进度。";
             [self.navigationController pushViewController:controller animated:YES];
             
-        }else{
+        }else if([status intValue] == 1){
             [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+            //[NSThread sleepForTimeInterval:2.0f];
+            //进度查看
+            double delayInSeconds = 1.0;
+            //__block RoadShowDetailViewController* bself = self;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                UserTraceViewController* controller = [[UserTraceViewController alloc]init];
+                //来现场
+                controller.titleStr = self.navView.title;
+                controller.currentSelected = 1001;
+                [self.navigationController pushViewController:controller animated:YES];
+
+            
+            });
+            
         }
         [LoadingUtil close:loadingView];
     }

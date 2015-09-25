@@ -46,7 +46,7 @@
         imgView.backgroundColor = BackColor;
         [view addSubview:imgView];
         
-        self.collecteImgView = [[UIButton alloc]initWithFrame:CGRectMake(20, POS_Y(imgView)+15, 20, 20)];
+        self.collecteImgView = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(view)/4-20, POS_Y(imgView)+15, 20, 20)];
         [self.collecteImgView setImage:IMAGENAMED(@"shoucang") forState:UIControlStateNormal];
         [view addSubview:self.collecteImgView];
         
@@ -56,13 +56,13 @@
         self.collectDataLabelView.font  =SYSTEMFONT(14);
         [view addSubview:self.collectDataLabelView];
         
-        UIImageView*  imageView =[[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.collectDataLabelView)+5, Y(self.collectDataLabelView), 1, 30)];
+        UIImageView*  imageView =[[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2, Y(self.collectDataLabelView), 1, 30)];
         imageView.alpha = 0.3;
         imageView.backgroundColor = BACKGROUND_LIGHT_GRAY_COLOR;
         [view addSubview:imageView];
         
         
-        self.priseImgView = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(imageView)+10, POS_Y(imgView)+15, 20, 20)];
+        self.priseImgView = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(view)*3/4-20, POS_Y(imgView)+15, 20, 20)];
         [self.priseImgView setImage:IMAGENAMED(@"dianzan") forState:UIControlStateNormal];
         [view addSubview:self.priseImgView];
         
@@ -71,21 +71,6 @@
         self.priseDataLabel.text = @"44";
         self.priseDataLabel.font  =SYSTEMFONT(14);
         [view addSubview:self.priseDataLabel];
-        
-        imageView =[[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.priseDataLabel)+5, Y(imageView), 1, 30)];
-        imageView.alpha = 0.3;
-        imageView.backgroundColor = BACKGROUND_LIGHT_GRAY_COLOR;
-        [view addSubview:imageView];
-        
-        self.voteImgView = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(imageView)+20, POS_Y(imgView)+15, 20, 20)];
-        [self.voteImgView setImage:IMAGENAMED(@"toupiao") forState:UIControlStateNormal];
-        [view addSubview:self.voteImgView];
-        
-        self.voteDataLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.voteImgView), Y(self.voteImgView)-5, 40, 30)];
-        self.voteDataLabel.textAlignment = NSTextAlignmentCenter;
-        self.voteDataLabel.text = @"144";
-        self.voteDataLabel.font  =SYSTEMFONT(14);
-        [view addSubview:self.voteDataLabel];
 //
         self.backgroundColor = BackColor;
         self.layer.cornerRadius = 5;
@@ -134,11 +119,5 @@
 {
     self->_priseData=priseData;
     self.priseDataLabel.text=[NSString stringWithFormat:@"%ld",(long)self.priseData];
-}
-
--(void)setVoteData:(NSInteger)voteData
-{
-    self->_voteData=voteData;
-    self.voteDataLabel.text=[NSString stringWithFormat:@"%ld",(long)self.voteData];
 }
 @end

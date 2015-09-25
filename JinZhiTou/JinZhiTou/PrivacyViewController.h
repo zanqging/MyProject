@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface PrivacyViewController : UIViewController
+@property(retain,nonatomic)NSString* titleStr;
 @property(retain,nonatomic)NSString* serverUrl;
 @end
