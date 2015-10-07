@@ -53,4 +53,18 @@
     
 }
 
+-(void)setContent:(NSString *)content
+{
+    self->_content  = content;
+    if (!self.lblFunName) {
+        self.lblFunName = [[UILabel alloc]initWithFrame:CGRectMake(0, HEIGHT(self)/2-10, 50, 20)];
+        self.lblFunName.font  =SYSTEMFONT(14);
+        self.lblFunName.textColor = FONT_COLOR_BLACK;
+        self.lblFunName.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:self.lblFunName];
+    }
+    
+    self.lblFunName.text  =content;
+}
+
 @end

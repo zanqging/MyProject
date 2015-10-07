@@ -40,8 +40,7 @@
     
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:@"首页" forState:UIControlStateNormal];
-    [self.navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
-    [self.navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [self.view addSubview:self.navView];
     
     
@@ -272,6 +271,31 @@
     }else{
         //位置不可用
         NSLog(@"GPS被禁");
+        NSString* title = @"金指投温馨提示";
+        
+        NSString* content = @"GPS被禁，请至->设置->隐私->定位服务->金指投->始终 打开定位服务";
+        
+#ifdef IOS8_SDK_AVAILABLE
+        
+        UIAlertController* controller =[UIAlertController alertControllerWithTitle:title message:content preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* actionSure = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+        
+        [controller addAction:actionSure];
+        
+        [self.navigationController presentViewController:controller animated:YES completion:nil];
+        
+#else
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                        message:content
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        
+        [alert show];
+        
+#endif
+        
     }
 }
 
@@ -279,6 +303,30 @@
 {
     if (error.code==kCLErrorDenied) {
         NSLog(@"地理位置信息服务获取被用户拒绝!");
+        NSString* title = @"金指投温馨提示";
+        
+        NSString* content = @"GPS被禁，请至->设置->隐私->定位服务->金指投->始终 打开定位服务";
+        
+#ifdef IOS8_SDK_AVAILABLE
+        
+        UIAlertController* controller =[UIAlertController alertControllerWithTitle:title message:content preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction* actionSure = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+        
+        [controller addAction:actionSure];
+        
+        [self.navigationController presentViewController:controller animated:YES completion:nil];
+        
+#else
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                        message:content
+                                                       delegate:nil
+                                              cancelButtonTitle:@"确定" otherButtonTitles:nil];
+        
+        [alert show];
+        
+#endif
     }
 }
 

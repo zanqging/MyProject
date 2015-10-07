@@ -529,12 +529,21 @@
        imgFrame = imgView.frame;
        fileName  =@"dianzan_selected";
 //       [self viewAnimation:imgView salce:5];
-        self.priserNum ++;
+        if (flagLike) {
+            self.priserNum ++;
+        }else{
+            flagLike = true;
+        }
     }else{
         fileName  =@"dianzan";
-        if (self.priserNum>0) {
-            self.priserNum --;
+        if (flagLike) {
+            if (self.priserNum>0) {
+                self.priserNum --;
+            }
+        }else{
+            flagLike = true;
         }
+        
     }
     
     imgView.image = IMAGENAMED(fileName);
@@ -552,12 +561,19 @@
         imgFrame = imgView.frame;
         fileName = @"shoucang_selected";
 //        [self viewAnimation:imgView salce:5];
-        
-        self.collecteNum++;
+        if (flagCollect) {
+            self.collecteNum++;
+        }else{
+            flagCollect = true;
+        }
     }else{
         fileName = @"shoucang";
-        if (self.collecteNum>0) {
-            self.collecteNum--;
+        if (flagCollect) {
+            if (self.collecteNum>0) {
+                self.collecteNum--;
+            }
+        }else{
+            flagCollect = true;
         }
     }
     

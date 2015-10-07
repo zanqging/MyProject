@@ -58,11 +58,10 @@
     [self.navView setTitle:@"金指投"];
     self.navView.titleLable.textColor=WriteColor;
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
-    [self.navView.leftButton addTarget:self action:@selector(userInfoAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     
     [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
-    [self.navView.rightButton addTarget:self action:@selector(searchAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
     [self.view addSubview:self.navView];
     //头部
     [self loadNewsTag];
@@ -193,15 +192,16 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    BannerViewController* controller =[[BannerViewController alloc]init];
-    controller.title = self.navView.title;
+    if(!self.webViewController){
+        self.webViewController =[[BannerViewController alloc]init];
+        self.webViewController.title = self.navView.title;
+    }
     NSDictionary* dic  = self.dataCreateArray[indexPath.row];
     NSURL* url = [NSURL URLWithString:[dic valueForKey:@"href"]];
-    controller.type = 3;
-    controller.url = url;
-    controller.dic = dic;
-    [self.navigationController pushViewController:controller animated:YES];
+    self.webViewController.type = 3;
+    self.webViewController.url = url;
+    self.webViewController.dic = dic;
+    [self.navigationController pushViewController:self.webViewController animated:YES];
     NSString* serverUrl = [NEWS_READ_COUNT stringByAppendingFormat:@"%@/",[dic valueForKey:@"id"]];
     [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:0 sel:nil];
 }

@@ -10,6 +10,8 @@
 #import "UIImageView+WebCache.h"
 @interface RoadShowHeader : UIView
 {
+    BOOL flagLike;
+    BOOL flagCollect;
     UILabel* leftLabel; //剩余进度
     UILabel* statusLabel; //状态
     UILabel* industryLabel;//行业

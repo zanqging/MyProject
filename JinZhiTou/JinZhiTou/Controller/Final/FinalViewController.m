@@ -64,17 +64,17 @@
     [navView setTitle:@"金指投"];
     navView.titleLable.textColor=WriteColor;
     [navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
-    [navView.leftButton addTarget:self action:@selector(userInfoAction:) forControlEvents:UIControlEventTouchUpInside];
-    [navView.backView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
+    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
+    [navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
     
     [navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
-    [navView.rightButton addTarget:self action:@selector(searchAction:) forControlEvents:UIControlEventTouchUpInside];
     
     
     [self.view addSubview:navView];
-    
-    self.finalContentTableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(51, POS_Y(navView), WIDTH(self.view)-50, HEIGHT(self.view)-POS_Y(navView)-kBottomBarHeight-85)];
+    self.finalFunTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), 50, HEIGHT(self.view)-POS_Y(navView)-kBottomBarHeight-85)];
+    self.finalContentTableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(51, POS_Y(navView), WIDTH(self.view)-50,HEIGHT(self.finalFunTableView))];
     self.finalContentTableView.backgroundColor  =WriteColor;
+    [self.view addSubview:self.finalFunTableView];
     [self.view addSubview:self.finalContentTableView];
     
     //分割线
@@ -364,7 +364,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (tableView.tag==100001) {
-        return 4;
+        return self.array.count;
     }
     if (currentArray.count==0) {
         self.finalContentTableView.isNone =YES;
@@ -386,7 +386,7 @@
         if (indexPath.row==0) {
             Cell.isSelected=YES;
         }
-        Cell.lblFunName.text=self.array[indexPath.row];
+        Cell.content=self.array[indexPath.row];
         Cell.selectionStyle=UITableViewCellSelectionStyleNone;
         return Cell;
         

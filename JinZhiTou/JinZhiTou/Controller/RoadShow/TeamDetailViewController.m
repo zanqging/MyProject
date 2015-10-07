@@ -40,8 +40,7 @@
     
     [navView.leftButton setImage:nil forState:UIControlStateNormal];
     [navView.leftButton setTitle:@"核心团队" forState:UIControlStateNormal];
-    [navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
-    [navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [self.view addSubview:navView];
     
     UIImageView* imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), 250)];

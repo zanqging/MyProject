@@ -57,8 +57,7 @@
     self.view.backgroundColor = ColorTheme;
     [navView.leftButton setImage:nil forState:UIControlStateNormal];
     [navView.leftButton setTitle:self.title forState:UIControlStateNormal];
-    [navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
-    [navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
 	self.searchBarWithoutDelegate = [[INSSearchBar alloc] initWithFrame:CGRectMake(100.0, 27.0, CGRectGetWidth(self.view.bounds) - 110.0, 34.0)];
     self.searchBarWithoutDelegate.searchField.textColor =ColorTheme;
     self.searchBarWithoutDelegate.delegate = self;

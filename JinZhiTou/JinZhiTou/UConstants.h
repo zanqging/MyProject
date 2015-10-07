@@ -109,6 +109,11 @@
 #define DSystemVersion          ([[[UIDevice currentDevice] systemVersion] doubleValue])
 #define SSystemVersion          ([[UIDevice currentDevice] systemVersion])
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+#define IOS8_SDK_AVAILABLE 1
+#endif
+
+
 // 当前语言
 #define CURRENTLANGUAGE         ([[NSLocale preferredLanguages] objectAtIndex:0])
 

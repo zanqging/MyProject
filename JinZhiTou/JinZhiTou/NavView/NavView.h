@@ -26,5 +26,9 @@
 @property(retain,nonatomic)UIButton* rightButton;
 @property(retain,nonatomic)UIImageView* imageView;
 
+//触摸感应区域
+@property(retain,nonatomic)UIView* leftTouchView;
+@property(retain,nonatomic)UIView* rightTouchView;
+
 -(void)setNavAnimation:(NSString*)type offset:(CGPoint)offset;
 @end

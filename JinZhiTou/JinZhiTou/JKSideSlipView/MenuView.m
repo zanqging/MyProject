@@ -39,7 +39,7 @@
         [navView setTitle:@"个人中心"];
         navView.titleLable.textColor=WriteColor;
         [navView.rightButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
-        [navView.rightButton addTarget:self action:@selector(menu:)forControlEvents:UIControlEventTouchUpInside];
+        [navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(menu:)]];
         [self addSubview:navView];
         
         self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self), HEIGHT(self)-POS_Y(navView)-kBottomBarHeight)];

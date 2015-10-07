@@ -12,6 +12,7 @@
 #import "AlertView.h"
 #import "APService.h"
 #import "HttpUtils.h"
+#import "UConstants.h"
 #import "GlobalDefine.h"
 #import "NSString+SBJSON.h"
 #import "BannerViewController.h"
@@ -216,11 +217,21 @@
     NetworkStatus status = [curReach currentReachabilityStatus];
     
     if (status == NotReachable) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"金指投温馨提示"
-                                                        message:@"当前网络状况不佳，请检测网络连接!"
+NSString* title = @"金指投温馨提示";
+NSString* content = @"当前网络状况不佳，请检测网络连接!";
+#ifdef IOS8_SDK_AVAILABLE
+        UIAlertController* controller =[UIAlertController alertControllerWithTitle:title message:content preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction* actionSure = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+        [controller addAction:actionSure];
+        [self.iNav presentViewController:controller animated:YES completion:nil];
+#else
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                        message:content
                                                        delegate:nil
                                               cancelButtonTitle:@"确定" otherButtonTitles:nil];
         [alert show];
+#endif
+
     }
     
 }
@@ -265,6 +276,11 @@ fetchCompletionHandler:(void
     
     
     [APService setBadge:0];
+    NSInteger number = [UIApplication sharedApplication].applicationIconBadgeNumber;
+    if (number>0) {
+        number --;
+    }
+    [UIApplication sharedApplication].applicationIconBadgeNumber =number;
     [APService handleRemoteNotification:userInfo];
     completionHandler(UIBackgroundFetchResultNewData);
     

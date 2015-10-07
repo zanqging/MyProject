@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface FinalKindTableViewCell : UITableViewCell
-@property (strong, nonatomic) IBOutlet UILabel *lblFunName;
+@property (retain, nonatomic)UILabel *lblFunName;
 @property(assign,nonatomic)BOOL isSelected;
 
-@property (weak, nonatomic) IBOutlet UIImageView *imgaeView;
+@property(retain,nonatomic)NSString* content;
 @end

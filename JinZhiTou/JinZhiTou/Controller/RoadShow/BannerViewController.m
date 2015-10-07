@@ -44,12 +44,11 @@
     
     [navView.leftButton setImage:nil forState:UIControlStateNormal];
     [navView.leftButton setTitle:self.title forState:UIControlStateNormal];
-    [navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
-    [navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
     if (self.type == 3) {
         [navView.rightButton setImage:IMAGENAMED(@"share") forState:UIControlStateNormal];
-        [navView.rightButton addTarget:self action:@selector(ShareAction) forControlEvents:UIControlEventTouchUpInside];
+        [navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(ShareAction)]];
     }
     [self.view addSubview:navView];
     
@@ -147,6 +146,7 @@
 }
 -(void)dealloc
 {
+    self.webView = nil;
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 

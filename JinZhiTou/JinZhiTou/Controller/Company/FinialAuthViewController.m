@@ -60,8 +60,7 @@
     
     [navView.leftButton setImage:nil forState:UIControlStateNormal];
     [navView.leftButton setTitle:self.titleStr forState:UIControlStateNormal];
-    [navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
-    [navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [self.view addSubview:navView];
     
     [self addPersonalView];

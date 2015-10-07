@@ -38,11 +38,10 @@
     
     [navView.leftButton setImage:nil forState:UIControlStateNormal];
     [navView.leftButton setTitle:@"设置" forState:UIControlStateNormal];
-    [navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
+    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [navView.rightButton setImage:nil forState:UIControlStateNormal];
     [navView.rightButton setTitle:@"保存" forState:UIControlStateNormal];
-    [navView.rightButton addTarget:self action:@selector(save:)forControlEvents:UIControlEventTouchUpInside];
-    [navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(save:)]];
     
     [self.view addSubview:navView];
     

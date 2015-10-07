@@ -44,8 +44,7 @@
     
     [navView.leftButton setImage:nil forState:UIControlStateNormal];
     [navView.leftButton setTitle:@"投资人" forState:UIControlStateNormal];
-    [navView.leftButton addTarget:self action:@selector(back:)forControlEvents:UIControlEventTouchUpInside];
-    [navView.imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [self.view addSubview:navView];
     
     scrollView =[[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView))];
@@ -54,9 +53,9 @@
     
     //头部
     UIView* view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(scrollView), 200)];
+    view.tag = 10001;
     view.backgroundColor  = WriteColor;
     view.userInteractionEnabled = YES;
-    [view addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playMedia:)]];
     [scrollView addSubview:view];
     
     UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, WIDTH(scrollView)-20, 150)];
@@ -77,15 +76,11 @@
     label.textColor = ColorTheme;
     [view addSubview:label];
     
-    //播放按钮
-    UIImageView* imgPlay = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(imgView)/2-10, HEIGHT(imgView)/2-10, 40, 40)];
-    imgPlay.image = IMAGENAMED(@"bofang");
-    imgPlay.contentMode = UIViewContentModeScaleAspectFill;
-    [view addSubview:imgPlay];
+   
     
     
     view = [[UIView alloc]initWithFrame:CGRectMake(X(view), POS_Y(view)+10, WIDTH(view), scrollView.contentSize.height)];
-    view.tag = 10001;
+    view.tag = 10002;
     view.backgroundColor = WriteColor;
     [scrollView addSubview:view];
     
@@ -191,7 +186,18 @@
         if ([status intValue] == 0 || [status intValue] == -1) {
             dataDic = [jsonDic valueForKey:@"data"];
             
-            UIView* view = [scrollView viewWithTag:10001];
+            NSString* url = [dataDic valueForKey:@"url"];
+            if ([TDUtil isValidString:url]) {
+                //播放按钮
+                CGRect frame =CGRectMake(10, 10, WIDTH(scrollView)-20, 150);
+                UIImageView* imgPlay = [[UIImageView alloc]initWithFrame:CGRectMake(frame.size.width/2-10, frame.size.height/2-10, 40, 40)];
+                imgPlay.image = IMAGENAMED(@"bofang");
+                imgPlay.contentMode = UIViewContentModeScaleAspectFill;
+                UIView* view = [scrollView viewWithTag:10001];
+                [view addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playMedia:)]];
+                [view addSubview:imgPlay];
+            }
+            UIView* view = [scrollView viewWithTag:10002];
             UIImageView* imgView=(UIImageView*)[scrollView viewWithTag:1001];
             
             UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+20, Y(imgView)-20, 100, 40)];

@@ -47,6 +47,16 @@
         [rightButton.titleLabel setFont:SYSTEMFONT(18)];
         [rightButton setImage:[UIImage imageNamed:@"ic_toolbar_profile"]forState:UIControlStateNormal];
         [self addSubview:rightButton];
+        
+        
+        //左边－触摸感应区域
+        self.leftTouchView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self)/2, HEIGHT(self))];
+        self.leftTouchView.userInteractionEnabled  =YES;
+        [self addSubview:self.leftTouchView];
+        //右边 - 触摸感应区域
+        self.rightTouchView = [[UIView alloc]initWithFrame:CGRectMake(WIDTH(self)/2, 0, WIDTH(self.leftTouchView), HEIGHT(self.leftTouchView))];
+        self.rightTouchView.userInteractionEnabled  =YES;
+        [self addSubview:self.rightTouchView];
     }
     return self;
 }
