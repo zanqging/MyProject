@@ -390,7 +390,8 @@ fetchCompletionHandler:(void
     BannerViewController* controller = [[BannerViewController alloc]init];
    // NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:[NSString stringWithFormat:@"%d",index] forKey:@"id"];
     controller.titleStr = @"消息推送";
-     controller.title = @"首页";
+    controller.title = @"首页";
+    controller.type = 3;
     controller.url = url;
     [self.iNav pushViewController:controller animated:YES];
 }

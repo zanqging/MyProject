@@ -110,6 +110,7 @@
 		453E23E21B7E2CA30023BB00 /* FinialSuccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453E23E11B7E2CA30023BB00 /* FinialSuccessViewController.m */; };
 		453E23E41B7ED07F0023BB00 /* read_me.txt in Resources */ = {isa = PBXBuildFile; fileRef = 453E23E31B7ED07F0023BB00 /* read_me.txt */; };
 		453E23E61B7ED09C0023BB00 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 453E23E51B7ED09C0023BB00 /* libWeChatSDK.a */; };
+		453E64251BC6CA2C000B664E /* SystemSwipableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 453E64241BC6CA2C000B664E /* SystemSwipableCell.m */; };
 		453F93CF1BB4379100CA7700 /* FoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 453F93CE1BB4379100CA7700 /* FoldView.m */; };
 		45495BC91B60DA02007A17FD /* CustomImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45495BB31B60DA02007A17FD /* CustomImagePickerController.m */; };
 		45495BCA1B60DA02007A17FD /* IphoneScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 45495BB51B60DA02007A17FD /* IphoneScreen.m */; };
@@ -190,6 +191,10 @@
 		45A2ADB31B72811200751F78 /* AuthTraceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A2ADB21B72811200751F78 /* AuthTraceTableViewCell.m */; };
 		45A2ADB61B72823800751F78 /* FinialAuthTraceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A2ADB51B72823800751F78 /* FinialAuthTraceViewController.m */; };
 		45AE9DCE1B84047C0053207C /* LoadingViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AE9DCD1B84047C0053207C /* LoadingViewDelegate.m */; };
+		45D27B8C1BC631ED00ECD9D7 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D27B871BC631ED00ECD9D7 /* DetailViewController.m */; };
+		45D27B8D1BC631ED00ECD9D7 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D27B891BC631ED00ECD9D7 /* MasterViewController.m */; };
+		45D27B8E1BC631ED00ECD9D7 /* SwipeableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D27B8B1BC631ED00ECD9D7 /* SwipeableCell.m */; };
+		45D27B921BC66BF700ECD9D7 /* ReplyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D27B911BC66BF700ECD9D7 /* ReplyView.m */; };
 		45D49D761B8228AB00EC529F /* ModifyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D49D751B8228AB00EC529F /* ModifyViewController.m */; };
 		45D49D8B1B82336F00EC529F /* city.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45D49D7A1B82336F00EC529F /* city.plist */; };
 		45D49D921B82336F00EC529F /* ZHPickView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D49D851B82336F00EC529F /* ZHPickView.m */; };
@@ -490,6 +495,8 @@
 		453E23E51B7ED09C0023BB00 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
 		453E23E81B7ED0B20023BB00 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
 		453E23E91B7ED0B20023BB00 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
+		453E64231BC6CA2C000B664E /* SystemSwipableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemSwipableCell.h; path = Controller/UserInfo/SystemSwipableCell.h; sourceTree = "<group>"; };
+		453E64241BC6CA2C000B664E /* SystemSwipableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SystemSwipableCell.m; path = Controller/UserInfo/SystemSwipableCell.m; sourceTree = "<group>"; };
 		453F93CD1BB4379100CA7700 /* FoldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoldView.h; sourceTree = "<group>"; };
 		453F93CE1BB4379100CA7700 /* FoldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoldView.m; sourceTree = "<group>"; };
 		45495BB11B60DA02007A17FD /* ColorMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorMatrix.h; sourceTree = "<group>"; };
@@ -637,6 +644,14 @@
 		45A2ADB51B72823800751F78 /* FinialAuthTraceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FinialAuthTraceViewController.m; path = Controller/Company/FinialAuthTraceViewController.m; sourceTree = "<group>"; };
 		45AE9DCC1B84047C0053207C /* LoadingViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoadingViewDelegate.h; path = View/LoadingViewDelegate.h; sourceTree = "<group>"; };
 		45AE9DCD1B84047C0053207C /* LoadingViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoadingViewDelegate.m; path = View/LoadingViewDelegate.m; sourceTree = "<group>"; };
+		45D27B861BC631ED00ECD9D7 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		45D27B871BC631ED00ECD9D7 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		45D27B881BC631ED00ECD9D7 /* MasterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
+		45D27B891BC631ED00ECD9D7 /* MasterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
+		45D27B8A1BC631ED00ECD9D7 /* SwipeableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwipeableCell.h; sourceTree = "<group>"; };
+		45D27B8B1BC631ED00ECD9D7 /* SwipeableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwipeableCell.m; sourceTree = "<group>"; };
+		45D27B901BC66BF700ECD9D7 /* ReplyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReplyView.h; path = Controller/UserInfo/ReplyView.h; sourceTree = "<group>"; };
+		45D27B911BC66BF700ECD9D7 /* ReplyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReplyView.m; path = Controller/UserInfo/ReplyView.m; sourceTree = "<group>"; };
 		45D49D741B8228AB00EC529F /* ModifyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ModifyViewController.h; path = Controller/ModifyViewController.h; sourceTree = "<group>"; };
 		45D49D751B8228AB00EC529F /* ModifyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ModifyViewController.m; path = Controller/ModifyViewController.m; sourceTree = "<group>"; };
 		45D49D7A1B82336F00EC529F /* city.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = city.plist; sourceTree = "<group>"; };
@@ -1559,6 +1574,15 @@
 			name = Cell;
 			sourceTree = "<group>";
 		};
+		45D27B8F1BC66BC500ECD9D7 /* ReplyView */ = {
+			isa = PBXGroup;
+			children = (
+				45D27B901BC66BF700ECD9D7 /* ReplyView.h */,
+				45D27B911BC66BF700ECD9D7 /* ReplyView.m */,
+			);
+			name = ReplyView;
+			sourceTree = "<group>";
+		};
 		45D49D771B82336F00EC529F /* ZHpickView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1678,11 +1702,20 @@
 		45E18A191B79FB780082225E /* Message */ = {
 			isa = PBXGroup;
 			children = (
+				45D27B8F1BC66BC500ECD9D7 /* ReplyView */,
 				45E18A201B79FD240082225E /* Common */,
 				45E18A1A1B79FC1E0082225E /* MyTableViewCell.h */,
 				45E18A1B1B79FC1E0082225E /* MyTableViewCell.m */,
 				45E18A1D1B79FC290082225E /* MessageViewController.h */,
 				45E18A1E1B79FC290082225E /* MessageViewController.m */,
+				45D27B861BC631ED00ECD9D7 /* DetailViewController.h */,
+				45D27B871BC631ED00ECD9D7 /* DetailViewController.m */,
+				45D27B881BC631ED00ECD9D7 /* MasterViewController.h */,
+				45D27B891BC631ED00ECD9D7 /* MasterViewController.m */,
+				45D27B8A1BC631ED00ECD9D7 /* SwipeableCell.h */,
+				45D27B8B1BC631ED00ECD9D7 /* SwipeableCell.m */,
+				453E64231BC6CA2C000B664E /* SystemSwipableCell.h */,
+				453E64241BC6CA2C000B664E /* SystemSwipableCell.m */,
 			);
 			name = Message;
 			sourceTree = "<group>";
@@ -2209,6 +2242,7 @@
 				45495BCB1B60DA02007A17FD /* PECropRectView.m in Sources */,
 				450140081B943024000F8A97 /* MMDrawerBarButtonItem.m in Sources */,
 				45495BD11B60DA02007A17FD /* UIImage+Resize.m in Sources */,
+				45D27B8C1BC631ED00ECD9D7 /* DetailViewController.m in Sources */,
 				45F93B541B637311004526F5 /* MJRefreshBackFooter.m in Sources */,
 				45326EF81B732A7F0044F8C1 /* UserInfoHeader.m in Sources */,
 				4517CDBD1B78C7ED00EFBB6A /* AFSecurityPolicy.m in Sources */,
@@ -2293,6 +2327,7 @@
 				453E23DC1B7DB6040023BB00 /* MZTimerLabel.m in Sources */,
 				45ECCEFF1B61FED40013CA73 /* WaterFCell.m in Sources */,
 				453271791B7490000044F8C1 /* UserGenderTableViewCell.m in Sources */,
+				45D27B8D1BC631ED00ECD9D7 /* MasterViewController.m in Sources */,
 				458115491B7F7539006EEBBC /* THProgressView.m in Sources */,
 				45F09C861B862ABA0065D873 /* BedgesView.m in Sources */,
 				45DED8931BA021D800B4D393 /* IndustoryTableViewCell.m in Sources */,
@@ -2329,12 +2364,14 @@
 				450D7E6B1B913E1D001781C4 /* WeiboCell.m in Sources */,
 				45FCD0541B75E216009AD6E3 /* SDWebImageDownloader.m in Sources */,
 				4517CDB91B78C7ED00EFBB6A /* AFHTTPRequestOperation.m in Sources */,
+				45D27B8E1BC631ED00ECD9D7 /* SwipeableCell.m in Sources */,
 				45326EFC1B7330180044F8C1 /* UserInfoTableViewCell.m in Sources */,
 				45F09C711B86297B0065D873 /* ASIFormDataRequest.m in Sources */,
 				45495BCC1B60DA02007A17FD /* PECropView.m in Sources */,
 				45326F121B74432C0044F8C1 /* NSData+AES.m in Sources */,
 				45E8121C1B67C6DC009F840D /* TeamDetailViewController.m in Sources */,
 				453E23D41B7DA3570023BB00 /* UITableViewCustomView.m in Sources */,
+				453E64251BC6CA2C000B664E /* SystemSwipableCell.m in Sources */,
 				45495C4F1B60EAEC007A17FD /* NavView.m in Sources */,
 				45E2DDC21B687778008F2942 /* InteractionViewController.m in Sources */,
 				45F93B591B637311004526F5 /* MJRefreshAutoNormalFooter.m in Sources */,
@@ -2370,6 +2407,7 @@
 				45F09C6F1B86297B0065D873 /* ASIDataDecompressor.m in Sources */,
 				45A2ADB61B72823800751F78 /* FinialAuthTraceViewController.m in Sources */,
 				45F09C651B86297B0065D873 /* DialogUtil.m in Sources */,
+				45D27B921BC66BF700ECD9D7 /* ReplyView.m in Sources */,
 				45FCD05D1B75E216009AD6E3 /* UIImageView+WebCache.m in Sources */,
 				450876371B8F656A006EFC1A /* BoxModel.m in Sources */,
 				45A2ADA01B71A08B00751F78 /* PhotoAdd.m in Sources */,
@@ -2503,7 +2541,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = JinZhiTou/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2530,7 +2568,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = JinZhiTou/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

@@ -232,9 +232,9 @@
     [dic setValue:@"消息回复" forKey:@"title"];
     [array addObject:dic];
     
-    [dic setValue:@"jindu" forKey:@"imageName"];
-    [dic setValue:@"进度查看" forKey:@"title"];
-    [array addObject:dic];
+//    [dic setValue:@"jindu" forKey:@"imageName"];
+//    [dic setValue:@"进度查看" forKey:@"title"];
+//    [array addObject:dic];
     
     [dic setValue:@"xiaoxihuifu" forKey:@"imageName"];
     [dic setValue:@"消息通知" forKey:@"title"];

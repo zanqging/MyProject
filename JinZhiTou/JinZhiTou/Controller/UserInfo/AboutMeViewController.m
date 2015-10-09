@@ -10,7 +10,7 @@
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #import "AboutMeViewCell.h"
-#import "MessageViewController.h"
+#import "MasterViewController.h"
 @interface AboutMeViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 @end
@@ -78,12 +78,17 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UIStoryboard* storyBorard =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    MessageViewController* controller =(MessageViewController*)[storyBorard instantiateViewControllerWithIdentifier:@"ResplyMessage"];
+    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    MasterViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"SystemMessage"];
     NSInteger row = indexPath.row;
+    if(row==0){
+        controller.type=0;
+    }else{
+        controller.type=1;
+    }
     NSDictionary* dic =self.dataArray[row];
     controller.titleStr = [dic valueForKey:@"title"];
-    controller.type = row;
+//    controller.type = row;
     [self.navigationController pushViewController:controller animated:YES];
 }
 

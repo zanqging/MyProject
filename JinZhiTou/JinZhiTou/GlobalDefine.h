@@ -385,6 +385,7 @@
 //设置已读
 #define settopicread @"settopicread/"
 
+#define setsysteminform @"setsysteminform/"
 //新三板更新数据
 #define latestnewscount @"latestnewscount/"
 //知识库更新数据

@@ -17,13 +17,15 @@
 #import "DAKeyboardControl.h"
 @interface MessageViewController ()<ASIHTTPRequestDelegate,UITextViewDelegate>
 {
-    NSInteger rowCount;
     BOOL isRefresh;
     int currentPage;
+    
+    NSString* atTopId;
+    NSInteger rowCount;
     UITextView *textView;
+    
     HttpUtils* httpUtils;
     LoadingView* loadingView;
-    NSString* atTopId;
 }
 @end
 
@@ -215,7 +217,7 @@
         lines = 1;
     }
     float height = lines *20;
-    return height+80;
+    return height+50;
 }
 
 -(void)didSelectedRowAthIndexPath:(UITableView *)aTableView IndexPath:(NSIndexPath *)aIndexPath FromView:(CustomTableView *)aView{
@@ -251,7 +253,7 @@
     if (vCell == nil) {
         vCell = [[MyTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:vCellIdentify];
         if (self.type!=0) {
-            [vCell hiddenMoreButton];
+            //[vCell hiddenMoreButton];
         }
     }
     NSInteger row  = aIndexPath.row;

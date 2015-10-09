@@ -50,10 +50,10 @@
     [dic setValue:@"消息回复" forKey:@"title"];
     [array addObject:dic];
     
-    dic =[[NSMutableDictionary alloc]init];
-    [dic setValue:@"jindu" forKey:@"imageName"];
-    [dic setValue:@"进度查看" forKey:@"title"];
-    [array addObject:dic];
+//    dic =[[NSMutableDictionary alloc]init];
+//    [dic setValue:@"jindu" forKey:@"imageName"];
+//    [dic setValue:@"进度查看" forKey:@"title"];
+//    [array addObject:dic];
     
     dic =[[NSMutableDictionary alloc]init];
     [dic setValue:@"tongzhi" forKey:@"imageName"];
