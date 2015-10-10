@@ -14,8 +14,8 @@
 #import "DialogUtil.h"
 #import "UConstants.h"
 #import "ReplyViewController.h"
-#import "DAKeyboardControl.h"
-@interface WeiboViewControlle ()<UITextViewDelegate>
+#import "ReplyView.h"
+@interface WeiboViewControlle ()<UITextViewDelegate,WeiboDeleget,ReplyDelegate>
 {
     BOOL _first;
     int _lastId;
@@ -24,11 +24,12 @@
     
     NSString* atTopId;
     UIWebView * webView;
-    UITextView *textView;
     NSString * phoneNumber;
     
     NSMutableArray * _images;  //测试用
     NSMutableArray * _contents;
+    
+    ReplyView* replyView;
 }
 
 @end
@@ -53,7 +54,7 @@
     [self.navView setTitle:@"评论"];
     self.navView.titleLable.textColor=WriteColor;
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [self.navView.leftButton setTitle:@"项目详情" forState:UIControlStateNormal];
+    [self.navView.leftButton setTitle:self.titleStr forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
     [self.navView.rightButton setImage:IMAGENAMED(@"fapiao") forState:UIControlStateNormal];
@@ -61,52 +62,13 @@
     [self.view addSubview:self.navView];
     
     
-    self.tableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-70)];
+    self.tableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight)];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:self.tableView];
     
     [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshData:) loadAction:@selector(loadData:)];
-    
-    UIToolbar *toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f,
-                                                                     self.view.bounds.size.height - 40.0f,
-                                                                     self.view.bounds.size.width,
-                                                                     40.0f)];
-    toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview:toolBar];
-    
-    textView = [[UITextView alloc] initWithFrame:CGRectMake(10.0f,
-                                                                           6.0f,
-                                                                           toolBar.bounds.size.width - 20.0f - 68.0f,
-                                                                           30.0f)];
-    textView.delegate =self;
-    textView.font =SYSTEMFONT(18);
-    textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [toolBar addSubview:textView];
-    
-    UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [sendButton setTitle:@"发表" forState:UIControlStateNormal];
-    [sendButton addTarget:self action:@selector(submmit:) forControlEvents:UIControlEventTouchUpInside];
-    sendButton.frame = CGRectMake(toolBar.bounds.size.width - 68.0f,
-                                  6.0f,
-                                  58.0f,
-                                  29.0f);
-    [toolBar addSubview:sendButton];
-    
-    
-    self.view.keyboardTriggerOffset = toolBar.bounds.size.height;
-    
-    [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
-        CGRect toolBarFrame = toolBar.frame;
-        toolBarFrame.origin.y = keyboardFrameInView.origin.y - toolBarFrame.size.height;
-        toolBar.frame = toolBarFrame;
-    }];
-    
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showyboard:) name:@"showKeyboard" object:nil];
-    
-    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hiddeKeyboard:)]];
     _first=YES;
     
     httpUtils = [[HttpUtils alloc]init];
@@ -114,32 +76,16 @@
     
     isRefresh = YES;
     [self loadData];
-    
 }
 
--(void)showyboard:(id)sender
+-(void)submmit:(NSString*)text
 {
-    if ([sender isKindOfClass:NSNotification.class]) {
-        NSDictionary* dic =  (NSDictionary* )sender;
-        atTopId = [[dic valueForKey:@"userInfo"] valueForKey:@"id"];
-    }
-    [textView becomeFirstResponder];
-}
-
--(void)hiddeKeyboard:(id)sender
-{
-    if ([textView isFirstResponder]) {
-        [textView resignFirstResponder];
-    }
-}
--(void)submmit:(NSDictionary* )userInfo
-{
-    NSString* str = textView.text;
+    NSString* str = text;
     
     if ([TDUtil isValidString:str]) {
         NSString* url  =[TOPIC stringByAppendingFormat:@"%ld/",(long)self.project_id];
         NSMutableDictionary* dic  =[[NSMutableDictionary alloc]init];
-        [dic setValue:textView.text forKey:@"content"];
+        [dic setValue:str forKey:@"content"];
         [dic setValue:atTopId forKey:@"at_topic"];
         
         [httpUtils getDataFromAPIWithOps:url postParam:dic type:0 delegate:self sel:@selector(requestSubmmit:)];
@@ -211,6 +157,7 @@
     if (!cell) {
         float height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
         cell = [[WeiboCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), height)];
+        cell.delegate = self;
     }
     // Configure the cell...
     cell.controller=self;
@@ -299,6 +246,26 @@
     }
 }
 
+#pragma WeiboDelegate
+-(void)weiboCell:(id)sender replyData:(id)data
+{
+    if (data) {
+        atTopId = [data stringValue];
+        if (!replyView) {
+            replyView = [[ReplyView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView))];
+            replyView.delegate = self;
+        }
+        //重置布局
+        [replyView resetLayout];
+        [self.view addSubview:replyView];
+    }
+}
+
+#pragma ReplyDelegate
+-(void)replyView:(id)replyView text:(NSString *)text
+{
+    [self submmit:text];
+}
 #pragma ASIHttpquest
 //待融资
 -(void)requestReplyData:(ASIHTTPRequest*)request
@@ -367,13 +334,9 @@
             
             currentPage = 0;
             [self loadData];
+            [replyView removeFromSuperview];
+            [replyView.textView setText:@""];
         }
-        
-        //隐藏键盘
-        [self hiddeKeyboard:nil];
-        //清空数据
-        textView.text =@"";
-        
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
     }
 }

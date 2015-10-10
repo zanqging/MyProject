@@ -24,10 +24,7 @@
 @property(assign,nonatomic)BOOL isSystemMessage;
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-
 - (void)openCell;
-
 - (void)closeCell;
-
 -(void)layout;
 @end

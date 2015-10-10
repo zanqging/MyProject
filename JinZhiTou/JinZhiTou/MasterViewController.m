@@ -18,8 +18,11 @@
 #import "GlobalDefine.h"
 #import "SwipeableCell.h"
 #import "NSString+SBJSON.h"
+#import "WeiboViewControlle.h"
 #import "SystemSwipableCell.h"
-
+#import "BannerViewController.h"
+#import "UserTraceViewController.h"
+#import "RoadShowDetailViewController.h"
 #import "ASIFormDataRequest.h"
 
 @interface MasterViewController () <SwipeableCellDelegate,UITableViewDataSource,UITextViewDelegate,UITableViewDelegate,ReplyDelegate,SystemSwipableCellDelegate> {
@@ -125,10 +128,8 @@
     NSString* serverUrl;
     if (self.type==0) {
         serverUrl= [settopicread stringByAppendingFormat:@"%d/",0];
-    }else{
-        serverUrl= [setsysteminform stringByAppendingFormat:@"%d/",0];
+        [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestReadFinished:)];
     }
-    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestReadFinished:)];
 }
 
 -(void)back:(id)sender
@@ -261,7 +262,24 @@
     [self.view addSubview:replyView];
 }
 
-
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    SystemSwipableCell* cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (self.type!=0) {
+        NSDictionary* dic = cell.dic;
+        NSString* serverUrl= [setsysteminform stringByAppendingFormat:@"%@/",[dic valueForKey:@"id"]];
+        [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestReadFinished:)];
+        
+        [self notification:dic];
+    }else{
+        WeiboViewControlle* controller = [[WeiboViewControlle alloc]init];
+        NSDictionary* dic = cell.dic;
+        NSLog(@"%@",dic);
+        controller.titleStr = @"消息回复";
+        controller.project_id = [[dic valueForKey:@"pid"] integerValue];
+        [self.navigationController pushViewController:controller animated:YES];
+    }
+}
 -(void)replyView:(id)replyView text:(NSString *)text
 {
     
@@ -286,6 +304,114 @@
 {
     [self.cellsCurrentlyEditing removeObject:[self.tableView indexPathForCell:cell]];
 }
+
+-(void)notification:(NSDictionary*)dic
+{
+    dic =[dic valueForKey:@"extras"];
+    NSString* type = [dic valueForKey:@"api"];
+    
+    int index=-1;
+    NSString* str;
+    for (int i=0; i<ROMATE_MSG_TYPE.count; i++) {
+        str=[ROMATE_MSG_TYPE valueForKey:[NSString stringWithFormat:@"%d",i]];
+        if ([str isEqualToString:type]) {
+            index = i;
+        }
+    }
+    
+    if (index!=-1) {
+        switch (index) {
+            case 0:
+                [self loadProjectDetail:[[dic valueForKey:@"_id"] integerValue]];
+                break;
+            case 1:
+//                [self loadMsgDetail:[[dic valueForKey:@"_id"] integerValue]];
+                break;
+            case 2:
+//                [self loadSystemMsgDetail:[[dic valueForKey:@"_id"] integerValue]];
+                break;
+            case 3:
+                [self loadWebViewDetail:[NSURL URLWithString:[dic valueForKey:@"url"]]];
+                break;
+            case 4:
+                [self loadWebViewDetail:[NSURL URLWithString:[dic valueForKey:@"url"]]];
+                break;
+            case 5:
+                [self loadWebViewDetail:[NSURL URLWithString:[dic valueForKey:@"url"]]];
+                break;
+            case 6:
+                [self loadTraceInfo:1000];
+                break;
+            case 7:
+                [self loadTraceInfo:1001];
+                break;
+            case 8:
+                [self loadTraceInfo:1002];
+                break;
+            default:
+                break;
+        }
+    }
+    
+    
+}
+
+////为了MPMoviePlayerViewController保持横平
+//- (NSUInteger)application:(UIApplication*)application supportedInterfaceOrientationsForWindow:(UIWindow*)window
+//{
+//    return UIInterfaceOrientationMaskAllButUpsideDown;
+//}
+
+
+
+-(void)loadProjectDetail:(NSInteger)index
+{
+    RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
+    NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:[NSString stringWithFormat:@"%ld",(long)index] forKey:@"id"];
+    controller.type=1;
+    controller.dic = dic;
+    controller.title = @"系统通知";
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+//-(void)loadMsgDetail:(NSInteger)index
+//{
+//    UIStoryboard* storyBorard =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+//    MasterViewController* controller =(MasterViewController*)[storyBorard instantiateViewControllerWithIdentifier:@"SystemMessage"];
+//    controller.type=0;
+//    controller.titleStr = @"消息回复";
+//    [self.navigationController pushViewController:controller animated:YES];
+//}
+//
+//-(void)loadSystemMsgDetail:(NSInteger)index
+//{
+//    UIStoryboard* storyBorard =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+//    MasterViewController* controller =(MasterViewController*)[storyBorard instantiateViewControllerWithIdentifier:@"SystemMessage"];
+//    controller.type=1;
+//    controller.titleStr = @"系统通知";
+//    [self.navigationController pushViewController:controller animated:YES];
+//}
+
+-(void)loadTraceInfo:(NSInteger)index
+{
+    UserTraceViewController* controller =[[UserTraceViewController alloc]init];
+    controller.currentSelected =index;
+    controller.titleStr = @"系统通知";
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+
+-(void)loadWebViewDetail:(NSURL*)url
+{
+    BannerViewController* controller = [[BannerViewController alloc]init];
+    // NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:[NSString stringWithFormat:@"%d",index] forKey:@"id"];
+    controller.titleStr = @"消息推送";
+    controller.title = @"系统通知";
+    controller.type = 3;
+    controller.url = url;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 
 
 

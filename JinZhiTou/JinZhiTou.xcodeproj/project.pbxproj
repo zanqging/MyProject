@@ -54,7 +54,6 @@
 		4517CDC01B78C7ED00EFBB6A /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 4517CDB61B78C7ED00EFBB6A /* AFURLResponseSerialization.m */; };
 		4517CDC11B78C7ED00EFBB6A /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4517CDB81B78C7ED00EFBB6A /* AFURLSessionManager.m */; };
 		451A3C2E1BB0E56D008BE22C /* libMobClickLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 451A3C2D1BB0E56D008BE22C /* libMobClickLibrary.a */; };
-		451A3C311BB0F299008BE22C /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 451A3C301BB0F299008BE22C /* DAKeyboardControl.m */; };
 		451A3C331BB11F38008BE22C /* youyuan.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 451A3C321BB11F38008BE22C /* youyuan.ttf */; };
 		451A3C361BB143A0008BE22C /* ThinkTankTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 451A3C351BB143A0008BE22C /* ThinkTankTableViewCell.m */; };
 		451ACAB71B7C5D390045DD5E /* ShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451ACAB61B7C5D390045DD5E /* ShareView.m */; };
@@ -167,7 +166,6 @@
 		4581155C1B80150C006EEBBC /* ThinkTankViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4581155B1B80150C006EEBBC /* ThinkTankViewController.m */; };
 		458115631B8034DA006EEBBC /* ProjectFinanceDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 458115611B8034DA006EEBBC /* ProjectFinanceDetailViewController.m */; };
 		458115681B803F7D006EEBBC /* ProgressTraceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 458115671B803F7D006EEBBC /* ProgressTraceView.m */; };
-		4583579E1BB5AB800017CC13 /* HitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4583579D1BB5AB800017CC13 /* HitView.m */; };
 		4584DAB21BAAB87200560724 /* ProjectShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4584DAB11BAAB87200560724 /* ProjectShareView.m */; };
 		458631F31B65C6C500F06688 /* FinalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 458631F21B65C6C500F06688 /* FinalViewController.m */; };
 		458631F71B65C98D00F06688 /* FinalKindTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 458631F61B65C98D00F06688 /* FinalKindTableViewCell.m */; };
@@ -215,13 +213,7 @@
 		45E189C21B7909CF0082225E /* MenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E189BD1B7909CF0082225E /* MenuView.m */; };
 		45E189D11B79CA230082225E /* INSSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E189C61B79CA230082225E /* INSSearchBar.m */; };
 		45E189DE1B79D2490082225E /* INSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E189DD1B79D2490082225E /* INSViewController.m */; };
-		45E189E11B79DEB10082225E /* RelpyMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E189E01B79DEB10082225E /* RelpyMessageViewController.m */; };
 		45E189E41B79E0500082225E /* ReplyMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E189E31B79E0500082225E /* ReplyMessageTableViewCell.m */; };
-		45E18A1C1B79FC1E0082225E /* MyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E18A1B1B79FC1E0082225E /* MyTableViewCell.m */; };
-		45E18A1F1B79FC290082225E /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E18A1E1B79FC290082225E /* MessageViewController.m */; };
-		45E18A301B79FD250082225E /* CustomTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E18A221B79FD250082225E /* CustomTableView.m */; };
-		45E18A361B79FD250082225E /* SlideTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E18A2E1B79FD250082225E /* SlideTableViewCell.m */; };
-		45E18A371B79FD250082225E /* SlideTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45E18A2F1B79FD250082225E /* SlideTableViewCell.xib */; };
 		45E2DDBF1B687443008F2942 /* InteractionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E2DDBE1B687443008F2942 /* InteractionHeader.m */; };
 		45E2DDC21B687778008F2942 /* InteractionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E2DDC11B687778008F2942 /* InteractionViewController.m */; };
 		45E2DDCF1B68CA13008F2942 /* ShowCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E2DDCE1B68CA13008F2942 /* ShowCommentViewController.m */; };
@@ -394,8 +386,6 @@
 		4517CDB81B78C7ED00EFBB6A /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
 		451A3C2C1BB0E56D008BE22C /* MobClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobClick.h; sourceTree = "<group>"; };
 		451A3C2D1BB0E56D008BE22C /* libMobClickLibrary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMobClickLibrary.a; sourceTree = "<group>"; };
-		451A3C2F1BB0F299008BE22C /* DAKeyboardControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAKeyboardControl.h; sourceTree = "<group>"; };
-		451A3C301BB0F299008BE22C /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
 		451A3C321BB11F38008BE22C /* youyuan.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = youyuan.ttf; sourceTree = "<group>"; };
 		451A3C341BB143A0008BE22C /* ThinkTankTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThinkTankTableViewCell.h; sourceTree = "<group>"; };
 		451A3C351BB143A0008BE22C /* ThinkTankTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThinkTankTableViewCell.m; sourceTree = "<group>"; };
@@ -596,8 +586,6 @@
 		458115651B80352B006EEBBC /* ProjectFinanceDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectFinanceDetailViewController.h; path = Controller/RoadShow/ProjectFinanceDetailViewController.h; sourceTree = "<group>"; };
 		458115661B803F7D006EEBBC /* ProgressTraceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgressTraceView.h; path = View/ProgressTraceView.h; sourceTree = "<group>"; };
 		458115671B803F7D006EEBBC /* ProgressTraceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProgressTraceView.m; path = View/ProgressTraceView.m; sourceTree = "<group>"; };
-		4583579C1BB5AB800017CC13 /* HitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HitView.h; sourceTree = "<group>"; };
-		4583579D1BB5AB800017CC13 /* HitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HitView.m; sourceTree = "<group>"; };
 		4584DAB01BAAB87200560724 /* ProjectShareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectShareView.h; path = View/ProjectShareView.h; sourceTree = "<group>"; };
 		4584DAB11BAAB87200560724 /* ProjectShareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProjectShareView.m; path = View/ProjectShareView.m; sourceTree = "<group>"; };
 		458631F11B65C6C500F06688 /* FinalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FinalViewController.h; path = Controller/Final/FinalViewController.h; sourceTree = "<group>"; };
@@ -685,19 +673,8 @@
 		45E189C61B79CA230082225E /* INSSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INSSearchBar.m; sourceTree = "<group>"; };
 		45E189DC1B79D2490082225E /* INSViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = INSViewController.h; sourceTree = "<group>"; };
 		45E189DD1B79D2490082225E /* INSViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = INSViewController.m; sourceTree = "<group>"; };
-		45E189DF1B79DEB10082225E /* RelpyMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RelpyMessageViewController.h; path = Controller/UserInfo/RelpyMessageViewController.h; sourceTree = "<group>"; };
-		45E189E01B79DEB10082225E /* RelpyMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RelpyMessageViewController.m; path = Controller/UserInfo/RelpyMessageViewController.m; sourceTree = "<group>"; };
 		45E189E21B79E0500082225E /* ReplyMessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReplyMessageTableViewCell.h; path = View/UserInfo/Cell/ReplyMessageTableViewCell.h; sourceTree = "<group>"; };
 		45E189E31B79E0500082225E /* ReplyMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReplyMessageTableViewCell.m; path = View/UserInfo/Cell/ReplyMessageTableViewCell.m; sourceTree = "<group>"; };
-		45E18A1A1B79FC1E0082225E /* MyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyTableViewCell.h; path = Controller/UserInfo/MyTableViewCell.h; sourceTree = "<group>"; };
-		45E18A1B1B79FC1E0082225E /* MyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyTableViewCell.m; path = Controller/UserInfo/MyTableViewCell.m; sourceTree = "<group>"; };
-		45E18A1D1B79FC290082225E /* MessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageViewController.h; path = Controller/UserInfo/MessageViewController.h; sourceTree = "<group>"; };
-		45E18A1E1B79FC290082225E /* MessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageViewController.m; path = Controller/UserInfo/MessageViewController.m; sourceTree = "<group>"; };
-		45E18A211B79FD250082225E /* CustomTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTableView.h; sourceTree = "<group>"; };
-		45E18A221B79FD250082225E /* CustomTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTableView.m; sourceTree = "<group>"; };
-		45E18A2D1B79FD250082225E /* SlideTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideTableViewCell.h; sourceTree = "<group>"; };
-		45E18A2E1B79FD250082225E /* SlideTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideTableViewCell.m; sourceTree = "<group>"; };
-		45E18A2F1B79FD250082225E /* SlideTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SlideTableViewCell.xib; sourceTree = "<group>"; };
 		45E2DDBD1B687443008F2942 /* InteractionHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InteractionHeader.h; path = View/RoadShow/Header/InteractionHeader.h; sourceTree = "<group>"; };
 		45E2DDBE1B687443008F2942 /* InteractionHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InteractionHeader.m; path = View/RoadShow/Header/InteractionHeader.m; sourceTree = "<group>"; };
 		45E2DDC01B687778008F2942 /* InteractionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InteractionViewController.h; path = Controller/RoadShow/InteractionViewController.h; sourceTree = "<group>"; };
@@ -1108,8 +1085,6 @@
 				4532719C1B751CAD0044F8C1 /* UserFinialViewController.m */,
 				4532719E1B751CCA0044F8C1 /* AboutUsViewController.h */,
 				4532719F1B751CCA0044F8C1 /* AboutUsViewController.m */,
-				45E189DF1B79DEB10082225E /* RelpyMessageViewController.h */,
-				45E189E01B79DEB10082225E /* RelpyMessageViewController.m */,
 				453E23DD1B7DD3E10023BB00 /* SecuityViewController.h */,
 				453E23DE1B7DD3E10023BB00 /* SecuityViewController.m */,
 			);
@@ -1703,11 +1678,6 @@
 			isa = PBXGroup;
 			children = (
 				45D27B8F1BC66BC500ECD9D7 /* ReplyView */,
-				45E18A201B79FD240082225E /* Common */,
-				45E18A1A1B79FC1E0082225E /* MyTableViewCell.h */,
-				45E18A1B1B79FC1E0082225E /* MyTableViewCell.m */,
-				45E18A1D1B79FC290082225E /* MessageViewController.h */,
-				45E18A1E1B79FC290082225E /* MessageViewController.m */,
 				45D27B861BC631ED00ECD9D7 /* DetailViewController.h */,
 				45D27B871BC631ED00ECD9D7 /* DetailViewController.m */,
 				45D27B881BC631ED00ECD9D7 /* MasterViewController.h */,
@@ -1718,20 +1688,6 @@
 				453E64241BC6CA2C000B664E /* SystemSwipableCell.m */,
 			);
 			name = Message;
-			sourceTree = "<group>";
-		};
-		45E18A201B79FD240082225E /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				45E18A211B79FD250082225E /* CustomTableView.h */,
-				45E18A221B79FD250082225E /* CustomTableView.m */,
-				4583579C1BB5AB800017CC13 /* HitView.h */,
-				4583579D1BB5AB800017CC13 /* HitView.m */,
-				45E18A2D1B79FD250082225E /* SlideTableViewCell.h */,
-				45E18A2E1B79FD250082225E /* SlideTableViewCell.m */,
-				45E18A2F1B79FD250082225E /* SlideTableViewCell.xib */,
-			);
-			path = Common;
 			sourceTree = "<group>";
 		};
 		45E811FC1B671E2A009F840D /* RoadShowTableView */ = {
@@ -1776,8 +1732,6 @@
 		45F09A2F1B8629790065D873 /* class */ = {
 			isa = PBXGroup;
 			children = (
-				451A3C2F1BB0F299008BE22C /* DAKeyboardControl.h */,
-				451A3C301BB0F299008BE22C /* DAKeyboardControl.m */,
 				45F09A3B1B8629790065D873 /* data */,
 				45F09B1D1B86297B0065D873 /* util */,
 				45F09B771B86297B0065D873 /* view */,
@@ -2161,7 +2115,6 @@
 				458115591B7FA57C006EEBBC /* PushConfig.plist in Resources */,
 				453E23E41B7ED07F0023BB00 /* read_me.txt in Resources */,
 				4511CC231BA2B6E300A9D00A /* movieBackwardSelected@2x.png in Resources */,
-				45E18A371B79FD250082225E /* SlideTableViewCell.xib in Resources */,
 				451B52BD1BA66E3500388E5C /* NavBarIconSearch_white@2x.png in Resources */,
 				4511CC2C1BA2B6E300A9D00A /* moviePause.png in Resources */,
 				451B52BB1BA66E3500388E5C /* NavBarIconSearch_blue@2x.png in Resources */,
@@ -2196,7 +2149,6 @@
 				45FCD0531B75E216009AD6E3 /* SDWebImageDecoder.m in Sources */,
 				450D7E6C1B913E1D001781C4 /* WeiboViewControlle.m in Sources */,
 				45A2AD911B70FD4D00751F78 /* CompanyViewController.m in Sources */,
-				451A3C311BB0F299008BE22C /* DAKeyboardControl.m in Sources */,
 				45FCD0561B75E216009AD6E3 /* SDWebImageManager.m in Sources */,
 				45FCD02A1B75E15A009AD6E3 /* SBJsonBase.m in Sources */,
 				45495BCE1B60DA02007A17FD /* PEResizeControl.m in Sources */,
@@ -2256,7 +2208,6 @@
 				45F09C721B86297B0065D873 /* ASIHTTPRequest.m in Sources */,
 				45495BCD1B60DA02007A17FD /* PECropViewController.m in Sources */,
 				454BF2E31B8E9AB700F1FEE5 /* SearchTableViewCell.m in Sources */,
-				45E189E11B79DEB10082225E /* RelpyMessageViewController.m in Sources */,
 				453271A61B751EA00044F8C1 /* UserFinialTableViewCell.m in Sources */,
 				45F09B861B86297B0065D873 /* WeiboReplyData.m in Sources */,
 				45326F111B74432C0044F8C1 /* GTMBase64.m in Sources */,
@@ -2265,7 +2216,6 @@
 				4532717C1B7490170044F8C1 /* UserPhoneTableViewCell.m in Sources */,
 				45A2ADB31B72811200751F78 /* AuthTraceTableViewCell.m in Sources */,
 				45A2AD9A1B7109F100751F78 /* CompanyFinial.m in Sources */,
-				45E18A1C1B79FC1E0082225E /* MyTableViewCell.m in Sources */,
 				45F829471B6B62470044F6F0 /* FinialPersonTableViewController.m in Sources */,
 				4517CD671B785AA000EFBB6A /* TableViewCell.m in Sources */,
 				45D49D931B82336F00EC529F /* ZHTableViewController.m in Sources */,
@@ -2337,7 +2287,6 @@
 				4508762D1B8F644E006EFC1A /* SlideView.m in Sources */,
 				4532718E1B74A5360044F8C1 /* UserInfoSettingViewController.m in Sources */,
 				45495BD01B60DA02007A17FD /* UIImage+Cut.m in Sources */,
-				45E18A1F1B79FC290082225E /* MessageViewController.m in Sources */,
 				45FCD02C1B75E15A009AD6E3 /* SBJsonWriter.m in Sources */,
 				4581155C1B80150C006EEBBC /* ThinkTankViewController.m in Sources */,
 				45495C151B60DA91007A17FD /* PinYinForObjc.m in Sources */,
@@ -2355,7 +2304,6 @@
 				45495C1E1B60DACA007A17FD /* NSString+PinYin4Cocoa.m in Sources */,
 				45F90B161B709DAC005E8D15 /* TimeLineViewController.m in Sources */,
 				45FCD0291B75E15A009AD6E3 /* SBJSON.m in Sources */,
-				4583579E1BB5AB800017CC13 /* HitView.m in Sources */,
 				45631F7F1B5A48CE009FA35D /* DataModel.m in Sources */,
 				45E2DDBF1B687443008F2942 /* InteractionHeader.m in Sources */,
 				45E189BF1B7909CF0082225E /* JKSideSlipView.m in Sources */,
@@ -2376,9 +2324,7 @@
 				45E2DDC21B687778008F2942 /* InteractionViewController.m in Sources */,
 				45F93B591B637311004526F5 /* MJRefreshAutoNormalFooter.m in Sources */,
 				45326F161B7443CA0044F8C1 /* PaddingView.m in Sources */,
-				45E18A361B79FD250082225E /* SlideTableViewCell.m in Sources */,
 				45FCD05E1B75E216009AD6E3 /* UIView+WebCacheOperation.m in Sources */,
-				45E18A301B79FD250082225E /* CustomTableView.m in Sources */,
 				450140091B943024000F8A97 /* MMDrawerController.m in Sources */,
 				453271881B7490740044F8C1 /* UserAreaTableViewCell.m in Sources */,
 				45326F031B7358DB0044F8C1 /* UserInfo.m in Sources */,

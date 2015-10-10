@@ -162,6 +162,7 @@
 //#define SERVICE_URL @"http://www.jinzht.com/phone/"//服务器域名地址
 //#define SERVICE_URL @"http://192.168.31.236:8080/weini/"
 //#define SERVICE_URL @"http://192.168.0.182:8080/weini/"
+
 //版本更新itunes 地址
 #define ITUNES_URL @"https://itunes.apple.com/us/app/jin-zhi-tou-zhong-guo-cheng/id1024857089?mt=8"
 //版本更新

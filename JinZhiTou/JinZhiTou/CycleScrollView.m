@@ -10,7 +10,7 @@
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #import "NSTimer+Addition.h"
-
+#import <QuartzCore/QuartzCore.h>
 @interface CycleScrollView () <UIScrollViewDelegate>
 
 @property (nonatomic , assign) NSInteger currentPageIndex;
@@ -45,6 +45,7 @@
                                                              userInfo:nil
                                                               repeats:YES];
         [self.animationTimer pauseTimer];
+        self.layer.masksToBounds  = YES;
     }
     return self;
 }
@@ -62,6 +63,7 @@
         self.scrollView.delegate = self;
         self.scrollView.contentOffset = CGPointMake(CGRectGetWidth(self.scrollView.frame), 0);
         self.scrollView.pagingEnabled = YES;
+        self.scrollView.backgroundColor  = WriteColor;
         [self addSubview:self.scrollView];
         self.currentPageIndex = 0;
         
@@ -92,7 +94,7 @@
         [contentView addGestureRecognizer:tapGesture];
         CGRect rightRect = contentView.frame;
         rightRect.origin = CGPointMake(CGRectGetWidth(self.scrollView.frame) * (counter ++), 0);
-        
+        rightRect.origin.y+=15;
         contentView.frame = rightRect;
         [self.scrollView addSubview:contentView];
     }

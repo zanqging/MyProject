@@ -30,6 +30,7 @@
 }
 @property(nonatomic,strong)NSArray*datas;
 @property(retain,nonatomic)NavView* navView;
+@property(retain,nonatomic)NSString* titleStr;
 @property(nonatomic,strong) UIView * superView;
 @property(assign,nonatomic)NSInteger project_id;
 @property(assign,nonatomic)BOOL isEndOfPageSize;

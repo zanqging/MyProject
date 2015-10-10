@@ -110,7 +110,9 @@
     
 }
 - (IBAction)doAction:(id)sender {
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"showKeyboard" object:nil userInfo:[NSDictionary dictionaryWithObject:self.topicId forKey:@"id"]];
+    if ([_delegate respondsToSelector:@selector(weiboCell:replyData:)]) {
+        [_delegate weiboCell:self replyData:self.topicId];
+    }
 }
 
 

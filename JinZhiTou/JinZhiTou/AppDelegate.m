@@ -21,7 +21,7 @@
 #import "StartPageViewController.h"
 #import "RoadShowDetailViewController.h"
 #import <TencentOpenAPI/TencentOAuth.h>
-#import "MessageViewController.h"
+#import "MasterViewController.h"
 #import "UserTraceViewController.h"
 
 @interface AppDelegate ()<UIAlertViewDelegate>
@@ -361,7 +361,7 @@ fetchCompletionHandler:(void
 -(void)loadMsgDetail:(NSInteger)index
 {
     UIStoryboard* storyBorard =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    MessageViewController* controller =(MessageViewController*)[storyBorard instantiateViewControllerWithIdentifier:@"ResplyMessage"];
+    MasterViewController* controller =(MasterViewController*)[storyBorard instantiateViewControllerWithIdentifier:@"SystemMessage"];
     controller.type=0;
     controller.titleStr = @"消息回复";
     [self.iNav pushViewController:controller animated:YES];
@@ -370,7 +370,7 @@ fetchCompletionHandler:(void
 -(void)loadSystemMsgDetail:(NSInteger)index
 {
     UIStoryboard* storyBorard =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    MessageViewController* controller =(MessageViewController*)[storyBorard instantiateViewControllerWithIdentifier:@"ResplyMessage"];
+    MasterViewController* controller =(MasterViewController*)[storyBorard instantiateViewControllerWithIdentifier:@"SystemMessage"];
      controller.type=1;
     controller.titleStr = @"系统通知";
     [self.iNav pushViewController:controller animated:YES];

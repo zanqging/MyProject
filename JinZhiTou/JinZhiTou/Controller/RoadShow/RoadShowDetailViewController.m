@@ -27,8 +27,6 @@
 #import "RoadShowViewController.h"
 #import "FinialApplyViewController.h"
 #import "FinialPlanViewController.h"
-#import "InteractionViewController.h"
-#import "ShowCommentViewController.h"
 #import "FinialSuccessViewController.h"
 #import <TencentOpenAPI/TencentOAuth.h>
 #import "FinialPersonTableViewController.h"
@@ -522,6 +520,7 @@
 -(void)doAction:(id)sender
 {
     WeiboViewControlle* controller = [[WeiboViewControlle alloc]init];
+    controller.titleStr = @"项目详情";
     controller.project_id = [[self.dic valueForKey:@"id"] integerValue];
     [self.navigationController pushViewController:controller animated:YES];
 }

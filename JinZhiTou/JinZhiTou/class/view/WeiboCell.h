@@ -13,6 +13,12 @@
 #import "UIImageView+WebCache.h"
 #define REPLY_BACK_COLOR 0xd5d5d5
 
+@protocol WeiboDeleget <NSObject>
+
+-(void)weiboCell:(id)sender replyData:(id)data;
+
+@end
+
 @class WeiboViewControlle;
 @interface WeiboCell : UITableViewCell<UIActionSheetDelegate,UIAlertViewDelegate>
 {
@@ -46,7 +52,6 @@
 @property(nonatomic,retain) WeiboViewControlle * controller;
 @property(nonatomic,retain) IBOutlet UILabel * contentLabel;
 @property(nonatomic,retain) IBOutlet UIImageView* authenImgView;
-
-
+@property(weak,nonatomic)id <WeiboDeleget>delegate;
 @end
 
