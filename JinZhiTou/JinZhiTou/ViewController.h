@@ -1,16 +1,17 @@
 //
 //  ViewController.h
-//  JinZhiTou
+//  Cycle
 //
-//  Created by air on 15/7/1.
-//  Copyright (c) 2015年 金指投. All rights reserved.
+//  Created by air on 15/10/12.
+//  Copyright © 2015年 csz. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-
-@interface ViewController : UIViewController
-
-@property (weak, nonatomic) IBOutlet UIButton *lblName;
-- (IBAction)actionDown:(id)sender;
+#import "NavView.h"
+#import "WeiboTableViewCell.h"
+@interface ViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
+@property (retain, nonatomic)UITableView *tableView;
+@property(retain,nonatomic)NSMutableArray* dataArray;
+@property(retain,nonatomic)NavView* navView;
 @end
 

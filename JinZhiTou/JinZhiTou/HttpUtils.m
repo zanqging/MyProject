@@ -68,6 +68,55 @@
     
 }
 
+//上传图片
+- (void)getDataFromAPIWithOps:(NSString*)urlStr
+                    postParam:(NSDictionary*)postDic
+                         files:(NSMutableArray*)files
+                     postName:(NSString*)postName
+                         type:(NSInteger)type
+                     delegate:(id)delegate
+                          sel:(SEL)sel {
+    
+    str=urlStr;
+    //设置请求标志
+    self.isRequestSuccessed=@"NO";
+    NSURL* url = [NSURL URLWithString:[SERVICE_URL stringByAppendingString:urlStr]];
+    NSLog(@"上传文件:%@",url);
+    self.requestInstance=[ASIFormDataRequest requestWithURL:url];
+    if (postDic!=nil) {
+        for (int i=0; i<postDic.count; i++) {
+            NSString* key=[[postDic allKeys] objectAtIndex:i];
+            NSString* value=[postDic valueForKey:key];
+            [self.requestInstance setPostValue:value forKey:key];
+        }
+    }
+    NSString* fileName;
+    for (int i = 0 ; i <files.count; i++) {
+        fileName = [files objectAtIndex:i];
+        NSString* filePath = [TDUtil loadContentPath:fileName];
+        fileName = [fileName stringByAppendingString:@".jpg"];
+        [self.requestInstance setFile:filePath withFileName:fileName andContentType:@"jpg" forKey:[NSString stringWithFormat:@"%@%d",postName,i]];
+    }
+    
+    self.requestInstance.timeOutSeconds=10;
+    if (delegate) {
+        requestInstance.delegate=delegate;
+    }else{
+        requestInstance.delegate=self;
+    }
+    
+    if (sel) {
+        [requestInstance setDidFinishSelector:sel];
+    }
+    if (type==1) {
+        [requestInstance startSynchronous];
+    }else{
+        [self.requestInstance startAsynchronous];
+        //        [requestInstance startSynchronous];
+    }
+    
+}
+
 - (void)getDataFromAPIWithOps:(NSString*)urlStr
         postParam:(NSDictionary*)postDic
         type:(NSInteger)type

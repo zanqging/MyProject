@@ -62,7 +62,6 @@
     [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
     [self.view addSubview:self.navView];
-    [self.view addSubview:self.navView];
     
     //头部
     [self loadNewsTag];

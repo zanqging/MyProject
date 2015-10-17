@@ -156,8 +156,8 @@
 
 //服务器域名地址
 //#define SERVICE_URL @"http://weini.im/"
-#define SERVICE_URL @"http://www.jinzht.com/phone3/"//服务器域名地址
-//#define SERVICE_URL @"http://www.jinzht.com:8000/phone/"//服务器域名地址
+//#define SERVICE_URL @"http://www.jinzht.com/phone3/"//服务器域名地址
+#define SERVICE_URL @"http://www.jinzht.com:8000/phone/"//服务器域名地址
 //服务器域名地址
 //#define SERVICE_URL @"http://www.jinzht.com/phone/"//服务器域名地址
 //#define SERVICE_URL @"http://192.168.31.236:8080/weini/"
@@ -391,6 +391,11 @@
 #define latestnewscount @"latestnewscount/"
 //知识库更新数据
 #define latestknowledgecount @"latestknowledgecount/"
+
+//圈子功能
+#define CYCLE_CONTENT_LIST @"feeling/"
+//发布心情
+#define CYCLE_CONTENT_PUBLISH @"/"
 
 
 //用户下载头像

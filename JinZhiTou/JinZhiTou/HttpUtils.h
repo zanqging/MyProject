@@ -20,4 +20,12 @@
 -(void)getDataFromAPI:(NSString*)urlStr postParam:(NSDictionary*)postDic type:(NSInteger)type delegate:(id)delegate;
 -(void)getDataFromAPIWithOps:(NSString*)urlStr postParam:(NSDictionary*)postDic type:(NSInteger)type delegate:(id)delegate sel:(SEL)sel;
 -(void)getDataFromAPIWithOps:(NSString*)urlStr postParam:(NSDictionary*)postDic file:(NSString*)fileName postName:(NSString*)postName type:(NSInteger)type delegate:(id)delegate sel:(SEL)sel;
+
+- (void)getDataFromAPIWithOps:(NSString*)urlStr
+                    postParam:(NSDictionary*)postDic
+                        files:(NSMutableArray*)files
+                     postName:(NSString*)postName
+                         type:(NSInteger)type
+                     delegate:(id)delegate
+                          sel:(SEL)sel;
 @end
