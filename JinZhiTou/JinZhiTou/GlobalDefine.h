@@ -395,8 +395,19 @@
 //圈子功能
 #define CYCLE_CONTENT_LIST @"feeling/"
 //发布心情
-#define CYCLE_CONTENT_PUBLISH @"/"
-
+#define CYCLE_CONTENT_PUBLISH @"postfeeling/"
+//点赞
+#define CYCLE_CONTENT_PRISE  @"likefeeling/"
+//回复消息
+#define CYCLE_CONTENT_REPLY @"postfeelingcomment/"
+//删除消息
+#define CYCLE_CONTENT_DELETE @"deletefeeling/"
+//删除自己评论
+#define CYCLE_CONTENT_REPLY_DELETE  @"hidefeelingcomment/"
+//点赞列表
+#define CYCLE_CONTENT_PRISE_LIST @"feelinglikers/"
+//评论列表
+#define CYCLE_CONTENT_COMMENT_LIST @"feelingcomment/"
 
 //用户下载头像
 //http://weini.im/upload//menuinfo//_EN_8427.jpg

@@ -7,10 +7,15 @@
 //
 
 #import "ActionDetailViewController.h"
+#import "TDUtil.h"
+#import "HttpUtils.h"
 #import "UConstants.h"
+#import "DialogUtil.h"
 #import "GlobalDefine.h"
+#import "NSString+SBJSON.h"
 @interface ActionDetailViewController ()<UITableViewDataSource,UITableViewDelegate,ActionHeaderDeleaget>
 {
+    HttpUtils* httpUtils;
     ActionHeader* headerView;
 }
 @end
@@ -47,11 +52,50 @@
     
     headerView = [[ActionHeader alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 200)];
     headerView.delegate = self;
+    headerView.dic = self.dic;
     [self.tableView setTableHeaderView:headerView];
     
     self.classStringName = @"CyclePriseTableViewCell";
+    httpUtils = [[HttpUtils alloc]init];
+    self.selectIndex = 1;
+    [self loadData];
+    
 }
 
+-(void)loadData
+{
+    switch (self.selectIndex) {
+        case 1:
+            [self loadPriseListData];
+            break;
+        case 2:
+            [self loadShareListData];
+            break;
+        case 3:
+            [self loadCommentListData];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+-(void)loadPriseListData
+{
+    NSString* serverUrl = [CYCLE_CONTENT_PRISE_LIST stringByAppendingFormat:@"%@/%d/",[self.dic valueForKey:@"id"],0];
+    [httpUtils getDataFromAPIWithOps:serverUrl type:0 delegate:self sel:@selector(requestPriseList:) method:@"GET"];
+}
+
+-(void)loadShareListData
+{
+    
+}
+
+-(void)loadCommentListData
+{
+    NSString* serverUrl = [CYCLE_CONTENT_COMMENT_LIST stringByAppendingFormat:@"%@/%d/",[self.dic valueForKey:@"id"],0];
+    [httpUtils getDataFromAPIWithOps:serverUrl type:0 delegate:self sel:@selector(requestPriseList:) method:@"GET"];
+}
 -(void)back:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -63,12 +107,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString* indexStr = [self.dataArray[indexPath.row] valueForKey:@"index"];
-    if (indexStr.integerValue == 5) {
-        
-    }else{
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"userInfoAction" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:indexStr,@"index",nil]];
-    }
+   
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -76,16 +115,16 @@
     CGFloat height = 100;
     switch (self.selectIndex) {
         case 1:
-            height = 70;
+            height = 44;
             break;
         case 2:
-            height = 70;
+            height = 60;
             break;
         case 3:
-            height = 100;
+            height = 60;
             break;
         default:
-            height = 100;
+            height = 70;
             break;
     }
     return height;
@@ -94,22 +133,46 @@
 {
     //声明静态字符串对象，用来标记重用单元格
     NSString* TableDataIdentifier=@"UserInfoViewCell";
-    //用TableDataIdentifier标记重用单元格
-     UITableViewCell *cell =[[NSClassFromString(self.classStringName)alloc]init];
-     cell=[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
-    //如果单元格未创建，则需要新建
-    if (cell==nil) {
-        CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
-        cell = [[NSClassFromString(self.classStringName)alloc]initWithFrame:CGRectMake(0, 0, WIDTH(tableView), height)];
+    if([self.classStringName isEqualToString:@"CyclePriseTableViewCell"])
+    {
+        CyclePriseTableViewCell* cell;
+        //用TableDataIdentifier标记重用单元格
+        cell =[[NSClassFromString(self.classStringName)alloc]init];
+        cell=[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
+        //如果单元格未创建，则需要新建
+        if (cell==nil) {
+            CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
+            cell = [[NSClassFromString(self.classStringName)alloc]initWithFrame:CGRectMake(0, 0, WIDTH(tableView), height)];
+        }
+        
+        NSDictionary* dic = self.dataArray[indexPath.row];
+        cell.dic = dic;
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        return cell;
+    }else{
+        CycleShareTableViewCell* cell;
+        //用TableDataIdentifier标记重用单元格
+        cell =[[NSClassFromString(self.classStringName)alloc]init];
+        cell=[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
+        //如果单元格未创建，则需要新建
+        if (cell==nil) {
+            CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
+            cell = [[NSClassFromString(self.classStringName)alloc]initWithFrame:CGRectMake(0, 0, WIDTH(tableView), height)];
+        }
+        
+        NSDictionary* dic = self.dataArray[indexPath.row];
+        cell.dic = dic;
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        return cell;
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+
+
     
-    return cell;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.selectIndex;
+    return self.dataArray.count;
 }
 
 
@@ -121,12 +184,43 @@
 -(void)setSelectIndex:(NSInteger)selectIndex
 {
     self->_selectIndex  =selectIndex;
-    [self.tableView reloadData];
+
+}
+
+-(void)setDataArray:(NSMutableArray *)dataArray{
+    self->_dataArray = dataArray;
+    if (self.dataArray) {
+        [self.tableView reloadData];
+    }
 }
 
 -(void)actionHeader:(id)header selectedIndex:(NSInteger)selectedIndex className:(NSString *)className
 {
     self.classStringName = className;
-    self.selectIndex = selectedIndex;
+    if (self.selectIndex != selectedIndex) {
+        self.selectIndex = selectedIndex;
+        [self loadData];
+    }
 }
+
+#pragma ASIHttpRequest
+-(void)requestPriseList:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"status"];
+        if ([status integerValue] == 0 || [status integerValue] == -1) {
+            self.dataArray = [dic valueForKey:@"data"];
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"内容获取成功!"];
+        }
+    }
+}
+-(void)requestFailed:(ASIHTTPRequest *)request
+{
+    NSLog(@"%@",request.responseString);
+}
+
 @end

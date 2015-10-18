@@ -41,7 +41,7 @@
     [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [navView.rightButton setImage:nil forState:UIControlStateNormal];
     [navView.rightButton setTitle:@"保存" forState:UIControlStateNormal];
-    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(save:)]];
+    [navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(save:)]];
     
     [self.view addSubview:navView];
     

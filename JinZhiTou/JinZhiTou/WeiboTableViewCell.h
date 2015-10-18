@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HttpUtils.h"
 #import "MWPhotoBrowser.h"
 #import "UIImageView+WebCache.h"
 #import "ReplyTableViewCell.h"
@@ -14,18 +15,23 @@
 @protocol WeiboTableViewCellDelegate <NSObject>
 
 -(void)weiboTableViewCell:(id)weiboTableViewCell userId:(NSString*)userId isSelf:(BOOL) isSelf;
+-(void)weiboTableViewCell:(id)weiboTableViewCell contentId:(NSString*)contentId atId:(NSString*)atId isSelf:(BOOL) isSelf;
+-(void)weiboTableViewCell:(id)weiboTableViewCell deleteDic:(NSDictionary*)dic;
+-(void)weiboTableViewCell:(id)weiboTableViewCell refresh:(BOOL)refresh;
 
 @end
 
-@interface WeiboTableViewCell : UITableViewCell<UITableViewDelegate,UITableViewDataSource,MWPhotoBrowserDelegate>
+@interface WeiboTableViewCell : UITableViewCell<UITableViewDelegate,UITableViewDataSource,MWPhotoBrowserDelegate,UIAlertViewDelegate>
 {
     NSMutableArray *_selections;
+    HttpUtils* httpUtils;
+    NSIndexPath* currentSelectedCellIndex;
 }
 @property (retain, nonatomic)  UITableView *tableView;
 
 @property (retain, nonatomic) NSMutableDictionary* dic;
-@property (retain, nonatomic)  UIView *priseView;
 @property (retain, nonatomic)  UIView *funView;
+@property (retain, nonatomic)  UIView *priseView;
 @property (retain, nonatomic)  UIView *imgContentView;
 
 @property (nonatomic, retain) NSMutableArray *photos;
@@ -39,11 +45,13 @@
 @property (retain, nonatomic)  UILabel *industryLabel;
 @property (retain, nonatomic)  UILabel *contentLabel;
 @property (retain, nonatomic)  UIButton *expandButton;
+@property (retain, nonatomic)  UIButton *deleteButton;
 @property (retain, nonatomic)  UILabel *priseListLabel;
 @property(retain,nonatomic)UIButton* criticalButton;
 @property(retain,nonatomic)UIButton * shareButton;
 @property(retain,nonatomic)UIButton* priseButton;
 @property(retain,nonatomic)NSMutableArray* dataArray;
+@property(retain,nonatomic)NSString* topId;
 @property(retain,nonatomic)id <WeiboTableViewCellDelegate>delegate;
 
 @end

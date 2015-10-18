@@ -13,5 +13,6 @@
 @property (retain, nonatomic)UITableView *tableView;
 @property(retain,nonatomic)NSMutableArray* dataArray;
 @property(retain,nonatomic)NavView* navView;
+@property(assign,nonatomic)BOOL isEndOfPageSize;
 @end
 

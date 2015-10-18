@@ -10,10 +10,12 @@
 #import "ActionHeader.h"
 #import "NavView.h"
 #import "CyclePriseTableViewCell.h"
+#import "CycleShareTableViewCell.h"
 @interface ActionDetailViewController : UIViewController
 @property(retain,nonatomic)UITableView* tableView;
 @property(retain,nonatomic)NSMutableArray* dataArray;
 @property(retain,nonatomic)NSString* classStringName;
 @property(assign,nonatomic)NSInteger selectIndex;
+@property(retain,nonatomic)NSDictionary* dic;
 @property(retain,nonatomic)NavView* navView;
 @end

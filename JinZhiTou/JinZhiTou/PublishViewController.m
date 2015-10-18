@@ -12,11 +12,16 @@
 #import "MWCommon.h"
 #import "GlobalDefine.h"
 #import "UConstants.h"
-
+#import "HttpUtils.h"
+#import "TDUtil.h"
+#import "DialogUtil.h"
+#import "NSString+SBJSON.h"
 @interface PublishViewController ()
 {
     NSMutableArray *_selections;
     UIScrollView* scrollView;
+    
+    HttpUtils* httpUtils;
 }
 
 @end
@@ -71,10 +76,23 @@
     [self loadAssets];
 }
 
+
 -(void)publishAction:(id)sender
 {
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"发布消息" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alertView show];
+    if (!httpUtils) {
+        httpUtils = [[HttpUtils alloc]init];
+    }
+    
+    NSString* content = self.textView.text;
+    NSMutableArray* postArray = [[NSMutableArray alloc]init];
+    for (int i=0; i<self.imgSelectAssetArray.count; i++) {
+        UIImage* image = self.imgSelectArray[i];
+        [TDUtil saveContent:image fileName:[NSString stringWithFormat:@"file%d",i]];
+        [postArray addObject:[NSString stringWithFormat:@"file%d",i]];
+    }
+    
+    [httpUtils getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:[NSDictionary dictionaryWithObject:content forKey:@"content"] files:postArray postName:@"file" type:0 delegate:self sel:@selector(requestPublishContent:)];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -465,6 +483,33 @@
         
     }
     
+}
+
+
+#pragma ASIHttpRequest
+-(void)requestPublishContent:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"status"];
+        if ([status integerValue] == 0) {
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"发布内容成功!"];
+            
+            [self performSelector:@selector(dissmissController) withObject:nil afterDelay:1];
+        }
+    }
+}
+
+-(void)dissmissController
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+-(void)requestFailed:(ASIHTTPRequest *)request
+{
+    NSLog(@"%@",request.responseString);
 }
 
 @end

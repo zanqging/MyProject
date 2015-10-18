@@ -251,6 +251,7 @@
 		45A2ADB31B72811200751F78 /* AuthTraceTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A2ADB21B72811200751F78 /* AuthTraceTableViewCell.m */; };
 		45A2ADB61B72823800751F78 /* FinialAuthTraceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A2ADB51B72823800751F78 /* FinialAuthTraceViewController.m */; };
 		45AE9DCE1B84047C0053207C /* LoadingViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45AE9DCD1B84047C0053207C /* LoadingViewDelegate.m */; };
+		45B435CF1BD1E87D0031B799 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 45B435CE1BD1E87D0031B799 /* DAKeyboardControl.m */; };
 		45D27B8C1BC631ED00ECD9D7 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D27B871BC631ED00ECD9D7 /* DetailViewController.m */; };
 		45D27B8D1BC631ED00ECD9D7 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D27B891BC631ED00ECD9D7 /* MasterViewController.m */; };
 		45D27B8E1BC631ED00ECD9D7 /* SwipeableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D27B8B1BC631ED00ECD9D7 /* SwipeableCell.m */; };
@@ -779,6 +780,8 @@
 		45A2ADB51B72823800751F78 /* FinialAuthTraceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FinialAuthTraceViewController.m; path = Controller/Company/FinialAuthTraceViewController.m; sourceTree = "<group>"; };
 		45AE9DCC1B84047C0053207C /* LoadingViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoadingViewDelegate.h; path = View/LoadingViewDelegate.h; sourceTree = "<group>"; };
 		45AE9DCD1B84047C0053207C /* LoadingViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoadingViewDelegate.m; path = View/LoadingViewDelegate.m; sourceTree = "<group>"; };
+		45B435CD1BD1E87D0031B799 /* DAKeyboardControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAKeyboardControl.h; sourceTree = "<group>"; };
+		45B435CE1BD1E87D0031B799 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
 		45D27B861BC631ED00ECD9D7 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		45D27B871BC631ED00ECD9D7 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		45D27B881BC631ED00ECD9D7 /* MasterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
@@ -1626,6 +1629,7 @@
 		45631F831B5A4B7B009FA35D /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				45B435CC1BD1E87D0031B799 /* DAKeyboardControl */,
 				4543EB0F1BD08E320041DCBD /* DACircularProgress */,
 				4543EAF01BD08DF50041DCBD /* MWPhoto */,
 				4511CC021BA2B6E300A9D00A /* ALMoviePlayerController */,
@@ -1809,6 +1813,15 @@
 				45A2ADB21B72811200751F78 /* AuthTraceTableViewCell.m */,
 			);
 			name = Cell;
+			sourceTree = "<group>";
+		};
+		45B435CC1BD1E87D0031B799 /* DAKeyboardControl */ = {
+			isa = PBXGroup;
+			children = (
+				45B435CD1BD1E87D0031B799 /* DAKeyboardControl.h */,
+				45B435CE1BD1E87D0031B799 /* DAKeyboardControl.m */,
+			);
+			path = DAKeyboardControl;
 			sourceTree = "<group>";
 		};
 		45D27B8F1BC66BC500ECD9D7 /* ReplyView */ = {
@@ -2631,6 +2644,7 @@
 				45326EFC1B7330180044F8C1 /* UserInfoTableViewCell.m in Sources */,
 				45F09C711B86297B0065D873 /* ASIFormDataRequest.m in Sources */,
 				45495BCC1B60DA02007A17FD /* PECropView.m in Sources */,
+				45B435CF1BD1E87D0031B799 /* DAKeyboardControl.m in Sources */,
 				4543EADE1BD08DCB0041DCBD /* ActionDetailViewController.m in Sources */,
 				45326F121B74432C0044F8C1 /* NSData+AES.m in Sources */,
 				45E8121C1B67C6DC009F840D /* TeamDetailViewController.m in Sources */,

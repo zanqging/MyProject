@@ -185,6 +185,35 @@
     
 }
 
+
+
+- (void)getDataFromAPIWithOps:(NSString *)urlStr  type:(NSInteger)type delegate:(id)delegate sel:(SEL)sel method:(NSString *)method{
+    str=urlStr;
+    //设置请求标志
+    self.isRequestSuccessed=@"NO";
+    NSURL* url = [NSURL URLWithString:[SERVICE_URL stringByAppendingString:urlStr]];
+    NSLog(@"请求地址:%@",url);
+    self.requestInstance=[ASIFormDataRequest requestWithURL:url];
+    self.requestInstance.timeOutSeconds=10;
+    [self.requestInstance setRequestMethod:method];
+    if (delegate) {
+        requestInstance.delegate=delegate;
+    }else{
+        requestInstance.delegate=self;
+    }
+    
+    if (sel) {
+        [requestInstance setDidFinishSelector:sel];
+    }
+    if (type==1) {
+        [requestInstance startSynchronous];
+    }else{
+        [self.requestInstance startAsynchronous];
+        //        [requestInstance startSynchronous];
+    }
+}
+
+
 - (void)requestFinished:(ASIHTTPRequest *)request {
     NSError *error = [requestInstance error];
     if (!error) {

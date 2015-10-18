@@ -12,11 +12,21 @@
 #import "UConstants.h"
 #import "HttpUtils.h"
 #import "TDUtil.h"
+#import "LoadingUtil.h"
+#import "LoadingView.h"
+#import "MJRefresh.h"
+#import "DialogUtil.h"
 #import "NSString+SBJSON.h"
+#import "DAKeyboardControl.h"
 #import "UserLookForViewController.h"
 @interface ViewController ()<WeiboTableViewCellDelegate>
 {
+    BOOL isRefresh;
+    LoadingView* loadingView;
+    NSInteger currentPage;
     HttpUtils* httpUtils;
+    UITextField *textField;
+    NSString* conId,* atConId;
 }
 
 @end
@@ -56,9 +66,60 @@
     
     [self.view addSubview:self.tableView];
     
+    [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
+    
     [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     
-     httpUtils = [[HttpUtils alloc]init];
+    
+    UIToolbar *toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f,
+                                                                     self.view.bounds.size.height - 40.0f,
+                                                                     self.view.bounds.size.width,
+                                                                     40.0f)];
+    toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+    [self.view addSubview:toolBar];
+    
+    textField = [[UITextField alloc] initWithFrame:CGRectMake(10.0f,
+                                                                           6.0f,
+                                                                           toolBar.bounds.size.width - 20.0f - 68.0f,
+                                                                           30.0f)];
+    textField.borderStyle = UITextBorderStyleRoundedRect;
+    textField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [toolBar addSubview:textField];
+    
+    UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [sendButton setTitle:@"回复" forState:UIControlStateNormal];
+    [sendButton addTarget:self action:@selector(commentAction:) forControlEvents:UIControlEventTouchUpInside];
+    sendButton.frame = CGRectMake(toolBar.bounds.size.width - 68.0f,
+                                  6.0f,
+                                  58.0f,
+                                  29.0f);
+    [toolBar addSubview:sendButton];
+    
+    
+    self.view.keyboardTriggerOffset = toolBar.bounds.size.height;
+    __block ViewController* viewSelf = self;
+    [self.view addKeyboardPanningWithFrameBasedActionHandler:^(CGRect keyboardFrameInView, BOOL opening, BOOL closing) {
+        /*
+         Try not to call "self" inside this block (retain cycle).
+         But if you do, make sure to remove DAKeyboardControl
+         when you are done with the view controller by calling:
+         [self.view removeKeyboardControl];
+         */
+        
+//        CGRect toolBarFrame = toolBar.frame;
+//        toolBarFrame.origin.y = keyboardFrameInView.origin.y - toolBarFrame.size.height;
+//        toolBar.frame = toolBarFrame;
+        
+//        CGRect tableViewFrame = viewSelf.tableView.frame;
+//        tableViewFrame.size.height = toolBarFrame.origin.y;
+//        viewSelf.tableView.frame = tableViewFrame;
+    } constraintBasedActionHandler:nil];
+    
+    //网络加载
+    httpUtils = [[HttpUtils alloc]init];
+    loadingView = [LoadingUtil shareinstance:self.view];
+    [LoadingUtil show:loadingView];
     
     [self loadData];
 }
@@ -77,17 +138,47 @@
 //        [array addObject:dic];
 //    }
 //    self.dataArray = array;
-    NSString* serverUrl = [CYCLE_CONTENT_LIST stringByAppendingFormat:@"%d/",0];
+    NSString* serverUrl = [CYCLE_CONTENT_LIST stringByAppendingFormat:@"%ld/",currentPage];
     [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestData:)];
 }
 
 
+-(void)refreshProject
+{
+    isRefresh =YES;
+    currentPage = 0;
+    [self loadData];
+}
 
+-(void)loadProject
+{
+    isRefresh =NO;
+    if (!self.isEndOfPageSize) {
+        currentPage++;
+        [self loadData];
+    }else{
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"已加载全部"];
+        isRefresh =NO;
+    }
+}
+
+
+-(void)commentAction:(id)sender
+{
+    [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"回复消息"];
+    NSString* content = textField.text;
+    if(!httpUtils){
+        httpUtils = [[HttpUtils alloc]init];
+    }
+    
+    NSString* serverUrl = [CYCLE_CONTENT_REPLY stringByAppendingFormat:@"%@/",conId];
+    [httpUtils getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:content,@"content",atConId,@"at", nil] type:0 delegate:self sel:@selector(requestReply:)];
+}
 -(void)publishAction:(id)sender
 {
     UIStoryboard* board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     UIViewController* controller = [board instantiateViewControllerWithIdentifier:@"PublishViewController"];
-    [self.navigationController pushViewController:controller animated:YES];
+    [self.navigationController presentViewController:controller animated:YES completion:nil];
 }
 
 -(void)setDataArray:(NSMutableArray *)dataArray{
@@ -101,6 +192,7 @@
 {
     
     ActionDetailViewController* controller = [[ActionDetailViewController alloc]init];
+    controller.dic = self.dataArray[indexPath.row];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -128,11 +220,9 @@
     //姓名
     cell.nameLabel.text = [dic valueForKey:@"name"];
     //内容
+    cell.industryLabel.text = [dic valueForKey:@"city"];
     cell.contentLabel.text = [dic valueForKey:@"content"];
     cell.jobLabel.text = [[dic valueForKey:@"position"] objectAtIndex:0];
-    
-    cell.industryLabel.text = [dic valueForKey:@"city"];
-    
     cell.dic =dic;
     return cell;
 }
@@ -150,8 +240,27 @@
     [self.navigationController pushViewController:controller animated:YES];
 }
 
+-(void)weiboTableViewCell:(id)weiboTableViewCell contentId:(NSString *)contentId atId:(NSString *)atId isSelf:(BOOL)isSelf
+{
+    atConId  =atId;
+    conId  =contentId;
+    [textField becomeFirstResponder];
+}
 
+-(void)weiboTableViewCell:(id)weiboTableViewCell deleteDic:(NSDictionary *)dic
+{
+    if ([self.dataArray containsObject:dic]) {
+        [self.dataArray removeObject:dic];
+        [self.tableView reloadData];
+    }
+}
 
+-(void)weiboTableViewCell:(id)weiboTableViewCell refresh:(BOOL)refresh
+{
+    if (refresh) {
+        [self loadData];
+    }
+}
 #pragma ASIHttpRequest
 -(void)requestData:(ASIHTTPRequest*)request
 {
@@ -161,13 +270,49 @@
     NSMutableDictionary * dic =[jsonString JSONValue];
     if (dic!=nil) {
         NSString* status = [dic valueForKey:@"status"];
-        if ([status integerValue]==0) {
-            self.dataArray  = [dic valueForKey:@"data"];
+        NSMutableArray* dataArray = [NSMutableArray new];
+        NSMutableArray* arrayData = [dic valueForKey:@"data"];
+        if ([status integerValue]==0  || [status integerValue]==-1) {
+            if (isRefresh) {
+                dataArray = arrayData;
+            }else{
+                for (int i=0; i<arrayData.count; i++) {
+                    [dataArray addObject:arrayData[i]];
+                }
+            }
+            self.dataArray = dataArray;
+            if (isRefresh) {
+                [self.tableView.header endRefreshing];
+            }else{
+                [self.tableView.footer endRefreshing];
+            }
+            
+            if ([status integerValue]==-1) {
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"内容已加载完毕!"]];
+            }
+            
+            [LoadingUtil close:loadingView];
         }else{
             
         }
     }
 }
+
+-(void)requestReply:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"status"];
+        if ([status integerValue] ==0) {
+            [self loadData];
+        }
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
+    }
+}
+
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"%@",request.responseString);

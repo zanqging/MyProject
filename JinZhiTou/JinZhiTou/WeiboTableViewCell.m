@@ -9,7 +9,10 @@
 #import "WeiboTableViewCell.h"
 #import "GlobalDefine.h"
 #import "UConstants.h"
+#import "DialogUtil.h"
+#import "NSString+SBJSON.h"
 #import "UILabel+Data.h"
+#import "TDUtil.h"
 #import <QuartzCore/QuartzCore.h>
 @implementation WeiboTableViewCell
 
@@ -67,6 +70,9 @@
         [self.expandButton setTitle:@"全文" forState:UIControlStateNormal];
         [self.expandButton addTarget:self action:@selector(expandAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.expandButton];
+       
+        
+        
         
     }
     return self;
@@ -92,20 +98,36 @@
 }
 -(void)commentAction:(id)sender
 {
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"评论消息" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alertView show];
+    if ([_delegate respondsToSelector:@selector(weiboTableViewCell:contentId:atId:isSelf:)]) {
+        [_delegate weiboTableViewCell:self contentId:[self.dic valueForKey:@"id"] atId:nil isSelf:NO];
+    }
 }
 
 -(void)priseAction:(id)sender
 {
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"点赞消息" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alertView show];
+    if (!httpUtils) {
+        httpUtils = [[HttpUtils alloc]init];
+    }
+    NSString* serverUrl = [CYCLE_CONTENT_PRISE stringByAppendingFormat:@"%@/%d/",[self.dic
+                           valueForKey:@"id"],1];
+    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
 }
 
 -(void)shareAction:(id)sender
 {
     UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"分享消息" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
     [alertView show];
+}
+
+-(void)deleteAction:(id)sender
+{
+    if (!httpUtils) {
+        httpUtils = [[HttpUtils alloc]init];
+    }
+    NSString* serverUrl = [CYCLE_CONTENT_DELETE stringByAppendingFormat:@"%@/",[self.dic
+                                                                                  valueForKey:@"id"]];
+    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestDeleteFinished:)];
+
 }
 
 - (IBAction)expandAction:(id)sender {
@@ -130,7 +152,18 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    NSDictionary* dic =self.dataArray[indexPath.row];
+    currentSelectedCellIndex = indexPath;
+    if(![[dic valueForKey:@"flag"] boolValue]){
+        if ([_delegate respondsToSelector:@selector(weiboTableViewCell:contentId:atId:isSelf:)]) {
+            [_delegate weiboTableViewCell:self contentId:[self.dic valueForKey:@"id"] atId:[dic valueForKey:@"id"] isSelf:NO];
+        }
+    }else{
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"删除" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        alertView.tag  = [[dic valueForKey:@"id"] integerValue];
+        alertView.delegate = self;
+        [alertView show];
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -230,10 +263,30 @@
     [[UIApplication sharedApplication].windows[0].rootViewController presentViewController:nc animated:YES completion:nil];
 }
 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (!httpUtils) {
+        httpUtils = [[HttpUtils alloc]init];
+    }
+    NSString* serverUrl = [CYCLE_CONTENT_REPLY_DELETE stringByAppendingFormat:@"%ld/",alertView.tag];
+    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestDeleteReplyFinished:)];
+}
+
 -(void)setDic:(NSMutableDictionary *)dic
 {
     if (dic) {
         self->_dic =dic;
+        
+        if ([[dic valueForKey:@"flag"] boolValue]) {
+            self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(self.expandButton), Y(self.expandButton), 50, 50)];
+            self.deleteButton.titleLabel.font  =FONT(@"Arial", 12);
+            [self.deleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            [self.deleteButton setTitle:@"删除" forState:UIControlStateNormal];
+            [self.deleteButton addTarget:self action:@selector(deleteAction:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:self.deleteButton];
+        }
+        
+        
         NSArray* pics =[self.dic valueForKey:@"pics"];
         NSInteger value = pics.count;
         NSInteger number = value/3;
@@ -322,7 +375,7 @@
             dic =dataPriseArray[i];
             label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x,pos_y, 40, 15)];
             label.index =[NSString stringWithFormat:@"%@",[dic valueForKey:@"uid"]];
-            label.text  =[dic valueForKey:@"name"];
+            label.text  =[NSString stringWithFormat:@"%@,",[dic valueForKey:@"name"]];
             label.font  = FONT(@"Arial", 10);
             label.textColor = [UIColor blueColor];
             label.userInteractionEnabled = YES;
@@ -343,6 +396,8 @@
         [self setTableViewFrame:label];
         
         self.dataArray = dataCriticalArray;
+        
+       
 
     }
 }
@@ -392,6 +447,80 @@
     // If we subscribe to this method we must dismiss the view controller ourselves
     NSLog(@"Did finish modal presentation");
     [[UIApplication sharedApplication].windows[0].rootViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma ASIHttpRequest
+-(void)requestData:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"status"];
+        if ([status integerValue]==0) {
+            self.dataArray  = [dic valueForKey:@"data"];
+        }else{
+            
+        }
+        [[DialogUtil sharedInstance]showDlg:self textOnly:[dic valueForKey:@"msg"]];
+    }
+}
+
+-(void)requestFinished:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"status"];
+        if ([status integerValue]==0) {
+            if ([_delegate respondsToSelector:@selector(weiboTableViewCell:refresh:)]) {
+                [_delegate weiboTableViewCell:self refresh:YES];
+            }
+        }
+        [[DialogUtil sharedInstance]showDlg:self.superview textOnly:[dic valueForKey:@"msg"]];
+    }
+}
+-(void)requestDeleteReplyFinished:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"status"];
+        if ([status integerValue]==0) {
+            NSDictionary* tempDic =self.dataArray[currentSelectedCellIndex.row];
+            if ([self.dataArray containsObject:tempDic]) {
+                [self.dataArray removeObject:tempDic];
+                [self.tableView reloadData];
+            }
+        }
+    }
+}
+
+-(void)requestDeleteFinished:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"status"];
+        if ([status integerValue]==0) {
+            if ([_delegate respondsToSelector:@selector(weiboTableViewCell:deleteDic:)]) {
+                [_delegate weiboTableViewCell:self deleteDic:self.dic];
+
+            }
+        }
+    }
+}
+
+-(void)requestFailed:(ASIHTTPRequest *)request
+{
+    NSLog(@"%@",request.responseString);
 }
 
 @end

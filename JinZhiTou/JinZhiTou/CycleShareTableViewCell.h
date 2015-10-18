@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "UIImageView+WebCache.h"
 @interface CycleShareTableViewCell : UITableViewCell
 {
     UIImageView* headerImgView;
     UILabel* nameLabel,* companyLabel,* industoryLabel;
     UILabel* contentLabel;
 }
-
+@property(retain,nonatomic)NSDictionary* dic;
 @end
