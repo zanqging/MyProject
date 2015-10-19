@@ -7,12 +7,13 @@
 //
 
 #import "WeiboTableViewCell.h"
-#import "GlobalDefine.h"
+#import "TDUtil.h"
 #import "UConstants.h"
 #import "DialogUtil.h"
-#import "NSString+SBJSON.h"
+#import "GlobalDefine.h"
+#import "UIReplyLabel.h"
 #import "UILabel+Data.h"
-#import "TDUtil.h"
+#import "NSString+SBJSON.h"
 #import <QuartzCore/QuartzCore.h>
 @implementation WeiboTableViewCell
 
@@ -27,7 +28,7 @@
         [self addSubview:self.headerImgView];
         
         //名称
-        self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.headerImgView)+10, Y(self.headerImgView), 50, 21)];
+        self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.headerImgView)+10, Y(self.headerImgView), 50, 14)];
         self.nameLabel.font = FONT(@"Arial", 14);
         self.nameLabel.textColor = [UIColor blueColor];
         self.nameLabel.userInteractionEnabled = YES;
@@ -64,36 +65,43 @@
         self.contentLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [self addSubview:self.contentLabel];
         
-        self.expandButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)-15, POS_Y(self.contentLabel)+5, 50, 50)];
-        self.expandButton.titleLabel.font  =FONT(@"Arial", 12);
-        [self.expandButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-        [self.expandButton setTitle:@"全文" forState:UIControlStateNormal];
-        [self.expandButton addTarget:self action:@selector(expandAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:self.expandButton];
-       
-        
-        
-        
     }
     return self;
 }
 
--(void)setTableViewFrame:(UIView*)v
+-(void)setTableViewFrame:(UIView*)v replyDataHeigt:(NSInteger)height
 {
-    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0 , POS_Y(v)+5, WIDTH(self.priseView), HEIGHT(self.priseView)-55)];
-    self.tableView.bounces=NO;
-    self.tableView.delegate=self;
-    self.tableView.dataSource=self;
-    self.tableView.scrollEnabled =  NO;
-    self.tableView.allowsSelection=YES;
-    self.tableView.delaysContentTouches=NO;
-    self.tableView.showsVerticalScrollIndicator=NO;
-    self.tableView.showsHorizontalScrollIndicator=NO;
-    self.tableView.backgroundColor = [UIColor lightGrayColor];
-    self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
-    [self.priseView addSubview:self.tableView];
-    
-    [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
+    if (!self.tableView) {
+        if (self.dataArray.count>0) {
+            if (v.frame.size.height>0) {
+                self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0 , POS_Y(v)+5, WIDTH(self.priseView),height)];
+            }else{
+                self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0 ,10, WIDTH(self.priseView), height)];
+            }
+        }else{
+            self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0 , POS_Y(v)+5, WIDTH(self.priseView), 0)];
+        }
+        NSLog(@"%@",NSStringFromCGRect(self.tableView.frame));
+        self.tableView.bounces=NO;
+        self.tableView.delegate=self;
+        self.tableView.dataSource=self;
+        self.tableView.scrollEnabled =  NO;
+        self.tableView.allowsSelection=YES;
+        self.tableView.delaysContentTouches=NO;
+        self.tableView.showsVerticalScrollIndicator=NO;
+        self.tableView.showsHorizontalScrollIndicator=NO;
+        self.tableView.backgroundColor = [UIColor lightGrayColor];
+        self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+        [self.priseView addSubview:self.tableView];
+        [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
+    }else{
+        if (self.dataArray.count>0) {
+            [self.tableView setFrame:CGRectMake(0 , POS_Y(v)+15, WIDTH(self.priseView), HEIGHT(self.priseView)-10)];
+        }else{
+            [self.tableView setFrame:CGRectMake(0 , POS_Y(v)+5, WIDTH(self.priseView), 0)];
+        }
+    }
+   
    
 }
 -(void)commentAction:(id)sender
@@ -109,8 +117,8 @@
         httpUtils = [[HttpUtils alloc]init];
     }
     NSString* serverUrl = [CYCLE_CONTENT_PRISE stringByAppendingFormat:@"%@/%d/",[self.dic
-                           valueForKey:@"id"],1];
-    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
+                           valueForKey:@"id"],![[self.dic valueForKey:@"is_like"] boolValue]];
+    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestPriseFinished:)];
 }
 
 -(void)shareAction:(id)sender
@@ -159,7 +167,7 @@
             [_delegate weiboTableViewCell:self contentId:[self.dic valueForKey:@"id"] atId:[dic valueForKey:@"id"] isSelf:NO];
         }
     }else{
-        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"删除" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"删除" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除", nil];
         alertView.tag  = [[dic valueForKey:@"id"] integerValue];
         alertView.delegate = self;
         [alertView show];
@@ -168,18 +176,6 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 20;
-}
--(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    //声明静态字符串对象，用来标记重用单元格
-    NSString* TableDataIdentifier=@"ReplyCell";
-    //用TableDataIdentifier标记重用单元格
-    ReplyTableViewCell* cell=[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
-    if (!cell) {
-        CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
-        cell  =  [[ReplyTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
-    }
     NSDictionary* dic  = self.dataArray[indexPath.row];
     NSString* name  = [dic valueForKey:@"name"];
     NSString* atLabel = [dic valueForKey:@"at_label"];
@@ -202,10 +198,67 @@
     if (content) {
         str = [str stringByAppendingString:content];
     }
+
+    NSInteger line = [TDUtil convertToInt:str]/17;
+    if (line>0) {
+        return line*20;
+    }else{
+        return 20;
+    }
+    
+}
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //声明静态字符串对象，用来标记重用单元格
+    NSString* TableDataIdentifier=@"ReplyCell";
+    //用TableDataIdentifier标记重用单元格
+    ReplyTableViewCell* cell=[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
+    if (!cell) {
+        CGFloat height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
+        cell  =  [[ReplyTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
+    }
+    
+    UIReplyLabel* label = [[UIReplyLabel alloc]initWithFrame:cell.frame];
+    label.userInteractionEnabled = YES;
+    
+    NSDictionary* dic  = self.dataArray[indexPath.row];
+    NSString* name  = [dic valueForKey:@"name"];
+    NSString* atLabel = [dic valueForKey:@"at_label"];
+    NSString* atName = [dic valueForKey:@"at_name"];
+    NSString* suffix =  [dic valueForKey:@"label_suffix"];
+    NSString* content =  [dic valueForKey:@"content"];
+    NSString* str = name;
+    if (name) {
+        //监听事件
+        label.nameLabel.userInteractionEnabled  =YES;
+        [label.nameLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+        [label setName:name];
+    }
+    
+    if (atLabel) {
+        str = [str stringByAppendingString:atLabel];
+        [label setAtString:atLabel];
+    }
+    
+    if (atName) {
+        str = [str stringByAppendingString:atName];
+        label.atNameLabel.userInteractionEnabled  =YES;
+        [label.atNameLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+        [label setAtName:atName];
+    }
+    
+    if (suffix) {
+        str = [str stringByAppendingString:suffix];
+        [label setSuffix:suffix];
+    }
+    
+    if (content) {
+        str = [str stringByAppendingString:content];
+        [label setContent:content];
+    }
     
     
-    cell.textLabel.font =FONT(@"Arial", 12);
-    cell.textLabel.text = str;
+    [cell addSubview:label];
     cell.backgroundColor = [UIColor lightGrayColor];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     //    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -265,38 +318,106 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (!httpUtils) {
-        httpUtils = [[HttpUtils alloc]init];
+    if (buttonIndex==1) {
+        if (!httpUtils) {
+            httpUtils = [[HttpUtils alloc]init];
+        }
+        NSString* serverUrl = [CYCLE_CONTENT_REPLY_DELETE stringByAppendingFormat:@"%ld/",alertView.tag];
+        [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestDeleteReplyFinished:)];
     }
-    NSString* serverUrl = [CYCLE_CONTENT_REPLY_DELETE stringByAppendingFormat:@"%ld/",alertView.tag];
-    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestDeleteReplyFinished:)];
 }
 
 -(void)setDic:(NSMutableDictionary *)dic
 {
     if (dic) {
         self->_dic =dic;
+        //头像
+        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"photo"]];
+        [self.headerImgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"coremember")];
+        
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
+        [paragraphStyle setLineSpacing:5.f];//调整行间距
+        
+        [paragraphStyle setAlignment:NSTextAlignmentJustified];
+        
+        [paragraphStyle setHeadIndent:-50];
+        
+        NSString* content = [dic valueForKey:@"name"];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+        self.nameLabel.attributedText = attributedString;//ios 6
+        [self.nameLabel sizeToFit];
+        
+        //内容
+        content = [[dic valueForKey:@"position"] objectAtIndex:0];
+        attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+        self.jobLabel.attributedText = attributedString;//ios 6
+        [self.jobLabel sizeToFit];
+
+        
+        [self.jobLabel setFrame:CGRectMake(POS_X(self.nameLabel)+5, Y(self.nameLabel),WIDTH(self.jobLabel), HEIGHT(self.jobLabel))];
+        
+        self.industryLabel.text = [dic valueForKey:@"city"];
+        
+        //内容
+        content = [dic valueForKey:@"content"];
+        attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+        self.contentLabel.attributedText = attributedString;//ios 6
+        [self.contentLabel sizeToFit];
+        
+        int numlines = [TDUtil  convertToInt:content]/17;
+        
+        if (numlines>5) {
+            self.expandButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)-15, POS_Y(self.contentLabel)-15, 50, 50)];
+            self.expandButton.titleLabel.font  =FONT(@"Arial", 12);
+            [self.expandButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            [self.expandButton setTitle:@"全文" forState:UIControlStateNormal];
+            [self.expandButton addTarget:self action:@selector(expandAction:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:self.expandButton];
+        }
+        
+
         
         if ([[dic valueForKey:@"flag"] boolValue]) {
-            self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(self.expandButton), Y(self.expandButton), 50, 50)];
+            if (self.expandButton) {
+                self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(self.expandButton), Y(self.expandButton), 50, 50)];
+            }else{
+                self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)-15, POS_Y(self.contentLabel)-15, 50, 50)];
+            }
             self.deleteButton.titleLabel.font  =FONT(@"Arial", 12);
             [self.deleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
             [self.deleteButton setTitle:@"删除" forState:UIControlStateNormal];
             [self.deleteButton addTarget:self action:@selector(deleteAction:) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:self.deleteButton];
         }
+        //时间
+        if (self.expandButton || self.deleteButton) {
+            self.dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.contentLabel)+20, 100, 20)];
+        }else{
+            self.dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.contentLabel)+5, 100, 20)];
+        }
+        self.dateTimeLabel.font  =FONT(@"Arial", 10);
+        self.dateTimeLabel.text = [dic valueForKey:@"datetime"];
+        self.dateTimeLabel.textColor  =FONT_COLOR_GRAY;
+        [self addSubview:self.dateTimeLabel];
         
         
         NSArray* pics =[self.dic valueForKey:@"pics"];
         NSInteger value = pics.count;
         NSInteger number = value/3;
         
+        float width =80;
         if ( value % 3 !=0) {
+            width = 240;
             number++;
         }else if (value<3 && value >0){
             number++;
+            width =value*80;
         }
-        self.imgContentView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.expandButton)+10, WIDTH(self.contentLabel), number*80)];
+        self.imgContentView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.dateTimeLabel)+10,width, number*80)];
         [self addSubview:self.imgContentView];
         
         UIImageView* imgView;
@@ -326,12 +447,13 @@
         [dictemp setValue:array forKey:@"imageName"];
         
         //分享点赞
-        self.funView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.imgContentView), WIDTH(self.contentLabel), 30)];
+        self.funView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.imgContentView), WIDTH(self)-80, 30)];
         [self addSubview:self.funView];
         
         
         //点赞，分享,评论
         NSMutableArray* dataCriticalArray = [self.dic valueForKey:@"comment"];
+        self.dataArray = dataCriticalArray;
         
         //评论
         self.criticalButton = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self.funView)-70, 0, 50, 25)];
@@ -361,45 +483,108 @@
         [self.priseButton setImage:IMAGENAMED(@"gossip_like_normal") forState:UIControlStateNormal];
         [self.funView addSubview:self.priseButton];
         
-        //点赞评论区域
+        [self setPriseListData];
         
-        self.priseView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.contentLabel), 150)];
-        self.priseView.layer.cornerRadius = 5;
-        self.priseView.backgroundColor = [UIColor lightGrayColor];
+    
+    }
+}
+
+-(void)setPriseListData
+{
+    //点赞评论区域
+    NSArray* dataPriseArray = [self.dic valueForKey:@"likers"];
+    if (!self.priseView) {
+        self.priseView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView)+5, WIDTH(self.funView), 10)];
         [self addSubview:self.priseView];
-        
-        UILabel* label;
-        pos_x =30,pos_y =10;
-        NSDictionary* dic;
-        for (int i = 0; i<dataPriseArray.count; i++) {
-            dic =dataPriseArray[i];
-            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x,pos_y, 40, 15)];
-            label.index =[NSString stringWithFormat:@"%@",[dic valueForKey:@"uid"]];
-            label.text  =[NSString stringWithFormat:@"%@,",[dic valueForKey:@"name"]];
-            label.font  = FONT(@"Arial", 10);
-            label.textColor = [UIColor blueColor];
-            label.userInteractionEnabled = YES;
-            [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
-            [self.priseView addSubview:label];
-            pos_x+=WIDTH(label);
-            if (pos_x > WIDTH(self.priseView)-40) {
-                pos_y+=HEIGHT(label)+5;
-                pos_x = 10;
-            }
+    }else{
+        [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView), 10)];
+    }
+    
+    self.priseView.layer.cornerRadius = 5;
+    self.priseView.backgroundColor = [UIColor lightGrayColor];
+    
+    self.priseListView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.priseView),20)];
+    [self.priseView addSubview:self.priseListView];
+    
+    UILabel* label;
+    float pos_x =30,pos_y =5;
+    NSDictionary* dic;
+    int num=0;
+    for (int i = 0; i<dataPriseArray.count; i++) {
+        dic =dataPriseArray[i];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x,pos_y, 40, 15)];
+        label.index =[NSString stringWithFormat:@"%@",[dic valueForKey:@"uid"]];
+        label.text  =[NSString stringWithFormat:@"%@,",[dic valueForKey:@"name"]];
+        label.font  = FONT(@"Arial", 10);
+        label.textColor = [UIColor blueColor];
+        label.userInteractionEnabled = YES;
+        [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+        [self.priseListView addSubview:label];
+        pos_x+=WIDTH(label);
+        if (pos_x > WIDTH(self.priseListView)-40) {
+            pos_y+=HEIGHT(label)+5;
+            pos_x = 10;
+            num++;
+        }
+    }
+    if (dataPriseArray.count>0) {
+        [self.priseListView setFrame:CGRectMake(0,0, WIDTH(self.priseView),(num+1)*25)];
+    }else{
+        [self.priseListView setFrame:CGRectMake(0, 0, WIDTH(self.priseView),num*25)];
+    }
+    
+    float comment_height =0;
+    for (int i=0; i<self.dataArray.count; i++) {
+        NSDictionary* dic  = self.dataArray[i];
+        NSString* name  = [dic valueForKey:@"name"];
+        NSString* atLabel = [dic valueForKey:@"at_label"];
+        NSString* atName = [dic valueForKey:@"at_name"];
+        NSString* suffix =  [dic valueForKey:@"label_suffix"];
+        NSString* content =  [dic valueForKey:@"content"];
+        NSString* str = name;
+        if (atLabel) {
+            str = [str stringByAppendingString:atLabel];
         }
         
-        UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(15, 10, 15, 15)];
+        if (atName) {
+            str = [str stringByAppendingString:atName];
+        }
+        
+        if (suffix) {
+            str = [str stringByAppendingString:suffix];
+        }
+        
+        if (content) {
+            str = [str stringByAppendingString:content];
+        }
+        
+        NSInteger line = [TDUtil convertToInt:str]/17;
+        
+        if (line>0) {
+            comment_height +=line*20;
+        }else{
+            comment_height += 20;
+        }
+    }
+    
+    if (dataPriseArray.count>0 && self.dataArray.count>0) {
+        [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView), num*25+comment_height+HEIGHT(self.priseListView)+10)];
+    }else{
+        float height = 0;
+        if (!dataPriseArray.count>0) {
+            if (self.dataArray.count>0) {
+                height = 20;
+            }
+        }
+        [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView), num*25+comment_height+HEIGHT(self.priseListView)+height)];
+    }
+    if (dataPriseArray.count>0) {
+        UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(15, 5, 15, 15)];
         imgview.image = IMAGENAMED(@"like_white");
         [self.priseView addSubview:imgview];
-        
-        
-        [self setTableViewFrame:label];
-        
-        self.dataArray = dataCriticalArray;
-        
-       
-
     }
+    
+    [self setTableViewFrame:self.priseListView replyDataHeigt:comment_height];
 }
 #pragma mark - MWPhotoBrowserDelegate
 
@@ -463,7 +648,35 @@
         }else{
             
         }
-        [[DialogUtil sharedInstance]showDlg:self textOnly:[dic valueForKey:@"msg"]];
+        [[DialogUtil sharedInstance]showDlg:self.superview textOnly:[dic valueForKey:@"msg"]];
+    }
+}
+
+-(void)requestPriseFinished:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"status"];
+        if ([status integerValue]==0) {
+            BOOL flag = ![[self.dic valueForKey:@"is_like"] boolValue];
+            NSString* flagStr = flag==true?@"True":@"False";
+            [self.dic setValue:flagStr forKey:@"is_like"];
+            NSInteger num = [self.priseButton.titleLabel.text integerValue];
+            if ([[self.dic valueForKey:@"is_like"]boolValue]) {
+                [self.priseButton setTitle:[NSString stringWithFormat:@"%ld",++num] forState:UIControlStateNormal];
+            }else{
+                [self.priseButton setTitle:[NSString stringWithFormat:@"%ld",--num] forState:UIControlStateNormal];
+            }
+            
+            //[self setPriseListData];
+            if ([_delegate respondsToSelector:@selector(weiboTableViewCell:refresh:)]) {
+                [_delegate weiboTableViewCell:self refresh:YES];
+            }
+        }
+        [[DialogUtil sharedInstance]showDlg:self.superview textOnly:[dic valueForKey:@"msg"]];
     }
 }
 
@@ -483,6 +696,7 @@
         [[DialogUtil sharedInstance]showDlg:self.superview textOnly:[dic valueForKey:@"msg"]];
     }
 }
+
 -(void)requestDeleteReplyFinished:(ASIHTTPRequest*)request
 {
     NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
@@ -495,7 +709,9 @@
             NSDictionary* tempDic =self.dataArray[currentSelectedCellIndex.row];
             if ([self.dataArray containsObject:tempDic]) {
                 [self.dataArray removeObject:tempDic];
-                [self.tableView reloadData];
+                if ([_delegate respondsToSelector:@selector(weiboTableViewCell:refresh:)]) {
+                    [_delegate weiboTableViewCell:self refresh:YES];
+                }
             }
         }
     }
@@ -512,7 +728,6 @@
         if ([status integerValue]==0) {
             if ([_delegate respondsToSelector:@selector(weiboTableViewCell:deleteDic:)]) {
                 [_delegate weiboTableViewCell:self deleteDic:self.dic];
-
             }
         }
     }

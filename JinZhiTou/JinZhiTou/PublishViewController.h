@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "NavView.h"
 #import "MWPhotoBrowser.h"
+#import "ViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 @interface PublishViewController : UIViewController<UITextViewDelegate,MWPhotoBrowserDelegate>
 @property (retain, nonatomic)UITextView *textView;
@@ -24,6 +25,7 @@
 
 @property (nonatomic, strong) ALAssetsLibrary *ALAssetsLibrary;
 @property(retain,nonatomic)NavView* navView;
+@property(retain,nonatomic)ViewController* controller;
 
 - (void)loadAssets;
 

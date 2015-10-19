@@ -399,6 +399,22 @@
 
 + ( CameraMoveDirection )determineCameraDirectionIfNeeded:( CGPoint )translation direction:(CameraMoveDirection)direction;
 
+/**
+ *  检测时间合法性
+ *
+ *  @param timeString 待检测时间
+ *
+ *  @return 返回是否合法
+ */
 +(BOOL)isValideTime:(NSString*)timeString;
+/**
+ *  设置UILabel多格式文本
+ *
+ *  @param label       UiLabel
+ *  @param content     内容
+ *  @param lineSpacing 间距
+ *  @param indent      缩进
+ */
++(void)setLabelMutableText:(UILabel*)label content:(NSString*)content lineSpacing:(float)lineSpacing headIndent:(CGFloat)indent;
 
 @end

@@ -18,6 +18,7 @@
 #import "DialogUtil.h"
 #import "NSString+SBJSON.h"
 #import "DAKeyboardControl.h"
+#import "PublishViewController.h"
 #import "UserLookForViewController.h"
 @interface ViewController ()<WeiboTableViewCellDelegate>
 {
@@ -48,13 +49,13 @@
     [self.navView setTitle:@"金指投"];
     self.navView.titleLable.textColor=WriteColor;
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
-//    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     
     [self.navView.rightButton setImage:IMAGENAMED(@"feed_action_share_normal") forState:UIControlStateNormal];
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(publishAction:)]];
     [self.view addSubview:self.navView];
     
-    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView))];
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-170)];
     self.tableView.bounces=YES;
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
@@ -162,6 +163,10 @@
     }
 }
 
+-(void)userInfoAction:(id)sender
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"userInfo" object:nil];
+}
 
 -(void)commentAction:(id)sender
 {
@@ -177,7 +182,8 @@
 -(void)publishAction:(id)sender
 {
     UIStoryboard* board = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    UIViewController* controller = [board instantiateViewControllerWithIdentifier:@"PublishViewController"];
+    PublishViewController* controller = [board instantiateViewControllerWithIdentifier:@"PublishViewController"];
+    controller.controller = self;
     [self.navigationController presentViewController:controller animated:YES completion:nil];
 }
 
@@ -198,7 +204,10 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 700;
+    if (self.dataArray.count>0) {
+        return [self getHeightItemWithIndexpath:indexPath];
+    }
+    return 0;
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -214,15 +223,6 @@
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     NSMutableDictionary* dic =self.dataArray[indexPath.row];
-    //头像
-    NSURL* url = [NSURL URLWithString:[dic valueForKey:@"photo"]];
-    [cell.headerImgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"coremember")];
-    //姓名
-    cell.nameLabel.text = [dic valueForKey:@"name"];
-    //内容
-    cell.industryLabel.text = [dic valueForKey:@"city"];
-    cell.contentLabel.text = [dic valueForKey:@"content"];
-    cell.jobLabel.text = [[dic valueForKey:@"position"] objectAtIndex:0];
     cell.dic =dic;
     return cell;
 }
@@ -261,6 +261,81 @@
         [self loadData];
     }
 }
+
+-(CGFloat)getHeightItemWithIndexpath:(NSIndexPath*) indexpath
+{
+    NSDictionary* dic = self.dataArray[indexpath.row];
+    //内容
+    NSString* content = [dic valueForKey:@"content"];
+    NSInteger picsCount = [[dic valueForKey:@"pics"] count];
+    NSInteger likersCount = [[dic valueForKey:@"likers"] count];
+    NSInteger commentCount = [[dic valueForKey:@"comment"] count];
+    
+    
+    int number = [TDUtil convertToInt:content] / 17;
+    if (number>5) {
+        number  =5;
+    }else{
+        if ([content length]>0) {
+            number++;
+        }
+    }
+    
+    CGFloat height = number*25;
+    if(picsCount>0 && picsCount<=3){
+        height +=70;
+    }else{
+        if (picsCount%3!=0) {
+            height += (picsCount/3+1)*80;
+        }else{
+            height += (picsCount/3)*80;
+        }
+    }
+    
+    if (likersCount>0 && likersCount<7) {
+        height+=50;
+    }else{
+        height += (likersCount/7+1)*20;
+    }
+    
+    for (int i=0; i<commentCount; i++) {
+        NSMutableArray* array  = [dic valueForKey:@"comment"];
+        NSDictionary* dic  = array[i];
+        NSString* name  = [dic valueForKey:@"name"];
+        NSString* atLabel = [dic valueForKey:@"at_label"];
+        NSString* atName = [dic valueForKey:@"at_name"];
+        NSString* suffix =  [dic valueForKey:@"label_suffix"];
+        NSString* content =  [dic valueForKey:@"content"];
+        NSString* str = name;
+        if (atLabel) {
+            str = [str stringByAppendingString:atLabel];
+        }
+        
+        if (atName) {
+            str = [str stringByAppendingString:atName];
+        }
+        
+        if (suffix) {
+            str = [str stringByAppendingString:suffix];
+        }
+        
+        if (content) {
+            str = [str stringByAppendingString:content];
+        }
+        
+        NSInteger line = [TDUtil convertToInt:str]/17;
+        
+        if (line>0) {
+            height +=line*20;
+        }else{
+            height += 20;
+        }
+        
+    }
+    
+    height+=140;
+    return height;
+}
 #pragma ASIHttpRequest
 -(void)requestData:(ASIHTTPRequest*)request
 {
@@ -288,7 +363,7 @@
             }
             
             if ([status integerValue]==-1) {
-                [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"内容已加载完毕!"]];
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"内容已加载完毕!"];
             }
             
             [LoadingUtil close:loadingView];

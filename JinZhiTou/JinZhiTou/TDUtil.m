@@ -1182,4 +1182,21 @@
     return isValid;
 
 }
+
+
++(void)setLabelMutableText:(UILabel*)label content:(NSString*)content lineSpacing:(float)lineSpacing headIndent:(CGFloat)indent
+{
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    
+    //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
+    
+    [paragraphStyle setLineSpacing:lineSpacing];//调整行间距
+    [paragraphStyle setAlignment:NSTextAlignmentJustified];
+    [paragraphStyle setFirstLineHeadIndent:indent];
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+    
+    label.attributedText = attributedString;//ios 6
+    [label sizeToFit];
+}
 @end

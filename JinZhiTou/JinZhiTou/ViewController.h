@@ -14,5 +14,7 @@
 @property(retain,nonatomic)NSMutableArray* dataArray;
 @property(retain,nonatomic)NavView* navView;
 @property(assign,nonatomic)BOOL isEndOfPageSize;
+
+-(void)loadData;
 @end
 

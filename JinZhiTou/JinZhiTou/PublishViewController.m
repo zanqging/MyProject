@@ -92,7 +92,6 @@
     }
     
     [httpUtils getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:[NSDictionary dictionaryWithObject:content forKey:@"content"] files:postArray postName:@"file" type:0 delegate:self sel:@selector(requestPublishContent:)];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -497,6 +496,8 @@
         NSString* status = [dic valueForKey:@"status"];
         if ([status integerValue] == 0) {
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"发布内容成功!"];
+            
+            [self.controller loadData];
             
             [self performSelector:@selector(dissmissController) withObject:nil afterDelay:1];
         }
