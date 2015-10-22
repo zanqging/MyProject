@@ -16,6 +16,8 @@
 @property(retain,nonatomic)NSMutableArray* dataArray;
 @property(retain,nonatomic)NSString* classStringName;
 @property(assign,nonatomic)NSInteger selectIndex;
+@property(assign,nonatomic)CGFloat headerHeight;
 @property(retain,nonatomic)NSDictionary* dic;
+@property(assign,nonatomic)BOOL isEndOfPageSize;
 @property(retain,nonatomic)NavView* navView;
 @end

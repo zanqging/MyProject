@@ -409,6 +409,12 @@
 //评论列表
 #define CYCLE_CONTENT_COMMENT_LIST @"feelingcomment/"
 
+//用户上传背景
+#define CYCLE_CONTENT_BACKGROUND_UPLOAD @"feelingbackground/"
+//调用投融资板块展示顺序
+#define CYCLE_FINIAL_SORT  @"defaultclassify/"
+
+
 //用户下载头像
 //http://weini.im/upload//menuinfo//_EN_8427.jpg
 
@@ -433,6 +439,8 @@
 #define STATIC_USER_DEFAULT_PIC @"userDefaultPic"
 //用户头像
 #define STATIC_USER_HEADER_PIC @"userDefaultHeaderPic"
+//用户头像
+#define STATIC_USER_BACKGROUND_PIC @"userDefaultBackgroundPic"
 //用户性别
 #define STATIC_USER_GENDER @"userGender"
 //用户类别

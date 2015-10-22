@@ -476,13 +476,11 @@
     NSFileManager * fileManager=[NSFileManager defaultManager];  //文件管理
     //filePath=[filePath stringByAppendingFormat:@"/image/%@",fileName];
     if (![fileManager fileExistsAtPath:[filePath stringByAppendingFormat:@"/image/%@",fileName]]) {
-        //文件不存在
-        [self saveContentToFile:filePath content:image fileName:fileName  fileManager:fileManager];
+       return  [self saveContentToFile:filePath content:image fileName:fileName  fileManager:fileManager];
     }else{
         //文件已存在
-        [self saveContentToFile:filePath content:image fileName:fileName  fileManager:fileManager];
+       return  [self saveContentToFile:filePath content:image fileName:fileName  fileManager:fileManager];
     }
-    return TRUE;
 }
 
 +(BOOL)saveCameraPicture:(UIImage *)image fileName:(NSString *)fileName
@@ -490,8 +488,7 @@
     NSString* filePath=[self currentContentFilePath];  //获取路劲
     NSFileManager * fileManager=[NSFileManager defaultManager];  //文件管理
     //filePath=[filePath stringByAppendingFormat:@"/image/%@",fileName];
-    [self saveContentToFile:filePath content:image fileName:fileName  fileManager:fileManager];
-    return TRUE;
+    return  [self saveContentToFile:filePath content:image fileName:fileName  fileManager:fileManager];
 }
 
 //删除图片
@@ -541,28 +538,33 @@
     return filePath;
 }
 
-+(void)saveContentToFile:(NSString*)filePath content:(UIImage*)image fileName:(NSString*)fileName fileManager:(NSFileManager*)fileManager
++(BOOL)saveContentToFile:(NSString*)filePath content:(UIImage*)image fileName:(NSString*)fileName fileManager:(NSFileManager*)fileManager
 {
     NSError* error;
     
     NSData *data;
-    
-    if (UIImagePNGRepresentation(image) == nil) {
+    if ([self isValidPNGByImageData:image]) {
         data = UIImageJPEGRepresentation(image, 1);
-        
-    } else {
+    }else if([self isValidJPGByImageData:image]){
         data = UIImagePNGRepresentation(image);
-        
     }
-    filePath=[filePath stringByAppendingString:@"/image/"];
-    BOOL success=[fileManager createDirectoryAtPath:filePath withIntermediateDirectories:YES attributes:nil error:&error];
-    filePath=[filePath stringByAppendingString:fileName];
-    success= [fileManager createFileAtPath:filePath contents:data attributes:nil];
-    if(!success){
-        NSLog(@"Unable to save file:%@\nError:%@",filePath,error);
+    if (data) {
+        filePath=[filePath stringByAppendingString:@"/image/"];
+        BOOL success=[fileManager createDirectoryAtPath:filePath withIntermediateDirectories:YES attributes:nil error:&error];
+        filePath=[filePath stringByAppendingString:fileName];
+        success= [fileManager createFileAtPath:filePath contents:data attributes:nil];
+        if(!success){
+            NSLog(@"Unable to save file:%@\nError:%@",filePath,error);
+            return NO;
+        }else{
+            NSLog(@"文件保存成功！");
+            return YES;
+        }
     }else{
-        NSLog(@"文件保存成功！");
+        NSLog(@"文件保存失败！");
+        return NO;
     }
+    
 }
 +(UIImage *) getImageFromURL:(NSString *)fileURL {
     
@@ -573,6 +575,54 @@
     result = [UIImage imageWithData:data];
     return result;
     
+}
+
+/**
+ *  校验图片是否为有效的PNG图片
+ *
+ *  @param imageData 图片文件直接得到的NSData对象
+ *
+ *  @return 是否为有效的PNG图片
+ */
++ (BOOL)isValidPNGByImageData:(UIImage*)image
+{
+    //UIImage* image = [UIImage imageWithData:imageData];
+    //第一种情况：通过[UIImage imageWithData:data];直接生成图片时，如果image为nil，那么imageData一定是无效的
+    if (image == nil) {
+        return NO;
+    }
+    
+    //第二种情况：图片有部分是OK的，但是有部分坏掉了，它将通过第一步校验，那么就要用下面这个方法了。将图片转换成PNG的数据，如果PNG数据能正确生成，那么这个图片就是完整OK的，如果不能，那么说明图片有损坏
+    NSData* tempData = UIImagePNGRepresentation(image);
+    if (tempData == nil) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
+/**
+ *  校验图片是否为有效的JPG图片
+ *
+ *  @param imageData 图片文件直接得到的NSData对象
+ *
+ *  @return 是否为有效的PNG图片
+ */
++ (BOOL)isValidJPGByImageData:(UIImage*)image
+{
+    //第一种情况：通过[UIImage imageWithData:data];直接生成图片时，如果image为nil，那么imageData一定是无效的
+    if (image == nil) {
+        
+        return NO;
+    }
+    
+    //第二种情况：图片有部分是OK的，但是有部分坏掉了，它将通过第一步校验，那么就要用下面这个方法了。将图片转换成PNG的数据，如果PNG数据能正确生成，那么这个图片就是完整OK的，如果不能，那么说明图片有损坏
+    NSData* tempData = UIImageJPEGRepresentation(image,0);
+    if (tempData == nil) {
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 +(BOOL)checkImageExists:(NSString *)fileName
@@ -658,6 +708,26 @@
     {
         return NO;
     }
+}
+
+//对图片尺寸进行压缩--
++(UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize
+{
+    // Create a graphics image context
+    UIGraphicsBeginImageContext(newSize);
+    
+    // Tell the old image to draw in this new context, with the desired
+    // new size
+    [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    
+    // Get the new image from the context
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // End the context
+    UIGraphicsEndImageContext();
+    
+    // Return the new image.
+    return newImage;
 }
 
 +(NSMutableArray*)soreAsc:(NSMutableDictionary*)arr

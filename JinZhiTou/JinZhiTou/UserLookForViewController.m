@@ -10,8 +10,13 @@
 #import <QuartzCore/QuartzCore.h>
 #import "UConstants.h"
 #import "GlobalDefine.h"
+#import "HttpUtils.h"
+#import "LoadingUtil.h"
+#import "LoadingView.h"
+#import "NSString+SBJSON.h"
 @interface UserLookForViewController ()
 {
+    HttpUtils* httpUtils;
     UIScrollView* scrollView;
 }
 @end
@@ -20,7 +25,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.view.backgroundColor  = ColorTheme;
     self.title = @"用户详情";
     
@@ -86,6 +90,15 @@
     [self.contentView addSubview:label];
     
     [scrollView addSubview:self.contentView];
+}
+
+-(void)loadData
+{
+    if (!httpUtils) {
+        httpUtils = [[HttpUtils alloc]init];
+    }
+    [httpUtils getDataFromAPIWithOps:USERINFO postParam:[NSDictionary dictionaryWithObject:[self.dic valueForKey:@"id"] forKey:@"id"] type:0 delegate:self sel:@selector(requestFinished:)];
+    
 }
 
 - (void)didReceiveMemoryWarning {

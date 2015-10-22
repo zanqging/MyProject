@@ -417,4 +417,31 @@
  */
 +(void)setLabelMutableText:(UILabel*)label content:(NSString*)content lineSpacing:(float)lineSpacing headIndent:(CGFloat)indent;
 
+/**
+ *  校验图片是否为有效的PNG图片
+ *
+ *  @param imageData 图片文件直接得到的NSData对象
+ *
+ *  @return 是否为有效的PNG图片
+ */
++ (BOOL)isValidPNGByImageData:(UIImage*)image;
+
+/**
+ *  校验图片是否为有效的JPG图片
+ *
+ *  @param imageData 图片文件直接得到的NSData对象
+ *
+ *  @return 是否为有效的PNG图片
+ */
++ (BOOL)isValidJPGByImageData:(UIImage*)image;
+
+/**
+ *  对图片进行统一压缩
+ *
+ *  @param image   原始图片
+ *  @param newSize 大小
+ *
+ *  @return 压缩后图片
+ */
++(UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize;
 @end

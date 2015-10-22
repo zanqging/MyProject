@@ -15,16 +15,16 @@
 {
     if (self = [super initWithFrame:frame]) {
         self.nameLabel = [[UILabel alloc]init];
-        self.nameLabel.font = SYSTEMFONT(12);
+        self.nameLabel.font = SYSTEMFONT(13);
         self.atLabel = [[UILabel alloc]init];
-        self.atLabel.font = SYSTEMFONT(12);
+        self.atLabel.font = SYSTEMFONT(13);
         self.atNameLabel = [[UILabel alloc]init];
-        self.atNameLabel.font = SYSTEMFONT(12);
+        self.atNameLabel.font = SYSTEMFONT(13);
         self.atSuffixLabel = [[UILabel alloc]init];
-        self.atSuffixLabel.font = SYSTEMFONT(12);
+        self.atSuffixLabel.font = SYSTEMFONT(13);
         
         self.contentLabel = [[UILabel alloc]init];
-        self.contentLabel.font = SYSTEMFONT(12);
+        self.contentLabel.font = SYSTEMFONT(13);
         
         [self addSubview:self.contentLabel];
         [self addSubview:self.nameLabel];

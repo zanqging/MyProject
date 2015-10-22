@@ -12,4 +12,5 @@
 @property(retain,nonatomic)UIView* contentView;
 @property(retain,nonatomic)NavView* navView;
 @property(retain,nonatomic)NSDictionary* dic;
+@property(assign,nonatomic)NSInteger userId;
 @end

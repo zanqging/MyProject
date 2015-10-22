@@ -15,15 +15,18 @@
 #import "HttpUtils.h"
 #import "TDUtil.h"
 #import "DialogUtil.h"
+#import "UIImage+Crop.h"
 #import "NSString+SBJSON.h"
-@interface PublishViewController ()
+#import "PECropViewController.h"
+#import "CustomImagePickerController.h"
+@interface PublishViewController ()<CustomImagePickerControllerDelegate>
 {
     NSMutableArray *_selections;
     UIScrollView* scrollView;
     
     HttpUtils* httpUtils;
 }
-
+@property(retain,nonatomic)CustomImagePickerController* customPicker;
 @end
 
 @implementation PublishViewController
@@ -62,7 +65,7 @@
     
     float w =(WIDTH(self.view)-50)/4;
     self.btnSelect = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, w, w)];
-    [self.btnSelect addTarget:self action:@selector(btnSelect:) forControlEvents:UIControlEventTouchUpInside];
+    [self.btnSelect addTarget:self action:@selector(showSecureTextEntryAlert) forControlEvents:UIControlEventTouchUpInside];
     [self.btnSelect setTitle:@"+" forState:UIControlStateNormal];
     [self.btnSelect.titleLabel setFont:[UIFont fontWithName:@"Arial" size:75]];
     [self.btnSelect setBackgroundColor:[UIColor lightGrayColor]];
@@ -85,18 +88,54 @@
     
     NSString* content = self.textView.text;
     NSMutableArray* postArray = [[NSMutableArray alloc]init];
-    for (int i=0; i<self.imgSelectAssetArray.count; i++) {
-        UIImage* image = self.imgSelectArray[i];
-        [TDUtil saveContent:image fileName:[NSString stringWithFormat:@"file%d",i]];
-        [postArray addObject:[NSString stringWithFormat:@"file%d",i]];
+    int i=0;
+    for (UIView* v in self.imgContentView.subviews) {
+        if ([v isKindOfClass:UIImageView.class]) {
+            UIImage* image = (UIImage*)self.imgSelectArray[i];
+            image = [image imageByCroppingSelf];
+//            CGSize imageSize = image.size;
+//            imageSize.height =626;
+//            imageSize.width =413;
+//            image = [TDUtil imageWithImage:image scaledToSize:imageSize];
+            BOOL flag = [TDUtil saveContent:image fileName:[NSString stringWithFormat:@"file%d",i]];
+            if (flag) {
+                [postArray addObject:[NSString stringWithFormat:@"file%d",i]];
+                i++;
+            }
+        }
     }
     
     [httpUtils getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:[NSDictionary dictionaryWithObject:content forKey:@"content"] files:postArray postName:@"file" type:0 delegate:self sel:@selector(requestPublishContent:)];
+
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)showSecureTextEntryAlert {
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    
+    __block PublishViewController* blockSelf = self;
+    // Create the actions.
+    UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [blockSelf takePhoto:nil];
+    }];
+    
+    UIAlertAction *chooiceAction = [UIAlertAction actionWithTitle:@"相册选择" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [blockSelf btnSelect:nil];
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        
+    }];
+    
+    
+    
+    // Add the actions.
+    [alertController addAction:takePhotoAction];
+    [alertController addAction:chooiceAction];
+    [alertController addAction:cancelAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 
@@ -186,7 +225,7 @@
 
 -(void)back:(id)sender
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self dissmissController];
 }
 
 -(void)getSelectImage:(NSArray *)imageArr
@@ -355,7 +394,7 @@
                 // 在资源的集合中获取第一个集合，并获取其中的图片
                 PHCachingImageManager *imageManager = [[PHCachingImageManager alloc] init];
                 [imageManager requestImageForAsset:photo
-                                        targetSize:CGSizeMake(70, 7)
+                                        targetSize:PHImageManagerMaximumSize
                                        contentMode:PHImageContentModeDefault
                                            options:nil
                                      resultHandler:^(UIImage *result, NSDictionary *info) {
@@ -484,7 +523,93 @@
     
 }
 
+#pragma UploadPic
+//*********************************************************照相机功能*****************************************************//
 
+
+//照相功能
+
+-(void)takePhoto:(NSDictionary*)dic
+{
+    [self showPicker];
+}
+
+- (void)showPicker
+{
+    CustomImagePickerController* picker = [[CustomImagePickerController alloc] init];
+    
+    //创建返回按钮
+    UIButton* btn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, NUMBERFORTY, NUMBERTHIRTY)];
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc]initWithCustomView:btn];
+    [leftButton setStyle:UIBarButtonItemStylePlain];
+    //创建设置按钮
+    btn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, NUMBERFORTY, NUMBERTHIRTY)];
+    btn.tintColor=WriteColor;
+    btn.titleLabel.textColor=WriteColor;
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc]initWithCustomView:btn];
+    
+    picker.navigationItem.leftBarButtonItem=leftButton;
+    picker.navigationItem.rightBarButtonItem=rightButton;
+    
+    if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
+        [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
+    }else{
+        [picker setIsSingle:YES];
+        [picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+    }
+    picker.modalPresentationStyle = UIModalPresentationCurrentContext;
+    [picker setCustomDelegate:self];
+    self.customPicker=picker;
+    [self presentViewController:self.customPicker animated:YES completion:nil];
+}
+
+- (void)cameraPhoto:(UIImage *)imageCamera  //选择完图片
+{
+    [self openEditor:imageCamera];
+}
+
+- (void)openEditor:(UIImage*)imageCamera
+{
+    PECropViewController *controller = [[PECropViewController alloc] init];
+    controller.delegate = self;
+    controller.image = imageCamera;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    
+    [self presentViewController:navigationController animated:YES completion:NULL];
+}
+
+- (void)cropViewController:(PECropViewController *)controller didFinishCroppingImage:(UIImage *)croppedImage
+{
+    [controller dismissViewControllerAnimated:YES completion:NULL];
+    MWPhoto* photo  = [MWPhoto photoWithImage:croppedImage];
+    if (!self.imgSelectAssetArray) {
+        self.imgSelectAssetArray = [[NSMutableArray alloc]init];
+    }
+    [self.imgSelectAssetArray addObject:photo];
+    if (!self.imgSelectArray) {
+        self.imgSelectArray = [[NSMutableArray alloc]init];
+    }
+    [self.imgSelectArray addObject:croppedImage];
+    
+    [self getSelectImage:self.imgSelectArray];
+}
+
+
+-(void)cropViewControllerDidCancel:(PECropViewController *)controller
+{
+    [controller dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+//取消照相
+-(void)cancelCamera
+{
+    
+}
+
+
+//*********************************************************照相机功能结束*****************************************************//
 #pragma ASIHttpRequest
 -(void)requestPublishContent:(ASIHTTPRequest*)request
 {
@@ -495,10 +620,9 @@
     if (dic!=nil) {
         NSString* status = [dic valueForKey:@"status"];
         if ([status integerValue] == 0) {
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"发布内容成功!"];
-            
-            [self.controller loadData];
-            
+            //[self.controller loadData];
+            NSDictionary* dataDic = [dic valueForKey:@"data"];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"publishContent" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:dataDic,@"data", nil]];
             [self performSelector:@selector(dissmissController) withObject:nil afterDelay:1];
         }
     }

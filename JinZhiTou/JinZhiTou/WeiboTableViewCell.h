@@ -17,6 +17,7 @@
 -(void)weiboTableViewCell:(id)weiboTableViewCell userId:(NSString*)userId isSelf:(BOOL) isSelf;
 -(void)weiboTableViewCell:(id)weiboTableViewCell contentId:(NSString*)contentId atId:(NSString*)atId isSelf:(BOOL) isSelf;
 -(void)weiboTableViewCell:(id)weiboTableViewCell deleteDic:(NSDictionary*)dic;
+-(void)weiboTableViewCell:(id)weiboTableViewCell priseDic:(NSDictionary*)dic msg:(NSString*)msg;
 -(void)weiboTableViewCell:(id)weiboTableViewCell refresh:(BOOL)refresh;
 
 @end
@@ -25,6 +26,7 @@
 {
     NSMutableArray *_selections;
     HttpUtils* httpUtils;
+    int currentTag; //当前删除模式
     NSIndexPath* currentSelectedCellIndex;
 }
 @property (retain, nonatomic)  UITableView *tableView;

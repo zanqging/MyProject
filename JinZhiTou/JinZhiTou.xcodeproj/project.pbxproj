@@ -102,6 +102,7 @@
 		453271A01B751CCA0044F8C1 /* AboutUsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4532719F1B751CCA0044F8C1 /* AboutUsViewController.m */; };
 		453271A31B751E830044F8C1 /* UserCollecteTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 453271A21B751E830044F8C1 /* UserCollecteTableViewCell.m */; };
 		453271A61B751EA00044F8C1 /* UserFinialTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 453271A51B751EA00044F8C1 /* UserFinialTableViewCell.m */; };
+		45367D801BD8B6BC00039253 /* CycleHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 45367D7F1BD8B6BC00039253 /* CycleHeader.m */; };
 		453E23D41B7DA3570023BB00 /* UITableViewCustomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 453E23D31B7DA3570023BB00 /* UITableViewCustomView.m */; };
 		453E23D81B7DB0FD0023BB00 /* SignViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453E23D71B7DB0FD0023BB00 /* SignViewController.m */; };
 		453E23DC1B7DB6040023BB00 /* MZTimerLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 453E23DB1B7DB6040023BB00 /* MZTimerLabel.m */; };
@@ -367,6 +368,7 @@
 		45FCD05E1B75E216009AD6E3 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FCD04E1B75E216009AD6E3 /* UIView+WebCacheOperation.m */; };
 		45FD343A1BB53DC60065739E /* code.png in Resources */ = {isa = PBXBuildFile; fileRef = 45FD34391BB53DC60065739E /* code.png */; };
 		45FD86CD1B6A14A900823451 /* VoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FD86CC1B6A14A900823451 /* VoteViewController.m */; };
+		45FE76CF1BD742AE002D4F04 /* UIImage+Crop.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FE76CE1BD742AE002D4F04 /* UIImage+Crop.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -534,6 +536,8 @@
 		453271A21B751E830044F8C1 /* UserCollecteTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserCollecteTableViewCell.m; path = View/UserInfo/Cell/UserCollecteTableViewCell.m; sourceTree = "<group>"; };
 		453271A41B751EA00044F8C1 /* UserFinialTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserFinialTableViewCell.h; path = View/UserInfo/Cell/UserFinialTableViewCell.h; sourceTree = "<group>"; };
 		453271A51B751EA00044F8C1 /* UserFinialTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserFinialTableViewCell.m; path = View/UserInfo/Cell/UserFinialTableViewCell.m; sourceTree = "<group>"; };
+		45367D7E1BD8B6BC00039253 /* CycleHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CycleHeader.h; sourceTree = "<group>"; };
+		45367D7F1BD8B6BC00039253 /* CycleHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CycleHeader.m; sourceTree = "<group>"; };
 		453E23D21B7DA3570023BB00 /* UITableViewCustomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UITableViewCustomView.h; path = Controller/UITableViewCustomView.h; sourceTree = "<group>"; };
 		453E23D31B7DA3570023BB00 /* UITableViewCustomView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UITableViewCustomView.m; path = Controller/UITableViewCustomView.m; sourceTree = "<group>"; };
 		453E23D61B7DB0FD0023BB00 /* SignViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SignViewController.h; path = Controller/UserInfo/SignViewController.h; sourceTree = "<group>"; };
@@ -1010,6 +1014,8 @@
 		45FD34391BB53DC60065739E /* code.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = code.png; sourceTree = "<group>"; };
 		45FD86CB1B6A14A900823451 /* VoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VoteViewController.h; path = Controller/Final/VoteViewController.h; sourceTree = "<group>"; };
 		45FD86CC1B6A14A900823451 /* VoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VoteViewController.m; path = Controller/Final/VoteViewController.m; sourceTree = "<group>"; };
+		45FE76CD1BD742AE002D4F04 /* UIImage+Crop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Crop.h"; path = "../UIImage+Crop.h"; sourceTree = "<group>"; };
+		45FE76CE1BD742AE002D4F04 /* UIImage+Crop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Crop.m"; path = "../UIImage+Crop.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1351,6 +1357,8 @@
 				4543EB011BD08E0F0041DCBD /* MWTapDetectingView.m */,
 				4543EB021BD08E0F0041DCBD /* MWZoomingScrollView.h */,
 				4543EB031BD08E0F0041DCBD /* MWZoomingScrollView.m */,
+				45FE76CD1BD742AE002D4F04 /* UIImage+Crop.h */,
+				45FE76CE1BD742AE002D4F04 /* UIImage+Crop.m */,
 				4543EB041BD08E0F0041DCBD /* UIImage+MWPhotoBrowser.h */,
 				4543EB051BD08E100041DCBD /* UIImage+MWPhotoBrowser.m */,
 			);
@@ -1558,6 +1566,8 @@
 				4543EAE71BD08DDE0041DCBD /* ReplyTableViewCell.m */,
 				4543EAE81BD08DDE0041DCBD /* UserLookForViewController.h */,
 				4543EAE91BD08DDE0041DCBD /* UserLookForViewController.m */,
+				45367D7E1BD8B6BC00039253 /* CycleHeader.h */,
+				45367D7F1BD8B6BC00039253 /* CycleHeader.m */,
 				4543EAEA1BD08DDE0041DCBD /* WeiboTableViewCell.h */,
 				4543EAEB1BD08DDE0041DCBD /* WeiboTableViewCell.m */,
 				4543EAD21BD08DCB0041DCBD /* ActionDetailViewController.h */,
@@ -2339,7 +2349,7 @@
 				TargetAttributes = {
 					45DEACE71B437879001EDA5D = {
 						CreatedOnToolsVersion = 6.3.2;
-						DevelopmentTeam = FS28DNM2QR;
+						DevelopmentTeam = PT9XT89LQL;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -2525,6 +2535,7 @@
 				45326EF81B732A7F0044F8C1 /* UserInfoHeader.m in Sources */,
 				4517CDBD1B78C7ED00EFBB6A /* AFSecurityPolicy.m in Sources */,
 				45E811FB1B6717D1009F840D /* RoadShowDetailViewController.m in Sources */,
+				45FE76CF1BD742AE002D4F04 /* UIImage+Crop.m in Sources */,
 				45E812031B6748BE009F840D /* RoadShowTableViewCell.m in Sources */,
 				4543EAE01BD08DCB0041DCBD /* CyclePriseTableViewCell.m in Sources */,
 				452381111BAFE21E00C1144A /* UserTraceViewController.m in Sources */,
@@ -2694,6 +2705,7 @@
 				45F09C651B86297B0065D873 /* DialogUtil.m in Sources */,
 				45D27B921BC66BF700ECD9D7 /* ReplyView.m in Sources */,
 				45FCD05D1B75E216009AD6E3 /* UIImageView+WebCache.m in Sources */,
+				45367D801BD8B6BC00039253 /* CycleHeader.m in Sources */,
 				450876371B8F656A006EFC1A /* BoxModel.m in Sources */,
 				45A2ADA01B71A08B00751F78 /* PhotoAdd.m in Sources */,
 				453E23E21B7E2CA30023BB00 /* FinialSuccessViewController.m in Sources */,
@@ -2820,8 +2832,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Lu Liu (WKWLHQSAU5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shaanxi gold investment enterprise management consulting Co., Ltd. (PT9XT89LQL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_NS_ASSERTIONS = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2837,7 +2849,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1264b681-7bfc-423d-8e28-2da41ee455b7";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -2848,8 +2860,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Lu Liu (WKWLHQSAU5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shaanxi gold investment enterprise management consulting Co., Ltd. (PT9XT89LQL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2864,7 +2876,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1264b681-7bfc-423d-8e28-2da41ee455b7";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

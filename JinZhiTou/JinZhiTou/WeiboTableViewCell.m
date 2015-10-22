@@ -117,7 +117,7 @@
         httpUtils = [[HttpUtils alloc]init];
     }
     NSString* serverUrl = [CYCLE_CONTENT_PRISE stringByAppendingFormat:@"%@/%d/",[self.dic
-                           valueForKey:@"id"],![[self.dic valueForKey:@"is_like"] boolValue]];
+                           valueForKey:@"id"],[[self.dic valueForKey:@"is_like"] boolValue]];
     [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestPriseFinished:)];
 }
 
@@ -129,18 +129,18 @@
 
 -(void)deleteAction:(id)sender
 {
-    if (!httpUtils) {
-        httpUtils = [[HttpUtils alloc]init];
-    }
-    NSString* serverUrl = [CYCLE_CONTENT_DELETE stringByAppendingFormat:@"%@/",[self.dic
-                                                                                  valueForKey:@"id"]];
-    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestDeleteFinished:)];
+    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"删除" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除", nil];
+    alertView.tag  = [[self.dic valueForKey:@"id"] integerValue];
+    alertView.delegate = self;
+    [alertView show];
+    currentTag =1;
 
 }
 
 - (IBAction)expandAction:(id)sender {
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:[NSString stringWithFormat:@"展开/收缩:%d",self.expandButton.isSelected] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alertView show];
+//    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:[NSString stringWithFormat:@"展开/收缩:%d",self.expandButton.isSelected] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//    [alertView show];
+    [self UserInfoAction:self.nameLabel.gestureRecognizers[0]];
 }
 
 -(void)UserInfoAction:(UITapGestureRecognizer*)sender
@@ -171,6 +171,7 @@
         alertView.tag  = [[dic valueForKey:@"id"] integerValue];
         alertView.delegate = self;
         [alertView show];
+        currentTag = 0;
     }
 }
 
@@ -274,13 +275,13 @@
 
 -(void)showImage:(UITapGestureRecognizer*)sender
 {
-    NSMutableArray* dataArray = [self.dic valueForKey:@"imageName"];
+    NSMutableArray* dataArray = [self.dic valueForKey:@"pics"];
     
     MWPhoto* photo;
     NSMutableArray* thumbs = [NSMutableArray new];
     
     for (int i= 0 ; i <dataArray.count;i++) {
-        photo = [MWPhoto photoWithImage:[UIImage imageNamed:dataArray[i]]];
+        photo = [MWPhoto photoWithURL:[NSURL URLWithString:dataArray[i]]];
         [thumbs addObject:photo];
     }
     self.thumbs = thumbs;
@@ -319,11 +320,21 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex==1) {
-        if (!httpUtils) {
-            httpUtils = [[HttpUtils alloc]init];
+        if (currentTag==0) {
+            if (!httpUtils) {
+                httpUtils = [[HttpUtils alloc]init];
+            }
+            NSString* serverUrl = [CYCLE_CONTENT_REPLY_DELETE stringByAppendingFormat:@"%ld/",alertView.tag];
+            [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestDeleteReplyFinished:)];
+        }else{
+            if (!httpUtils) {
+                httpUtils = [[HttpUtils alloc]init];
+            }
+            NSString* serverUrl = [CYCLE_CONTENT_DELETE stringByAppendingFormat:@"%@/",[self.dic
+                                                                                        valueForKey:@"id"]];
+            [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestDeleteFinished:)];
         }
-        NSString* serverUrl = [CYCLE_CONTENT_REPLY_DELETE stringByAppendingFormat:@"%ld/",alertView.tag];
-        [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestDeleteReplyFinished:)];
+        
     }
 }
 
@@ -409,15 +420,12 @@
         NSInteger value = pics.count;
         NSInteger number = value/3;
         
-        float width =80;
         if ( value % 3 !=0) {
-            width = 240;
             number++;
         }else if (value<3 && value >0){
             number++;
-            width =value*80;
         }
-        self.imgContentView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.dateTimeLabel)+10,width, number*80)];
+        self.imgContentView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.dateTimeLabel)+10,240, number*80)];
         [self addSubview:self.imgContentView];
         
         UIImageView* imgView;
@@ -427,11 +435,13 @@
         for (int i = 0; i < value; i ++) {
             imgView = [[UIImageView alloc]initWithFrame:CGRectMake(pos_x, pos_y, 70, 70)];
             imgView.tag = i;
+            imgView.layer.masksToBounds = YES;
             imgView.userInteractionEnabled  = YES;
-            [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showImage:)]];
             [self.imgContentView addSubview:imgView];
+            imgView.contentMode = UIViewContentModeScaleAspectFill;
             NSURL* url =[NSURL URLWithString:[pics objectAtIndex:i]];
             [imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"coremember")];
+            [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showImage:)]];
             
             [array addObject:[NSString stringWithFormat:@"%d",i+1]];
             pos_x += 70+10;
@@ -442,9 +452,10 @@
                 number++;
             }
         }
-        NSMutableDictionary* dictemp = [[NSMutableDictionary alloc]init];
         
-        [dictemp setValue:array forKey:@"imageName"];
+//        NSMutableDictionary* dictemp = [[NSMutableDictionary alloc]init];
+//        
+//        [dictemp setValue:array forKey:@"imageName"];
         
         //分享点赞
         self.funView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.imgContentView), WIDTH(self)-80, 30)];
@@ -459,7 +470,7 @@
         self.criticalButton = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self.funView)-70, 0, 50, 25)];
         [self.criticalButton setTitleColor:FONT_COLOR_GRAY forState:UIControlStateNormal];
         [self.criticalButton setTitle:[NSString stringWithFormat:@"%ld",dataCriticalArray.count] forState:UIControlStateNormal];
-        [self.criticalButton.titleLabel setFont:FONT(@"Arial", 10)];
+        [self.criticalButton.titleLabel setFont:FONT(@"Arial", 13)];
         [self.criticalButton addTarget:self action:@selector(commentAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.criticalButton setImage:IMAGENAMED(@"gossip_comment") forState:UIControlStateNormal];
         [self.funView addSubview:self.criticalButton];
@@ -468,7 +479,7 @@
         self.shareButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.criticalButton)-50, Y(self.criticalButton), WIDTH(self.criticalButton), HEIGHT(self.criticalButton))];
         [self.shareButton setTitleColor:FONT_COLOR_GRAY forState:UIControlStateNormal];
         [self.shareButton setTitle:@"转发" forState:UIControlStateNormal];
-        [self.shareButton.titleLabel setFont:FONT(@"Arial", 10)];
+        [self.shareButton.titleLabel setFont:FONT(@"Arial", 13)];
         [self.shareButton addTarget:self action:@selector(shareAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.shareButton setImage:IMAGENAMED(@"gossip_share") forState:UIControlStateNormal];
         [self.funView addSubview:self.shareButton];
@@ -478,7 +489,7 @@
         self.priseButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.shareButton)-50, Y(self.shareButton), WIDTH(self.shareButton), HEIGHT(self.shareButton))];
         [self.priseButton setTitleColor:FONT_COLOR_GRAY forState:UIControlStateNormal];
         [self.priseButton setTitle:[NSString stringWithFormat:@"%ld",dataPriseArray.count] forState:UIControlStateNormal];
-        [self.priseButton.titleLabel setFont:FONT(@"Arial", 10)];
+        [self.priseButton.titleLabel setFont:FONT(@"Arial", 13)];
         [self.priseButton addTarget:self action:@selector(priseAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.priseButton setImage:IMAGENAMED(@"gossip_like_normal") forState:UIControlStateNormal];
         [self.funView addSubview:self.priseButton];
@@ -494,7 +505,7 @@
     //点赞评论区域
     NSArray* dataPriseArray = [self.dic valueForKey:@"likers"];
     if (!self.priseView) {
-        self.priseView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView)+5, WIDTH(self.funView), 10)];
+        self.priseView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView)+5, WIDTH(self.funView), 13)];
         [self addSubview:self.priseView];
     }else{
         [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView), 10)];
@@ -512,10 +523,10 @@
     int num=0;
     for (int i = 0; i<dataPriseArray.count; i++) {
         dic =dataPriseArray[i];
-        label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x,pos_y, 40, 15)];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x,pos_y, 50, 15)];
         label.index =[NSString stringWithFormat:@"%@",[dic valueForKey:@"uid"]];
         label.text  =[NSString stringWithFormat:@"%@,",[dic valueForKey:@"name"]];
-        label.font  = FONT(@"Arial", 10);
+        label.font  = FONT(@"Arial", 13);
         label.textColor = [UIColor blueColor];
         label.userInteractionEnabled = YES;
         [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
@@ -579,7 +590,7 @@
         [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView), num*25+comment_height+HEIGHT(self.priseListView)+height)];
     }
     if (dataPriseArray.count>0) {
-        UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(15, 5, 15, 15)];
+        UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(10, 0, 20, 20)];
         imgview.image = IMAGENAMED(@"like_white");
         [self.priseView addSubview:imgview];
     }
@@ -671,12 +682,11 @@
                 [self.priseButton setTitle:[NSString stringWithFormat:@"%ld",--num] forState:UIControlStateNormal];
             }
             
-            //[self setPriseListData];
-            if ([_delegate respondsToSelector:@selector(weiboTableViewCell:refresh:)]) {
-                [_delegate weiboTableViewCell:self refresh:YES];
+            if ([_delegate respondsToSelector:@selector(weiboTableViewCell:priseDic:msg:)]) {
+                [_delegate weiboTableViewCell:self  priseDic:[dic valueForKey:@"data"] msg:[dic valueForKey:@"msg"]];
             }
         }
-        [[DialogUtil sharedInstance]showDlg:self.superview textOnly:[dic valueForKey:@"msg"]];
+
     }
 }
 

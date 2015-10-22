@@ -8,28 +8,33 @@
 
 #import "ViewController.h"
 #import "ActionDetailViewController.h"
-#import "GlobalDefine.h"
-#import "UConstants.h"
-#import "HttpUtils.h"
 #import "TDUtil.h"
-#import "LoadingUtil.h"
-#import "LoadingView.h"
 #import "MJRefresh.h"
+#import "HttpUtils.h"
 #import "DialogUtil.h"
+#import "UConstants.h"
+#import "LoadingView.h"
+#import "LoadingUtil.h"
+#import "CycleHeader.h"
+#import "GlobalDefine.h"
 #import "NSString+SBJSON.h"
 #import "DAKeyboardControl.h"
+#import "PECropViewController.h"
 #import "PublishViewController.h"
 #import "UserLookForViewController.h"
-@interface ViewController ()<WeiboTableViewCellDelegate>
+#import "CustomImagePickerController.h"
+@interface ViewController ()<WeiboTableViewCellDelegate,CustomImagePickerControllerDelegate>
 {
     BOOL isRefresh;
+    CycleHeader* headerView;
     LoadingView* loadingView;
     NSInteger currentPage;
     HttpUtils* httpUtils;
     UITextField *textField;
     NSString* conId,* atConId;
+    WeiboTableViewCell* currentSelectedCell;
 }
-
+@property(retain,nonatomic)CustomImagePickerController* customPicker;
 @end
 
 @implementation ViewController
@@ -51,11 +56,11 @@
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     
-    [self.navView.rightButton setImage:IMAGENAMED(@"feed_action_share_normal") forState:UIControlStateNormal];
+    [self.navView.rightButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(publishAction:)]];
     [self.view addSubview:self.navView];
     
-    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-170)];
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-70)];
     self.tableView.bounces=YES;
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
@@ -64,16 +69,19 @@
     self.tableView.showsVerticalScrollIndicator=NO;
     self.tableView.showsHorizontalScrollIndicator=NO;
     self.tableView.separatorStyle=UITableViewCellSeparatorStyleSingleLine;
-    
     [self.view addSubview:self.tableView];
     
     [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
     
     [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     
+    //头部
+    headerView = [[CycleHeader alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 200)];
+    [headerView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(takePhoto:)]];
+    [self.tableView setTableHeaderView:headerView];
     
     UIToolbar *toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f,
-                                                                     self.view.bounds.size.height - 40.0f,
+                                                                     self.view.bounds.size.height,
                                                                      self.view.bounds.size.width,
                                                                      40.0f)];
     toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
@@ -97,9 +105,7 @@
                                   29.0f);
     [toolBar addSubview:sendButton];
     
-    
     self.view.keyboardTriggerOffset = toolBar.bounds.size.height;
-    __block ViewController* viewSelf = self;
     [self.view addKeyboardPanningWithFrameBasedActionHandler:^(CGRect keyboardFrameInView, BOOL opening, BOOL closing) {
         /*
          Try not to call "self" inside this block (retain cycle).
@@ -108,9 +114,9 @@
          [self.view removeKeyboardControl];
          */
         
-//        CGRect toolBarFrame = toolBar.frame;
-//        toolBarFrame.origin.y = keyboardFrameInView.origin.y - toolBarFrame.size.height;
-//        toolBar.frame = toolBarFrame;
+        CGRect toolBarFrame = toolBar.frame;
+        toolBarFrame.origin.y = keyboardFrameInView.origin.y - toolBarFrame.size.height;
+        toolBar.frame = toolBarFrame;
         
 //        CGRect tableViewFrame = viewSelf.tableView.frame;
 //        tableViewFrame.size.height = toolBarFrame.origin.y;
@@ -121,8 +127,10 @@
     httpUtils = [[HttpUtils alloc]init];
     loadingView = [LoadingUtil shareinstance:self.view];
     [LoadingUtil show:loadingView];
-    
     [self loadData];
+    
+    //添加监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContentNotification:) name:@"publishContent" object:nil];
 }
 
 -(void)loadData
@@ -163,6 +171,14 @@
     }
 }
 
+-(void)publishContentNotification:(NSDictionary*)dic
+{
+    NSDictionary* dataDic = [[dic valueForKey:@"userInfo"] valueForKey:@"data"];
+    if (dataDic) {
+        [self.dataArray insertObject:dataDic atIndex:0];
+        [self.tableView reloadData];
+    }
+}
 -(void)userInfoAction:(id)sender
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:@"userInfo" object:nil];
@@ -170,7 +186,6 @@
 
 -(void)commentAction:(id)sender
 {
-    [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"回复消息"];
     NSString* content = textField.text;
     if(!httpUtils){
         httpUtils = [[HttpUtils alloc]init];
@@ -196,9 +211,38 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [textField resignFirstResponder];
+    
+    NSDictionary* dic = self.dataArray[indexPath.row];
+    //内容
+    NSString* content = [dic valueForKey:@"content"];
+    NSInteger picsCount = [[dic valueForKey:@"pics"] count];
+    
+    
+    int number = [TDUtil convertToInt:content] / 17;
+    if (number==0) {
+        if ([content length]>0) {
+            number++;
+        }
+    }
+    
+    CGFloat height = number*25;
+    if(picsCount>0 && picsCount<=3){
+        height +=70;
+    }else{
+        if (picsCount%3!=0) {
+            height += (picsCount/3+1)*80;
+        }else{
+            height += (picsCount/3)*80;
+        }
+    }
+    
+    
+    height+=160;
     
     ActionDetailViewController* controller = [[ActionDetailViewController alloc]init];
     controller.dic = self.dataArray[indexPath.row];
+    controller.headerHeight =height;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -222,8 +266,10 @@
     }
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    NSMutableDictionary* dic =self.dataArray[indexPath.row];
-    cell.dic =dic;
+    if(self.dataArray.count>0){
+        NSMutableDictionary* dic =self.dataArray[indexPath.row];
+        cell.dic =dic;
+    }
     return cell;
 }
 
@@ -244,6 +290,7 @@
 {
     atConId  =atId;
     conId  =contentId;
+    currentSelectedCell = weiboTableViewCell;
     [textField becomeFirstResponder];
 }
 
@@ -255,6 +302,33 @@
     }
 }
 
+-(void)weiboTableViewCell:(id)weiboTableViewCell priseDic:(NSDictionary *)dic msg:(NSString *)msg
+{
+    NSIndexPath* indexPath = [self.tableView indexPathForCell:weiboTableViewCell];
+    if (dic) {
+        if ([[dic valueForKey:@"is_like"] boolValue]) {
+            NSDictionary* dicTemp = self.dataArray[indexPath.row];
+            NSMutableArray* array = [dicTemp valueForKey:@"likers"];
+            [array insertObject:dic atIndex:0];
+            [dicTemp setValue:array forKey:@"likers"];
+            self.dataArray[indexPath.row] = dicTemp;
+        }else{
+            NSDictionary* dicTemp = self.dataArray[indexPath.row];
+            NSMutableArray* array = [dicTemp valueForKey:@"likers"];
+            for (int i= 0 ;i<array.count;i++) {
+                NSDictionary* d = array[i];
+                if ([[d valueForKey:@"uid"]integerValue]==[[dic valueForKey:@"uid"] integerValue]) {
+                    [array removeObject:d];
+                }
+            }
+            [dicTemp setValue:array forKey:@"likers"];
+            self.dataArray[indexPath.row] = dicTemp;
+        }
+        [self.tableView reloadData];
+    }
+//    [[DialogUtil sharedInstance]showDlg:self.view textOnly:msg];
+    
+}
 -(void)weiboTableViewCell:(id)weiboTableViewCell refresh:(BOOL)refresh
 {
     if (refresh) {
@@ -336,6 +410,98 @@
     height+=140;
     return height;
 }
+
+#pragma UploadPic
+//*********************************************************照相机功能*****************************************************//
+
+
+//照相功能
+
+-(void)takePhoto:(NSDictionary*)dic
+{
+    [self showPicker];
+}
+
+- (void)showPicker
+{
+    CustomImagePickerController* picker = [[CustomImagePickerController alloc] init];
+    
+    //创建返回按钮
+    UIButton* btn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, NUMBERFORTY, NUMBERTHIRTY)];
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc]initWithCustomView:btn];
+    [leftButton setStyle:UIBarButtonItemStylePlain];
+    //创建设置按钮
+    btn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, NUMBERFORTY, NUMBERTHIRTY)];
+    btn.tintColor=WriteColor;
+    btn.titleLabel.textColor=WriteColor;
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc]initWithCustomView:btn];
+    
+    picker.navigationItem.leftBarButtonItem=leftButton;
+    picker.navigationItem.rightBarButtonItem=rightButton;
+    
+    if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
+        [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
+    }else{
+        [picker setIsSingle:YES];
+        [picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+    }
+    picker.modalPresentationStyle = UIModalPresentationCurrentContext;
+    [picker setCustomDelegate:self];
+    self.customPicker=picker;
+    [self presentViewController:self.customPicker animated:YES completion:nil];
+}
+
+- (void)cameraPhoto:(UIImage *)imageCamera  //选择完图片
+{
+    [self openEditor:imageCamera];
+}
+
+- (void)openEditor:(UIImage*)imageCamera
+{
+    PECropViewController *controller = [[PECropViewController alloc] init];
+    controller.delegate = self;
+    controller.image = imageCamera;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    
+    [self presentViewController:navigationController animated:YES completion:NULL];
+}
+
+- (void)cropViewController:(PECropViewController *)controller didFinishCroppingImage:(UIImage *)croppedImage
+{
+    [controller dismissViewControllerAnimated:YES completion:NULL];
+    //保存图片
+    [TDUtil saveCameraPicture:croppedImage fileName:STATIC_USER_BACKGROUND_PIC];
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"changeUserPic" object:nil userInfo:[NSDictionary dictionaryWithObject:croppedImage forKey:@"img"]];
+    
+    //开始上传
+    [self uploadUserPic:0];
+}
+
+
+-(void)cropViewControllerDidCancel:(PECropViewController *)controller
+{
+    [controller dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+//取消照相
+-(void)cancelCamera
+{
+    
+}
+
+
+//上传身份证
+-(void)uploadUserPic:(NSInteger)id
+{
+    [httpUtils getDataFromAPIWithOps:CYCLE_CONTENT_BACKGROUND_UPLOAD postParam:nil file:STATIC_USER_BACKGROUND_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUploadHeaderImg:)];
+}
+
+
+
+//*********************************************************照相机功能结束*****************************************************//
 #pragma ASIHttpRequest
 -(void)requestData:(ASIHTTPRequest*)request
 {
@@ -373,6 +539,27 @@
     }
 }
 
+/**
+ *  上传照片
+ *
+ *  @param request 返回上传结果
+ */
+-(void)requestUploadHeaderImg:(ASIHTTPRequest *)request{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        NSString* status = [jsonDic valueForKey:@"status"];
+        if ([status intValue] == 0) {
+            headerView.headerBackView.image  =[TDUtil loadContent:STATIC_USER_BACKGROUND_PIC];
+        }
+        
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+    }
+}
+
 -(void)requestReply:(ASIHTTPRequest*)request
 {
     NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
@@ -382,7 +569,15 @@
     if (dic!=nil) {
         NSString* status = [dic valueForKey:@"status"];
         if ([status integerValue] ==0) {
-            [self loadData];
+            [textField resignFirstResponder];
+            //currentSelectedCell.dic = [dic valueForKey:@"data"];
+            NSIndexPath* indexPath = [self.tableView indexPathForCell:currentSelectedCell];
+            NSDictionary* dataDic = self.dataArray[indexPath.row];
+            NSMutableArray* array =[dataDic  valueForKey:@"comment"];
+            NSDictionary* dicTemp = [dic valueForKey:@"data"];
+            [array insertObject:dicTemp atIndex:0];
+            self.dataArray[indexPath.row] = dataDic;
+            [self.tableView reloadData];
         }
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
     }
