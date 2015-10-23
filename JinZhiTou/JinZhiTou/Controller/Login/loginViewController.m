@@ -18,6 +18,7 @@
 #import "RegisteViewController.h"
 #import "UserInfoViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ForgetPassViewController.h"
 #import "MMExampleDrawerVisualStateManager.h"
 @interface loginViewController ()<ASIHTTPRequestDelegate,UITextFieldDelegate>
 {
@@ -108,15 +109,24 @@
     
     self.loginButton = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(self.passwordTextField)+40, WIDTH(scrollView)-60, 40)];
     self.loginButton.layer.cornerRadius = 5;
-    [self.loginButton setBackgroundColor:ColorTheme];
     [self.loginButton addTarget:self action:@selector(doAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.loginButton.layer setBorderColor:ColorTheme.CGColor];
+    [self.loginButton.layer setBorderWidth:1];
     [self.loginButton setTitle:@"登录" forState:UIControlStateNormal];
-    [self.loginButton setTitleColor:WriteColor forState:UIControlStateNormal];
+    [self.loginButton setTitleColor:ColorTheme forState:UIControlStateNormal];
     [scrollView addSubview:self.loginButton];
     
     UITapGestureRecognizer* recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(CreateUserAction:)];
     self.userImageView.userInteractionEnabled = YES;
     [self.userImageView addGestureRecognizer:recognizer];
+    
+    UIButton* btnActionLeft = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(self.loginButton)+15, WIDTH(self.view)-60, 40)];
+    btnActionLeft.backgroundColor = ClearColor;
+    btnActionLeft.titleLabel.font =SYSTEMFONT(14);
+    [btnActionLeft setTitle:@"忘记密码" forState:UIControlStateNormal];
+    [btnActionLeft setTitleColor:ColorTheme forState:UIControlStateNormal];
+    [btnActionLeft addTarget:self action:@selector(forgetAction:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:btnActionLeft];
     
     
     recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(ForgetPassAction:)];
@@ -127,6 +137,14 @@
     self.forgetPassLabel.userInteractionEnabled = YES;
     [self.forgetPassLabel addGestureRecognizer:recognizer];
     
+}
+
+-(void)forgetAction:(id)sender
+{
+    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    ForgetPassViewController* controller =[storyBoard instantiateViewControllerWithIdentifier:@"ModifyPasswordController"];
+    controller.type=0;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 -(void)back:(id)sender

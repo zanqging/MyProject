@@ -47,10 +47,12 @@
     [self.view addSubview:self.navView];
     
     
-    self.configBtn.backgroundColor= ColorTheme;
     [self.configBtn addTarget:self action:@selector(doAction:) forControlEvents:UIControlEventTouchUpInside];
-    self.configBtn.layer.cornerRadius = HEIGHT(self.configBtn)/2;
+    self.configBtn.layer.cornerRadius = 5;
+    self.configBtn.layer.borderWidth = 1;
+    self.configBtn.layer.borderColor = ColorTheme.CGColor;
     [self.configBtn.titleLabel setFont:SYSTEMFONT(16)];
+    [self.configBtn setTitleColor:ColorTheme forState:UIControlStateNormal];
     
     self.phoneTextField.layer.borderWidth = 1;
     self.phoneTextField.font  =SYSTEMFONT(14);

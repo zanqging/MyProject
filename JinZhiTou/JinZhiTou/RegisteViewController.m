@@ -222,11 +222,12 @@
     
     
     self.regietButton = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(label)+30, WIDTH(self.view)-60, 40)];
-    self.regietButton.backgroundColor= ColorTheme;
-    self.regietButton.layer.cornerRadius = HEIGHT(self.regietButton)/2;
+    self.regietButton.layer.cornerRadius = 5;
     [self.regietButton setTitle:@"立即注册" forState:UIControlStateNormal];
     [self.regietButton addTarget:self action:@selector(doRegistAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.regietButton setTitleColor:WriteColor forState:UIControlStateNormal];
+    [self.regietButton.layer setBorderWidth:1];
+    [self.regietButton.layer setBorderColor:ColorTheme.CGColor];
+    [self.regietButton setTitleColor:ColorTheme forState:UIControlStateNormal];
     [scrollView addSubview:self.regietButton];
     
     

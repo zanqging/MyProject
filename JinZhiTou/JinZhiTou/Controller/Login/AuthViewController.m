@@ -12,7 +12,6 @@
 #import "GlobalDefine.h"
 #import "MMDrawerController.h"
 #import "UserInfoViewController.h"
-#import "ForgetPassViewController.h"
 #import "MMExampleDrawerVisualStateManager.h"
 @interface AuthViewController ()
 {
@@ -33,63 +32,50 @@
     UIView* view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.view))];
     view.backgroundColor  =WriteColor;
     [self.view addSubview:view];
-    UIImageView* imgView =[[UIImageView alloc]initWithFrame:self.view.frame];
+    
+    UIImageView* imgView = [[UIImageView alloc]initWithFrame:self.view.frame];
     imgView.image = IMAGENAMED(@"denglu");
-    imgView.contentMode = UIViewContentModeScaleAspectFill;
-    [view addSubview:imgView];
-    
-    
-    imgView =[[UIImageView alloc]initWithFrame:CGRectMake(60, 70, WIDTH(self.view)-120  , 100)];
-    imgView.image = IMAGENAMED(@"jinzht");
-    imgView.contentMode = UIViewContentModeScaleAspectFill;
-    [view addSubview:imgView];
+    [view  addSubview:imgView];
     
     //设置button样式
-    self.registeButton = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(imgView)+20, WIDTH(self.view)/2-40, 40)];
-    self.registeButton.backgroundColor = ColorTheme;
+    self.registeButton = [[UIButton alloc]initWithFrame:CGRectMake(30, 100 , WIDTH(self.view)-60, 40)];
     [self.registeButton addTarget:self action:@selector(registAction:) forControlEvents:UIControlEventTouchUpInside];
+     self.registeButton.titleLabel.font = SYSTEMFONT(14);
     [self.registeButton setTitle:@"注册" forState:UIControlStateNormal];
-    self.registeButton.layer.cornerRadius = HEIGHT(self.registeButton)/2;
-    [self.registeButton setTitleColor:WriteColor forState:UIControlStateNormal];
+    self.registeButton.layer.cornerRadius = 5;
+    self.registeButton.layer.borderColor = ColorTheme.CGColor;
+    self.registeButton.layer.borderWidth = 1;
+    [self.registeButton setTitleColor:ColorTheme forState:UIControlStateNormal];
     [view addSubview:self.registeButton];
     
-    self.loginButon = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2+10,Y(self.registeButton), WIDTH(self.view)/2-40, 40)];
-    self.loginButon.backgroundColor = ColorTheme;
+    self.loginButon = [[UIButton alloc]initWithFrame:CGRectMake(X(self.registeButton),POS_Y(self.registeButton)+10, WIDTH(self.registeButton), 40)];
     self.loginButon.userInteractionEnabled = YES;
     [self.loginButon addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
-    self.loginButon.layer.cornerRadius = HEIGHT(self.loginButon)/2;
+    self.loginButon.titleLabel.font = SYSTEMFONT(14);
+    self.loginButon.layer.borderColor = ColorTheme.CGColor;
+    self.loginButon.layer.borderWidth = 1;
+    self.loginButon.layer.cornerRadius = 5;
     [self.loginButon setTitle:@"登录" forState:UIControlStateNormal];
-    [self.loginButon setTitleColor:WriteColor forState:UIControlStateNormal];
-    [self.loginButon setTitleColor:WriteColor forState:UIControlStateNormal];
+    [self.loginButon setTitleColor:ColorTheme forState:UIControlStateNormal];
     [view addSubview:self.loginButon];
     
-    UIButton* btnActionLeft = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2-100, POS_Y(self.loginButon)+30, 100, 40)];
-    btnActionLeft.backgroundColor = ClearColor;
-    [btnActionLeft addTarget:self action:@selector(forgetAction:) forControlEvents:UIControlEventTouchUpInside];
-    [btnActionLeft setTitle:@"忘记密码" forState:UIControlStateNormal];
-    [btnActionLeft setTitleColor:ColorTheme forState:UIControlStateNormal];
-    [view addSubview:btnActionLeft];
+
     
     
-    UIButton* btnActionRight = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2, Y(btnActionLeft), 100, 40)];
-    btnActionRight.backgroundColor = ClearColor;
-    [btnActionRight addTarget:self action:@selector(animousAction:) forControlEvents:UIControlEventTouchUpInside];
+    UIButton* btnActionRight = [[UIButton alloc]initWithFrame:CGRectMake(X(self.loginButon), POS_Y(self.loginButon)+5, WIDTH(self.loginButon), HEIGHT(self.loginButon))];
     [btnActionRight setTitle:@"游客入口" forState:UIControlStateNormal];
+    btnActionRight.titleLabel.font = SYSTEMFONT(14);
+    btnActionRight.layer.borderColor = ColorTheme.CGColor;
+    btnActionRight.layer.borderWidth = 1;
+    btnActionRight.layer.cornerRadius = 5;
     [btnActionRight setTitleColor:ColorTheme forState:UIControlStateNormal];
+    [btnActionRight addTarget:self action:@selector(animousAction:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btnActionRight];
     
-    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2, Y(btnActionLeft)-5, 1, HEIGHT(btnActionLeft)+5)];
-    imgView.backgroundColor= ColorTheme;
-    [view addSubview:imgView];
+    
 }
 
--(void)forgetAction:(id)sender
-{
-    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    ForgetPassViewController* controller =[storyBoard instantiateViewControllerWithIdentifier:@"ModifyPasswordController"];
-    controller.type=0;
-    [self.navigationController pushViewController:controller animated:YES];
-}
+
 -(void)registAction:(id)sender
 {
     UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
