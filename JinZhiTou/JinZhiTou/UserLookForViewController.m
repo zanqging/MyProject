@@ -8,15 +8,20 @@
 
 #import "UserLookForViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "UConstants.h"
-#import "GlobalDefine.h"
+#import "TDUtil.h"
 #import "HttpUtils.h"
+#import "UConstants.h"
+#import "LoadingView.h"
+#import "LoadingUtil.h"
+#import "GlobalDefine.h"
 #import "LoadingUtil.h"
 #import "LoadingView.h"
+#import "UIImageView+WebCache.h"
 #import "NSString+SBJSON.h"
 @interface UserLookForViewController ()
 {
     HttpUtils* httpUtils;
+    LoadingView* loadingView;
     UIScrollView* scrollView;
 }
 @end
@@ -51,38 +56,38 @@
     
     //头像
     UIImageView* imageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 70, 70)];
-    imageView.image = [UIImage imageNamed:@"头像"];
+    imageView.tag=20001;
     [self.contentView addSubview:imageView];
     
     UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imageView)+10, 10, WIDTH(self.contentView)-POS_X(imageView)-50, 30)];
-    label.text = @"杨顺才";
+    label.tag=10001;
     [self.contentView addSubview:label];
     
-    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imageView)+10, POS_Y(label),WIDTH(label)-100, 50)];
-    label.text = @"聚英国际咨询集团郑州二顾问中心总经理";
+    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imageView)+10, POS_Y(label),WIDTH(label)-100, 20)];
+    label.tag=10002;
+    label.numberOfLines = 2;
+    label.font = SYSTEMFONT(13);
+    label.textColor =FONT_COLOR_GRAY;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    [self.contentView addSubview:label];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imageView)+10, POS_Y(label),WIDTH(label), 20)];
+    label.tag=10003;
     label.font = SYSTEMFONT(13);
     label.numberOfLines = 2;
     label.lineBreakMode = NSLineBreakByWordWrapping;
     label.textColor =FONT_COLOR_GRAY;
     [self.contentView addSubview:label];
     
-    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imageView)+10, POS_Y(label),WIDTH(label), 20)];
-    label.text = @"教育培训｜咨询";
-    label.font = SYSTEMFONT(13);
-    label.numberOfLines = 2;
-    label.lineBreakMode = NSLineBreakByWordWrapping;
-    label.textColor =FONT_COLOR_GRAY;
-    [self.contentView addSubview:label];
-    
     
     label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imageView)+10, POS_Y(label),WIDTH(label), 20)];
-    label.text = @"地址：河南郑州";
+    label.tag=10004;
     label.font = SYSTEMFONT(12);
     label.textColor =FONT_COLOR_GRAY;
     [self.contentView addSubview:label];
     
     label = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self.contentView)-60, POS_Y(label)-50,40, 50)];
-    label.text = @"聚英国际";
+    label.tag=10005;
     label.font = SYSTEMFONT(20);
     label.numberOfLines = 2;
     label.lineBreakMode = NSLineBreakByWordWrapping;
@@ -90,6 +95,9 @@
     [self.contentView addSubview:label];
     
     [scrollView addSubview:self.contentView];
+    loadingView = [LoadingUtil shareinstance:self.view];
+    [LoadingUtil show:loadingView];
+    [self loadData];
 }
 
 -(void)loadData
@@ -97,10 +105,31 @@
     if (!httpUtils) {
         httpUtils = [[HttpUtils alloc]init];
     }
-    [httpUtils getDataFromAPIWithOps:USERINFO postParam:[NSDictionary dictionaryWithObject:[self.dic valueForKey:@"id"] forKey:@"id"] type:0 delegate:self sel:@selector(requestFinished:)];
+    NSString* serverUrl = [USERINFO stringByAppendingFormat:@"%@/",self.userId];
+    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
     
 }
 
+-(void)setDic:(NSDictionary *)dic
+{
+    self->_dic = dic;
+    if (self.dic) {
+        UIImageView* imgView =(UIImageView*)[self.contentView viewWithTag:20001];
+        [imgView sd_setImageWithURL:[NSURL URLWithString:[self.dic valueForKey:@"user_img"]]];
+        
+        UILabel* label = (UILabel*)[self.contentView viewWithTag:10001];
+        label.text = [self.dic valueForKey:@"real_name"];
+        
+        label = (UILabel*)[self.contentView viewWithTag:10002];
+        label.text = [[self.dic valueForKey:@"position_type"] objectAtIndex:0];
+        
+        label = (UILabel*)[self.contentView viewWithTag:10003];
+        label.text = [self.dic valueForKey:@"province"];
+        
+        label = (UILabel*)[self.contentView viewWithTag:10004];
+        label.text = [self.dic valueForKey:@"city"];
+    }
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -111,14 +140,25 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+-(void)requestFinished:(ASIHTTPRequest *)request
+{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    if(jsonDic!=nil)
+    {
+        NSString* status = [jsonDic valueForKey:@"status"];
+        if ([status intValue] == 0 ) {
+            self.dic = [jsonDic valueForKey:@"data"];
+            [LoadingUtil close:loadingView];
+        }
+    }
 }
-*/
+
+-(void)requestFailed:(ASIHTTPRequest *)request
+{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+}
 
 @end

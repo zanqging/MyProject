@@ -156,7 +156,7 @@
 
 //服务器域名地址
 //#define SERVICE_URL @"http://weini.im/"
-//#define SERVICE_URL @"http://www.jinzht.com/phone3/"//服务器域名地址
+//#define SERVICE_URL @"http://www.jinzht.com/phone3gs/"//服务器域名地址
 #define SERVICE_URL @"http://www.jinzht.com:8000/phone/"//服务器域名地址
 //服务器域名地址
 //#define SERVICE_URL @"http://www.jinzht.com/phone/"//服务器域名地址
@@ -413,13 +413,15 @@
 #define CYCLE_CONTENT_BACKGROUND_UPLOAD @"feelingbackground/"
 //调用投融资板块展示顺序
 #define CYCLE_FINIAL_SORT  @"defaultclassify/"
-
-
+//获取某条心情内容
+#define PUBLISH_CONTENT_DETAIL  @"getfeeling/"
+//默认投融资
+#define defaultclassify @"defaultclassify/"
 //用户下载头像
 //http://weini.im/upload//menuinfo//_EN_8427.jpg
 
 //支持区域
-#define ROMATE_MSG_TYPE [NSDictionary dictionaryWithObjectsAndKeys:@"projectdetail",@"0",@"msg",@"1",@"system",@"2",@"web",@"3",@"news",@"4",@"knowledge",@"5",@"roadshow",@"6",@"participate",@"7",@"investor",@"8",nil]
+#define ROMATE_MSG_TYPE [NSDictionary dictionaryWithObjectsAndKeys:@"projectdetail",@"0",@"msg",@"1",@"system",@"2",@"web",@"3",@"news",@"4",@"knowledge",@"5",@"roadshow",@"6",@"participate",@"7",@"investor",@"8",@"feeling",@"9",nil]
 
 /***===================================================================================**
  *                                          本地缓存静态变量
@@ -476,6 +478,7 @@
 
 #define APP_PRIVATE_KEY @"lindyang"
 
+#define PUBLISH_CONTENT @"发表最新、最热、最前沿投融资话题"
 /***===================================================================================**
  *                                          静态数字型常量
  *

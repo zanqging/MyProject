@@ -46,7 +46,7 @@
     navView.titleLable.textColor=WriteColor;
     
     [navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [navView.leftButton setTitle:@"我要路演" forState:UIControlStateNormal];
+    [navView.leftButton setTitle:@"上传项目" forState:UIControlStateNormal];
     [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [self.view addSubview:navView];
     

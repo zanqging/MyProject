@@ -15,16 +15,22 @@
 #import "GlobalDefine.h"
 #import "NSString+SBJSON.h"
 #import "DAKeyboardControl.h"
-@interface ActionDetailViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate, ActionHeaderDeleaget>
+#import <QuartzCore/QuartzCore.h>
+#define  TEXT_VIEW_HEIGHT  30
+@interface ActionDetailViewController ()<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate, ActionHeaderDeleaget,UITextViewDelegate>
 {
     BOOL isRefresh;
     int currentPage;
+    float toolBarHeight;
+    UIButton *sendButton;
+    
     NSInteger conId;
     NSInteger atConId;
     HttpUtils* httpUtils;
-    UITextField* textField;
+    UITextView* textView;
     ActionHeader* headerView;
 }
+@property(retain,nonatomic)UIToolbar *toolBar;
 @end
 
 @implementation ActionDetailViewController
@@ -58,44 +64,50 @@
     [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     [self.view addSubview:self.tableView];
     
-     [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
+    [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
+    if (self.dic) {
+        headerView = [[ActionHeader alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 10)];
+        headerView.delegate = self;
+        headerView.dic = self.dic;
+        [self.tableView setTableHeaderView:headerView];
+    }
     
-    headerView = [[ActionHeader alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), self.headerHeight)];
-    headerView.delegate = self;
-    headerView.dic = self.dic;
-    [self.tableView setTableHeaderView:headerView];
     
     self.classStringName = @"CyclePriseTableViewCell";
     httpUtils = [[HttpUtils alloc]init];
     self.selectIndex = 1;
     
-    UIToolbar *toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f,
+    self.toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f,
                                                                      self.view.bounds.size.height,
                                                                      self.view.bounds.size.width,
                                                                      40.0f)];
-    toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview:toolBar];
+    self.toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+    [self.view addSubview:self.toolBar];
     
-    textField = [[UITextField alloc] initWithFrame:CGRectMake(10.0f,
+    textView = [[UITextView alloc] initWithFrame:CGRectMake(10.0f,
                                                               6.0f,
-                                                              toolBar.bounds.size.width - 20.0f - 68.0f,
+                                                              self.toolBar.bounds.size.width - 20.0f - 68.0f,
                                                               30.0f)];
-    textField.borderStyle = UITextBorderStyleRoundedRect;
-    textField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [toolBar addSubview:textField];
+    textView.delegate = self;
+    textView.layer.cornerRadius = 5;
+    textView.layer.borderWidth = 1;
+    textView.delegate  =self;
+    textView.layer.borderColor = FONT_COLOR_GRAY.CGColor;
+    textView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    [self.toolBar addSubview:textView];
     
-    UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [sendButton setTitle:@"回复" forState:UIControlStateNormal];
     [sendButton addTarget:self action:@selector(commentAction:) forControlEvents:UIControlEventTouchUpInside];
-    sendButton.frame = CGRectMake(toolBar.bounds.size.width - 68.0f,
+    sendButton.frame = CGRectMake(self.toolBar.bounds.size.width - 68.0f,
                                   6.0f,
                                   58.0f,
                                   29.0f);
-    [toolBar addSubview:sendButton];
+    [self.toolBar addSubview:sendButton];
     
-    
-    self.view.keyboardTriggerOffset = toolBar.bounds.size.height;
+    __block ActionDetailViewController* blockSelf = self;
+    self.view.keyboardTriggerOffset = self.toolBar.bounds.size.height;
     [self.view addKeyboardPanningWithFrameBasedActionHandler:^(CGRect keyboardFrameInView, BOOL opening, BOOL closing) {
         /*
          Try not to call "self" inside this block (retain cycle).
@@ -104,9 +116,9 @@
          [self.view removeKeyboardControl];
          */
         
-        CGRect toolBarFrame = toolBar.frame;
+        CGRect toolBarFrame = blockSelf.toolBar.frame;
         toolBarFrame.origin.y = keyboardFrameInView.origin.y - toolBarFrame.size.height;
-        toolBar.frame = toolBarFrame;
+        blockSelf.toolBar.frame = toolBarFrame;
     } constraintBasedActionHandler:nil];
     [self loadData];
 }
@@ -126,6 +138,18 @@
             
         default:
             break;
+    }
+}
+
+-(void)setProjectId:(NSString *)projectId
+{
+    self->_projectId = projectId;
+    if (self.projectId) {
+        NSString* serverUrl = [PUBLISH_CONTENT_DETAIL stringByAppendingFormat:@"%@/",self.projectId];
+        if (!httpUtils) {
+            httpUtils= [[HttpUtils alloc]init];
+        }
+        [httpUtils getDataFromAPIWithOps:serverUrl type:0 delegate:self sel:@selector(requestPublishData:) method:@"GET"];
     }
 }
 
@@ -151,7 +175,13 @@
 
 -(void)loadPriseListData
 {
-    NSString* serverUrl = [CYCLE_CONTENT_PRISE_LIST stringByAppendingFormat:@"%@/%d/",[self.dic valueForKey:@"id"],0];
+    NSString* str;
+    if (self.dic) {
+        str =[self.dic valueForKey:@"id"];
+    }else{
+        str =self.projectId;
+    }
+    NSString* serverUrl = [CYCLE_CONTENT_PRISE_LIST stringByAppendingFormat:@"%@/%d/",str,0];
     [httpUtils getDataFromAPIWithOps:serverUrl type:0 delegate:self sel:@selector(requestPriseList:) method:@"GET"];
 }
 
@@ -185,7 +215,7 @@
     }else{
         atConId  = [[dic valueForKey:@"id"] integerValue];
         conId  =[[self.dic valueForKey:@"id"] integerValue];
-        [textField becomeFirstResponder];
+        [textView becomeFirstResponder];
     }
     
 }
@@ -279,7 +309,7 @@
 
 -(void)commentAction:(id)sender
 {
-    NSString* content = textField.text;
+    NSString* content = textView.text;
     if(!httpUtils){
         httpUtils = [[HttpUtils alloc]init];
     }
@@ -334,10 +364,65 @@
     atConId  = [[data valueForKey:@"at_uid"] integerValue];
     conId  =[[self.dic valueForKey:@"id"] integerValue];
     
-    [textField becomeFirstResponder];
+    [textView becomeFirstResponder];
+}
+
+-(void)textViewDidChange:(UITextView *)tv
+{
+    CGFloat height = textView.contentSize.height;
+    if (toolBarHeight != height) {
+        NSLog(@"%f",height);
+        if (toolBarHeight!=0) {
+            CGRect toolBarFrame = self.toolBar.frame;
+            NSLog(@"%@",NSStringFromCGRect(toolBarFrame));
+            toolBarFrame.origin.y -=(height-toolBarHeight);
+            toolBarFrame.size.height+=(height-toolBarHeight);
+            
+            [self.toolBar setFrame:toolBarFrame];
+            
+            sendButton.frame = CGRectMake(self.toolBar.bounds.size.width - 68.0f,
+                                          HEIGHT(self.toolBar)/2-15,
+                                          58.0f,
+                                          29.0f);
+            
+        }
+        toolBarHeight=height;
+    }
+}
+
+-(void)textViewDidChangeSelection:(UITextView *)tv
+{
+    //    NSLog(@"-----%@",tv.text);
 }
 
 #pragma ASIHttpRequest
+-(void)requestPublishData:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"status"];
+        if ([status integerValue] == 0 || [status integerValue] == -1) {
+            self.dic = [dic valueForKey:@"data"];
+            
+            //[[DialogUtil sharedInstance]showDlg:self.view textOnly:@"内容获取成功!"];
+            if (self.dic) {
+                headerView = [[ActionHeader alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 10)];
+                headerView.delegate = self;
+                headerView.dic = self.dic;
+                [self.tableView setTableHeaderView:headerView];
+            }
+        }
+        
+        if (isRefresh) {
+            [self.tableView.header endRefreshing];
+        }else{
+            [self.tableView.footer endRefreshing];
+        }
+    }
+}
 -(void)requestPriseList:(ASIHTTPRequest*)request
 {
     NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
@@ -367,7 +452,7 @@
     if (dic!=nil) {
         NSString* status = [dic valueForKey:@"status"];
         if ([status integerValue] ==0) {
-            [textField resignFirstResponder];
+            [textView resignFirstResponder];
             //currentSelectedCell.dic = [dic valueForKey:@"data"];
 //            NSIndexPath* indexPath = [self.tableView indexPathForCell:currentSelectedCell];
 //            NSDictionary* dataDic = self.dataArray[indexPath.row];

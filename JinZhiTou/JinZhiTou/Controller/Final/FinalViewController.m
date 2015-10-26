@@ -73,7 +73,6 @@
     [self.view addSubview:navView];
     self.finalFunTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), 50, HEIGHT(self.view)-POS_Y(navView)-kBottomBarHeight-85)];
     self.finalContentTableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(51, POS_Y(navView), WIDTH(self.view)-50,HEIGHT(self.finalFunTableView))];
-    self.finalContentTableView.backgroundColor  =WriteColor;
     [self.view addSubview:self.finalFunTableView];
     [self.view addSubview:self.finalContentTableView];
     
@@ -94,16 +93,16 @@
     self.finalContentTableView.separatorStyle=UITableViewCellSeparatorStyleNone;
     float h =HEIGHT(self.finalFunTableView)/10;
     self.finalFunTableView.contentInset = UIEdgeInsetsMake(h, 0, 0, 0);
-    
+    [self.finalContentTableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     [TDUtil tableView:self.finalContentTableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
     [self addObserver];
     //加载左侧菜单
     [self loadMenuData];
     //加载数据
-    [self loadWaitFinaceData];
+    //[self loadWaitFinaceData];
     
     loadingView = [LoadingUtil shareinstance:self.view];
-    currentSelectIndex = 0;
+    currentSelectIndex = 1;
     loadingView.isTransparent = NO;
     
     //添加监听
@@ -145,10 +144,10 @@
     currentPage = 0;
     switch (currentSelectIndex) {
         case 0:
-            [self loadWaitFinaceData];
+            [self loadFinishData];
             break;
         case 1:
-            [self loadFinishData];
+            [self loadWaitFinaceData];
             break;
         case 2:
             [self loadThinkTank];
@@ -169,10 +168,10 @@
         currentPage++;
         switch (currentSelectIndex) {
             case 0:
-                [self loadWaitFinaceData];
+                [self loadFinishData];
                 break;
             case 1:
-                [self loadFinishData];
+                [self loadWaitFinaceData];
                 break;
             case 2:
                 [self loadThinkTank];
@@ -191,14 +190,18 @@
 
 -(void)loadMenuData
 {
-    NSMutableArray* dataArray=[NSMutableArray arrayWithObjects:@"融资中",@"已融资",@"智囊团",@"金推荐",nil];
+    NSMutableArray* dataArray=[NSMutableArray arrayWithObjects:@"已融资",@"待融资",@"智囊团",@"金推荐",nil];
     self.array=dataArray;
     
+    loadingView.isTransparent = YES;
+    [LoadingUtil show:loadingView];
+    [httpUtils getDataFromAPIWithOps:defaultclassify type:0 delegate:self sel:@selector(requestDefaultData:) method:@"GET"];
 }
+
 -(void)loadWaitFinaceData
 {
     loadingView.isTransparent = YES;
-    [LoadingUtil showLoadingView:self.finalContentTableView withLoadingView:loadingView];
+    [LoadingUtil show:loadingView];
     NSString* url = [WAIT_FINACE stringByAppendingFormat:@"%d/",currentPage];
     [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestWaitFinaceList:)];
 }
@@ -206,7 +209,7 @@
 -(void)loadFinishData
 {
     loadingView.isTransparent = YES;
-    [LoadingUtil showLoadingView:self.finalContentTableView withLoadingView:loadingView];
+    [LoadingUtil show:loadingView];
     NSString* url = [FINISHED_FINACE stringByAppendingFormat:@"%d/",currentPage];
     [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestFinishedFinaceList:)];
 }
@@ -214,7 +217,7 @@
 -(void)loadThinkTank
 {
     loadingView.isTransparent = YES;
-    [LoadingUtil showLoadingView:self.finalContentTableView withLoadingView:loadingView];
+    [LoadingUtil show:loadingView];
     NSString* url = [THINKTANK stringByAppendingFormat:@"%d/",currentPage];
     [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestThinkTankFinaceList:)];
 }
@@ -222,7 +225,7 @@
 -(void)loadRecommendproject
 {
     loadingView.isTransparent = YES;
-    [LoadingUtil showLoadingView:self.finalContentTableView withLoadingView:loadingView];
+    [LoadingUtil show:loadingView];
     NSString* url = [RECOMMEND_PROJECT stringByAppendingFormat:@"%d/",currentPage];
     [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestRecommendFinaceList:)];
 }
@@ -254,7 +257,6 @@
 -(void)setArray:(NSMutableArray *)array
 {
     self->_array = array;
-    [self.finalFunTableView reloadData];
 }
 -(void)userInfoAction:(id)sender
 {
@@ -281,34 +283,34 @@
 {
     NSInteger row = indexPath.row;
     if (tableView.tag==100001) {
-        FinalKindTableViewCell* Cell=(FinalKindTableViewCell*)[tableView cellForRowAtIndexPath:indexPath];
-        Cell.isSelected=YES;
         
-        NSIndexPath* path = [NSIndexPath indexPathForRow:0 inSection:0];
-        
-        //获取第一行
-        FinalKindTableViewCell* cellRowAtFirst=(FinalKindTableViewCell*)[tableView cellForRowAtIndexPath:path];
-        if (cellRowAtFirst.isSelected && indexPath.row!=0) {
-            cellRowAtFirst.isSelected =NO;
-        }
         
         currentPage = 0;
         currentSelectIndex=(int)row;
+        for (int i=0; i<4; i++) {
+            NSIndexPath* indexPath =[NSIndexPath indexPathForItem:i inSection:0];
+            FinalKindTableViewCell* tepmCell=[self.finalFunTableView cellForRowAtIndexPath:indexPath];
+            if (i!=currentSelectIndex) {
+                tepmCell.isSelected=NO;
+            }else{
+                tepmCell.isSelected=YES;
+            }
+        }
         switch (row) {
             case 0:
-                if (!self.waitFinialDataArray) {
-                    [self loadWaitFinaceData];
-                }else{
-                    currentArray = self.waitFinialDataArray;
-                    [self.finalContentTableView reloadData];
-                }
-                break;
-            case 1:
                 if (!self.finishedFinialDataArray) {
                     [self loadFinishData];
                 }else{
                     isRefresh = YES;
                     currentArray = self.finishedFinialDataArray;
+                    [self.finalContentTableView reloadData];
+                }
+                break;
+            case 1:
+                if (!self.waitFinialDataArray) {
+                    [self loadWaitFinaceData];
+                }else{
+                    currentArray = self.waitFinialDataArray;
                     [self.finalContentTableView reloadData];
                 }
                 break;
@@ -366,7 +368,7 @@
     if (tableView.tag==100001) {
         return self.array.count;
     }
-    if (currentArray.count==0) {
+    if (currentArray.count==0 && currentArray) {
         self.finalContentTableView.isNone =YES;
     }else{
         self.finalContentTableView.isNone =NO;
@@ -383,8 +385,10 @@
             Cell =(FinalKindTableViewCell*)[[FinalKindTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CustomCellIdentifier];
         }
         
-        if (indexPath.row==0) {
+        if (indexPath.row==currentSelectIndex) {
             Cell.isSelected=YES;
+        }else{
+             Cell.isSelected=NO;
         }
         Cell.content=self.array[indexPath.row];
         Cell.selectionStyle=UITableViewCellSelectionStyleNone;
@@ -420,6 +424,7 @@
             }
             
             cellInstance.typeDescription = str;
+            cellInstance.backgroundColor = ClearColor;
             cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
@@ -495,6 +500,22 @@
 }
 #pragma ASIHttpRequest
 //待融资
+-(void)requestDefaultData:(ASIHTTPRequest*)request
+{
+    NSString* jsonString =[TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    
+    NSDictionary* jsonDic = [jsonString JSONValue];
+    if (jsonDic!=nil) {
+        NSString* status =[jsonDic valueForKey:@"status"];
+        if([status intValue] == 0 ){
+            currentSelectIndex = [[jsonDic valueForKey:@"data"] intValue];
+            [self refreshProject];
+            [self.finalFunTableView reloadData];
+        }
+    }
+}
+//待融资
 -(void)requestWaitFinaceList:(ASIHTTPRequest*)request
 {
     NSString* jsonString =[TDUtil convertGBKDataToUTF8String:request.responseData];
@@ -525,7 +546,6 @@
         }else{
             [self.finalContentTableView.footer endRefreshing];
         }
-        self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
     }
 }
 
@@ -560,7 +580,6 @@
         }else{
             [self.finalContentTableView.footer endRefreshing];
         }
-self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
     }
 }
 //智囊团
@@ -594,7 +613,6 @@ self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
             [self.finalContentTableView.footer endRefreshing];
         }
         
-self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
     }
 }
 //平台推荐
@@ -628,7 +646,6 @@ self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
         }else{
             [self.finalContentTableView.footer endRefreshing];
         }
-        self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
 
     }
 }

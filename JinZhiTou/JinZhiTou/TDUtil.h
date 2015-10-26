@@ -86,13 +86,38 @@
  */
 
 +(NSString*)CurrentDate;
-//从字符串转换时间
+/**
+ *  从字符串转换时间
+ *
+ *  @param uiDate 时间字符串
+ *
+ *  @return 时间对象
+ */
 +(NSDate*) convertDateFromString:(NSString*)uiDate;
 
+/**
+ *  格式化时间
+ *
+ *  @param dateString 时间字符串
+ *
+ *  @return 时间对象
+ */
 +(NSDate *)dateFromStringYMD:(NSString *)dateString;
-//获取本月最大天数
+
+/**
+ *  获取本月最大天数
+ *
+ *  @return 返回每月
+ */
 +(NSInteger)maxNumOfMonth;
 
+/**
+ *  转化时间字符串
+ *
+ *  @param dateString 时间字符串
+ *
+ *  @return 转化时间
+ */
 +(NSString *)dateTimeFromString:(NSString *)dateString;
 
 +(NSInteger)monthWithDateString:(NSString*)uiDate withFormat:(NSString*)format;

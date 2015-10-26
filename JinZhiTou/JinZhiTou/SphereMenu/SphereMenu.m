@@ -6,7 +6,7 @@
 static const CGFloat kSphereLength = 120;
 static const float kSphereDamping = 0.3;
 
-@interface SphereMenu () <UICollisionBehaviorDelegate>
+@interface SphereMenu () 
 
 @property (strong, nonatomic) NSArray *images;
 @property (strong, nonatomic) NSArray *dataArray;
@@ -18,7 +18,7 @@ static const float kSphereDamping = 0.3;
 // animator and behaviors
 @property (strong, nonatomic) NSMutableArray *snaps;
 @property (strong, nonatomic) UIDynamicAnimator *animator;
-@property (strong, nonatomic) UICollisionBehavior *collision;
+//@property (strong, nonatomic) UICollisionBehavior *collision;
 @property (strong, nonatomic) UIDynamicItemBehavior *itemBehavior;
 
 @property (strong, nonatomic) UITapGestureRecognizer *tapOnStart;
@@ -122,9 +122,9 @@ static const float kSphereDamping = 0.3;
     // setup animator and behavior
     self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
     
-    self.collision = [[UICollisionBehavior alloc] initWithItems:self.items];
-    self.collision.translatesReferenceBoundsIntoBoundary = YES;
-    self.collision.collisionDelegate = self;
+//    self.collision = [[UICollisionBehavior alloc] initWithItems:self.items];
+//    self.collision.translatesReferenceBoundsIntoBoundary = YES;
+//    self.collision.collisionDelegate = self;
     
     for (int i = 0; i < self.count; i++) {
         UISnapBehavior *snap = [[UISnapBehavior alloc] initWithItem:self.items[i] snapToPoint:self.center];
@@ -181,7 +181,7 @@ static const float kSphereDamping = 0.3;
 
 - (void)startTapped:(UITapGestureRecognizer *)gesture
 {
-    [self.animator removeBehavior:self.collision];
+//    [self.animator removeBehavior:self.collision];
     [self.animator removeBehavior:self.itemBehavior];
     [self removeSnapBehaviors];
     
@@ -222,13 +222,13 @@ static const float kSphereDamping = 0.3;
     UIView *touchedView = gesture.view;
     if (gesture.state == UIGestureRecognizerStateBegan) {
         [self.animator removeBehavior:self.itemBehavior];
-        [self.animator removeBehavior:self.collision];
+//        [self.animator removeBehavior:self.collision];
         [self removeSnapBehaviors];
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
         touchedView.center = [gesture locationInView:self.superview];
     } else if (gesture.state == UIGestureRecognizerStateEnded) {
         self.bumper = touchedView;
-        [self.animator addBehavior:self.collision];
+//        [self.animator addBehavior:self.collision];
         NSUInteger index = [self.items indexOfObject:touchedView];
         
         if (index != NSNotFound) {

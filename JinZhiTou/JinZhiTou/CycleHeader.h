@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "HttpUtils.h" 
+#import "UIImageView+WebCache.h"
 @interface CycleHeader : UIView
+{
+    HttpUtils* httpUtils;
+}
 @property(retain,nonatomic)UIImageView* headerView;
 @property(retain,nonatomic)UIImageView* headerBackView;
 @property(retain,nonatomic)UILabel* nameLabel;

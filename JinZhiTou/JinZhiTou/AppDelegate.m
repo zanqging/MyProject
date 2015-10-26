@@ -22,6 +22,7 @@
 #import "RoadShowDetailViewController.h"
 #import <TencentOpenAPI/TencentOAuth.h>
 #import "MasterViewController.h"
+#import "ActionDetailViewController.h"
 #import "UserTraceViewController.h"
 
 @interface AppDelegate ()<UIAlertViewDelegate>
@@ -332,6 +333,9 @@ fetchCompletionHandler:(void
             case 8:
                 [self loadTraceInfo:1002];
                 break;
+            case 9:
+                [self loadReplyInfo:[dic valueForKey:@"id"]];
+                break;
             default:
                 break;
         }
@@ -371,7 +375,7 @@ fetchCompletionHandler:(void
 {
     UIStoryboard* storyBorard =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     MasterViewController* controller =(MasterViewController*)[storyBorard instantiateViewControllerWithIdentifier:@"SystemMessage"];
-     controller.type=1;
+    controller.type=1;
     controller.titleStr = @"系统通知";
     [self.iNav pushViewController:controller animated:YES];
 }
@@ -381,6 +385,13 @@ fetchCompletionHandler:(void
     UserTraceViewController* controller =[[UserTraceViewController alloc]init];
     controller.currentSelected =index;
     controller.titleStr = @"首页";
+    [self.iNav pushViewController:controller animated:YES];
+}
+
+-(void)loadReplyInfo:(NSString*)postId
+{
+    ActionDetailViewController* controller =[[ActionDetailViewController alloc]init];
+    controller.projectId = postId;
     [self.iNav pushViewController:controller animated:YES];
 }
 

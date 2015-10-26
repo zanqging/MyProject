@@ -102,7 +102,7 @@
 //        contentLabel.text = [dic valueForKey:@"content"];
         
         //事件
-        dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(contentLabel), POS_Y(contentLabel)-5, 100, 10)];
+        dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(contentLabel), POS_Y(contentLabel)+5, 100, 10)];
         dateTimeLabel.font  =FONT(@"Arial", 10);
         dateTimeLabel.text = [dic valueForKey:@"datetime"];
         dateTimeLabel.textColor  =FONT_COLOR_GRAY;
@@ -158,16 +158,8 @@
         [criticalButton setImage:IMAGENAMED(@"gossip_comment") forState:UIControlStateNormal];
         [self addSubview:criticalButton];
         
-        //分享
-        shareButton = [[UIButton alloc]initWithFrame:CGRectMake(X(criticalButton)-50, Y(criticalButton), WIDTH(criticalButton), HEIGHT(criticalButton))];
-        [shareButton setTitleColor:FONT_COLOR_GRAY forState:UIControlStateNormal];
-        [shareButton setTitle:@"转发" forState:UIControlStateNormal];
-        [shareButton.titleLabel setFont:FONT(@"Arial", 10)];
-        [shareButton setImage:IMAGENAMED(@"gossip_share") forState:UIControlStateNormal];
-        [self addSubview:shareButton];
-        
         //点赞
-        priseButton = [[UIButton alloc]initWithFrame:CGRectMake(X(shareButton)-50, Y(shareButton), WIDTH(shareButton), HEIGHT(shareButton))];
+        priseButton = [[UIButton alloc]initWithFrame:CGRectMake(X(criticalButton)-50, Y(criticalButton), WIDTH(criticalButton), HEIGHT(criticalButton))];
         [priseButton setTitleColor:FONT_COLOR_GRAY forState:UIControlStateNormal];
         [priseButton.titleLabel setFont:FONT(@"Arial", 10)];
         [priseButton addTarget:self action:@selector(priseAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -183,7 +175,7 @@
         
         //点赞，分享,评论
         //点赞
-        priseListButton = [[UIButton alloc]initWithFrame:CGRectMake(0, POS_Y(lineImageView), WIDTH(self)/3, HEIGHT(self)-POS_Y(lineImageView)-2)];
+        priseListButton = [[UIButton alloc]initWithFrame:CGRectMake(0, POS_Y(lineImageView), WIDTH(self)/3, 40)];
         priseListButton.tag =1;
         [priseListButton setTitleColor:FONT_COLOR_BLACK forState:UIControlStateNormal];
         [priseListButton.titleLabel setFont:FONT(@"Arial", 10)];
@@ -194,20 +186,8 @@
         imgView.backgroundColor = lineImageView.backgroundColor;
         [self addSubview:imgView];
         
-        //分享
-        shareListButton = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(priseListButton), Y(priseListButton), WIDTH(priseListButton), HEIGHT(priseListButton))];
-        shareListButton.tag =2;
-        [shareListButton setTitleColor:FONT_COLOR_GRAY forState:UIControlStateNormal];
-        [shareListButton setTitle:@"扩散 8" forState:UIControlStateNormal];
-        [shareListButton.titleLabel setFont:FONT(@"Arial", 10)];
-        [shareListButton addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:shareListButton];
-        
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(shareListButton), Y(shareListButton)+10, 1, HEIGHT(shareListButton)-20)];
-        imgView.backgroundColor = lineImageView.backgroundColor;
-        [self addSubview:imgView];
         //评论
-        criticalListButton = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(shareListButton), Y(shareListButton), WIDTH(priseListButton), HEIGHT(priseListButton))];
+        criticalListButton = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(priseListButton), Y(priseListButton), WIDTH(priseListButton), HEIGHT(priseListButton))];
         criticalListButton.tag =3;
         [criticalListButton setTitleColor:FONT_COLOR_GRAY forState:UIControlStateNormal];
         [criticalListButton setTitle:@"评论 46" forState:UIControlStateNormal];
@@ -222,9 +202,11 @@
         dataArray = [self.dic valueForKey:@"comment"];
         [criticalButton setTitle:[NSString stringWithFormat:@"%ld",dataArray.count] forState:UIControlStateNormal];
         [criticalListButton setTitle:[NSString stringWithFormat:@"评论  %ld",dataArray.count] forState:UIControlStateNormal];
-        lineImageView =[[UIImageView alloc]initWithFrame:CGRectMake(0, HEIGHT(self), WIDTH(self), 1)];
+        lineImageView =[[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(lineImageView)+40, WIDTH(self), 1)];
         lineImageView.backgroundColor = FONT_COLOR_GRAY;
         [self addSubview:lineImageView];
+        
+        [self setFrame:CGRectMake(0, 0, WIDTH(self), POS_Y(lineImageView))];
 
     }
 }

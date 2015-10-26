@@ -40,6 +40,8 @@
     self.navView.imageView.alpha=0;
     [self.navView setTitle:@"个人中心"];
     self.navView.titleLable.textColor=WriteColor;
+    [self.navView.leftButton setImage:IMAGENAMED(@"gerenzhongxin-8") forState:UIControlStateNormal];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setting:)]];
     [self.view addSubview:self.navView];
     NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
     BOOL isAmious = [[data valueForKey:@"isAnimous"]boolValue];
@@ -62,12 +64,6 @@
         [self.tableView setTableHeaderView:headerView];
         
         UIView* footView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 50)];
-        UIImageView* imgView = [[UIImageView alloc]initWithImage:IMAGENAMED(@"gerenzhongxin-8")];
-        imgView.frame = CGRectMake(WIDTH(footView)-30, HEIGHT(footView)/2-5, 20, 20);
-        imgView.contentMode = UIViewContentModeScaleAspectFill;
-        [footView addSubview:imgView];
-        imgView.userInteractionEnabled = YES;
-        [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setting:)]];
         [self.tableView setTableFooterView:footView];
         
         [self loadData];

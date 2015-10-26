@@ -75,6 +75,7 @@
         [self addSubview:self.pageControl];
         
         self.pageControl.currentPage=self.currentPageIndex;
+        
     }
     return self;
 }
@@ -94,7 +95,6 @@
         [contentView addGestureRecognizer:tapGesture];
         CGRect rightRect = contentView.frame;
         rightRect.origin = CGPointMake(CGRectGetWidth(self.scrollView.frame) * (counter ++), 0);
-        rightRect.origin.y+=15;
         contentView.frame = rightRect;
         [self.scrollView addSubview:contentView];
     }

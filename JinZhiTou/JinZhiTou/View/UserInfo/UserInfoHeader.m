@@ -98,8 +98,11 @@
             
             //本地缓存数据
             NSUserDefaults* dataStore  = [NSUserDefaults standardUserDefaults];
-            [dataStore setValue:[dic valueForKey:@"province"] forKey:@"province"];
+            [dataStore setValue:name forKey:@"name"];
+            [dataStore setValue:str forKey:@"photo"];
+            [dataStore setValue:[dic valueForKey:@"userId"] forKey:@"uid"];
             [dataStore setValue:[dic valueForKey:@"city"] forKey:@"city"];
+            [dataStore setValue:[dic valueForKey:@"province"] forKey:@"province"];
             [dataStore setValue:[dic valueForKey:@"position_type"] forKey:@"STATIC_USER_TYPE"];
             
             if (str && str.class !=NSNull.class) {

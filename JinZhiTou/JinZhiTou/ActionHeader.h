@@ -27,9 +27,9 @@
     UIView* imgContentView;
     
     
-    UIButton* criticalButton,* shareButton,* priseButton;
+    UIButton* criticalButton,* priseButton;
     
-    UIButton* criticalListButton,* shareListButton,* priseListButton;
+    UIButton* criticalListButton,* priseListButton;
 }
 @property(retain,nonatomic)id <ActionHeaderDeleaget> delegate;
 @property(retain,nonatomic)NSDictionary* dic;

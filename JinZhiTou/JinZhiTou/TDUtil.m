@@ -1261,8 +1261,9 @@
     //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
     
     [paragraphStyle setLineSpacing:lineSpacing];//调整行间距
-    [paragraphStyle setAlignment:NSTextAlignmentJustified];
+//    [paragraphStyle setAlignment:NSTextAlignmentLeft];
     [paragraphStyle setFirstLineHeadIndent:indent];
+    [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
     [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
     

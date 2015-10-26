@@ -14,7 +14,7 @@
 -(id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-35, HEIGHT(self)/2-35, 70, 70)];
+        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-75, HEIGHT(self)/2-75, 150, 150)];
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:imageView];
         
@@ -28,20 +28,20 @@
 -(void)loadImages
 {
     NSArray *magesArray = [NSArray arrayWithObjects:
-                           [UIImage imageNamed:@"loading1"],
-                           [UIImage imageNamed:@"loading2"],
-                           [UIImage imageNamed:@"loading3"],
-                           [UIImage imageNamed:@"loading4"],
-                           [UIImage imageNamed:@"loading5"],
-                           [UIImage imageNamed:@"loading6"],
-                           [UIImage imageNamed:@"loading7"],
-                           [UIImage imageNamed:@"loading8"],
-                           [UIImage imageNamed:@"loading9"],
-                           [UIImage imageNamed:@"loading10"],
-                           [UIImage imageNamed:@"loading11"],nil];
+                           [UIImage imageNamed:@"jz1"],
+                           [UIImage imageNamed:@"jz2"],
+                           [UIImage imageNamed:@"jz3"],
+                           [UIImage imageNamed:@"jz4"],
+                           [UIImage imageNamed:@"jz5"],
+                           [UIImage imageNamed:@"jz6"],
+                           [UIImage imageNamed:@"jz7"],
+                           [UIImage imageNamed:@"jz8"],
+                           [UIImage imageNamed:@"jz9"],
+                           [UIImage imageNamed:@"jz10"],
+                           [UIImage imageNamed:@"jz11"],nil];
     
     imageView.animationImages = magesArray;//将序列帧数组赋给UIImageView的animationImages属性
-    imageView.animationDuration = 1.5;//设置动画时间
+    imageView.animationDuration = 3.0;//设置动画时间
     imageView.animationRepeatCount = 0;//设置动画次数 0 表示无限
 }
 -(void)startAnimation
@@ -98,7 +98,7 @@
         [labelMessage removeFromSuperview];
         [refreshButton removeFromSuperview];
         
-        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-35, HEIGHT(self)/2-35, 70, 70)];
+        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-75, HEIGHT(self)/2-75, 150, 150)];
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:imageView];
         [self loadImages];

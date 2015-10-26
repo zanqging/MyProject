@@ -119,7 +119,6 @@
 		4543EAE21BD08DCB0041DCBD /* UILabel+Data.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EADB1BD08DCB0041DCBD /* UILabel+Data.m */; };
 		4543EAE31BD08DCB0041DCBD /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EADD1BD08DCB0041DCBD /* ViewController.m */; };
 		4543EAEC1BD08DDE0041DCBD /* PublishViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EAE51BD08DDE0041DCBD /* PublishViewController.m */; };
-		4543EAED1BD08DDE0041DCBD /* ReplyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EAE71BD08DDE0041DCBD /* ReplyTableViewCell.m */; };
 		4543EAEE1BD08DDE0041DCBD /* UserLookForViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EAE91BD08DDE0041DCBD /* UserLookForViewController.m */; };
 		4543EAEF1BD08DDE0041DCBD /* WeiboTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EAEB1BD08DDE0041DCBD /* WeiboTableViewCell.m */; };
 		4543EB061BD08E100041DCBD /* MWCaptionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EAF21BD08E0F0041DCBD /* MWCaptionView.m */; };
@@ -570,8 +569,6 @@
 		4543EADD1BD08DCB0041DCBD /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		4543EAE41BD08DDE0041DCBD /* PublishViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublishViewController.h; sourceTree = "<group>"; };
 		4543EAE51BD08DDE0041DCBD /* PublishViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublishViewController.m; sourceTree = "<group>"; };
-		4543EAE61BD08DDE0041DCBD /* ReplyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplyTableViewCell.h; sourceTree = "<group>"; };
-		4543EAE71BD08DDE0041DCBD /* ReplyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplyTableViewCell.m; sourceTree = "<group>"; };
 		4543EAE81BD08DDE0041DCBD /* UserLookForViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserLookForViewController.h; sourceTree = "<group>"; };
 		4543EAE91BD08DDE0041DCBD /* UserLookForViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserLookForViewController.m; sourceTree = "<group>"; };
 		4543EAEA1BD08DDE0041DCBD /* WeiboTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiboTableViewCell.h; sourceTree = "<group>"; };
@@ -1562,8 +1559,6 @@
 				4543EAE51BD08DDE0041DCBD /* PublishViewController.m */,
 				458C9E1C1BD52BEC00F66916 /* UIReplyLabel.h */,
 				458C9E1D1BD52BEC00F66916 /* UIReplyLabel.m */,
-				4543EAE61BD08DDE0041DCBD /* ReplyTableViewCell.h */,
-				4543EAE71BD08DDE0041DCBD /* ReplyTableViewCell.m */,
 				4543EAE81BD08DDE0041DCBD /* UserLookForViewController.h */,
 				4543EAE91BD08DDE0041DCBD /* UserLookForViewController.m */,
 				45367D7E1BD8B6BC00039253 /* CycleHeader.h */,
@@ -2673,7 +2668,6 @@
 				45326F161B7443CA0044F8C1 /* PaddingView.m in Sources */,
 				45FCD05E1B75E216009AD6E3 /* UIView+WebCacheOperation.m in Sources */,
 				450140091B943024000F8A97 /* MMDrawerController.m in Sources */,
-				4543EAED1BD08DDE0041DCBD /* ReplyTableViewCell.m in Sources */,
 				453271881B7490740044F8C1 /* UserAreaTableViewCell.m in Sources */,
 				45326F031B7358DB0044F8C1 /* UserInfo.m in Sources */,
 				453271731B748EEB0044F8C1 /* UserBasicInfoTableViewCell.m in Sources */,
@@ -2832,8 +2826,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Lu Liu (WKWLHQSAU5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shaanxi gold investment enterprise management consulting Co., Ltd. (PT9XT89LQL)";
 				ENABLE_NS_ASSERTIONS = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2849,7 +2843,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1264b681-7bfc-423d-8e28-2da41ee455b7";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -2860,8 +2854,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shaanxi gold investment enterprise management consulting Co., Ltd. (PT9XT89LQL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shaanxi gold investment enterprise management consulting Co., Ltd. (PT9XT89LQL)";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2876,7 +2870,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1264b681-7bfc-423d-8e28-2da41ee455b7";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

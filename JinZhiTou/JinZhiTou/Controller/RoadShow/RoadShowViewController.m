@@ -111,7 +111,7 @@
     }
     loadingView.isError = NO;
     loadingView.delegate  = self;
-    [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
+    [LoadingUtil show:loadingView];
     [httpUtil getDataFromAPIWithOps:BANNER_LIST postParam:nil type:0 delegate:self sel:@selector(requestBannerList:)];
 }
 
@@ -166,7 +166,6 @@
         if ([status intValue] == 0) {
             loadingView.isError = NO;
 //            [LoadingUtil close:loadingView];
-            
             self.mainScorllView = [[CycleScrollView alloc] initWithFrame:CGRectMake(0,0, WIDTH(self.view), 150) animationDuration:2];
             self.mainScorllView.backgroundColor = [[UIColor purpleColor] colorWithAlphaComponent:0.1];
             

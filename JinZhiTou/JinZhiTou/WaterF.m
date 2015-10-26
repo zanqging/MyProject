@@ -259,6 +259,8 @@
         reusableView = [collectionView dequeueReusableSupplementaryViewOfKind:kind
                                                           withReuseIdentifier:@"WaterFallSectionHeader"
                                                                  forIndexPath:indexPath];
+        reusableView.backgroundColor  =WriteColor;
+        [self.headerView setFrame:CGRectMake(1, 1, WIDTH(self.headerView)-1, HEIGHT(self.headerView)-2)];
         [reusableView addSubview:self.headerView];
     }
     else if ([kind isEqualToString:WaterFallSectionFooter])

@@ -47,13 +47,19 @@
     //添加TabBar中间＋号视图
     NSMutableArray* dataArray=[[NSMutableArray alloc]init];
     DataModel* model=[[DataModel alloc]init];
-    [model setDesc1:@"我要路演"];
+    [model setDesc1:@"我要认证"];
+    [model setDesc2:@"woyaorenzheng"];
+    [dataArray addObject:model];
+    
+    
+    model=[[DataModel alloc]init];
+    [model setDesc1:@"上传项目"];
     [model setDesc2:@"woyaoluyan"];
     [dataArray addObject:model];
     
     model=[[DataModel alloc]init];
-    [model setDesc1:@"我要认证"];
-    [model setDesc2:@"woyaorenzheng"];
+    [model setDesc1:@"我要分享"];
+    [model setDesc2:@"woyaofenxiang"];
     [dataArray addObject:model];
     
     model=[[DataModel alloc]init];
@@ -61,10 +67,6 @@
     [model setDesc2:@"woyaoqiandao"];
     [dataArray addObject:model];
     
-    model=[[DataModel alloc]init];
-    [model setDesc1:@"我要分享"];
-    [model setDesc2:@"woyaofenxiang"];
-    [dataArray addObject:model];
     
     UIImage *startImage = [UIImage imageNamed:@"jiahao"];
     
@@ -253,19 +255,19 @@
     }else{
         switch (index) {
             case 1000:
-                [self RoadShowAction];
-                break;
-            case 1001:
                 [self AuthApplyAction];
                 break;
-            case 1002:
-                [self ActionArriveAction];
+            case 1001:
+                [self RoadShowAction];
                 break;
-            case 1003:
+            case 1002:
                 [self ShareAction];
                 break;
+            case 1003:
+                [self ActionArriveAction];
+                break;
             default:
-                [self RoadShowAction];
+                [self AuthApplyAction];
                 break;
         }
     }

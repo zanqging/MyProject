@@ -19,12 +19,11 @@
 #import "NSString+SBJSON.h"
 #import "PECropViewController.h"
 #import "CustomImagePickerController.h"
-@interface PublishViewController ()<CustomImagePickerControllerDelegate>
+@interface PublishViewController ()<CustomImagePickerControllerDelegate,UITextViewDelegate>
 {
     NSMutableArray *_selections;
     UIScrollView* scrollView;
     
-    HttpUtils* httpUtils;
 }
 @property(retain,nonatomic)CustomImagePickerController* customPicker;
 @end
@@ -54,8 +53,8 @@
     [self.view addSubview:scrollView];
     
     self.textView = [[UITextView alloc]initWithFrame:CGRectMake(10, 10, WIDTH(self.view)-20, 150)];
-    self.textView.font  =SYSTEMBOLDFONT(14);
-    self.textView.text  =@"发表最新、最热、最前沿话题";
+    self.textView.font  =SYSTEMBOLDFONT(16);
+    self.textView.text  =PUBLISH_CONTENT;
     self.textView.textColor  =FONT_COLOR_GRAY;
     self.textView.delegate = self;
     [scrollView addSubview:self.textView];
@@ -82,30 +81,31 @@
 
 -(void)publishAction:(id)sender
 {
-    if (!httpUtils) {
-        httpUtils = [[HttpUtils alloc]init];
-    }
     
     NSString* content = self.textView.text;
+    if ([content isEqualToString:PUBLISH_CONTENT]) {
+        content =@"";
+    }
     NSMutableArray* postArray = [[NSMutableArray alloc]init];
-    int i=0;
     for (UIView* v in self.imgContentView.subviews) {
         if ([v isKindOfClass:UIImageView.class]) {
-            UIImage* image = (UIImage*)self.imgSelectArray[i];
+            UIImage* image = ((UIImageView*)v).image;
             image = [image imageByCroppingSelf];
-//            CGSize imageSize = image.size;
-//            imageSize.height =626;
-//            imageSize.width =413;
-//            image = [TDUtil imageWithImage:image scaledToSize:imageSize];
-            BOOL flag = [TDUtil saveContent:image fileName:[NSString stringWithFormat:@"file%d",i]];
-            if (flag) {
-                [postArray addObject:[NSString stringWithFormat:@"file%d",i]];
-                i++;
-            }
+            [postArray addObject:image];
         }
     }
     
-    [httpUtils getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:[NSDictionary dictionaryWithObject:content forKey:@"content"] files:postArray postName:@"file" type:0 delegate:self sel:@selector(requestPublishContent:)];
+    
+    
+    //发布内容
+    NSMutableDictionary* dataDic = [[NSMutableDictionary alloc]init];
+    [dataDic setValue:content forKey:@"content"];
+    [dataDic setValue:postArray forKey:@"files"];
+    
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"publishContent" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:dataDic,@"data", nil]];
+    //[self performSelector:@selector(dissmissController) withObject:nil afterDelay:1];
+    [self dissmissController];
 
 }
 
@@ -610,24 +610,25 @@
 
 
 //*********************************************************照相机功能结束*****************************************************//
-#pragma ASIHttpRequest
--(void)requestPublishContent:(ASIHTTPRequest*)request
+#pragma UITextView
+-(void)textViewDidBeginEditing:(UITextView *)textView
 {
-    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    
-    NSLog(@"返回:%@",jsonString);
-    NSMutableDictionary * dic =[jsonString JSONValue];
-    if (dic!=nil) {
-        NSString* status = [dic valueForKey:@"status"];
-        if ([status integerValue] == 0) {
-            //[self.controller loadData];
-            NSDictionary* dataDic = [dic valueForKey:@"data"];
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"publishContent" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:dataDic,@"data", nil]];
-            [self performSelector:@selector(dissmissController) withObject:nil afterDelay:1];
-        }
-    }
+    self.textView.font  =SYSTEMBOLDFONT(18);
+    textView.text =@"";
 }
 
+-(void)textViewDidEndEditing:(UITextView *)textView
+{
+    if ([textView.text isEqualToString:@""]) {
+        self.textView.font  =SYSTEMBOLDFONT(16);
+        textView.text = PUBLISH_CONTENT;
+    }
+}
+-(void)textViewDidChange:(UITextView *)textView
+{
+    NSLog(@"%@",textView.text);
+}
+#pragma ASIHttpRequest
 -(void)dissmissController
 {
     [self dismissViewControllerAnimated:YES completion:nil];

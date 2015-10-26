@@ -10,15 +10,15 @@
 #import "HttpUtils.h"
 #import "MWPhotoBrowser.h"
 #import "UIImageView+WebCache.h"
-#import "ReplyTableViewCell.h"
 
 @protocol WeiboTableViewCellDelegate <NSObject>
 
--(void)weiboTableViewCell:(id)weiboTableViewCell userId:(NSString*)userId isSelf:(BOOL) isSelf;
--(void)weiboTableViewCell:(id)weiboTableViewCell contentId:(NSString*)contentId atId:(NSString*)atId isSelf:(BOOL) isSelf;
+-(void)weiboTableViewCell:(id)weiboTableViewCell refresh:(BOOL)refresh;
 -(void)weiboTableViewCell:(id)weiboTableViewCell deleteDic:(NSDictionary*)dic;
 -(void)weiboTableViewCell:(id)weiboTableViewCell priseDic:(NSDictionary*)dic msg:(NSString*)msg;
--(void)weiboTableViewCell:(id)weiboTableViewCell refresh:(BOOL)refresh;
+-(void)weiboTableViewCell:(id)weiboTableViewCell userId:(NSString*)userId isSelf:(BOOL) isSelf;
+-(void)weiboTableViewCell:(id)weiboTableViewCell contentId:(NSString*)contentId atId:(NSString*)atId isSelf:(BOOL) isSelf;
+-(void)weiboTableViewCell:(id)weiboTableViewCell didSelectedContent:(BOOL)isSelected;
 
 @end
 
@@ -37,7 +37,6 @@
 @property (retain, nonatomic)  UILabel *jobLabel;
 @property (retain, nonatomic)  UILabel *nameLabel;
 @property(retain,nonatomic)    UIButton* priseButton;
-@property(retain,nonatomic)    UIButton * shareButton;
 @property(retain,nonatomic)    MWPhotoBrowser *browser;
 @property (nonatomic, retain)  NSMutableArray *photos;
 @property (nonatomic, retain)  NSMutableArray *thumbs;
