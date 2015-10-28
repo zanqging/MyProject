@@ -16,5 +16,4 @@
 //播放器视图控制器
 @property (nonatomic,strong) MPMoviePlayerViewController *moviePlayerViewController;
 
--(void)loadCompanyData;
 @end

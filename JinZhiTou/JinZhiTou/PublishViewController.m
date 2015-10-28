@@ -32,7 +32,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title =@"朋友圈";
+    self.title =@"圈子";
     self.view.backgroundColor  =ColorTheme;
     self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     self.navView.imageView.alpha=1;
@@ -79,13 +79,10 @@
 }
 
 
--(void)publishAction:(id)sender
+-(BOOL)publishAction:(id)sender
 {
     
     NSString* content = self.textView.text;
-    if ([content isEqualToString:PUBLISH_CONTENT]) {
-        content =@"";
-    }
     NSMutableArray* postArray = [[NSMutableArray alloc]init];
     for (UIView* v in self.imgContentView.subviews) {
         if ([v isKindOfClass:UIImageView.class]) {
@@ -95,7 +92,16 @@
         }
     }
     
+    if ([content isEqualToString:PUBLISH_CONTENT]) {
+        if ((!postArray || postArray.count==0)) {
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"发表内容不能为空"];
+            return false;
+        }
+    }
     
+    if ([content isEqualToString:PUBLISH_CONTENT]) {
+        content =@"";
+    }
     
     //发布内容
     NSMutableDictionary* dataDic = [[NSMutableDictionary alloc]init];
@@ -106,7 +112,8 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:@"publishContent" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:dataDic,@"data", nil]];
     //[self performSelector:@selector(dissmissController) withObject:nil afterDelay:1];
     [self dissmissController];
-
+    
+    return true;
 }
 
 - (void)showSecureTextEntryAlert {

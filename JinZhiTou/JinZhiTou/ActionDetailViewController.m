@@ -38,7 +38,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
-    self.title = @"朋友圈";
+    self.title = @"圈子";
     self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     self.navView.imageView.alpha=1;
     [self.navView setTitle:@"全文详情"];
@@ -307,15 +307,21 @@
     }
 }
 
--(void)commentAction:(id)sender
+-(BOOL)commentAction:(id)sender
 {
     NSString* content = textView.text;
+    if ([content isEqualToString:@""]) {
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入回复内容"];
+        return false;
+    }
+    
+    [textView resignFirstResponder];
     if(!httpUtils){
         httpUtils = [[HttpUtils alloc]init];
     }
-    
     NSString* serverUrl = [CYCLE_CONTENT_REPLY stringByAppendingFormat:@"%ld/",conId];
     [httpUtils getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:content,@"content",[NSString stringWithFormat:@"%ld",atConId],@"at", nil] type:0 delegate:self sel:@selector(requestReply:)];
+    return true;
 }
 
 
@@ -384,7 +390,6 @@
                                           HEIGHT(self.toolBar)/2-15,
                                           58.0f,
                                           29.0f);
-            
         }
         toolBarHeight=height;
     }
@@ -452,7 +457,6 @@
     if (dic!=nil) {
         NSString* status = [dic valueForKey:@"status"];
         if ([status integerValue] ==0) {
-            [textView resignFirstResponder];
             //currentSelectedCell.dic = [dic valueForKey:@"data"];
 //            NSIndexPath* indexPath = [self.tableView indexPathForCell:currentSelectedCell];
 //            NSDictionary* dataDic = self.dataArray[indexPath.row];

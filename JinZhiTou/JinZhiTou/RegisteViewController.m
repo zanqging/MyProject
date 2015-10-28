@@ -211,10 +211,10 @@
     label.font = SYSTEMFONT(14);
     label.userInteractionEnabled = YES;
     label.textAlignment = NSTextAlignmentCenter;
-    NSString* content =@"点击“立即注册“意味着您同意 金指投用户协议";
+    NSString* content =@"新注册用户请查看《金指投用户协议》";
 
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(14, [content length]-14)];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(9, [content length]-9)];
     
     label.attributedText = attributedString;//ios 6
     [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];

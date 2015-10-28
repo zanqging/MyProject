@@ -105,7 +105,7 @@
 
         [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestShare:)];
     }else if(self.type == 3){
-        NSString* url = [NEWS_SHARE stringByAppendingFormat:@"%d/",self.projectId];
+        NSString* url = [NEWS_SHARE stringByAppendingFormat:@"%ld/",(long)self.projectId];
         [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestShare:)];
     }else{
         [httpUtils getDataFromAPIWithOps:SHARE_APP postParam:nil type:0 delegate:self sel:@selector(requestShare:)];
@@ -114,7 +114,6 @@
 }
 - (void)shareWeiXin:(int)type
 {
-    
     WXMediaMessage *message = [WXMediaMessage message];
     SendMessageToWXReq* req;
     NSString* content;

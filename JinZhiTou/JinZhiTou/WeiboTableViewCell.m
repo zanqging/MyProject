@@ -55,7 +55,6 @@
         self.industryLabel.textColor = FONT_COLOR_GRAY;
         [self addSubview:self.industryLabel];
         
-        
         self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.industryLabel), POS_Y(self.industryLabel)+5, WIDTH(self.industryLabel), 80)];
         self.contentLabel.font  =FONT(@"Arial", 14);
         self.contentLabel.textColor  =FONT_COLOR_BLACK;
@@ -89,8 +88,7 @@
         self.tableView.delaysContentTouches=NO;
         self.tableView.showsVerticalScrollIndicator=NO;
         self.tableView.showsHorizontalScrollIndicator=NO;
-//        self.tableView.backgroundColor = ClearColor;
-        self.tableView.backgroundColor = ColorBeef;
+        self.tableView.backgroundColor = ClearColor;
         self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
         [self.priseView addSubview:self.tableView];
     }else{
@@ -276,7 +274,8 @@
     
     
     [cell addSubview:label];
-    cell.backgroundColor = [UIColor colorWithRed:238.0f/255.0 green:238.0f/255.0 blue:238.0f/255.0 alpha:1];
+    //cell.backgroundColor = [UIColor colorWithRed:238.0f/255.0 green:238.0f/255.0 blue:238.0f/255.0 alpha:1];
+    cell.backgroundColor = ClearColor;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     //    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
@@ -505,7 +504,7 @@
         self.dataArray = dataCriticalArray;
         
         //评论
-        self.criticalButton = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self.funView)-70, 0, 50, 25)];
+        self.criticalButton = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self.funView)-70, 0, 50, 30)];
         [self.criticalButton setTitleColor:FONT_COLOR_GRAY forState:UIControlStateNormal];
         [self.criticalButton setTitle:[NSString stringWithFormat:@"%ld",dataCriticalArray.count] forState:UIControlStateNormal];
         [self.criticalButton.titleLabel setFont:FONT(@"Arial", 13)];
@@ -575,9 +574,9 @@
         }
     }
     if (dataPriseArray.count>0) {
-        [self.priseListView setFrame:CGRectMake(0,0, WIDTH(self.priseView),(num+1)*25)];
+        [self.priseListView setFrame:CGRectMake(0,0, WIDTH(self.priseView),(num+1)*20)];
     }else{
-        [self.priseListView setFrame:CGRectMake(0, 0, WIDTH(self.priseView),num*25)];
+        [self.priseListView setFrame:CGRectMake(0, 0, WIDTH(self.priseView),num*30)];
     }
     
     float comment_height =0;
@@ -623,7 +622,7 @@
                 height = 20;
             }
         }
-        [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView), num*25+comment_height+HEIGHT(self.priseListView)+height)];
+        [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView),comment_height+HEIGHT(self.priseListView)+height)];
     }
     if (dataPriseArray.count>0 || self.dataArray.count>0) {
         UIImage* image = IMAGENAMED(@"message_reply");

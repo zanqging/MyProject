@@ -9,12 +9,13 @@
 #import "RoadShowApplyViewController.h"
 #import "TDUtil.h"
 #import "NavView.h"
+#import "QiniuSDK.h"
 #import "HttpUtils.h"
-//#import "LoadVideo.h"
+#import "LoadVideo.h"
 #import "DialogUtil.h"
 #import "UConstants.h"
 #import "FinialKind.h"
-#import "AutoShowView.h"
+//#import "AutoShowView.h"
 #import "GlobalDefine.h"
 #import "NSString+SBJSON.h"
 #import "ASIFormDataRequest.h"
@@ -28,8 +29,8 @@
     NavView* navView;
     NSString* videoName;
     HttpUtils* httpUtil;
-    AutoShowView* autoShowView;
-    //LoadVideo* loadingVideView;
+//    AutoShowView* autoShowView;
+    LoadVideo* loadingVideView;
     
     UIImage* cutImage;
     NSInteger currentIndex;
@@ -69,35 +70,35 @@
     [self addView];
     
     //获取公司列表
-    [self loadCompanyData];
+//    [self loadCompanyData];
     
-    //添加监听
-      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(autoSelect:) name:@"autoSelect" object:nil];
 }
 
--(void)loadCompanyData
-{
-    [httpUtil getDataFromAPIWithOps:COMPANY_LIST postParam:nil type:0 delegate:self  sel:@selector(requestCompanyData:)];
-}
+//-(void)loadCompanyData
+//{
+//    [httpUtil getDataFromAPIWithOps:COMPANY_LIST postParam:nil type:0 delegate:self  sel:@selector(requestCompanyData:)];
+//}
 
--(void)loadCompanyStatus
-{
-    [httpUtil getDataFromAPIWithOps:COMPANY_STATUS postParam:nil type:0 delegate:self  sel:@selector(requestStatusData:)];
-}
+//-(void)loadCompanyStatus
+//{
+//    [httpUtil getDataFromAPIWithOps:COMPANY_STATUS postParam:nil type:0 delegate:self  sel:@selector(requestStatusData:)];
+//}
 
--(void)loadCompanyInfo:(NSInteger)project_id
-{
-    NSString* url = [COMPANY_INFO stringByAppendingFormat:@"%ld/",(long)project_id];
-    [httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self  sel:@selector(requestCompanyInfoData:)];
-}
+//-(void)loadCompanyInfo:(NSInteger)project_id
+//{
+//    NSString* url = [COMPANY_INFO stringByAppendingFormat:@"%ld/",(long)project_id];
+//    [httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self  sel:@selector(requestCompanyInfoData:)];
+//}
 
 -(BOOL)commitRoadShow
 {
     
     NSString* userName;
     NSString* userPhone;
+    NSString* company;
     userName = userNameTextField.text;
     userPhone =userPhoneTextField.text;
+    company = userCompanyTextField.text;
     if (![TDUtil isValidString:userName]) {
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入联系人姓名" ];
         return NO;
@@ -115,15 +116,17 @@
     }
     
     
-    if (!dicData || [dicData valueForKey:@"dic"]) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请选择公司" ];
+    if (![TDUtil isValidString:company]) {
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入公司名称" ];
+        return NO;
     }
     
     
     NSDictionary* dic = [[NSMutableDictionary alloc]init];
-    [dic setValue:userName forKey:@"contact_name"];
-    [dic setValue:userPhone forKey:@"contact_phone"];
-    [dic setValue:[dicData valueForKey:@"id"] forKey:@"company"];
+    [dic setValue:userName forKey:@"name"];
+    [dic setValue:userPhone forKey:@"telephone"];
+    [dic setValue:company forKey:@"company"];
+    [dic setValue:videoName forKey:@"vcr"];
     
     [httpUtil getDataFromAPIWithOps:ROAD_SHOW postParam:dic type:0 delegate:self  sel:@selector(requestRoadShow:)];
     return YES;
@@ -132,17 +135,17 @@
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
-
--(void)autoSelect:(NSDictionary*)dic
-{
-    dicData= [[dic valueForKey:@"userInfo" ] valueForKey:@"item"];
-    userCompanyTextField.text = [dicData valueForKey:@"company_name"];
-    if (currentIndex != [[dicData valueForKey:@"id"] integerValue]) {
-        currentIndex = [[dicData valueForKey:@"id"] integerValue];
-        //请求公司详情
-        [self loadCompanyInfo:[[dicData valueForKey:@"id"] integerValue]];
-    }
-}
+//
+//-(void)autoSelect:(NSDictionary*)dic
+//{
+//    dicData= [[dic valueForKey:@"userInfo" ] valueForKey:@"item"];
+//    userCompanyTextField.text = [dicData valueForKey:@"company_name"];
+//    if (currentIndex != [[dicData valueForKey:@"id"] integerValue]) {
+//        currentIndex = [[dicData valueForKey:@"id"] integerValue];
+//        //请求公司详情
+//        [self loadCompanyInfo:[[dicData valueForKey:@"id"] integerValue]];
+//    }
+//}
 
 -(void)addView
 {
@@ -151,7 +154,6 @@
     scrollView.delegate=self;
     scrollView.bounces = NO;
     scrollView.backgroundColor=BackColor;
-    scrollView.contentSize = CGSizeMake(WIDTH(scrollView), HEIGHT(scrollView)+150);
     [self.view addSubview:scrollView];
     
     UIImageView* imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, WIDTH(scrollView), 170)];
@@ -167,15 +169,15 @@
     label.lineBreakMode = NSLineBreakByWordWrapping;
     [scrollView addSubview:label];
     
-//    loadingVideView = [[LoadVideo alloc]initWithFrame:CGRectMake(20, POS_Y(label)+10, WIDTH(scrollView)-40, 170)];
-//    loadingVideView.isLoaded = NO;
-//    loadingVideView.isComplete = NO;
-//    loadingVideView.uploadStart = NO;
-//    [loadingVideView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(uploadVideo:)]];
-//    [scrollView addSubview:loadingVideView];
+    loadingVideView = [[LoadVideo alloc]initWithFrame:CGRectMake(20, POS_Y(label)+10, WIDTH(scrollView)-40, 170)];
+    loadingVideView.isLoaded = NO;
+    loadingVideView.isComplete = NO;
+    loadingVideView.uploadStart = NO;
+    [loadingVideView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(uploadVideo:)]];
+    [scrollView addSubview:loadingVideView];
     
     //填写信息
-    UIView* view = [[UIView alloc]initWithFrame:CGRectMake(20, POS_Y(label)+10, WIDTH(self.view)-40, 160)];
+    UIView* view = [[UIView alloc]initWithFrame:CGRectMake(20, POS_Y(loadingVideView)+10, WIDTH(self.view)-40, 160)];
     view.tag = 30001;
     view.backgroundColor  =WriteColor;
     [scrollView addSubview:view];
@@ -233,7 +235,7 @@
     //公司
     label = [[UILabel alloc]initWithFrame:CGRectMake(X(label), POS_Y(lineImgView)+10, WIDTH(label), 30)];
     label.textAlignment = NSTextAlignmentLeft;
-    label.text = @"选择公司";
+    label.text = @"公司名称";
     label.font = SYSTEMFONT(14);
     [view addSubview:label];
     
@@ -241,7 +243,7 @@
     
     //输入公司信息
     userCompanyTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(userPhoneTextField)-25, 30)];
-    userCompanyTextField.placeholder = @"请选择或填写公司";
+    userCompanyTextField.placeholder = @"请输入公司名称";
     userCompanyTextField.font  =SYSTEMFONT(16);
     userCompanyTextField.tag = 10001;
     userCompanyTextField.delegate = self;
@@ -252,14 +254,14 @@
     userCompanyTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:userCompanyTextField];
     
-    
-    UITapGestureRecognizer* recognizer =[[ UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doAction:)];
-    
-    imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)-30, Y(userCompanyTextField)+5, 25, 25)];
-    imageView.image = IMAGENAMED(@"tianjia");
-    imageView.userInteractionEnabled = YES;
-    [imageView addGestureRecognizer:recognizer];
-    [view addSubview:imageView];
+//    
+//    UITapGestureRecognizer* recognizer =[[ UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doAction:)];
+//    
+//    imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)-30, Y(userCompanyTextField)+5, 25, 25)];
+//    imageView.image = IMAGENAMED(@"tianjia");
+//    imageView.userInteractionEnabled = YES;
+//    [imageView addGestureRecognizer:recognizer];
+//    [view addSubview:imageView];
     view.layer.cornerRadius = 5;
     
     //投资信息
@@ -324,7 +326,7 @@
     
     UIView* v = [scrollView viewWithTag:30001];
     
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(v), WIDTH(view), 100)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(v), WIDTH(view), 150)];
     view.tag = 30003;
     view.backgroundColor  =BackColor;
     [scrollView addSubview:view];
@@ -356,6 +358,8 @@
     [btnAction setTitle:@"提交资料" forState:UIControlStateNormal];
     [btnAction addTarget:self action:@selector(commitRoadShow) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btnAction];
+    
+    scrollView.contentSize = CGSizeMake(WIDTH(scrollView), POS_Y(view)+50);
 }
 
 -(void)check:(id)sender
@@ -382,15 +386,15 @@
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-//-(void)uploadVideo:(id)sender
-//{
-//    videoName = [NSString stringWithFormat:@"VCR%@",[TDUtil CurrentDate]];
-//    videoName = [videoName stringByReplacingOccurrencesOfString:@"-" withString:@""];
-//    videoName = [videoName stringByReplacingOccurrencesOfString:@" " withString:@""];
-//    videoName = [videoName stringByReplacingOccurrencesOfString:@":" withString:@""];
-//    NSLog(@"%@",videoName);
-//    [httpUtil getDataFromAPIWithOps:TOKEAN postParam:[NSDictionary dictionaryWithObjectsAndKeys:videoName,@"key", nil] type:0 delegate:self sel:@selector(requestToken:)];
-//}
+-(void)uploadVideo:(id)sender
+{
+    videoName = [NSString stringWithFormat:@"VCR%@",[TDUtil CurrentDate]];
+    videoName = [videoName stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    videoName = [videoName stringByReplacingOccurrencesOfString:@" " withString:@""];
+    videoName = [videoName stringByReplacingOccurrencesOfString:@":" withString:@""];
+    [httpUtil getDataFromAPIWithOps:TOKEAN postParam:[NSDictionary dictionaryWithObjectsAndKeys:videoName,@"key", nil] type:0 delegate:self sel:@selector(requestToken:)];
+}
+
 -(void)doAction:(UITapGestureRecognizer*)recognizer
 {
     CompanyViewController* controller  = [[CompanyViewController alloc]init];
@@ -398,33 +402,33 @@
 }
 
 
-//-(void)uploadQiNiuVedio:(NSURL*)url
-//{
-//    QNUploadManager *upManager = [[QNUploadManager alloc] init];
-//    QNUploadOption* options =[[QNUploadOption alloc]initWithProgessHandler:^(NSString* key,float progress){
-//        NSLog(@"%f",progress);
-//        loadingVideView.progress =progress;
-//    }];
-//    NSData *data =[NSData dataWithContentsOfURL:url];
-//    [upManager putData:data key:videoName token:token
-//              complete: ^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
-//                  NSLog(@"%@", info);
-//                  NSLog(@"返回:%@",resp);
-//                  if (resp!=nil) {
-//                      NSString* status = [resp valueForKey:@"status"];
-//                      if ([status integerValue] ==0 ) {
-//                          //NSDictionary* dic = [resp valueForKey:@"data"];
-//                          
-//                          [[DialogUtil sharedInstance]showDlg:self.view textOnly:[resp valueForKey:@"msg"]];
-//                          
-//                          loadingVideView.isLoaded = NO;
-//                          loadingVideView.uploadStart = NO;
-//                          loadingVideView.imgage = IMAGENAMED(@"loading");
-//                          loadingVideView.isComplete = YES;
-//                      }
-//                  }
-//              } option:options];
-//}
+-(void)uploadQiNiuVedio:(NSURL*)url
+{
+    QNUploadManager *upManager = [[QNUploadManager alloc] init];
+    QNUploadOption* options =[[QNUploadOption alloc]initWithProgessHandler:^(NSString* key,float progress){
+        NSLog(@"%f",progress);
+        loadingVideView.progress =progress;
+    }];
+    NSData *data =[NSData dataWithContentsOfURL:url];
+    [upManager putData:data key:videoName token:token
+              complete: ^(QNResponseInfo *info, NSString *key, NSDictionary *resp) {
+                  NSLog(@"%@", info);
+                  NSLog(@"返回:%@",resp);
+                  if (resp!=nil) {
+                      NSString* status = [resp valueForKey:@"status"];
+                      if ([status integerValue] ==0 ) {
+                          //NSDictionary* dic = [resp valueForKey:@"data"];
+                          
+                          [[DialogUtil sharedInstance]showDlg:self.view textOnly:[resp valueForKey:@"msg"]];
+                          
+                          loadingVideView.isLoaded = YES;
+                          loadingVideView.uploadStart = NO;
+                          loadingVideView.imgage = IMAGENAMED(@"vido_successful");
+                          loadingVideView.isComplete = YES;
+                      }
+                  }
+              } option:options];
+}
 #pragma ASIHttpRequest
 
 
@@ -460,11 +464,11 @@
                 frame.origin.x=90;
                 frame.size.width = 200;
                 
-                autoShowView = [[AutoShowView alloc]initWithFrame:frame];
-                autoShowView.isHidden =YES;
-                autoShowView.title=@"company_name";
-                autoShowView.dataArray = companyDataArray;
-                [scrollView addSubview:autoShowView];
+//                autoShowView = [[AutoShowView alloc]initWithFrame:frame];
+//                autoShowView.isHidden =YES;
+//                autoShowView.title=@"company_name";
+//                autoShowView.dataArray = companyDataArray;
+//                [scrollView addSubview:autoShowView];
                 
             }
         }
@@ -544,10 +548,6 @@
     if (dic!=nil) {
         NSString* status = [dic valueForKey:@"status"];
         if ([status integerValue]==0) {
-            [self back:nil];
-            
-        }else{
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
             //进度查看
             double delayInSeconds = 1.0;
             //__block RoadShowDetailViewController* bself = self;
@@ -561,7 +561,9 @@
                 
                 
             });
+            
         }
+         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
     }
 }
 
@@ -588,15 +590,15 @@
 #pragma UITextFieldDelegate
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    if (textField.tag ==10001) {
-        autoShowView.isHidden = NO;
-        [textField resignFirstResponder];
-        [scrollView setContentOffset:CGPointMake(0, 300) animated:YES];
-    }else if (textField.tag == 1001){
-        [scrollView setContentOffset:CGPointMake(0, 200) animated:YES];
-    }else if (textField.tag == 1002){
-        [scrollView setContentOffset:CGPointMake(0, 300) animated:YES];
-    }
+    [scrollView setContentOffset:CGPointMake(0, 500) animated:YES];
+//    if (textField.tag ==10001) {
+////        autoShowView.isHidden = NO;
+//        [scrollView setContentOffset:CGPointMake(0, 500) animated:YES];
+//    }else if (textField.tag == 1001){
+//        [scrollView setContentOffset:CGPointMake(0, 400) animated:YES];
+//    }else if (textField.tag == 1002){
+//        [scrollView setContentOffset:CGPointMake(0, 300) animated:YES];
+//    }
 }
 
 -(void)resignKeyboard
@@ -607,17 +609,11 @@
 -(void)textFieldDidEndEditing:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    if (textField.tag ==10001) {
-       [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
-    }
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    if (textField.tag ==10001) {
-        [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
-    }
     return YES;
 }
 
@@ -630,81 +626,80 @@
 
 #pragma mark - UIImagePickerController代理方法
 //完成
-//-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
-//    NSString *mediaType=[info objectForKey:UIImagePickerControllerMediaType];
-//    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {//如果是拍照
-//        UIImage *image;
-//        //如果允许编辑则获得编辑后的照片，否则获取原始照片
-//        if (self.imagePicker.allowsEditing) {
-//            image=[info objectForKey:UIImagePickerControllerEditedImage];//获取编辑后的照片
-//        }else{
-//            image=[info objectForKey:UIImagePickerControllerOriginalImage];//获取原始照片
-//        }
-//        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);//保存到相簿
-//    }else if([mediaType isEqualToString:(NSString *)kUTTypeMovie]){//如果是录制视频
-//        NSLog(@"video...");
-//        NSURL *url=[info objectForKey:UIImagePickerControllerMediaURL];//视频路径
-//        NSString *urlStr=[url path];
-//        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(urlStr)) {
-//            //保存视频到相簿，注意也可以使用ALAssetsLibrary来保存
-//            UISaveVideoAtPathToSavedPhotosAlbum(urlStr, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);//保存视频到相簿
-//        }
-//        
-//    }
-//    
-//    [self dismissViewControllerAnimated:YES completion:nil];
-//}
-//-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
-//    NSLog(@"取消");
-//    [picker dismissViewControllerAnimated:YES completion:nil];
-//}
-//
-//#pragma mark - 私有方法
-//-(UIImagePickerController *)imagePicker{
-//    if (!_imagePicker) {
-//        _imagePicker=[[UIImagePickerController alloc]init];
-//        _imagePicker.sourceType=UIImagePickerControllerSourceTypeCamera;//设置image picker的来源，这里设置为摄像头
-//        _imagePicker.cameraDevice=UIImagePickerControllerCameraDeviceRear;//设置使用哪个摄像头，这里设置为后置摄像头
-//        if (isVideo) {
-//            _imagePicker.mediaTypes=@[(NSString *)kUTTypeMovie];
-//            _imagePicker.videoQuality=UIImagePickerControllerQualityTypeIFrame1280x720;
-//            _imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModeVideo;//设置摄像头模式（拍照，录制视频）
-//            
-//        }else{
-//            _imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModePhoto;
-//        }
-//        _imagePicker.allowsEditing=YES;//允许编辑
-//        _imagePicker.delegate=self;//设置代理，检测操作
-//    }
-//    return _imagePicker;
-//}
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
+    NSString *mediaType=[info objectForKey:UIImagePickerControllerMediaType];
+    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {//如果是拍照
+        UIImage *image;
+        //如果允许编辑则获得编辑后的照片，否则获取原始照片
+        if (self.imagePicker.allowsEditing) {
+            image=[info objectForKey:UIImagePickerControllerEditedImage];//获取编辑后的照片
+        }else{
+            image=[info objectForKey:UIImagePickerControllerOriginalImage];//获取原始照片
+        }
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);//保存到相簿
+    }else if([mediaType isEqualToString:(NSString *)kUTTypeMovie]){//如果是录制视频
+        NSURL *url=[info objectForKey:UIImagePickerControllerMediaURL];//视频路径
+        NSString *urlStr=[url path];
+        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(urlStr)) {
+            //保存视频到相簿，注意也可以使用ALAssetsLibrary来保存
+            UISaveVideoAtPathToSavedPhotosAlbum(urlStr, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);//保存视频到相簿
+        }
+        
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    NSLog(@"取消");
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - 私有方法
+-(UIImagePickerController *)imagePicker{
+    if (!_imagePicker) {
+        _imagePicker=[[UIImagePickerController alloc]init];
+        _imagePicker.sourceType=UIImagePickerControllerSourceTypeCamera;//设置image picker的来源，这里设置为摄像头
+        _imagePicker.cameraDevice=UIImagePickerControllerCameraDeviceRear;//设置使用哪个摄像头，这里设置为后置摄像头
+        if (isVideo) {
+            _imagePicker.mediaTypes=@[(NSString *)kUTTypeMovie];
+            _imagePicker.videoQuality=UIImagePickerControllerQualityTypeIFrame1280x720;
+            _imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModeVideo;//设置摄像头模式（拍照，录制视频）
+            
+        }else{
+            _imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModePhoto;
+        }
+        _imagePicker.allowsEditing=YES;//允许编辑
+        _imagePicker.delegate=self;//设置代理，检测操作
+    }
+    return _imagePicker;
+}
 
 //视频保存后的回调
-//- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
-//    if (error) {
-//        NSLog(@"保存视频过程中发生错误，错误信息:%@",error.localizedDescription);
-//    }else{
-//        NSLog(@"视频保存成功.");
-//        //录制完之后自动播放
-//        NSURL *url=[NSURL fileURLWithPath:videoPath];
-//        AVURLAsset *asset1 = [[AVURLAsset alloc] initWithURL:url options:nil];
-//        AVAssetImageGenerator *generate1 = [[AVAssetImageGenerator alloc] initWithAsset:asset1];
-//        generate1.appliesPreferredTrackTransform = YES;
-//        NSError *err = NULL;
-//        CMTime time = CMTimeMake(1, 2);
-//        CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
-//        cutImage = [[UIImage alloc] initWithCGImage:oneRef];
-//        
-//        
-//        loadingVideView.isLoaded = YES;
-//        loadingVideView.isComplete = NO;
-//        loadingVideView.uploadStart = YES;
-//        //上传视频
-//        [self uploadQiNiuVedio:url];
-//       // _moviePlayerViewController=[[MPMoviePlayerViewController alloc]initWithContentURL:url];
-//        //[self presentMoviePlayerViewControllerAnimated:self.moviePlayerViewController];
-//    }
-//}
+- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
+    if (error) {
+        NSLog(@"保存视频过程中发生错误，错误信息:%@",error.localizedDescription);
+    }else{
+        NSLog(@"视频保存成功.");
+        //录制完之后自动播放
+        NSURL *url=[NSURL fileURLWithPath:videoPath];
+        AVURLAsset *asset1 = [[AVURLAsset alloc] initWithURL:url options:nil];
+        AVAssetImageGenerator *generate1 = [[AVAssetImageGenerator alloc] initWithAsset:asset1];
+        generate1.appliesPreferredTrackTransform = YES;
+        NSError *err = NULL;
+        CMTime time = CMTimeMake(1, 2);
+        CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
+        cutImage = [[UIImage alloc] initWithCGImage:oneRef];
+        
+        
+        loadingVideView.isLoaded = YES;
+        loadingVideView.isComplete = NO;
+        loadingVideView.uploadStart = YES;
+        //上传视频
+        [self uploadQiNiuVedio:url];
+       // _moviePlayerViewController=[[MPMoviePlayerViewController alloc]initWithContentURL:url];
+        //[self presentMoviePlayerViewControllerAnimated:self.moviePlayerViewController];
+    }
+}
 
 //*********************************************************照相机功能结束*****************************************************//
 - (void)viewDidAppear:(BOOL)animated

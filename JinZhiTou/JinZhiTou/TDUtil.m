@@ -1270,4 +1270,20 @@
     label.attributedText = attributedString;//ios 6
     [label sizeToFit];
 }
+
++ (CGFloat)getTextViewHeight:(NSIndexPath*)indexPath content:(NSString*)content width:(CGFloat)width
+{
+    NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:content];
+    UITextView* textViewTemple = [[UITextView alloc]initWithFrame:CGRectZero];
+    textViewTemple.attributedText = attrStr;
+    textViewTemple.text = content;
+    NSRange range = NSMakeRange(0, attrStr.length);
+    NSDictionary *dic = [attrStr attributesAtIndex:0 effectiveRange:&range];   // 获取该段attributedString的属性字典
+    // 计算文本的大小  ios7.0
+    CGSize textSize = [textViewTemple.text boundingRectWithSize:CGSizeMake(width, MAXFLOAT) // 用于计算文本绘制时占据的矩形块
+                                                        options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading // 文本绘制时的附加选项
+                                                     attributes:dic        // 文字的属性
+                                                        context:nil].size;
+    return textSize.height;
+}
 @end

@@ -469,4 +469,6 @@
  *  @return 压缩后图片
  */
 +(UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize;
+
++ (CGFloat)getTextViewHeight:(NSIndexPath*)indexPath content:(NSString*)content width:(CGFloat)width;
 @end

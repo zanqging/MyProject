@@ -13,6 +13,8 @@
 #import "HttpUtils.h"
 #import "DialogUtil.h"
 #import "UConstants.h"
+#import "LoadingUtil.h"
+#import "LoadingView.h"
 #import "AutoShowView.h"
 #import "SwitchSelect.h"
 #import "GlobalDefine.h"
@@ -28,12 +30,16 @@
 @interface FinialAuthViewController ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,CustomImagePickerControllerDelegate,ASIHTTPRequestDelegate,UITextFieldDelegate>
 {
     NavView* navView;
+    LoadingView* loadingView;
     HttpUtils* httpUtils;
     AutoShowView* autoShowView;
     
-    int currentItemIndex;
     BOOL isUploadID;
     BOOL isCheck;
+    
+    UITextField* nameTextField;
+    UITextField* positionTextField;
+    UITextField* companyTextField;
     NSDictionary* companySelected;
     NSDictionary* industorySelected;
     NSDictionary* foundationSizeSelected;
@@ -68,7 +74,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(autoSelect:) name:@"autoSelect" object:nil];
     //获取投资人认证协议条件
     [self loadData];
-    [self loadCompanyData];
+//    [self loadCompanyData];
     
     //初始化协议书组
     array = [[NSMutableArray alloc]init];
@@ -82,24 +88,16 @@
     UIView* view = [scrollViewFinial viewWithTag:30001];
     
     UITextField* textField;
-    if (currentItemIndex==0) {
-        textField = (UITextField*)[view viewWithTag:500003];
-        textField.text = [dicData valueForKey:@"type_name"];
-        industorySelected = dicData;
-    }else if(currentItemIndex==2){
-        textField = (UITextField*)[view viewWithTag:500002];
-        textField.text = [dicData valueForKey:@"company_name"];
-        companySelected = dicData;
-    }else{
-        textField = (UITextField*)[view viewWithTag:500004];
-        textField.text = [dicData valueForKey:@"desc"];
-        foundationSizeSelected = dicData;
-    }
+    textField = (UITextField*)[view viewWithTag:500003];
+    textField.text = [dicData valueForKey:@"type_name"];
+    industorySelected = dicData;
 }
 
 //加载协议
 -(void)loadData
 {
+    loadingView = [LoadingUtil shareinstance:self.view];
+    [LoadingUtil show:loadingView];
     [httpUtils getDataFromAPIWithOps:INVESTOR_PROT postParam:nil type:0 delegate:self sel:@selector(requestInvestPro:)];
 }
 //加载基金规模
@@ -150,25 +148,8 @@
     scrollViewPerson.contentSize = CGSizeMake(WIDTH(scrollViewPerson), HEIGHT(scrollViewPerson)+300);
     [self.view addSubview:scrollViewPerson];
     
-    UITapGestureRecognizer* recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doAddCompanyAction:)];
-    //自然投资人
-    SwitchSelect* personalSwitchView = [[SwitchSelect alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view)/2, 50)];
-    personalSwitchView.tag = 20001;
-    personalSwitchView.isSelected = YES;
-    [personalSwitchView addGestureRecognizer:recognizer];
-    personalSwitchView.titleName = @"个人投资人";
-    [scrollViewPerson addSubview:personalSwitchView];
     
-    recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doAction:)];
-    //机构投资人
-    SwitchSelect* companySwitchView = [[SwitchSelect alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2, 0, WIDTH(self.view)/2, 50)];
-    companySwitchView.tag = 20002;
-    companySwitchView.isSelected = NO;
-    [companySwitchView addGestureRecognizer:recognizer];
-    companySwitchView.titleName = @"机构投资人";
-    [scrollViewPerson addSubview:companySwitchView];
-    
-    PhotoAdd* IDPhotoAddView = [[PhotoAdd alloc]initWithFrame:CGRectMake(10, POS_Y(personalSwitchView)+20, WIDTH(scrollViewPerson)/2-15, 100)];
+    PhotoAdd* IDPhotoAddView = [[PhotoAdd alloc]initWithFrame:CGRectMake(10, 10, WIDTH(scrollViewPerson)/2-15, 100)];
     IDPhotoAddView.tag = 20003;
     IDPhotoAddView.title = @"上传身份证";
     [scrollViewPerson addSubview:IDPhotoAddView];
@@ -192,17 +173,21 @@
     [view addSubview:label];
     
     //输入姓名
-    UITextField* textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(scrollViewPerson)*2/3-20, 30)];
-    textField.font  =SYSTEMFONT(16);
-    textField.tag = 500001;
-    textField.delegate = self;
-    textField.placeholder = @"请输入您的真实姓名";
-    textField.returnKeyType = UIReturnKeyDone;
-    textField.layer.borderColor =ColorTheme.CGColor;
-    textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [view addSubview:textField];
+    nameTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(scrollViewPerson)*2/3-20, 30)];
+    nameTextField.font  =SYSTEMFONT(16);
+    nameTextField.tag = 500001;
+    nameTextField.delegate = self;
+    nameTextField.placeholder = @"请输入您的真实姓名";
+    nameTextField.returnKeyType = UIReturnKeyDone;
+    nameTextField.layer.borderColor =ColorTheme.CGColor;
+    nameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    nameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    nameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    [view addSubview:nameTextField];
+    
+    UIImageView* lineView =[[UIImageView alloc]initWithFrame:CGRectMake(X(view), POS_Y(nameTextField), WIDTH(view), 1)];
+    lineView.backgroundColor  =BackColor;
+    [view addSubview:lineView];
     
     //职位
     label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(label)+10, WIDTH(label), 30)];
@@ -212,17 +197,21 @@
     [view addSubview:label];
     
     //输入职位
-    textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(textField), 30)];
-    textField.tag = 500002;
-    textField.delegate = self;
-    textField.font  =SYSTEMFONT(16);
-    textField.placeholder = @"请输入您的职位";
-    textField.returnKeyType = UIReturnKeyDone;
-    textField.layer.borderColor =ColorTheme.CGColor;
-    textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [view addSubview:textField];
+    positionTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(nameTextField), 30)];
+    positionTextField.tag = 500002;
+    positionTextField.delegate = self;
+    positionTextField.font  =SYSTEMFONT(16);
+    positionTextField.placeholder = @"请输入您的职位";
+    positionTextField.returnKeyType = UIReturnKeyDone;
+    positionTextField.layer.borderColor =ColorTheme.CGColor;
+    positionTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    positionTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    positionTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    [view addSubview:positionTextField];
+    
+    lineView =[[UIImageView alloc]initWithFrame:CGRectMake(X(view), POS_Y(positionTextField), WIDTH(view), 1)];
+    lineView.backgroundColor  =BackColor;
+    [view addSubview:lineView];
     
     //公司
     label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(label)+10, WIDTH(scrollViewPerson)*1/4, 30)];
@@ -232,17 +221,17 @@
     [view addSubview:label];
     
     //输入公司信息
-    textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(scrollViewPerson)*2/3-20, 30)];
-    textField.tag = 500003;
-    textField.delegate = self;
-    textField.font  =SYSTEMFONT(16);
-    textField.placeholder = @"请输入您的公司";
-    textField.returnKeyType = UIReturnKeyDone;
-    textField.layer.borderColor =ColorTheme.CGColor;
-    textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [view addSubview:textField];
+    companyTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(scrollViewPerson)*2/3-20, 30)];
+    companyTextField.tag = 500003;
+    companyTextField.delegate = self;
+    companyTextField.font  =SYSTEMFONT(16);
+    companyTextField.placeholder = @"请输入您的公司名称";
+    companyTextField.returnKeyType = UIReturnKeyDone;
+    companyTextField.layer.borderColor =ColorTheme.CGColor;
+    companyTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    companyTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    companyTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    [view addSubview:companyTextField];
     
     //header
     view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(view)+10, WIDTH(scrollViewPerson), 30)];
@@ -326,267 +315,6 @@
 }
 
 
--(void)addCompanyView
-{
-    scrollViewFinial = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView))];
-    scrollViewFinial.tag =40002;
-    scrollViewFinial.delegate=self;
-    scrollViewFinial.bounces = NO;
-    scrollViewFinial.backgroundColor=BackColor;
-    scrollViewFinial.contentSize = CGSizeMake(WIDTH(scrollViewFinial), HEIGHT(scrollViewFinial)+350);
-    [self.view addSubview:scrollViewFinial];
-    
-    UITapGestureRecognizer* recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doAction:)];
-    //自然投资人
-    SwitchSelect* personalSwitchView = [[SwitchSelect alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view)/2, 50)];
-    personalSwitchView.tag = 20001;
-    personalSwitchView.isSelected = YES;
-    [personalSwitchView addGestureRecognizer:recognizer];
-    personalSwitchView.titleName = @"个人投资人";
-    [scrollViewFinial addSubview:personalSwitchView];
-    
-    recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doAction:)];
-    //机构投资人
-    SwitchSelect* companySwitchView = [[SwitchSelect alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2, 0, WIDTH(self.view)/2, 50)];
-    companySwitchView.tag = 20002;
-    companySwitchView.isSelected = NO;
-    [companySwitchView addGestureRecognizer:recognizer];
-    companySwitchView.titleName = @"机构投资人";
-    [scrollViewFinial addSubview:companySwitchView];
-    
-    PhotoAdd* IDPhotoAddView = [[PhotoAdd alloc]initWithFrame:CGRectMake(10, POS_Y(personalSwitchView)+20, WIDTH(scrollViewFinial)/2-15, 100)];
-    IDPhotoAddView.title = @"上传身份证";
-    IDPhotoAddView.tag = 20003;
-    [scrollViewFinial addSubview:IDPhotoAddView];
-    
-    PhotoAdd* CardPhotoAddView = [[PhotoAdd alloc]initWithFrame:CGRectMake(WIDTH(scrollViewFinial)/2+5, Y(IDPhotoAddView), WIDTH(scrollViewFinial)/2-15, 100)];
-    CardPhotoAddView.title = @"上传个人名片";
-    CardPhotoAddView.tag = 20004;
-    [scrollViewFinial addSubview:CardPhotoAddView];
-    
-    //header
-    UIView* view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(CardPhotoAddView)+10, WIDTH(scrollViewFinial), 30)];
-    view.tag =30002;
-    //头部
-    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, WIDTH(scrollViewFinial)-40, 20)];
-    label.text = @"符合以下条件之一的机构投资者，可多选";
-    label.font  =SYSTEMFONT(14);
-    [view addSubview:label];
-    [scrollViewFinial addSubview:view];
-    
-    //tableView
-    CGRect rect=CGRectMake(0, POS_Y(view)+10, WIDTH(scrollViewFinial),264);
-    self.tableView=[[UITableView alloc]initWithFrame:rect style:UITableViewStylePlain];
-    self.tableView.bounces=YES;
-    self.tableView.delegate=self;
-    self.tableView.dataSource=self;
-    self.tableView.allowsSelection=YES;
-    self.tableView.delaysContentTouches=NO;
-    self.tableView.showsVerticalScrollIndicator=NO;
-    self.tableView.showsHorizontalScrollIndicator=NO;
-    self.tableView.backgroundColor=[UIColor clearColor];
-    self.tableView.separatorStyle=UITableViewCellSeparatorStyleSingleLine;
-    
-    [scrollViewFinial addSubview:self.tableView];
-    
-    
-    
-    //footer
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(self.tableView)+10, WIDTH(scrollViewFinial), 50)];
-    view.tag =30003;
-    //头部
-    label = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, WIDTH(scrollViewFinial)-40, 40)];
-    label.text = @"备注：以上内容请参考《私募股权基金监督管理暂行办法（试行）》合格投资人规定";
-    label.numberOfLines = 0;
-    label.font  =SYSTEMFONT(14);
-    label.lineBreakMode  =NSLineBreakByWordWrapping;
-    [view addSubview:label];
-    
-    [scrollViewFinial addSubview:view];
-    
-    //填写信息
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(view)+10, WIDTH(self.view), 200)];
-    view.tag = 30001;
-    view.backgroundColor  =WriteColor;
-    [scrollViewFinial addSubview:view];
-    
-    //姓名
-    label = [[UILabel alloc]initWithFrame:CGRectMake(10, 20, WIDTH(scrollViewFinial)*1/4, 30)];
-    label.textAlignment = NSTextAlignmentRight;
-    label.text = @"姓名";
-    label.font = SYSTEMFONT(16);
-    [view addSubview:label];
-    
-    //输入姓名
-    UITextField* textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(scrollViewFinial)*2/3-20, 30)];
-    textField.tag = 500001;
-    textField.delegate = self;
-    textField.font  =SYSTEMFONT(16);
-    textField.placeholder = @"请输入您的真实姓名";
-    textField.returnKeyType = UIReturnKeyDone;
-    textField.layer.borderColor =ColorTheme.CGColor;
-    textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [view addSubview:textField];
-    
-    //职位
-    label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(label)+10, WIDTH(label), 30)];
-    label.textAlignment = NSTextAlignmentRight;
-    label.text = @"公司";
-    label.font = SYSTEMFONT(16);
-    [view addSubview:label];
-    
-    //输入职位
-    textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(textField), 30)];
-    textField.tag = 500002;
-    textField.delegate = self;
-    textField.font  =SYSTEMFONT(16);
-    textField.placeholder = @"请输入您的公司名称";
-    textField.returnKeyType = UIReturnKeyDone;
-    textField.layer.borderColor =ColorTheme.CGColor;
-    textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [view addSubview:textField];
-    
-    
-    recognizer =[[ UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doAction:)];
-    
-    UIImageView* imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)-35, Y(textField), 20, 20)];
-    imageView.image = IMAGENAMED(@"tianjia");
-    imageView.userInteractionEnabled = YES;
-    [imageView addGestureRecognizer:recognizer];
-    [view addSubview:imageView];
-    view.layer.cornerRadius = 5;
-    
-    //投资领域
-    label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(label)+10, WIDTH(scrollViewFinial)*1/4, 30)];
-    label.textAlignment = NSTextAlignmentRight;
-    label.text = @"投资领域";
-    label.font = SYSTEMFONT(16);
-    [view addSubview:label];
-    
-    //输入公司信息
-    textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(scrollViewFinial)*2/3-20, 30)];
-    textField.tag = 500003;
-    textField.delegate = self;
-    textField.font  =SYSTEMFONT(16);
-    textField.placeholder = @"请输入您所感兴趣的领域";
-    textField.returnKeyType = UIReturnKeyDone;
-    textField.layer.borderColor =ColorTheme.CGColor;
-    textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [view addSubview:textField];
-    
-    //基金规模
-    label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(label)+10, WIDTH(scrollViewFinial)*1/4, 30)];
-    label.textAlignment = NSTextAlignmentRight;
-    label.text = @"基金规模";
-    label.font = SYSTEMFONT(16);
-    [view addSubview:label];
-    
-    //输入公司信息
-    textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(scrollViewFinial)*2/3-20, 30)];
-    textField.placeholder = @"请选择您的基金规模";
-    textField.font  =SYSTEMFONT(16);
-    textField.tag =500004;
-    textField.delegate = self;
-    textField.returnKeyType = UIReturnKeyDone;
-    textField.layer.borderColor =ColorTheme.CGColor;
-    textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [view addSubview:textField];
-    
-    
-    
-    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(20, POS_Y(view)+20, 15, 15)];
-    imgView.image = IMAGENAMED(@"queren-1");
-    imgView.tag  =700001;
-    imgView.userInteractionEnabled = YES;
-    [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(check:)]];
-    imgView.contentMode = UIViewContentModeScaleAspectFill;
-    [scrollViewFinial addSubview:imgView];
-    
-    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, Y(imgView)-3, WIDTH(scrollViewFinial)-POS_X(imgView)-10, 20)];
-    label.font = SYSTEMFONT(12);
-    label.textAlignment = NSTextAlignmentLeft;
-    label.userInteractionEnabled = YES;
-    [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];
-    NSString* content =@"我已经认真阅读并同意 《投资风险提示书》";
-    
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(10, [content length]-10)];
-    
-    label.attributedText = attributedString;//ios 6
-    
-    [scrollViewFinial addSubview:label];
-    
-    
-    
-    UIButton* btnAction =[[UIButton alloc]initWithFrame:CGRectMake(60, POS_Y(label)+20, WIDTH(scrollViewFinial)-120, 35)];
-    btnAction.layer.cornerRadius =5;
-    btnAction.backgroundColor = ColorTheme;
-    [btnAction setTitle:@"提交资料" forState:UIControlStateNormal];
-    [btnAction addTarget:self action:@selector(commitData) forControlEvents:UIControlEventTouchUpInside];
-    [scrollViewFinial addSubview:btnAction];
-}
-
--(void)doAction:(UITapGestureRecognizer*)recongnizer
-{
-    NSInteger tag = recongnizer.view.tag;
-    SwitchSelect* selectViewPerson;
-    SwitchSelect* selectViewCompany;
-    if (selectedIndex==0) {
-        selectViewPerson =(SwitchSelect*)[scrollViewPerson viewWithTag:20001];
-        selectViewCompany =(SwitchSelect*)[scrollViewPerson viewWithTag:20002];
-    }else{
-        selectViewPerson =(SwitchSelect*)[scrollViewFinial viewWithTag:20001];
-        selectViewCompany =(SwitchSelect*)[scrollViewFinial viewWithTag:20002];
-    }
-    
-    switch (tag) {
-        case 20001:
-            if (!selectViewPerson.isSelected) {
-                selectedIndex =0;
-                selectViewPerson.isSelected=!selectViewPerson.isSelected;
-                selectViewCompany.isSelected = NO;
-            }
-            break;
-        case 20002:
-            if (!selectViewCompany.isSelected) {
-
-                selectedIndex =1;
-                selectViewCompany.isSelected=!selectViewCompany.isSelected;
-                selectViewPerson.isSelected = NO;
-            }
-            break;
-        default:
-            if (!selectViewPerson.isSelected) {
-                selectedIndex =0;
-                [self changeSwitchview];
-                selectViewPerson.isSelected=!selectViewPerson.isSelected;
-                selectViewCompany.isSelected = NO;
-            }
-            break;
-    }
-    //清空选项
-    [array removeAllObjects];
-    //重新加载
-    [self.tableView reloadData];
-    [self changeSwitchview];
-    
-    if (selectedIndex ==1) {
-        //获取基金规模
-        [self loadFoundationSize];
-        //获取行业类别
-        [self loadIndustoryTypeData];
-    }
-}
-
-
 -(void)layout
 {
     
@@ -653,8 +381,6 @@
         if (selectedIndex != 0 && !scrollView) {
             if (scrollViewFinial) {
                 [self.view addSubview:scrollViewFinial];
-            }else{
-                [self addCompanyView];
             }
             
         }
@@ -701,25 +427,10 @@
     NSString* userName;
     NSString* userType;
     NSString* company;
-    if (selectedIndex==0) {
-        UITextField* textField = (UITextField*)[scrollViewPerson viewWithTag:500001];
-        userName = textField.text;
-        
-        textField = (UITextField*)[scrollViewPerson viewWithTag:500002];
-        userType = textField.text;
-        
-        textField = (UITextField*)[scrollViewPerson viewWithTag:500003];
-        company = textField.text;
-    }else{
-        UITextField* textField = (UITextField*)[scrollViewFinial viewWithTag:500001];
-        userName = textField.text;
-        
-        textField = (UITextField*)[scrollViewFinial viewWithTag:500002];
-        userType = textField.text;
-        
-        textField = (UITextField*)[scrollViewFinial viewWithTag:500003];
-        company = textField.text;
-    }
+    
+    userName = nameTextField.text;
+    userType = positionTextField.text;
+    company  = companyTextField.text;
     
     if (![TDUtil isValidString:userName]) {
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入姓名" ];
@@ -727,31 +438,17 @@
     }
     
     if (![TDUtil isValidString:userType]) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请选择职位" ];
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入职位" ];
         return NO;
     }
+    
     
     if (![TDUtil isValidString:company]) {
-        if (selectedIndex == 1 && companySelected) {
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请填写公司" ];
-            return NO;
-        }
         
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请填写公司" ];
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入公司" ];
         return NO;
     }
     
-    if (selectedIndex ==1) {
-        if (!industorySelected) {
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请选择投资领域" ];
-            return NO;
-        }
-        
-        if (!foundationSizeSelected) {
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请选择基金规模" ];
-            return NO;
-        }
-    }
     
     
     if (!array || array.count<=0) {
@@ -775,19 +472,15 @@
         
     }
     
-    NSDictionary* dic =[[NSMutableDictionary alloc]init];
-    [dic setValue:userName forKey:@"real_name"];
-    [dic setValue:userType forKey:@"position"];
-    [dic setValue:str forKey:@"investor_qualification"];
-    if (selectedIndex==0) {
-        [dic setValue:company forKey:@"company"];
-    }else{
-        [dic setValue:[companySelected valueForKey:@"id"] forKey:@"company"];
-    }
+    //加载动画
+    loadingView.isTransparent  = YES;
+    [LoadingUtil show:loadingView];
     
-    [dic setValue:[industorySelected valueForKey:@"id"] forKey:@"industry_type"];
-    [dic setValue:[NSString stringWithFormat:@"%d",selectedIndex] forKey:@"investor_type"];
-    [dic setValue:[foundationSizeSelected valueForKey:@"id"] forKey:@"fund_size_range"];
+    NSDictionary* dic =[[NSMutableDictionary alloc]init];
+    [dic setValue:userName forKey:@"name"];
+    [dic setValue:userType forKey:@"position"];
+    [dic setValue:str forKey:@"qualification"];
+    [dic setValue:company forKey:@"company"];
     [httpUtils getDataFromAPIWithOps:AUTHENTICATE postParam:dic type:0 delegate:self sel:@selector(requestAuthenicate:)];
     return YES;
 }
@@ -1019,6 +712,7 @@
             NSMutableArray* data = [dic valueForKey:@"data"];
             if (data!=nil && data.count>0) {
                 self.dataArray = data;
+                [LoadingUtil close:loadingView];
             }
             
         }
@@ -1113,24 +807,29 @@
         if ([status integerValue]==0) {
             NSString* data = [dic valueForKey:@"data"];
             [self uploadBuinessCard:data];
+            
+            
+            //进度查看
+            double delayInSeconds = 1.0;
+            //__block RoadShowDetailViewController* bself = self;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                UserTraceViewController* controller = [[UserTraceViewController alloc]init];
+                //来现场
+                controller.titleStr = navView.title;
+                controller.currentSelected = 1002;
+                [self.navigationController pushViewController:controller animated:YES];
+                
+                
+            });
+            
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
         }
         
-        //进度查看
-        double delayInSeconds = 1.0;
-        //__block RoadShowDetailViewController* bself = self;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            UserTraceViewController* controller = [[UserTraceViewController alloc]init];
-            //来现场
-            controller.titleStr = navView.title;
-            controller.currentSelected = 1002;
-            [self.navigationController pushViewController:controller animated:YES];
-            
-            
-        });
+        [LoadingUtil close:loadingView];
+       
     }
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
@@ -1159,7 +858,6 @@
             }else{
                 [autoShowView setFrame:CGRectMake(X(textField), Y(view)+POS_Y(textField), WIDTH(textField), 150)];
             }
-            currentItemIndex = 0;
             autoShowView.alpha =1;
             autoShowView.title = @"type_name";
             autoShowView.dataArray = self.industoryList;
@@ -1173,30 +871,28 @@
             }else{
                 [autoShowView setFrame:CGRectMake(X(textField), Y(view)+POS_Y(textField), WIDTH(textField), 150)];
             }
-            currentItemIndex = 1;
             autoShowView.alpha =1;
             autoShowView.title = @"desc";
             autoShowView.dataArray = self.foundationSizeRange;
         }else if (textField.tag == 500002){
-            [textField resignFirstResponder];
-            UIView* view = [scrollViewFinial viewWithTag:30001];
-            [textField resignFirstResponder];
-            //bug
-            UITextField* txtField = (UITextField*)[view viewWithTag:500001];
-            if (txtField) {
-                [textField resignFirstResponder];
-            }
-            
-            if (!autoShowView) {
-                autoShowView = [[AutoShowView alloc]initWithFrame:CGRectMake(X(textField), Y(view)+POS_Y(textField), WIDTH(textField), 150)];
-                [scrollViewFinial addSubview:autoShowView];
-            }else{
-                [autoShowView setFrame:CGRectMake(X(textField), Y(view)+POS_Y(textField), WIDTH(textField), 150)];
-            }
-            currentItemIndex = 2;
-            autoShowView.alpha =1;
-            autoShowView.title = @"company_name";
-            autoShowView.dataArray = self.companyDataArray;
+//            UIView* view = [scrollViewFinial viewWithTag:30001];
+//            [textField resignFirstResponder];
+//            //bug
+//            UITextField* txtField = (UITextField*)[view viewWithTag:500001];
+//            if (txtField) {
+//                [textField resignFirstResponder];
+//            }
+//            
+//            if (!autoShowView) {
+//                autoShowView = [[AutoShowView alloc]initWithFrame:CGRectMake(X(textField), Y(view)+POS_Y(textField), WIDTH(textField), 150)];
+//                [scrollViewFinial addSubview:autoShowView];
+//            }else{
+//                [autoShowView setFrame:CGRectMake(X(textField), Y(view)+POS_Y(textField), WIDTH(textField), 150)];
+//            }
+//            currentItemIndex = 2;
+//            autoShowView.alpha =1;
+//            autoShowView.title = @"company_name";
+//            autoShowView.dataArray = self.companyDataArray;
 
         }
 

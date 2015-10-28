@@ -96,13 +96,14 @@
     [self.finalContentTableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     [TDUtil tableView:self.finalContentTableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
     [self addObserver];
+    
+    loadingView = [LoadingUtil shareinstance:self.view];
+    [LoadingUtil show:loadingView];
+    
     //加载左侧菜单
     [self loadMenuData];
     //加载数据
-    //[self loadWaitFinaceData];
-    
-    loadingView = [LoadingUtil shareinstance:self.view];
-    currentSelectIndex = 1;
+    currentSelectIndex = 0;
     loadingView.isTransparent = NO;
     
     //添加监听
@@ -391,6 +392,7 @@
              Cell.isSelected=NO;
         }
         Cell.content=self.array[indexPath.row];
+        Cell.backgroundColor = ClearColor;
         Cell.selectionStyle=UITableViewCellSelectionStyleNone;
         return Cell;
         

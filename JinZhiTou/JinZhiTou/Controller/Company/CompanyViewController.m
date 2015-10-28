@@ -379,7 +379,6 @@
 }
 -(void)back:(id)sender
 {
-    [(RoadShowApplyViewController*)self.controller loadCompanyData];
     [self.navigationController popViewControllerAnimated:YES];
 }
 #pragma UITextFieldDelegate

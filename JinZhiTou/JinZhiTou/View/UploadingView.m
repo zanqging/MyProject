@@ -92,7 +92,7 @@
     
     //主线程更新绘制
     [progressView setProgress:progress animated:YES];
-    NSString* str =[NSString stringWithFormat:@"uploading(%.f)",progress*100];
+    NSString* str =[NSString stringWithFormat:@"正在上传(%.f)",progress*100];
     str = [str stringByAppendingString:@"%"];
     self.progressLabel.text =str;
     

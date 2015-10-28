@@ -51,8 +51,10 @@
         [self addSubview:self.descLabel];
     }else{
         [self.thumailView removeFromSuperview];
-        [self.titleLabel removeFromSuperview];
-        [self.descLabel removeFromSuperview];
+        //[self.titleLabel removeFromSuperview];
+        //[self.descLabel removeFromSuperview];
+        self.titleLabel.text = @"视频上传完成";
+        self.descLabel.text = @"(可简单介绍公司,项目,团队等,需1-2分钟视频)";
     }
     
 }
@@ -101,9 +103,10 @@
 -(void)setImgage:(UIImage *)imgage
 {
     if (imgage) {
-        self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self), HEIGHT(self))];
+        self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-WIDTH(self)/8, 20, WIDTH(self)/4, HEIGHT(self)/4)];
         self->_imgage = imgage;
         self.imgView.image = self.imgage;
+        self.imgView.contentMode  =UIViewContentModeScaleAspectFill;
         [self addSubview:self.imgView];
     }
 }

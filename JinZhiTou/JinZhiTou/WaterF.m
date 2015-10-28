@@ -228,7 +228,7 @@
 - (CGFloat)getTextViewHeight:(NSIndexPath*)indexPath
 {
     NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:self.textsArr[indexPath.item]];
-    UITextView* textViewTemple = [[UITextView alloc]init];
+    UITextView* textViewTemple = [[UITextView alloc]initWithFrame:CGRectZero];
     textViewTemple.attributedText = attrStr;
     textViewTemple.text = self.textsArr[indexPath.item];
     NSRange range = NSMakeRange(0, attrStr.length);
@@ -260,7 +260,7 @@
                                                           withReuseIdentifier:@"WaterFallSectionHeader"
                                                                  forIndexPath:indexPath];
         reusableView.backgroundColor  =WriteColor;
-        [self.headerView setFrame:CGRectMake(1, 1, WIDTH(self.headerView)-1, HEIGHT(self.headerView)-2)];
+        [self.headerView setFrame:CGRectMake(1, 1, WIDTH(self.headerView), HEIGHT(self.headerView)-2)];
         [reusableView addSubview:self.headerView];
     }
     else if ([kind isEqualToString:WaterFallSectionFooter])
@@ -269,7 +269,6 @@
                                                           withReuseIdentifier:@"WaterFallSectionfooter"
                                                                  forIndexPath:indexPath];
     }
-    
     return reusableView;
 }
 

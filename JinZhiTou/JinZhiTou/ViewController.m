@@ -65,7 +65,7 @@
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     
-    [self.navView.rightButton setImage:IMAGENAMED(@"comment_write") forState:UIControlStateNormal];
+    [self.navView.rightButton setImage:IMAGENAMED(@"circle_publish") forState:UIControlStateNormal];
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(publishAction:)]];
     [self.view addSubview:self.navView];
     
@@ -266,15 +266,22 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:@"userInfo" object:nil];
 }
 
--(void)commentAction:(id)sender
+-(BOOL)commentAction:(id)sender
 {
     NSString* content = textView.text;
+    if ([content isEqualToString:@""]) {
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入回复内容"];
+        return false;
+    }
+    
+    [textView resignFirstResponder];
     if(!httpUtils){
         httpUtils = [[HttpUtils alloc]init];
     }
     
     NSString* serverUrl = [CYCLE_CONTENT_REPLY stringByAppendingFormat:@"%@/",conId];
     [httpUtils getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:content,@"content",atConId,@"at", nil] type:0 delegate:self sel:@selector(requestReply:)];
+    return true;
 }
 -(void)publishAction:(id)sender
 {
@@ -452,10 +459,10 @@
         }
     }
     
-    if (likersCount>0 && likersCount<7) {
+    if (likersCount>0 && likersCount<=4) {
         height+=50;
     }else{
-        height += (likersCount/7+1)*20;
+        height += (likersCount/4+1)*25;
     }
     
     for (int i=0; i<commentCount; i++) {
@@ -648,6 +655,11 @@
                     [dataArray addObject:arrayData[i]];
                 }
             }
+//            NSDictionary* dic =[[dataArray[0] valueForKey:@"likers"] objectAtIndex:0];
+//            for (int i=0; i<45; i++) {
+//                [dic setValue:[NSString stringWithFormat:@"%d",i] forKey:@"uid"];
+//                [[dataArray[0] valueForKey:@"likers"] addObject:dic];
+//            }
             self.dataArray = dataArray;
             if (isRefresh) {
                 [self.tableView.header endRefreshing];
