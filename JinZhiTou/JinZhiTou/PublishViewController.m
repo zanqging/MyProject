@@ -57,6 +57,7 @@
     self.textView.text  =PUBLISH_CONTENT;
     self.textView.textColor  =FONT_COLOR_GRAY;
     self.textView.delegate = self;
+    self.textView.returnKeyType = UIReturnKeyDone;
     [scrollView addSubview:self.textView];
     
     self.imgContentView =[[UIView alloc]initWithFrame:CGRectMake(X(self.textView), POS_Y(self.textView)+20, WIDTH(self.textView), 80)];
@@ -92,7 +93,7 @@
         }
     }
     
-    if ([content isEqualToString:PUBLISH_CONTENT]) {
+    if ([content isEqualToString:PUBLISH_CONTENT] || [content isEqualToString:@""]) {
         if ((!postArray || postArray.count==0)) {
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"发表内容不能为空"];
             return false;
@@ -134,8 +135,6 @@
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         
     }];
-    
-    
     
     // Add the actions.
     [alertController addAction:takePhotoAction];

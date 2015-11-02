@@ -71,7 +71,8 @@
     
     
     [self.view addSubview:navView];
-    self.finalFunTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), 50, HEIGHT(self.view)-POS_Y(navView)-kBottomBarHeight-85)];
+    float height = HEIGHT(self.view)-POS_Y(navView)-kBottomBarHeight-85;
+    self.finalFunTableView = [[UITableView alloc]initWithFrame:CGRectMake(0,POS_Y(navView), 50, height)];
     self.finalContentTableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(51, POS_Y(navView), WIDTH(self.view)-50,HEIGHT(self.finalFunTableView))];
     [self.view addSubview:self.finalFunTableView];
     [self.view addSubview:self.finalContentTableView];
@@ -91,7 +92,7 @@
     self.finalContentTableView.backgroundColor=BackColor;
     self.finalFunTableView.separatorStyle=UITableViewCellSeparatorStyleNone;
     self.finalContentTableView.separatorStyle=UITableViewCellSeparatorStyleNone;
-    float h =HEIGHT(self.finalFunTableView)/10;
+    float h =HEIGHT(self.view)/4-48;
     self.finalFunTableView.contentInset = UIEdgeInsetsMake(h, 0, 0, 0);
     [self.finalContentTableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     [TDUtil tableView:self.finalContentTableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
@@ -515,6 +516,10 @@
             [self refreshProject];
             [self.finalFunTableView reloadData];
         }
+        
+        if ([status intValue] == -1 && currentPage>0){
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+        }
     }
 }
 //待融资
@@ -538,7 +543,7 @@
                 }
             }
             
-            if ([status intValue] == -1 ){
+            if ([status intValue] == -1 && currentPage>0){
                 [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
@@ -572,7 +577,7 @@
                 }
                
             }
-            if ([status intValue] == -1 ){
+            if ([status intValue] == -1 && currentPage>0){
                 [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
@@ -604,7 +609,7 @@
                     self.thinkTankFinialDataArray = [jsonDic valueForKey:@"data"];
                 }
             }
-            if ([status intValue] == -1 ){
+            if ([status intValue] == -1 && currentPage>0){
                 [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
@@ -638,7 +643,7 @@
                 }
                 
             }
-            if ([status intValue] == -1 ){
+            if ([status intValue] == -1 && currentPage>0){
                 [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
@@ -666,7 +671,7 @@
         self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
         
         [LoadingUtil closeLoadingView:loadingView];
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+//        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         if (isRefresh) {
             [self.finalContentTableView.header endRefreshing];
         }else{

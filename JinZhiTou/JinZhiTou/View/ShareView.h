@@ -16,6 +16,9 @@
     UIView* view;
 }
 @property(assign,nonatomic)int type;
+@property(assign,nonatomic)BOOL isShareNews;
 @property(assign,nonatomic)NSInteger projectId;
 @property(retain,nonatomic)NSMutableDictionary* dic;
+
+-(id)initWithFrame:(CGRect)frame isShareNews:(BOOL)isShareNews;
 @end

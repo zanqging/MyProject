@@ -5,7 +5,7 @@
 	<key>CHANNEL</key>
 	<string>Publish channel</string>
 	<key>APS_FOR_PRODUCTION</key>
-	<string>1</string>
+	<string>0</string>
 	<key>APP_KEY</key>
 	<string>cc3fdb255d49497c5fd3d402</string>
 </dict>

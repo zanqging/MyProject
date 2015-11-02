@@ -7,7 +7,6 @@
 //
 
 #import "ViewController.h"
-#import "ActionDetailViewController.h"
 #import "TDUtil.h"
 #import "MJRefresh.h"
 #import "HttpUtils.h"
@@ -21,10 +20,12 @@
 #import "NSString+SBJSON.h"
 #import "DAKeyboardControl.h"
 #import "PECropViewController.h"
+#import "BannerViewController.h"
 #import "PublishViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "UserBasicInfoViewController.h"
 #import "UserLookForViewController.h"
+#import "ActionDetailViewController.h"
+#import "UserBasicInfoViewController.h"
 #import "CustomImagePickerController.h"
 #define  TEXT_VIEW_HEIGHT  30
 @interface ViewController ()<WeiboTableViewCellDelegate,CustomImagePickerControllerDelegate,UITextViewDelegate>
@@ -248,7 +249,7 @@
 }
 -(void)publishContent:(NSDictionary*)dic
 {
-     NSMutableArray* uploadFiles =[[dic valueForKey:@"userInfo"] valueForKey:@"uploadFiles"];
+    NSMutableArray* uploadFiles =[[dic valueForKey:@"userInfo"] valueForKey:@"uploadFiles"];
     NSString* content = [[dic valueForKey:@"userInfo"] valueForKey:@"content"];
     [httpUtils getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:[NSDictionary dictionaryWithObject:content forKey:@"content"] files:uploadFiles postName:@"file" type:0 delegate:self sel:@selector(requestPublishContent:)];
 }
@@ -384,7 +385,7 @@
         }
         [self.tableView reloadData];
     }
-//    [[DialogUtil sharedInstance]showDlg:self.view textOnly:msg];
+    [[DialogUtil sharedInstance]showDlg:self.view textOnly:msg];
     
 }
 -(void)weiboTableViewCell:(id)weiboTableViewCell refresh:(BOOL)refresh
@@ -429,6 +430,19 @@
     [self.navigationController pushViewController:controller animated:YES];
 }
 
+
+-(void)weiboTableViewCell:(id)weiboTableViewCell didSelectedShareContentUrl:(NSURL *)urlStr
+{
+    NSLog(@"url:%@",urlStr);
+    NSDictionary* dic =((WeiboTableViewCell*)weiboTableViewCell).dic;
+    BannerViewController* controller =[[BannerViewController alloc]init];
+    controller.titleStr=@"咨询详情";
+    controller.dic = [dic valueForKey:@"share"];
+    controller.title=@"圈子";
+    controller.type=3;
+    controller.url =urlStr;
+    [self.navigationController pushViewController:controller animated:YES];
+}
 -(CGFloat)getHeightItemWithIndexpath:(NSIndexPath*) indexpath
 {
     NSDictionary* dic = self.dataArray[indexpath.row];
@@ -501,6 +515,10 @@
             }
         }
         
+    }
+    
+    if ([dic valueForKey:@"share"]) {
+        height+=74;
     }
     
     height+=140;

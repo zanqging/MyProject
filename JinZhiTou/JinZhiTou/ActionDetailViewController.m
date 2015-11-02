@@ -120,7 +120,17 @@
         toolBarFrame.origin.y = keyboardFrameInView.origin.y - toolBarFrame.size.height;
         blockSelf.toolBar.frame = toolBarFrame;
     } constraintBasedActionHandler:nil];
-    [self loadData];
+    if (!self.projectId) {
+        [self loadData];
+    }else{
+        NSString* serverUrl = [PUBLISH_CONTENT_DETAIL stringByAppendingFormat:@"%@/",self.projectId];
+        if (!httpUtils) {
+            httpUtils= [[HttpUtils alloc]init];
+        }
+        [httpUtils getDataFromAPIWithOps:serverUrl type:0 delegate:self sel:@selector(requestPublishData:) method:@"GET"];
+        
+        self.selectIndex = 2;
+    }
 }
 
 -(void)loadData
@@ -130,9 +140,6 @@
             [self loadPriseListData];
             break;
         case 2:
-            [self loadShareListData];
-            break;
-        case 3:
             [self loadCommentListData];
             break;
             
@@ -144,13 +151,6 @@
 -(void)setProjectId:(NSString *)projectId
 {
     self->_projectId = projectId;
-    if (self.projectId) {
-        NSString* serverUrl = [PUBLISH_CONTENT_DETAIL stringByAppendingFormat:@"%@/",self.projectId];
-        if (!httpUtils) {
-            httpUtils= [[HttpUtils alloc]init];
-        }
-        [httpUtils getDataFromAPIWithOps:serverUrl type:0 delegate:self sel:@selector(requestPublishData:) method:@"GET"];
-    }
 }
 
 -(void)refreshProject
@@ -418,6 +418,13 @@
                 headerView.delegate = self;
                 headerView.dic = self.dic;
                 [self.tableView setTableHeaderView:headerView];
+                
+                //列表
+                if (self.selectIndex==1) {
+                    self.dataArray = [self.dic valueForKey:@"likers"];
+                }else{
+                    self.dataArray = [self.dic valueForKey:@"comment"];
+                }
             }
         }
         
@@ -438,7 +445,6 @@
         NSString* status = [dic valueForKey:@"status"];
         if ([status integerValue] == 0 || [status integerValue] == -1) {
             self.dataArray = [dic valueForKey:@"data"];
-            //[[DialogUtil sharedInstance]showDlg:self.view textOnly:@"内容获取成功!"];
         }
         
         if (isRefresh) {

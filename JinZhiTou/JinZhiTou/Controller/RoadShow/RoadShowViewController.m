@@ -130,6 +130,24 @@
     //重新布局
     [self.waterfall.collectionView setFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView)-kBottomBarHeight-39)];
     [self.view addSubview:self.waterfall.collectionView];
+    
+    //头部
+    UIView* headerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 150)];
+    self.mainScorllView = [[CycleScrollView alloc] initWithFrame:CGRectInset(headerView.frame, 1, 1) animationDuration:2];
+    self.mainScorllView.backgroundColor = [[UIColor purpleColor] colorWithAlphaComponent:0.1];
+    
+    for (int i=0; i<10; i++) {
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.mainScorllView))];
+        imageView.backgroundColor = WriteColor;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.layer.masksToBounds = YES;
+        
+        [imageView setImage:IMAGENAMED(@"loading")];
+        [self.viewsArray addObject:imageView];
+    }
+    [headerView addSubview:self.mainScorllView];
+    self.waterfall.headerView=headerView;
+    
 }
 
 
@@ -166,12 +184,17 @@
         if ([status intValue] == 0) {
             loadingView.isError = NO;
 //            [LoadingUtil close:loadingView];
-            self.mainScorllView = [[CycleScrollView alloc] initWithFrame:CGRectMake(0,0, WIDTH(self.view), 150) animationDuration:2];
+            //UIView* headerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 150)];
+            //self.mainScorllView = [[CycleScrollView alloc] initWithFrame:CGRectInset(headerView.frame, 1, 1) animationDuration:2];
             self.mainScorllView.backgroundColor = [[UIColor purpleColor] colorWithAlphaComponent:0.1];
             
             NSMutableArray* array = [jsonDic valueForKey:@"data"];
+            if (array.count>0) {
+                [self.viewsArray removeAllObjects];
+            }
+            
             for (int  i =0; i<array.count; i++) {
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 150)];
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.mainScorllView))];
                 imageView.backgroundColor = WriteColor;
                 imageView.contentMode = UIViewContentModeScaleAspectFit;
                 imageView.layer.masksToBounds = YES;
@@ -181,13 +204,13 @@
                 [self.viewsArray addObject:imageView];
                 
                 NSURL* url =[NSURL URLWithString:[array[i] valueForKey:@"img"]];
+                __block RoadShowViewController* blockSelf =self;
                 [imageView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                     imageView.contentMode = UIViewContentModeScaleAspectFill;
                     imageView.layer.masksToBounds = NO;
+                    [blockSelf.viewsArray replaceObjectAtIndex:i withObject:imageView];
                 }];
             }
-            self.bannerArray = array;
-            
             __block RoadShowViewController *instance = self;
             self.mainScorllView.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
                 return instance.viewsArray[pageIndex];
@@ -196,11 +219,14 @@
                 return instance.viewsArray.count;
             };
             
+            self.bannerArray = array;
+            
             __block RoadShowViewController* roadShow=self;
             self.mainScorllView.TapActionBlock = ^(NSInteger pageIndex){
                 NSString* projectId =[roadShow.bannerArray[pageIndex] valueForKey:@"project"];
                 if ([projectId isKindOfClass:NSNull.class]) {
                     BannerViewController* controller =[[BannerViewController alloc]init];
+                    controller.titleStr = @"首页";
                     NSString* urlStr =[roadShow.bannerArray[pageIndex] valueForKey:@"url"];
                     if (urlStr && ![urlStr isEqualToString:@""]) {
                         controller.url =[NSURL URLWithString:urlStr];
@@ -215,7 +241,7 @@
                     [roadShow.navigationController pushViewController:controller animated:YES];
                 }
             };
-            self.waterfall.headerView=self.mainScorllView;
+            
         }else{
             NSLog(@"请求失败!");
         }
@@ -224,9 +250,10 @@
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
-
     loadingView.isError = YES;
     loadingView.content =@"网络连接失败!";
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
 }
 
 -(void)refresh

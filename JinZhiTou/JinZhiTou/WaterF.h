@@ -26,7 +26,7 @@
 @property (nonatomic,assign)BOOL isEndOfPageSize;
 @property (nonatomic) NSInteger imagewidth;
 @property (nonatomic) CGFloat textViewHeight;
-@property(retain,nonatomic)CycleScrollView* headerView;
+@property(retain,nonatomic)UIView* headerView;
 @property(retain,nonatomic)id <WaterFDelegate> delegate;
 
 -(void)refreshProject;

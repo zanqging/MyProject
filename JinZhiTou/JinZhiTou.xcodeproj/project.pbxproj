@@ -119,6 +119,7 @@
 		453271A01B751CCA0044F8C1 /* AboutUsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4532719F1B751CCA0044F8C1 /* AboutUsViewController.m */; };
 		453271A31B751E830044F8C1 /* UserCollecteTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 453271A21B751E830044F8C1 /* UserCollecteTableViewCell.m */; };
 		453271A61B751EA00044F8C1 /* UserFinialTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 453271A51B751EA00044F8C1 /* UserFinialTableViewCell.m */; };
+		453441361BE0B6AC00802410 /* ShareNewsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 453441351BE0B6AC00802410 /* ShareNewsView.m */; };
 		45367D801BD8B6BC00039253 /* CycleHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 45367D7F1BD8B6BC00039253 /* CycleHeader.m */; };
 		453E23D41B7DA3570023BB00 /* UITableViewCustomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 453E23D31B7DA3570023BB00 /* UITableViewCustomView.m */; };
 		453E23D81B7DB0FD0023BB00 /* SignViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453E23D71B7DB0FD0023BB00 /* SignViewController.m */; };
@@ -583,6 +584,8 @@
 		453271A21B751E830044F8C1 /* UserCollecteTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserCollecteTableViewCell.m; path = View/UserInfo/Cell/UserCollecteTableViewCell.m; sourceTree = "<group>"; };
 		453271A41B751EA00044F8C1 /* UserFinialTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserFinialTableViewCell.h; path = View/UserInfo/Cell/UserFinialTableViewCell.h; sourceTree = "<group>"; };
 		453271A51B751EA00044F8C1 /* UserFinialTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserFinialTableViewCell.m; path = View/UserInfo/Cell/UserFinialTableViewCell.m; sourceTree = "<group>"; };
+		453441341BE0B6AC00802410 /* ShareNewsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareNewsView.h; path = View/ShareNewsView/ShareNewsView.h; sourceTree = "<group>"; };
+		453441351BE0B6AC00802410 /* ShareNewsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareNewsView.m; path = View/ShareNewsView/ShareNewsView.m; sourceTree = "<group>"; };
 		45367D7E1BD8B6BC00039253 /* CycleHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CycleHeader.h; sourceTree = "<group>"; };
 		45367D7F1BD8B6BC00039253 /* CycleHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CycleHeader.m; sourceTree = "<group>"; };
 		453E23D21B7DA3570023BB00 /* UITableViewCustomView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UITableViewCustomView.h; path = Controller/UITableViewCustomView.h; sourceTree = "<group>"; };
@@ -1213,6 +1216,7 @@
 		451F48A01B5368D800C91B4A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				453441331BE0B67300802410 /* Cycle */,
 				4584DAAF1BAAB84A00560724 /* ProjectShare */,
 				45DED88D1BA0217800B4D393 /* IndustoryView */,
 				458A337A1B7AFA3F00381963 /* LoadingView */,
@@ -1412,6 +1416,15 @@
 				45E189E31B79E0500082225E /* ReplyMessageTableViewCell.m */,
 			);
 			name = Cell;
+			sourceTree = "<group>";
+		};
+		453441331BE0B67300802410 /* Cycle */ = {
+			isa = PBXGroup;
+			children = (
+				453441341BE0B6AC00802410 /* ShareNewsView.h */,
+				453441351BE0B6AC00802410 /* ShareNewsView.m */,
+			);
+			name = Cycle;
 			sourceTree = "<group>";
 		};
 		453E23D51B7DB07B0023BB00 /* Config */ = {
@@ -2584,6 +2597,7 @@
 				459AC9411B6F39020050E817 /* AuthViewController.m in Sources */,
 				45A2ADAD1B7208E300751F78 /* RoadShowApplyViewController.m in Sources */,
 				45E189E41B79E0500082225E /* ReplyMessageTableViewCell.m in Sources */,
+				453441361BE0B6AC00802410 /* ShareNewsView.m in Sources */,
 				45E812091B675F40009F840D /* RoadShowFooter.m in Sources */,
 				45F8290F1B6B1A6D0044F6F0 /* NSTimer+Addition.m in Sources */,
 				45F09C6E1B86297B0065D873 /* ASIDataCompressor.m in Sources */,

@@ -19,6 +19,7 @@
 -(void)weiboTableViewCell:(id)weiboTableViewCell userId:(NSString*)userId isSelf:(BOOL) isSelf;
 -(void)weiboTableViewCell:(id)weiboTableViewCell contentId:(NSString*)contentId atId:(NSString*)atId isSelf:(BOOL) isSelf;
 -(void)weiboTableViewCell:(id)weiboTableViewCell didSelectedContent:(BOOL)isSelected;
+-(void)weiboTableViewCell:(id)weiboTableViewCell didSelectedShareContentUrl:(NSURL*)urlStr;
 
 @end
 
@@ -33,7 +34,7 @@
 
 @property(retain,nonatomic)NSString* topId;
 @property (retain, nonatomic)  UIView *funView;
-@property (retain, nonatomic)  UIView *priseView;
+@property (retain, nonatomic)  UIView *priseView; //点赞区域
 @property (retain, nonatomic)  UILabel *jobLabel;
 @property (retain, nonatomic)  UILabel *nameLabel;
 @property(retain,nonatomic)    UIButton* priseButton;
@@ -53,6 +54,12 @@
 @property (retain, nonatomic)  UIButton *deleteButton;
 @property (retain, nonatomic)  NSMutableDictionary* dic;
 @property (retain, nonatomic)  UIImageView *headerImgView;
+
+//---------------分享功能--------------//
+@property (retain, nonatomic)  UIView *shareView; //点赞区域
+@property (retain, nonatomic)  UIImageView *shareImgView;
+@property (retain, nonatomic)  UILabel *shareLabel;
+//---------------分享功能--------------//
 @property(retain,nonatomic)id  <WeiboTableViewCellDelegate>delegate;
 
 

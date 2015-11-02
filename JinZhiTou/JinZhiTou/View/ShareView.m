@@ -33,17 +33,43 @@
         
         [self addSubview:view];
         
-        [self addShareItem];
+        [self addShareItem:nil];
         
         [self addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeView:)]];
     }
     return self;
 }
 
--(void)addShareItem
+-(id)initWithFrame:(CGRect)frame isShareNews:(BOOL)isShareNews
+{
+    if (self = [super initWithFrame:frame]) {
+        view =[[UIView alloc]initWithFrame:frame];
+        view.backgroundColor = BlackColor;
+        view.alpha = 0.7;
+        
+        [self addSubview:view];
+        
+        NSDictionary* dic;
+        if (isShareNews) {
+            dic = [[NSMutableDictionary alloc]init];
+            [dic setValue:@"weixin" forKey:@"imagename"];
+            [dic setValue:@"圈子" forKey:@"title"];
+        }
+        [self addShareItem:dic];
+        
+        self.isShareNews = isShareNews;
+        
+        [self addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeView:)]];
+    }
+    return self;
+}
+
+-(void)addShareItem:(NSDictionary*)dic
 {
     NSMutableArray* array=[[NSMutableArray alloc]init];
-    NSDictionary* dic;
+    if (dic) {
+        [array addObject:dic];
+    }
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"weixin" forKey:@"imagename"];
     [dic setValue:@"微信" forKey:@"title"];
@@ -61,22 +87,24 @@
     
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"mail" forKey:@"imagename"];
-    [dic setValue:@"微信" forKey:@"title"];
+    [dic setValue:@"短信" forKey:@"title"];
     [array addObject:dic];
     
     float h =HEIGHT(self)-140;
-    float w =(WIDTH(self)-80)/4;
+    float w =WIDTH(self)/array.count;
+    float pos_x=(WIDTH(self)-(w-10)*array.count)/(array.count+1);
     UIImageView* imageView;
     for (int i=0; i<array.count; i++) {
         dic = array[i];
-        imageView = [[UIImageView alloc]initWithFrame:CGRectMake((i+1)*w-10, h, w-10, w-10)];
+        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(pos_x, h, w-10, w-10)];
         imageView.tag = 1000+i;
         imageView.userInteractionEnabled = YES;
         imageView.userInteractionEnabled = YES;
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
         [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(share:)]];
         imageView.image =IMAGENAMED([dic valueForKey:@"imagename"]);
         [self addSubview:imageView];
+        pos_x+=w;
     }
     
     imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-7.5, POS_Y(imageView)+45, 15, 15)];
@@ -330,25 +358,54 @@
         if ([status intValue] == 0 || [status intValue] == -1) {
             dataDic = [jsonDic valueForKey:@"data"];
             
-            switch (index) {
-                case 1000:
-                    //微信好友
-                    [self shareWeiXin:1];
-                    break;
-                case 1001:
-                    //微信好友
-                    [self shareWeiXin:0];
-                    break;
-                case 1002:
-                    //QQ分享
-                    [self shareQQ];
-                    break;
-                case 1003:
-                    [[NSNotificationCenter defaultCenter]postNotificationName:@"showMessageView" object:nil   userInfo:nil];
-                    break;
-                default:
-                    break;
+            if (!self.isShareNews) {
+                switch (index) {
+                    case 1000:
+                        //微信好友
+                        [self shareWeiXin:1];
+                        break;
+                    case 1001:
+                        //微信好友
+                        [self shareWeiXin:0];
+                        break;
+                    case 1002:
+                        //QQ分享
+                        [self shareQQ];
+                        break;
+                    case 1003:
+                        [[NSNotificationCenter defaultCenter]postNotificationName:@"showMessageView" object:nil   userInfo:nil];
+                        break;
+                    default:
+                        break;
+                }
+            }else{
+                switch (index) {
+                    case 1000:
+                        //金指投圈子
+                        [[NSNotificationCenter defaultCenter]postNotificationName:@"shareNews" object:nil];
+                        [self removeFromSuperview];
+                        break;
+                    case 1001:
+                        //微信好友
+                        [self shareWeiXin:1];
+                        break;
+                    case 1002:
+                        //微信好友
+                        [self shareWeiXin:0];
+                        break;
+                    case 1003:
+                        //QQ分享
+                        [self shareQQ];
+                        break;
+                    case 1004:
+                        [[NSNotificationCenter defaultCenter]postNotificationName:@"showMessageView" object:nil   userInfo:nil];
+                        break;
+                    default:
+                        break;
+                }
             }
+            
+            
         }
     }
 }

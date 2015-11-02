@@ -15,7 +15,7 @@ static const float HEIGHT = 25;
 {
     if (self=[super initWithFrame:frame]) {
         //图片
-        self.imageView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self)-10, (HEIGHT(self)-HEIGHT))];
+        self.imageView=[[UIImageView alloc]initWithFrame:CGRectMake(5, 0, WIDTH(self)-10, (HEIGHT(self)-HEIGHT))];
         self.imageView.contentMode=UIViewContentModeScaleAspectFit;
         
         //标签

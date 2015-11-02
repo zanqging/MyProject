@@ -260,7 +260,7 @@
                                                           withReuseIdentifier:@"WaterFallSectionHeader"
                                                                  forIndexPath:indexPath];
         reusableView.backgroundColor  =WriteColor;
-        [self.headerView setFrame:CGRectMake(1, 1, WIDTH(self.headerView), HEIGHT(self.headerView)-2)];
+//        [self.headerView setFrame:CGRectMake(0, 0, WIDTH(self.headerView), HEIGHT(self.headerView))];
         [reusableView addSubview:self.headerView];
     }
     else if ([kind isEqualToString:WaterFallSectionFooter])
@@ -350,7 +350,8 @@
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
-    
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
 }
 
 -(void)dealloc

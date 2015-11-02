@@ -9,6 +9,7 @@
 #import "BannerViewController.h"
 #import "TDUtil.h"
 #import "NavView.h"
+#import "DialogUtil.h"
 #import "UConstants.h"
 #import "ShareView.h"
 #import "HttpUtils.h"
@@ -17,12 +18,14 @@
 #import "GlobalDefine.h"
 #import "NSString+SBJSON.h"
 #import "ASIHTTPRequest.h"
+#import "ShareNewsView.h"
 @interface BannerViewController ()<UIWebViewDelegate,ASIHTTPRequestDelegate>
 {
     NavView* navView;
     HttpUtils* httpUtil;
     LoadingView* loadingView;
     
+    ShareNewsView* shareNewsView;
     BOOL isGetStatus;
 }
 @end
@@ -58,6 +61,11 @@
     loadingView = [LoadingUtil shareinstance:self.view];
     
      [self loadUrl];
+    
+    //添加监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(shareNews:) name:@"shareNews" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContent:) name:@"shareNewContent" object:nil];
+    
 }
 
 -(void)back:(id)sender
@@ -96,7 +104,12 @@
     self->_type = type;
 }
 
-
+-(void)shareNews:(NSNotification*)dic
+{
+    shareNewsView = [[ShareNewsView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView))];
+    shareNewsView.dic = self.dic;
+    [self.view addSubview:shareNewsView];
+}
 
 /**
  *  分享咨询
@@ -104,7 +117,7 @@
 -(void)ShareAction
 {
     UIWindow* window =[UIApplication sharedApplication].windows[0];
-    ShareView* shareView =[[ShareView alloc]initWithFrame:window.frame];
+    ShareView* shareView =[[ShareView alloc]initWithFrame:window.frame isShareNews:YES];
     shareView.type = 3;
     shareView.projectId = [[self.dic valueForKey:@"id"] integerValue];
     [window addSubview:shareView];
@@ -115,6 +128,17 @@
 {
     NSString* url = [NEWS_LIKE stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
     [httpUtil getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:[self.dic valueForKey:@"status"] forKey:@"flag"] type:0 delegate:self sel:@selector(requestFinished:)];
+}
+
+-(void)publishContent:(NSNotification*)dic
+{
+    NSString* content = [[dic valueForKey:@"userInfo"] valueForKey:@"data"];
+    NSMutableDictionary* tempDic =[[NSMutableDictionary alloc]init];
+    [tempDic setValue:content forKey:@"content"];
+    [tempDic setValue:[self.dic valueForKey:@"id"] forKey:@"news"];
+    
+    
+    [httpUtil getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:tempDic type:0 delegate:self sel:@selector(requestPublishContent:)];
 }
 
 
@@ -166,6 +190,22 @@
         }
     }
 }
+
+-(void)requestPublishContent:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"status"];
+        if ([status integerValue] == 0) {
+            [shareNewsView removeFromSuperview];
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
+        }
+    }
+}
+
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {

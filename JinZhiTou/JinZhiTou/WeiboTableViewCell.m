@@ -79,7 +79,6 @@
         }else{
             self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0 , POS_Y(v)+5, WIDTH(self.priseView), 0)];
         }
-        NSLog(@"tableView frame:%@",NSStringFromCGRect(self.tableView.frame));
         self.tableView.bounces=NO;
         self.tableView.delegate=self;
         self.tableView.dataSource=self;
@@ -409,10 +408,52 @@
         self.contentLabel.attributedText = attributedString;//ios 6
         [self.contentLabel sizeToFit];
         
+        //分享内容
+        if ([self.dic valueForKey:@"share"]) {
+            self.shareView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.contentLabel), WIDTH(self)-80,74)];
+            self.shareView.backgroundColor=[UIColor colorWithRed:238.0f/255.0 green:238.0f/255.0 blue:238.0f/255.0 alpha:1];
+            self.shareView.userInteractionEnabled  =YES;
+            [self.shareView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(shareContentTaped:)]];
+            //分享图片
+            self.shareImgView = [[UIImageView alloc]initWithFrame:CGRectMake(12, 12, 50, 50)];
+            [self.shareImgView sd_setImageWithURL:[NSURL URLWithString:[[self.dic valueForKey:@"share"] valueForKey:@"src"]] placeholderImage:IMAGENAMED(@"loading")];
+            [self.shareView addSubview:self.shareImgView];
+            
+            //分享文字
+            self.shareLabel =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.shareImgView)+5, 20, WIDTH(self.shareView)-77, HEIGHT(self)-20)];
+            self.shareLabel.numberOfLines=2;
+            self.shareLabel.font = SYSTEMFONT(14);
+            self.shareLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+            [self.shareView addSubview:self.shareLabel];
+            
+            content = [[self.dic valueForKey:@"share"] valueForKey:@"title"];
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            
+            //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
+            
+            [paragraphStyle setLineSpacing:0];//调整行间距
+            //    [paragraphStyle setAlignment:NSTextAlignmentLeft];
+            [paragraphStyle setFirstLineHeadIndent:0];
+            [paragraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
+            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+            [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+            
+            self.shareLabel.attributedText = attributedString;//ios 6
+            [self.shareLabel sizeToFit];
+            
+            [self addSubview:self.shareView];
+        }
+        
         int numlines = [TDUtil  convertToInt:content]/17;
         
         if (numlines>5) {
-            self.expandButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)-15, POS_Y(self.contentLabel)-15, 50, 50)];
+            float posY;
+            if (self.shareView) {
+                posY=POS_Y(self.shareView);
+            }else{
+                posY=POS_Y(self.contentLabel)-15;
+            }
+            self.expandButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)-15, posY, 50, 50)];
             self.expandButton.titleLabel.font  =FONT(@"Arial", 12);
             [self.expandButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
             [self.expandButton setTitle:@"全文" forState:UIControlStateNormal];
@@ -428,7 +469,13 @@
             if (self.expandButton) {
                 self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(self.expandButton), Y(self.expandButton), 50, 50)];
             }else{
-                self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)-15, POS_Y(self.contentLabel)-15, 50, 50)];
+                float posY;
+                if (self.shareView) {
+                    posY=POS_Y(self.shareView);
+                }else{
+                    posY=POS_Y(self.contentLabel)-15;
+                }
+                self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)-15, posY, 50, 50)];
             }
             self.deleteButton.titleLabel.font  =FONT(@"Arial", 12);
             [self.deleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
@@ -438,9 +485,17 @@
         }
         //时间
         if (self.expandButton || self.deleteButton) {
-            self.dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.contentLabel)+20, 100, 20)];
+            float posY;
+            posY=POS_Y(self.deleteButton)-20;
+            self.dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.contentLabel), posY, 100, 20)];
         }else{
-            self.dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.contentLabel)+5, 100, 20)];
+            float posY;
+            if (self.shareView) {
+                posY=POS_Y(self.shareView)+5;
+            }else{
+                posY=POS_Y(self.contentLabel)+5;
+            }
+            self.dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.contentLabel), posY, 100, 20)];
         }
         self.dateTimeLabel.font  =FONT(@"Arial", 10);
         self.dateTimeLabel.text = [dic valueForKey:@"datetime"];
@@ -642,6 +697,13 @@
     }
     
     [self setTableViewFrame:self.priseListView replyDataHeigt:comment_height];
+}
+
+-(void)shareContentTaped:(id)sender
+{
+    if ([_delegate respondsToSelector:@selector(weiboTableViewCell:didSelectedShareContentUrl:)]) {
+        [_delegate weiboTableViewCell:self didSelectedShareContentUrl:[NSURL URLWithString:[[self.dic valueForKey:@"share"] valueForKey:@"href"]]];
+    }
 }
 #pragma mark - MWPhotoBrowserDelegate
 
