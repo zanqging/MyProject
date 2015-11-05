@@ -7,13 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
+#import "RootViewController.h"
 #import "BannerViewController.h"
 #import "UITableViewCustomView.h"
-@interface NewFinialViewController : UIViewController
+@interface NewFinialViewController : RootViewController
 @property(assign,nonatomic)BOOL isBackHome;
 @property(retain,nonatomic)NSString* navTitle;
-@property (strong, nonatomic)NavView *navView;
 @property (nonatomic,assign)BOOL isEndOfPageSize;
 @property(retain,nonatomic)NSMutableArray* dataCreateArray;
 @property(nonatomic,retain)BannerViewController* webViewController;

@@ -301,7 +301,7 @@
         label.text =@"手机号码";
         
         label =(UILabel*) [scrollView viewWithTag:10004];
-        label.text = [dic valueForKey:@"telephone"];
+        label.text = [dic valueForKey:@"tel"];
         
         
         label =(UILabel*) [scrollView viewWithTag:10005];

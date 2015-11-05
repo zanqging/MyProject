@@ -11,7 +11,6 @@
 #import "NSString+MD5.h"
 #import "UConstants.h"
 #import "MJRefresh.h"
-
 @implementation TDUtil
 + (UIImage *)createImageWithColor:(UIColor *)color rect:(CGRect)rect
 {
@@ -1285,5 +1284,49 @@
                                                      attributes:dic        // 文字的属性
                                                         context:nil].size;
     return textSize.height;
+}
+
+/**
+ *  根据服务器返回状态值做各种行为
+ *
+ *  @param controller 当前发起请求所在的UIViewController
+ *  @param code       返回状态击级别
+ *  @param dic        服务器返回值
+ */
++(void)serverResultJudge:(id )controller dic:(NSMutableDictionary *)dic
+{
+ 
+    RootViewController* c =(RootViewController*)controller;
+    //默认不显示系统错误
+    c.isNetRequestError = NO;
+    
+    int code = [[dic valueForKey:@"code"] intValue];
+    
+    c.code  = code ;
+    
+    switch (code) {
+        case -2:
+            //系统错误
+            c.isNetRequestError = YES;
+            break;
+        case -1:
+            //没有登录，重新登录
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"login" object:nil];
+            break;
+        case 0:
+            //加载正常
+            c.dataDic=dic;
+            break;
+        case 1:
+            //业务错误
+            break;
+        case 2:
+            //列表加载完成
+            break;
+        default:
+            //系统错误
+            c.isNetRequestError = YES;
+            break;
+    }
 }
 @end

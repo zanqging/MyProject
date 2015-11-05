@@ -18,8 +18,6 @@
 #import <QuartzCore/QuartzCore.h>
 @interface ModifyViewController ()<ASIHTTPRequestDelegate,UITextFieldDelegate>
 {
-    NavView* navView;
-    HttpUtils* httpUtils;
     UITextField* textField;
     UIScrollView* scrollView;
 }
@@ -30,26 +28,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
-    //设置标题
-    navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
-    navView.imageView.alpha=1;
-    [navView setTitle:self.title];
-    navView.titleLable.textColor=WriteColor;
     
-    [navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [navView.leftButton setTitle:@"设置" forState:UIControlStateNormal];
-    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
-    [navView.rightButton setImage:nil forState:UIControlStateNormal];
-    [navView.rightButton setTitle:@"保存" forState:UIControlStateNormal];
-    [navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(save:)]];
+    //==============================导航栏属性区域设置开始==============================//
+    self.navView.imageView.alpha=1;
+    [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
+    [self.navView.leftButton setTitle:@"设置" forState:UIControlStateNormal];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [self.navView.rightButton setImage:nil forState:UIControlStateNormal];
+    [self.navView.rightButton setTitle:@"保存" forState:UIControlStateNormal];
+    [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(save:)]];
     
-    [self.view addSubview:navView];
+    //==============================导航栏属性区域设置开始==============================//
     
-    //scrollView
-    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView))];
+    
+    //==============================滚动视图开始==============================//
+    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView))];
     scrollView.backgroundColor = WriteColor;
-    [self.view addSubview:scrollView];
     
+    [self.view addSubview:scrollView];
+    //==============================滚动视图开始==============================//
+    
+    //==============================滚动视图内容设置开始==============================//
     UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, 20, 50, 40)];
     label.text = @"姓名";
     label.font = SYSTEMFONT(16);
@@ -57,7 +56,7 @@
     
     //输入姓名
     textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), WIDTH(self.view)-POS_X(label)-60, 40)];
-    textField.placeholder = @"请输入真实姓名";
+    textField.placeholder = @"请输入您的昵称 ";
     textField.font = SYSTEMFONT(16);
     textField.returnKeyType = UIReturnKeyDone;
     textField.borderStyle =UITextBorderStyleNone;
@@ -66,15 +65,13 @@
     textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     textField.delegate = self;
     [scrollView addSubview:textField];
+    //==============================滚动视图内容开始==============================//
 
     
     UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(textField), POS_Y(textField)+5, WIDTH(textField), 1)];
     imgView.backgroundColor = BACKGROUND_LIGHT_GRAY_COLOR;
     [scrollView addSubview:imgView];
     
-    
-    //初始化网络请求对象
-    httpUtils = [[HttpUtils alloc]init];
 }
 
 -(void)save:(id)sender
@@ -83,9 +80,11 @@
     [textField resignFirstResponder];
     NSString* name = textField.text;
     if (![TDUtil isValidString:name]) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入姓名"];
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入您昵称"];
     }else{
-        [httpUtils getDataFromAPIWithOps:REALNAME postParam:[NSDictionary dictionaryWithObject:name forKey:@"real_name"] type:0 delegate:self sel:@selector(requestSave:)];
+        [self.httpUtil getDataFromAPIWithOps:NICKNAME postParam:[NSDictionary dictionaryWithObject:name forKey:@"nickname"] type:0 delegate:self sel:@selector(requestSave:)];
+        
+        //[self.httpUtil getDataFromAPIWithOps:HOME_CREDIT postParam:[NSDictionary dictionaryWithObject:name forKey:@"wd"] type:0 delegate:self sel:@selector(requestSave:)];
     }
     
 }
@@ -128,12 +127,10 @@
 {
     NSString* jsonString =[TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);
-    
     NSMutableDictionary* dic = [jsonString JSONValue];
-    
     if (dic!=nil) {
-        NSString* status =[dic valueForKey:@"status"];
-        if ([status integerValue]==0) {
+        NSString* code =[dic valueForKey:@"code"];
+        if ([code integerValue]==0) {
             NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
             [data setValue:textField.text forKey:STATIC_USER_NAME];
         }

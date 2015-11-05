@@ -91,7 +91,7 @@
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0 || [status intValue] == -1) {
             NSDictionary* dic =[jsonDic valueForKey:@"data"];
-            NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"tel:%@",[dic valueForKey:@"telephone"]];
+            NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"tel:%@",[dic valueForKey:@"tel"]];
             UIWebView * callWebview = [[UIWebView alloc] init];
             [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
             [self addSubview:callWebview];

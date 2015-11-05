@@ -67,7 +67,7 @@
 
 -(void)requestData:(id)sender
 {
-    [httpUtil getDataFromAPIWithOps:USERINFO postParam:nil type:0 delegate:self sel:@selector(requestUserInfo:)];
+    [httpUtil getDataFromAPIWithOps:LEFT_SLIDE type:0 delegate:self sel:@selector(requestUserInfo:) method:@"GET"];
 }
 -(void)changeUserPic:(NSDictionary*)dic
 {
@@ -86,25 +86,21 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] == -1) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0 || [code intValue] == -1) {
             UILabel* label = (UILabel*)[self viewWithTag:10002];
             NSDictionary* dic = [jsonDic valueForKey:@"data"];
-            NSString* name = [dic valueForKey:@"real_name"];
+            NSString* name = [dic valueForKey:@"nickname"];
             
             label.text = name;
             
-            NSString* str = [dic valueForKey:@"user_img"];
+            NSString* str = [dic valueForKey:@"photo"];
             
             //本地缓存数据
             NSUserDefaults* dataStore  = [NSUserDefaults standardUserDefaults];
             [dataStore setValue:name forKey:@"name"];
             [dataStore setValue:str forKey:@"photo"];
-            [dataStore setValue:[dic valueForKey:@"userId"] forKey:@"uid"];
-            [dataStore setValue:[dic valueForKey:@"city"] forKey:@"city"];
-            [dataStore setValue:[dic valueForKey:@"province"] forKey:@"province"];
-            [dataStore setValue:[dic valueForKey:@"position_type"] forKey:@"STATIC_USER_TYPE"];
-            
+
             if (str && str.class !=NSNull.class) {
                 NSURL* url = [NSURL URLWithString:str];
                 //头像图片

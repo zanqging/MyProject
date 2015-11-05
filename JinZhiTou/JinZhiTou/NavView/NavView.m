@@ -39,7 +39,7 @@
         titleLable.textColor=WriteColor;
         titleLable.userInteractionEnabled=YES;
         titleLable.textAlignment=NSTextAlignmentCenter;
-        titleLable.font=SYSTEMFONT(18);
+        titleLable.font=SYSTEMBOLDFONT(18);
         [self addSubview:titleLable];
         
         //右边个人中心

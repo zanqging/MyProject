@@ -10,6 +10,8 @@
 #import "ZHPickView.h"
 #import "ModifyViewController.h"
 #import "ForgetPassViewController.h"
+#import "ModifyCompanyViewController.h"
+#import "ModifyPositionViewController.h"
 #import "CustomImagePickerController.h"
 @interface UserBasicInfoViewController ()<UITableViewDataSource,UITableViewDelegate,CustomImagePickerControllerDelegate,ASIHTTPRequestDelegate,ZHPickViewDelegate>
 {
@@ -74,11 +76,33 @@
     [settingDataArray addObject:dic];
     
     dic = [[NSMutableDictionary alloc]init];
-    [dic setValue:@"姓名" forKey:@"title"];
+    [dic setValue:@"昵称" forKey:@"title"];
     [dic setValue:@"1" forKey:@"section"];
     [dic setValue:[data valueForKey:STATIC_USER_NAME] forKey:@"subTitle"];
     
     [settingDataArray addObject:dic];
+    
+    dic = [[NSMutableDictionary alloc]init];
+    [dic setValue:@"真实姓名" forKey:@"title"];
+    [dic setValue:@"1" forKey:@"section"];
+    [dic setValue:[data valueForKey:STATIC_USER_NAME] forKey:@"subTitle"];
+    
+    [settingDataArray addObject:dic];
+    
+    dic = [[NSMutableDictionary alloc]init];
+    [dic setValue:@"公司名称" forKey:@"title"];
+    [dic setValue:@"1" forKey:@"section"];
+    [dic setValue:[data valueForKey:STATIC_USER_NAME] forKey:@"subTitle"];
+    
+    [settingDataArray addObject:dic];
+    
+    dic = [[NSMutableDictionary alloc]init];
+    [dic setValue:@"职位" forKey:@"title"];
+    [dic setValue:@"1" forKey:@"section"];
+    [dic setValue:[data valueForKey:STATIC_USER_NAME] forKey:@"subTitle"];
+    
+    [settingDataArray addObject:dic];
+    
     
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"性别" forKey:@"title"];
@@ -146,22 +170,29 @@
 {
     _indexPath = indexPath;
     
+    NSInteger row = indexPath.row;
     if (indexPath.section == 0 && indexPath.row == 0) {
         [self takePhoto:nil];
     }else if (indexPath.section == 1) {
-        if (indexPath.row==0) {
+        if (row == 0) {
             ModifyViewController* controller = [[ModifyViewController alloc]init];
-            controller.title = @"修改姓名";
+            controller.title = @"修改昵称";
             [self.navigationController pushViewController:controller animated:YES];
             
-        }else if(indexPath.row == 1){
+        }else if(row == 1){
             _pickview=[[ZHPickView alloc] initPickviewWithPlistName:@"sex" isHaveNavControler:NO];
             _pickview.delegate=self;
             
             [_pickview show];
-        }else if(indexPath.row == 2){
-            UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:@"金指投温馨提示" message:@"无法修改手机号码" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
-            [alertView show];
+        }else if(row == 2){
+            ModifyCompanyViewController* controller = [[ModifyCompanyViewController alloc]init];
+            controller.title = @"修改公司名称";
+            [self.navigationController pushViewController:controller animated:YES];
+            
+        }else if(row == 3){
+            ModifyPositionViewController* controller = [[ModifyPositionViewController alloc]init];
+            controller.title = @"修改职位";
+            [self.navigationController pushViewController:controller animated:YES];
             
         }else{
             _pickview=[[ZHPickView alloc]initPickviewWithArray:typeArray isHaveNavControler:NO];
@@ -248,7 +279,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 10;
+    return settingDataArray.count;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -261,10 +292,10 @@
             return 4;
             break;
         case 2:
-            return 2;
+            return 5;
             break;
         default:
-            return 1;
+            return 4;
             break;
     }
 }

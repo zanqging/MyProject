@@ -19,6 +19,7 @@
 - (id)init {
     if (self=[super init]) {
         self.requestInstance=[[ASIFormDataRequest alloc]init];
+        [self.requestInstance setTimeOutSeconds:5];
     }
     return self;
 }

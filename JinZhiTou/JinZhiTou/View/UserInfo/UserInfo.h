@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface UserInfo : UIView<UITableViewDataSource,UITableViewDelegate>
-@property(assign,nonatomic)BOOL isAmious;
 @property(retain,nonatomic)NSArray* dataArray;
 @property(retain,nonatomic)UITableView* tableView;
 @end

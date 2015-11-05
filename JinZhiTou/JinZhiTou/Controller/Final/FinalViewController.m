@@ -8,20 +8,9 @@
 
 #import "FinalViewController.h"
 #import "Cell.h"
-#import "TDUtil.h"
-#import "NavView.h"
-#import "MobClick.h"
-#import "HttpUtils.h"
 #import "MJRefresh.h"
 #import "LineLayout.h"
-#import "UConstants.h"
-#import "DialogUtil.h"
-#import "LoadingView.h"
-#import "LoadingUtil.h"
-#import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
 #import "INSViewController.h"
-#import "ASIFormDataRequest.h"
 #import "VoteViewController.h"
 #import "ThinkTankTableViewCell.h"
 #import "ThinkTankViewController.h"
@@ -29,9 +18,6 @@
 
 @interface FinalViewController ()
 {
-    NavView* navView;
-    HttpUtils* httpUtils;
-    LoadingView* loadingView;
     
     BOOL isRefresh;
     int currentPage;
@@ -50,8 +36,6 @@
     //设置背景颜色
     self.view.backgroundColor=ColorTheme;
     
-    //初始化网络对象
-    httpUtils = [[HttpUtils alloc]init];
     //TabBarItem 设置
     UIImage* image=IMAGENAMED(@"btn_tourongzi_selected");
     image=[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
@@ -59,29 +43,26 @@
     [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:ColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
     
     //设置标题
-    navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
-    navView.imageView.alpha=0;
-    [navView setTitle:@"金指投"];
-    navView.titleLable.textColor=WriteColor;
-    [navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
-    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
-    [navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
+    [self.navView setTitle:@"金指投"];
+    self.navView.titleLable.textColor=WriteColor;
+    [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
+    [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
     
-    [navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
+    [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
     
-    
-    [self.view addSubview:navView];
-    float height = HEIGHT(self.view)-POS_Y(navView)-kBottomBarHeight-85;
-    self.finalFunTableView = [[UITableView alloc]initWithFrame:CGRectMake(0,POS_Y(navView), 50, height)];
-    self.finalContentTableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(51, POS_Y(navView), WIDTH(self.view)-50,HEIGHT(self.finalFunTableView))];
+    float height = HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-85;
+    self.finalFunTableView = [[UITableView alloc]initWithFrame:CGRectMake(0,POS_Y(self.navView), 50, height)];
+    self.finalContentTableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(51, POS_Y(self.navView), WIDTH(self.view)-50,HEIGHT(self.finalFunTableView))];
     [self.view addSubview:self.finalFunTableView];
     [self.view addSubview:self.finalContentTableView];
     
     //分割线
-    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(50, POS_Y(navView), 1, HEIGHT(self.finalContentTableView))];
+    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(50, POS_Y(self.navView), 1, HEIGHT(self.finalContentTableView))];
     imgView.backgroundColor = BACKGROUND_LIGHT_GRAY_COLOR;
     [self.view addSubview:imgView];
     
+    float h =HEIGHT(self.view)/4-48;
     self.finalFunTableView.tag=100001;
     self.finalContentTableView.tag=100002;
     self.finalFunTableView.delegate=self;
@@ -90,22 +71,17 @@
     self.finalContentTableView.dataSource=self;
     self.finalFunTableView.backgroundColor=BackColor;
     self.finalContentTableView.backgroundColor=BackColor;
+    self.finalFunTableView.contentInset = UIEdgeInsetsMake(h, 0, 0, 0);
     self.finalFunTableView.separatorStyle=UITableViewCellSeparatorStyleNone;
     self.finalContentTableView.separatorStyle=UITableViewCellSeparatorStyleNone;
-    float h =HEIGHT(self.view)/4-48;
-    self.finalFunTableView.contentInset = UIEdgeInsetsMake(h, 0, 0, 0);
     [self.finalContentTableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     [TDUtil tableView:self.finalContentTableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
     [self addObserver];
-    
-    loadingView = [LoadingUtil shareinstance:self.view];
-    [LoadingUtil show:loadingView];
     
     //加载左侧菜单
     [self loadMenuData];
     //加载数据
     currentSelectIndex = 0;
-    loadingView.isTransparent = NO;
     
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
@@ -114,6 +90,9 @@
     
     
     [self updateNewMessage:nil];
+    
+    //开始加载
+    self.startLoading  = YES;
    
     
 }
@@ -124,7 +103,7 @@
     NSInteger newMessageCount = [[dataStore valueForKey:@"NewMessageCount"] integerValue];
     NSInteger systemMessageCount = [[dataStore valueForKey:@"SystemMessageCount"] integerValue];
     if (newMessageCount+systemMessageCount>0) {
-        [navView setIsHasNewMessage:YES];
+        [self.navView setIsHasNewMessage:YES];
     }
     
 }
@@ -195,41 +174,31 @@
     NSMutableArray* dataArray=[NSMutableArray arrayWithObjects:@"已融资",@"待融资",@"智囊团",@"金推荐",nil];
     self.array=dataArray;
     
-    loadingView.isTransparent = YES;
-    [LoadingUtil show:loadingView];
-    [httpUtils getDataFromAPIWithOps:defaultclassify type:0 delegate:self sel:@selector(requestDefaultData:) method:@"GET"];
+    [self.httpUtil getDataFromAPIWithOps:defaultclassify type:0 delegate:self sel:@selector(requestDefaultData:) method:@"GET"];
 }
 
 -(void)loadWaitFinaceData
 {
-    loadingView.isTransparent = YES;
-    [LoadingUtil show:loadingView];
     NSString* url = [WAIT_FINACE stringByAppendingFormat:@"%d/",currentPage];
-    [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestWaitFinaceList:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestWaitFinaceList:)];
 }
 
 -(void)loadFinishData
 {
-    loadingView.isTransparent = YES;
-    [LoadingUtil show:loadingView];
     NSString* url = [FINISHED_FINACE stringByAppendingFormat:@"%d/",currentPage];
-    [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestFinishedFinaceList:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestFinishedFinaceList:)];
 }
 
 -(void)loadThinkTank
 {
-    loadingView.isTransparent = YES;
-    [LoadingUtil show:loadingView];
     NSString* url = [THINKTANK stringByAppendingFormat:@"%d/",currentPage];
-    [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestThinkTankFinaceList:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestThinkTankFinaceList:)];
 }
 
 -(void)loadRecommendproject
 {
-    loadingView.isTransparent = YES;
-    [LoadingUtil show:loadingView];
     NSString* url = [RECOMMEND_PROJECT stringByAppendingFormat:@"%d/",currentPage];
-    [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestRecommendFinaceList:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestRecommendFinaceList:)];
 }
 
 -(void)loadProjectDetail:(NSMutableDictionary*)dic
@@ -238,12 +207,12 @@
         RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
         controller.dic = dic;
         controller.type=1;
-        controller.title = navView.title;
+        controller.title = self.navView.title;
         [self.navigationController pushViewController:controller animated:YES];
     }else{
         ThinkTankViewController* controller = [[ThinkTankViewController alloc]init];
         controller.dic = dic;
-        controller.title = navView.title;
+        controller.title = self.navView.title;
         [self.navigationController pushViewController:controller animated:YES];
     }
     
@@ -269,7 +238,7 @@
 -(void)searchAction:(id)sender
 {
     INSViewController* controller =[[INSViewController alloc]init];
-    controller.title = navView.title;
+    controller.title = self.navView.title;
     [self.navigationController pushViewController:controller animated:YES];
 }
 -(void)vote:(id)sender
@@ -547,12 +516,12 @@
                 [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
-        [LoadingUtil closeLoadingView:loadingView];
         if (isRefresh) {
             [self.finalContentTableView.header endRefreshing];
         }else{
             [self.finalContentTableView.footer endRefreshing];
         }
+        self.startLoading = NO;
     }
 }
 
@@ -581,7 +550,6 @@
                 [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
-        [LoadingUtil closeLoadingView:loadingView];
         if (isRefresh) {
             [self.finalContentTableView.header endRefreshing];
         }else{
@@ -613,7 +581,6 @@
                 [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
-        [LoadingUtil closeLoadingView:loadingView];
         if (isRefresh) {
             [self.finalContentTableView.header endRefreshing];
         }else{
@@ -647,7 +614,6 @@
                 [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
-        [LoadingUtil closeLoadingView:loadingView];
         if (isRefresh) {
             [self.finalContentTableView.header endRefreshing];
         }else{
@@ -670,7 +636,6 @@
         }
         self.finalContentTableView.content = [jsonDic valueForKey:@"msg"];
         
-        [LoadingUtil closeLoadingView:loadingView];
 //        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         if (isRefresh) {
             [self.finalContentTableView.header endRefreshing];
@@ -681,25 +646,14 @@
     }
 }
 
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    
-}
--(void)dealloc
-{
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
-}
-
 
 
 - (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];
-    
-    [MobClick beginLogPageView:navView.title];
+    [MobClick beginLogPageView:self.navView.title];
 }
 
 - (void)viewWillDisappear:(BOOL)animated { [super viewWillDisappear:animated];
-    
-    [MobClick beginLogPageView:navView.title];
+    [MobClick endLogPageView:self.navView.title];
 }
 
 @end

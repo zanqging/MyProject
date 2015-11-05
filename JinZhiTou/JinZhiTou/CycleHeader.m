@@ -40,35 +40,35 @@
         self.nameLabel.textColor  = WriteColor;
         self.nameLabel.textAlignment = NSTextAlignmentRight;
         [self addSubview:self.nameLabel];
-        [self loadData];
+//        [self loadData];
     }
     return self;
 }
 
--(void)loadData
-{
-    httpUtils =[[HttpUtils alloc]init];
-    [httpUtils getDataFromAPIWithOps:CYCLE_CONTENT_BACKGROUND_UPLOAD type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
-}
-
--(void)requestFinished:(ASIHTTPRequest*)request
-{
-    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    
-    NSLog(@"返回:%@",jsonString);
-    NSMutableDictionary * dic =[jsonString JSONValue];
-    if (dic!=nil) {
-        NSString* status = [dic valueForKey:@"status"];
-        if ([status integerValue] ==0) {
-            NSDictionary* data = [dic valueForKey:@"data"];
-            [self.headerBackView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:@"background"]]];
-            [self.headerView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:@"photo"]]];
-        }
-    }
-}
-
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    NSLog(@"%@",request.responseString);
-}
+//-(void)loadData
+//{
+//    httpUtils =[[HttpUtils alloc]init];
+//    [httpUtils getDataFromAPIWithOps:CYCLE_CONTENT_BACKGROUND_UPLOAD type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+//}
+//
+//-(void)requestFinished:(ASIHTTPRequest*)request
+//{
+//    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+//    
+//    NSLog(@"返回:%@",jsonString);
+//    NSMutableDictionary * dic =[jsonString JSONValue];
+//    if (dic!=nil) {
+//        NSString* status = [dic valueForKey:@"status"];
+//        if ([status integerValue] ==0) {
+//            NSDictionary* data = [dic valueForKey:@"data"];
+//            [self.headerBackView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:@"background"]]];
+//            [self.headerView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:@"photo"]]];
+//        }
+//    }
+//}
+//
+//-(void)requestFailed:(ASIHTTPRequest *)request
+//{
+//    NSLog(@"%@",request.responseString);
+//}
 @end

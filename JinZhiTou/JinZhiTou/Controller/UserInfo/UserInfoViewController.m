@@ -87,16 +87,12 @@
     [self takePhoto:nil];
 }
 
-//上传身份证
 -(void)uploadUserPic:(NSInteger)id
 {
     if(!httpUtils){
         httpUtils = [[HttpUtils alloc]init];
     }
     [httpUtils getDataFromAPIWithOps:UPLOAD_USER_PIC postParam:nil file:STATIC_USER_HEADER_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUploadHeaderImg:)];
-    //NSMutableArray* array =[NSMutableArray arrayWithObjects:STATIC_USER_HEADER_PIC,STATIC_USER_HEADER_PIC, nil];
-    //[httpUtils getDataFromAPIWithOps:@"postfeeling/" postParam:nil files:array type:0 delegate:self sel:@selector(requestUploadHeaderImg:)];
-    //[httpUtils getDataFromAPIWithOps:@"postfeeling/" postParam:nil files:array postName:@"file" type:0 delegate:self sel:@selector(requestUploadHeaderImg:)];
 }
 
 
@@ -387,8 +383,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
             
         }
         

@@ -12,6 +12,7 @@
 #import "AlertView.h"
 #import "APService.h"
 #import "HttpUtils.h"
+#import "DialogUtil.h"
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #import "NSString+SBJSON.h"
@@ -288,7 +289,8 @@ fetchCompletionHandler:(void
     
     //更新状态
     [[NSNotificationCenter defaultCenter]postNotificationName:@"updateStatus" object:nil];
-    
+    //更新状态
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(login) name:@"login" object:nil];
 }
 
 -(void)notification:(NSDictionary*)dic
@@ -415,4 +417,48 @@ fetchCompletionHandler:(void
         [self notification:dic];
     }
 }
+
+
+-(void)login
+{
+    //重新登录
+    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
+    NSString* phone = [data valueForKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
+    NSString* password = [data valueForKey:STATIC_USER_PASSWORD];
+    NSDictionary* dic =[[NSMutableDictionary alloc]init];
+    
+    //加密
+    [dic setValue:phone forKey:@"tel"];
+    [dic setValue:password forKey:@"passwd"];
+    
+    if ([TDUtil isValidString:phone] && [TDUtil isValidString:password]) {
+        [httpUtils getDataFromAPIWithOps:USER_LOGIN postParam:dic type:1 delegate:self sel:@selector(requestLogin:)];
+    }
+}
+
+-(void)requestLogin:(ASIHTTPRequest *)request{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        NSString* status = [jsonDic valueForKey:@"status"];
+        if ([status intValue] == 0) {
+            NSLog(@"登录成功!");
+        }else{
+            [[DialogUtil sharedInstance]showDlg:self.iNav.view textOnly:[jsonDic valueForKey:@"msg"]];
+            UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            UIViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"LoginController"];
+            [self.iNav pushViewController:controller animated:YES];
+            
+            for(UIViewController* c in self.iNav.childViewControllers){
+                if (![c isKindOfClass:controller.class]) {
+                    [c removeFromParentViewController];
+                }
+            }
+        }
+    }
+}
+
 @end

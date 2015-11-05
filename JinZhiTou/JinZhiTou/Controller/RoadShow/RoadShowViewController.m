@@ -7,16 +7,6 @@
 //
 
 #import "RoadShowViewController.h"
-#import "TDUtil.h"
-#import "MobClick.h"
-#import "NavView.h"
-#import "HttpUtils.h"
-#import "DialogUtil.h"
-#import "LoadingUtil.h"
-#import "DialogView.h"
-#import "UConstants.h"
-#import "LoadingView.h"
-#import "GlobalDefine.h"
 #import "WaterFLayout.h"
 #import "ASIHTTPRequest.h"
 #import "NSString+SBJSON.h"
@@ -24,15 +14,14 @@
 #import "UIImageView+WebCache.h"
 #import "BannerViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "RoadShowHomeHeaderView.h"
+#import "RoadShowHomeTableViewCell.h"
 #import "RoadShowDetailViewController.h"
-@interface RoadShowViewController ()<UIScrollViewDelegate,LoadingViewDelegate,WaterFDelegate>
+@interface RoadShowViewController ()<LoadingViewDelegate,WaterFDelegate,UITableViewDataSource,UITableViewDelegate,RoadShowHomeDelegate>
 {
-    NavView* navView;
-    HttpUtils* httpUtil;
     DialogView* dialogView;
-    LoadingView* loadingView;
-
-    
+    RoadShowHomeHeaderView* headerView;
+    NSMutableArray* dataArray;
 }
 @property (nonatomic , retain) CycleScrollView *mainScorllView;
 @property(retain,nonatomic)UIScrollView *scrollView;
@@ -41,32 +30,42 @@
 @implementation RoadShowViewController
 
 - (void)viewDidLoad {
-    //TabBarItem 设置
+    [super viewDidLoad];
+    //==============================TabBarItem 设置==============================//
     UIImage* image=IMAGENAMED(@"btn-weiluyan 1");
     image=[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [self.tabBarItem setSelectedImage:image];
     [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:ColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
-    [super viewDidLoad];
     //设置背景颜色
     self.view.backgroundColor=ColorTheme;
     //隐藏导航栏
     [self.navigationController.navigationBar setHidden:YES];
     //设置标题
-    navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
-    navView.imageView.alpha=0;
-    [navView setTitle:@"金指投"];
-    navView.titleLable.textColor=WriteColor;
-    [navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
-    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
-    [self.view addSubview:navView];
+    self.navView.imageView.alpha=0;
+    [self.navView setTitle:@"金指投"];
+    self.navView.titleLable.textColor=WriteColor;
+    [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
+    //==============================TabBarItem 设置==============================//
+
+    //==============================tableView 设置==============================//
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-113)];
+    self.tableView.bounces=YES;
+    self.tableView.delegate=self;
+    self.tableView.dataSource=self;
+    self.tableView.allowsSelection=YES;
+    self.tableView.delaysContentTouches=NO;
+    self.tableView.showsVerticalScrollIndicator=NO;
+    self.tableView.showsHorizontalScrollIndicator=NO;
+    self.tableView.separatorStyle=UITableViewCellAccessoryNone;
+   [self.view addSubview:self.tableView];
     
-    self.viewsArray = [@[] mutableCopy];
-    
-    //添加瀑布流
-    [self addWaterFollow];
-    
+    //头部
+    headerView = [[RoadShowHomeHeaderView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), HEIGHT(self.view)*0.618+30)];
+   [self.tableView setTableHeaderView:headerView];
+   [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     //加载Banner数据
-    [self loadBanner];
+    [self loadHomeData];
     
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(RoadShowProject:) name:@"RoadShowProject" object:nil];
@@ -76,7 +75,6 @@
     //提示框
     dialogView = [[DialogView alloc]initWithFrame:self.view.frame];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
-    
     
     [self updateNewMessage:nil];
     
@@ -88,9 +86,9 @@
     NSInteger newMessageCount = [[dataStore valueForKey:@"NewMessageCount"] integerValue];
     NSInteger systemMessageCount = [[dataStore valueForKey:@"SystemMessageCount"] integerValue];
     if (newMessageCount+systemMessageCount>0) {
-        [navView setIsHasNewMessage:YES];
+        [self.navView setIsHasNewMessage:YES];
     }else{
-        [navView setIsHasNewMessage:NO];
+        [self.navView setIsHasNewMessage:NO];
     }
 
 }
@@ -101,66 +99,24 @@
     BOOL isUserInteractionEnabled = [[[dic valueForKey:@"userInfo"] valueForKey:@"userInteractionEnabled"] boolValue];
     self.view.userInteractionEnabled = isUserInteractionEnabled;
 }
--(void)loadBanner
+-(void)loadHomeData
 {
-    //网络初始化
-    httpUtil = [[HttpUtils alloc]init];
-    //初始化加载页面
-    if (!loadingView) {
-        loadingView = [LoadingUtil shareinstance:self.view];
-    }
-    loadingView.isError = NO;
-    loadingView.delegate  = self;
-    [LoadingUtil show:loadingView];
-    [httpUtil getDataFromAPIWithOps:BANNER_LIST postParam:nil type:0 delegate:self sel:@selector(requestBannerList:)];
+    //加载页面
+    self.startLoading = YES;
+//    [self.httpUtil getDataFromAPIWithOps:HOME_DATA postParam:nil type:0 delegate:self sel:@selector(requestHomeData:)];
+    [self.httpUtil getDataFromAPIWithOps:HOME_DATA type:0 delegate:self sel:@selector(requestHomeData:) method:@"GET"];
 }
-
-- (void)addWaterFollow
-{
-    
-    WaterFLayout* flowLayout = [[WaterFLayout alloc]init];
-    flowLayout.minimumColumnSpacing = 5;
-    flowLayout.minimumInteritemSpacing=10;
-    self.waterfall = [[WaterF alloc]initWithCollectionViewLayout:flowLayout];
-    self.waterfall.sectionNum = 1;
-    self.waterfall.delegate = self;
-    self.waterfall.imagewidth = WIDTH(self.view)/2-10;
-    self.waterfall.view.backgroundColor=[UIColor whiteColor];
-    
-    //重新布局
-    [self.waterfall.collectionView setFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView)-kBottomBarHeight-39)];
-    [self.view addSubview:self.waterfall.collectionView];
-    
-    //头部
-    UIView* headerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 150)];
-    self.mainScorllView = [[CycleScrollView alloc] initWithFrame:CGRectInset(headerView.frame, 1, 1) animationDuration:2];
-    self.mainScorllView.backgroundColor = [[UIColor purpleColor] colorWithAlphaComponent:0.1];
-    
-    for (int i=0; i<10; i++) {
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.mainScorllView))];
-        imageView.backgroundColor = WriteColor;
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
-        imageView.layer.masksToBounds = YES;
-        
-        [imageView setImage:IMAGENAMED(@"loading")];
-        [self.viewsArray addObject:imageView];
-    }
-    [headerView addSubview:self.mainScorllView];
-    self.waterfall.headerView=headerView;
-    
-}
-
 
 
 -(void)loadFinished
 {
-    [LoadingUtil closeLoadingView:loadingView];
+    
 }
 -(void)RoadShowProject:(NSMutableDictionary*)dic
 {
     NSMutableDictionary* dataDic = [[dic valueForKey:@"userInfo"] valueForKey:@"data"];
     RoadShowDetailViewController* controller=[[RoadShowDetailViewController alloc]init];
-    controller.title = navView.title;
+    controller.title = self.navView.title;
     controller.dic =dataDic;
     [self.navigationController pushViewController:controller animated:YES];
 }
@@ -173,108 +129,87 @@
 
 #pragma ASIHttpRequester
 //===========================================================网络请求=====================================
--(void)requestBannerList:(ASIHTTPRequest *)request{
+-(void)requestHomeData:(ASIHTTPRequest *)request{
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);
     NSMutableDictionary* jsonDic = [jsonString JSONValue];
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
-            loadingView.isError = NO;
-//            [LoadingUtil close:loadingView];
-            //UIView* headerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 150)];
-            //self.mainScorllView = [[CycleScrollView alloc] initWithFrame:CGRectInset(headerView.frame, 1, 1) animationDuration:2];
-            self.mainScorllView.backgroundColor = [[UIColor purpleColor] colorWithAlphaComponent:0.1];
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
+            self.dataDic = [jsonDic valueForKey:@"data"];
+            dataArray  = [self.dataDic valueForKey:@"project"];
+            headerView.delegate = self;
+            headerView.dataDic = self.dataDic;
             
-            NSMutableArray* array = [jsonDic valueForKey:@"data"];
-            if (array.count>0) {
-                [self.viewsArray removeAllObjects];
-            }
-            
-            for (int  i =0; i<array.count; i++) {
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.mainScorllView))];
-                imageView.backgroundColor = WriteColor;
-                imageView.contentMode = UIViewContentModeScaleAspectFit;
-                imageView.layer.masksToBounds = YES;
-                
-                NSString* fileName=[NSString stringWithFormat:@"%d",i+1];
-                imageView.image =IMAGE(fileName, @"jpg");
-                [self.viewsArray addObject:imageView];
-                
-                NSURL* url =[NSURL URLWithString:[array[i] valueForKey:@"img"]];
-                __block RoadShowViewController* blockSelf =self;
-                [imageView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
-                    imageView.contentMode = UIViewContentModeScaleAspectFill;
-                    imageView.layer.masksToBounds = NO;
-                    [blockSelf.viewsArray replaceObjectAtIndex:i withObject:imageView];
-                }];
-            }
-            __block RoadShowViewController *instance = self;
-            self.mainScorllView.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
-                return instance.viewsArray[pageIndex];
-            };
-            self.mainScorllView.totalPagesCount = ^NSInteger(void){
-                return instance.viewsArray.count;
-            };
-            
-            self.bannerArray = array;
-            
-            __block RoadShowViewController* roadShow=self;
-            self.mainScorllView.TapActionBlock = ^(NSInteger pageIndex){
-                NSString* projectId =[roadShow.bannerArray[pageIndex] valueForKey:@"project"];
-                if ([projectId isKindOfClass:NSNull.class]) {
-                    BannerViewController* controller =[[BannerViewController alloc]init];
-                    controller.titleStr = @"首页";
-                    NSString* urlStr =[roadShow.bannerArray[pageIndex] valueForKey:@"url"];
-                    if (urlStr && ![urlStr isEqualToString:@""]) {
-                        controller.url =[NSURL URLWithString:urlStr];
-                        [roadShow.navigationController pushViewController:controller animated:YES];
-                    }
-                    
-                }else{
-                    RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
-                    NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:projectId forKey:@"id"];
-                    controller.dic = dic;
-                    controller.title =@"微路演";
-                    [roadShow.navigationController pushViewController:controller animated:YES];
-                }
-            };
-            
-        }else{
-            NSLog(@"请求失败!");
+            //刷新tableView
+            [self.tableView reloadData];
         }
+        self.startLoading = NO;
+    }else{
+        self.isNetRequestError  =YES;
     }
+    
 }
 
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    loadingView.isError = YES;
-    loadingView.content =@"网络连接失败!";
-    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-}
 
 -(void)refresh
 {
-    [self loadBanner];
-    [self.waterfall refreshProject];
+    [super refresh];
+    [self loadHomeData];
 }
 
--(void)dealloc
+//==============================RoadShowDelegate==============================//
+-(void)roadShowHome:(id)roadShowHome controller:(UIViewController *)controller
 {
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+//==============================RoadShowDelegate==============================//
+
+//==============================TableView区域开始==============================//
+-(void)tableView:(UITableView *)tableViewInstance didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
 }
 
 
-- (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];
-    
-    [MobClick beginLogPageView:navView.title];
+-(CGFloat)tableView:(UITableView *)tableViewInstance heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 100;
+}
+-(UITableViewCell*)tableView:(UITableView *)tableViewInstance cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //声明静态字符串对象，用来标记重用单元格
+    static NSString* RoadShowTableIdentifier=@"RoadShowHomeTableViewCell";
+    //用TableDataIdentifier标记重用单元格
+    RoadShowHomeTableViewCell* cellInstance=(RoadShowHomeTableViewCell*)[tableViewInstance dequeueReusableCellWithIdentifier:RoadShowTableIdentifier];
+    if (!cellInstance) {
+//        float height = [self tableView:tableViewInstance heightForRowAtIndexPath:indexPath];
+//        cellInstance = [[RoadShowHomeTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
+//        cellInstance.restorationIdentifier = RoadShowTableIdentifier;
+        
+        cellInstance  = [[RoadShowHomeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:RoadShowTableIdentifier];
+    }
+    NSInteger row = indexPath.row;
+    NSDictionary* dic = dataArray[row];
+    [cellInstance setTime:[dic valueForKey:@"time"]];
+    [cellInstance setImageName:[dic valueForKey:@"img"]];
+    [cellInstance setProess:[dic valueForKey:@"process"]];
+    [cellInstance setCompanyName:[dic valueForKey:@"company"]];
+    cellInstance.selectionStyle = UITableViewCellSelectionStyleDefault;
+    cellInstance.selectionStyle = UITableViewCellSelectionStyleNone;
+    return cellInstance;
 }
 
-- (void)viewWillDisappear:(BOOL)animated { [super viewWillDisappear:animated];
 
-    [MobClick beginLogPageView:navView.title];
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
 }
+-(NSInteger)tableView:(UITableView *)tableViewInstance numberOfRowsInSection:(NSInteger)section
+{
+    return dataArray.count;
+}
+//==============================TableView区域结束==============================//
 @end

@@ -7,32 +7,21 @@
 //
 
 #import "NewFinialViewController.h"
-#import "TDUtil.h"
 #import "TypeShow.h"
-#import "MobClick.h"
 #import "ShareView.h"
-#import "HttpUtils.h"
 #import "MJRefresh.h"
-#import "DialogUtil.h"
-#import "UConstants.h"
-#import "LoadingUtil.h"
-#import "LoadingView.h"
 #import "SwitchSelect.h"
-#import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
 #import "INSViewController.h"
-#import "ASIFormDataRequest.h"
 #import "NewFinialTableViewCell.h"
 #import "HomeTabBarViewController.h"
-#import "BannerViewController.h"
 @interface NewFinialViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,ASIHTTPRequestDelegate,TypeShowDelegate>
 {
     BOOL isRefresh;
-    NSInteger selectedIndex;
     int currentpage;
-    HttpUtils* httpUtils;
+    
     TypeShow* typeShow;
-    LoadingView* loadingView;
+    
+    NSInteger selectedIndex;
 }
 
 @end
@@ -42,9 +31,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
-    
-    //网络对象初始化
-    httpUtils = [[HttpUtils alloc]init];
     
     //TabBarItem 设置
     UIImage* image=IMAGENAMED(@"xinsanban-cheng");
@@ -68,6 +54,17 @@
     
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
+    
+    //开始加载
+    self.startLoading  =YES;
+    
+    NSMutableDictionary* dataDic = [[NSMutableDictionary alloc]init];
+    [dataDic setValue:@"陈生珠" forKey:@"name"];
+    [dataDic setValue:@"632223199011260314" forKey:@"idno"];
+    [dataDic setValue:@"他家的" forKey:@"company"];
+    [dataDic setValue:@"会计" forKey:@"position"];
+    [dataDic setValue:@"陕西 西安" forKey:@"addr"];
+    [self.httpUtil getDataFromAPIWithOps:@"userinfo/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
     
 }
 
@@ -123,14 +120,6 @@
     [self.navigationController pushViewController:controller animated:YES];
 }
 
--(void)refreshProject
-{
-    isRefresh =YES;
-    currentpage = 0;
-    
-     [self loadNewsData:selectedIndex];
-    
-}
 
 -(void)loadProject
 {
@@ -167,27 +156,22 @@
 }
 -(void)loadNewsData:(NSInteger)index
 {
-    //添加加载页面
-    if (isRefresh) {
-        loadingView.isTransparent = YES;
-        [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
+    if (!self.startLoading) {
+        self.startLoading  = YES;
+        self.isTransparent = YES;
     }
-    
-    
+    //添加加载页面
     NSString* str = [NEWS stringByAppendingFormat:@"%ld/%d/",(long)index,currentpage];
-    [httpUtils getDataFromAPIWithOps:str postParam:nil type:0 delegate:self sel:@selector(requestNewsData:)];
-    
+    //[httpUtils getDataFromAPIWithOps:str postParam:nil type:0 delegate:self sel:@selector(requestNewsData:)];
+    [self.httpUtil getDataFromAPIWithOps:str type:0 delegate:self sel:@selector(requestNewsData:) method:@"GET"];
 }
 
 -(void)loadNewsTag
 {
     isRefresh = YES;
     //添加加载页面
-    loadingView = [LoadingUtil shareinstance:self.view];
-    [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
-    
-    //添加加载页面
-    [httpUtils getDataFromAPIWithOps:NEWS_TYPE postParam:nil type:0 delegate:self sel:@selector(requestNewsTagData:)];
+//    [self.httpUtil getDataFromAPIWithOps:NEWS_TYPE postParam:nil type:0 delegate:self sel:@selector(requestNewsTagData:)];
+    [self.httpUtil getDataFromAPIWithOps:NEWS_TYPE type:0 delegate:self sel:@selector(requestNewsTagData:) method:@"GET"];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -197,13 +181,13 @@
         self.webViewController.title = self.navView.title;
     }
     NSDictionary* dic  = self.dataCreateArray[indexPath.row];
-    NSURL* url = [NSURL URLWithString:[dic valueForKey:@"href"]];
+    NSURL* url = [NSURL URLWithString:[dic valueForKey:@"url"]];
     self.webViewController.type = 3;
     self.webViewController.url = url;
     self.webViewController.dic = dic;
     [self.navigationController pushViewController:self.webViewController animated:YES];
     NSString* serverUrl = [NEWS_READ_COUNT stringByAppendingFormat:@"%@/",[dic valueForKey:@"id"]];
-    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:0 sel:nil];
+    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:nil];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -223,15 +207,15 @@
     }
     
     NSDictionary* dic = self.dataCreateArray[indexPath.row];
-    NSURL* url = [dic valueForKey:@"src"];
+    NSURL* url = [dic valueForKey:@"img"];
     cell.backgroundColor = BackColor;
     [cell.imgview sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading")];
     cell.titleLabel.text = [dic valueForKey:@"title"];
-    cell.desclabel.text = [dic valueForKey:@"source"];
+    cell.desclabel.text = [dic valueForKey:@"src"];
     cell.typeLabel.text = [dic valueForKey:@"content"];
     cell.timeLabel.text = [dic valueForKey:@"create_datetime"];
-    cell.colletcteLabel.text = [[dic valueForKey:@"sharecount"] stringValue];
-    cell.priseLabel.text = [[dic valueForKey:@"readcount"] stringValue];
+    cell.colletcteLabel.text = [[dic valueForKey:@"share"] stringValue];
+    cell.priseLabel.text = [[dic valueForKey:@"read"] stringValue];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableView.contentSize = CGSizeMake(WIDTH(tableView), 150*self.dataCreateArray.count+80);
@@ -265,8 +249,16 @@
     }
     [self.tableView reloadData];
 }
-
-
+//==============================刷新功能区域开始==============================//
+-(void)refresh
+{
+    [super refresh];
+    currentpage = 0;
+    isRefresh  = YES;
+    [self loadNewsData:selectedIndex];
+}
+//==============================刷新功能区域结束==============================//
+//==============================网络请求区域开始==============================//
 -(void)requestNewsData:(ASIHTTPRequest *)request{
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);
@@ -274,24 +266,28 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] ==-1) {
-            if (isRefresh) {
-                self.dataCreateArray = [jsonDic valueForKey:@"data"];
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0 || [code intValue] ==2) {
+            if ([code integerValue] == 2) {
+                self.isEndOfPageSize  =YES;
             }else{
-                if (!self.dataCreateArray) {
+                if (isRefresh) {
                     self.dataCreateArray = [jsonDic valueForKey:@"data"];
+                }else{
+                    if (!self.dataCreateArray) {
+                        self.dataCreateArray = [jsonDic valueForKey:@"data"];
+                    }
+                    [self.dataCreateArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
+                    [self.tableView reloadData];
                 }
-                [self.dataCreateArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
-                [self.tableView reloadData];
             }
-            
             
             NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
             [dataStore setValue:nil forKey:@"NewFinialCount"];
             [dataStore setValue:@"true" forKey:@"IsNewFinialUpdate"];
             [dataStore setValue:[TDUtil CurrentDay] forKey:@"NewFinialUpdateTime"];
             [self.tabBarItem setBadgeValue:nil];
+            
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         }
@@ -303,11 +299,23 @@
         
         self.tableView.content = [jsonDic valueForKey:@"msg"];
         
-        //关闭加载视图
-        [LoadingUtil closeLoadingView:loadingView];
+        self.startLoading = NO;
+        if (self.isNetRequestError) {
+            self.isNetRequestError = NO;
+        }
+    }else{
+        self.isNetRequestError = YES;
     }
+    
 }
 
+
+-(void)requestUserInfo:(ASIHTTPRequest *)request{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    
+    [[DialogUtil sharedInstance]showDlg:self.view textOnly:jsonString];
+}
 
 -(void)requestNewsTagData:(ASIHTTPRequest *)request{
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
@@ -316,8 +324,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] ==-1) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0 || [code intValue] ==-1) {
             NSMutableArray* array = [jsonDic valueForKey:@"data"];
             
             if (array && array.count>0) {
@@ -348,8 +356,9 @@
         self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
         [self.tableView removeFromSuperview];
         [self.view addSubview:self.tableView];
+        [self.view sendSubviewToBack:self.tableView];
         
-        [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
+        [TDUtil tableView:self.tableView target:self refreshAction:@selector(refresh) loadAction:@selector(loadProject)];
         
         NSInteger  index =[[typeShow.dataArray[0] valueForKey:@"key"] integerValue];
         
@@ -361,7 +370,9 @@
         
         
         [self updateNewMessage:nil];
-
+        
+    }else{
+        self.isNetRequestError  =YES;
     }
     
 }
@@ -377,10 +388,8 @@
     
 }
 
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    
-}
+
+//=============================网络请求区域结束==============================//
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -393,21 +402,12 @@
         
     }
 }
--(void)dealloc
-{
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
-}
-
 
 - (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];
+    [super viewWillAppear:animated];
+    
     NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
     if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
-    
-    [MobClick beginLogPageView:self.navView.title];
 }
 
-- (void)viewWillDisappear:(BOOL)animated { [super viewWillDisappear:animated];
-    
-    [MobClick beginLogPageView:self.navView.title];
-}
 @end

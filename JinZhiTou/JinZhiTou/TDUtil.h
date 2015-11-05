@@ -12,6 +12,7 @@
 #import "PaddingView.h"
 #import "DialogView.h"
 #import "GlobalDefine.h"
+#import "RootViewController.h"
 @interface TDUtil : UIView
 
 /**
@@ -264,8 +265,6 @@
  */
 +(NSMutableArray*)soreAsc:(NSMutableDictionary*)arr;
 //=====================================================================================================//
-//距次日6点整相差秒数
-+(NSInteger)leftSecond;
 +(int)BoxModelDaytime;
 //是否到达指定时间: 参数compareTimeStr 格式:@" 14:00:00"
 +(BOOL)isArrivedTime:(NSString*)compareTimeStr;
@@ -470,5 +469,22 @@
  */
 +(UIImage*)imageWithImage:(UIImage*)image scaledToSize:(CGSize)newSize;
 
+/**
+ *  富文本格式设置
+ *
+ *  @param indexPath 索引
+ *  @param content   内容
+ *  @param width     宽度
+ *
+ *  @return 高度
+ */
 + (CGFloat)getTextViewHeight:(NSIndexPath*)indexPath content:(NSString*)content width:(CGFloat)width;
+
+/**
+ *  根据服务器返回状态值做各种行为
+ *
+ *  @param controller 当前发起请求所在的UIViewController
+ *  @param dic        服务器返回值
+ */
++ (void)serverResultJudge:(id)controller dic:(NSMutableDictionary*)dic;
 @end

@@ -13,10 +13,11 @@
 @property(assign,nonatomic)int type;
 @property(assign,nonatomic) BOOL isCountDown;
 @property (strong, nonatomic) NavView *navView;
-@property (weak, nonatomic) UIButton *configBtn;
-@property (weak, nonatomic) IBOutlet UIView *subView;
-@property (strong, nonatomic) IBOutlet UITextField *phoneTextField;
-@property (strong, nonatomic) IBOutlet UITextField *passTextField;
-@property (strong, nonatomic) IBOutlet UITextField *codeTextField;
-@property (strong, nonatomic) IBOutlet JKCountDownButton *codeButton;
+@property (strong, nonatomic) UIButton *configBtn;
+@property (strong, nonatomic) UIView *subView;
+@property (strong, nonatomic) UITextField *phoneTextField;
+@property (strong, nonatomic) UITextField *passTextField;
+@property (strong, nonatomic) UITextField *codeTextField;
+@property (strong, nonatomic) JKCountDownButton *codeButton;
+@property (strong, nonatomic) UITextField *passRepeatTextField;
 @end

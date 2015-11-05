@@ -103,7 +103,8 @@
 
 
 //主题色
-#define ColorTheme  [UIColor colorWithRed:0xdc/256. green:0x47/256. blue:0x1c/256. alpha:1]
+#define ColorTheme  [UIColor colorWithRed:0xcb/256. green:0x02/256. blue:0x02/256. alpha:1]
+//#define ColorTheme  [UIColor colorWithRed:0xdc/256. green:0x47/256. blue:0x1c/256. alpha:1]
 #define ColorCompanyTheme  [UIColor colorWithRed:0xd4/256. green:0xa2/256. blue:0x25/256. alpha:1]
 #define ColorTheme2  [UIColor colorWithRed:0xe6/256. green:0x97/256. blue:0x85/256. alpha:1]
 #define BackColor [UIColor colorWithRed:245.0/255 green:245.0/255 blue:244.0/255 alpha:1]
@@ -196,7 +197,7 @@
 //平台推荐
 #define RECOMMEND_PROJECT @"recommendproject/"
 //用户注册
-#define USER_REGIST @"register/"
+#define USER_REGIST @"registe/"
 //忘记密码
 #define USER_FORGET_PWD @"resetpassword/"
 //修改 密码
@@ -223,8 +224,6 @@
 #define Position_Type @"positiontype/"
 //获取城市
 #define MODIFY_CITY @"provincecity/"
-//上传设备唯一码，极光推送
-#define REG_ID @"regid/"
 //添加公司
 #define ADD_COMPANY @"addcompany/"
 //公司信息
@@ -274,11 +273,15 @@
 //用户基本信息
 #define USERINFO @"generalinformation/"
 //忌口列表
-#define UPLOAD_USER_PIC @"userimg/"
+#define UPLOAD_USER_PIC @"photo/"
+//获取头像
+#define LEFT_SLIDE @"leftslide/"
 //重置密码
-#define RESET_PASSWORD @"resetpassword/"
+#define RESET_PASSWORD @"resetpasswd/"
 //修改姓名
 #define REALNAME @"realname/"
+//修改昵称
+#define NICKNAME @"nickname/"
 //用户性别
 #define  UserGender @"gender/"
 //用户类型修改
@@ -358,9 +361,11 @@
 //咨询点赞
 #define NEWS_LIKE @"newslike/"
 //咨询阅读量
-#define NEWS_READ_COUNT @"newsreadcount/"
+#define NEWS_READ_COUNT @"newsread/"
 //咨询分享
 #define NEWS_SHARE  @"sharenews/"
+//转发资讯
+#define SHARE_NEWS  @"sharenews/"
 
 //我的路演申请
 #define MY_ROADSHOW_APPLY @"myroadshow/"
@@ -410,7 +415,7 @@
 #define CYCLE_CONTENT_COMMENT_LIST @"feelingcomment/"
 
 //用户上传背景
-#define CYCLE_CONTENT_BACKGROUND_UPLOAD @"feelingbackground/"
+#define CYCLE_CONTENT_BACKGROUND_UPLOAD @"bg/"
 //调用投融资板块展示顺序
 #define CYCLE_FINIAL_SORT  @"defaultclassify/"
 //获取某条心情内容
@@ -419,6 +424,27 @@
 #define defaultclassify @"defaultclassify/"
 //用户下载头像
 //http://weini.im/upload//menuinfo//_EN_8427.jpg
+
+
+
+//==============================第三期App研发接口==============================//
+//征信查询
+#define HOME_CREDIT @"credit/"
+//公司名称修改
+#define USERINFO_MODIFY_COMPANY_NAME @"company/"
+//公司职位
+#define USERINFO_MODIFY_POSITION @"position/"
+//地址
+#define USERINFO_MODIFY_ADDRESS @"addr/"
+//圈子背景设置
+#define CYCLE_BACKGROUND @"bg/"
+//首页数据
+#define HOME_DATA @"home/"
+//客服热线
+#define HOME_TEL @"customservice/"
+
+
+//==============================第三期App研发接口==============================//
 
 //支持区域
 #define ROMATE_MSG_TYPE [NSDictionary dictionaryWithObjectsAndKeys:@"projectdetail",@"0",@"msg",@"1",@"system",@"2",@"web",@"3",@"news",@"4",@"knowledge",@"5",@"roadshow",@"6",@"participate",@"7",@"investor",@"8",@"feeling",@"9",nil]

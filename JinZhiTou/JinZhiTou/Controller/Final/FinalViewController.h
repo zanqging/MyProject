@@ -7,15 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RootViewController.h"
 #import "FinalKindTableViewCell.h"
 #import "UITableViewCustomView.h"
 #import "FinalContentTableViewCell.h"
-@interface FinalViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
+@interface FinalViewController : RootViewController<UITableViewDataSource,UITableViewDelegate>
 {
     
 }
 @property(retain,nonatomic)NSMutableArray* array;
-@property (strong, nonatomic) IBOutlet UITableView *finalFunTableView;
+@property (strong, nonatomic)UITableView *finalFunTableView;
 @property (strong, nonatomic)UITableViewCustomView *finalContentTableView;
 
 @property(retain,nonatomic)NSMutableArray* waitFinialDataArray;

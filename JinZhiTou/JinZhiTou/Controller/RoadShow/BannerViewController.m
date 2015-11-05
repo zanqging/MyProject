@@ -9,24 +9,24 @@
 #import "BannerViewController.h"
 #import "TDUtil.h"
 #import "NavView.h"
-#import "DialogUtil.h"
-#import "UConstants.h"
 #import "ShareView.h"
 #import "HttpUtils.h"
+#import "DialogUtil.h"
+#import "UConstants.h"
 #import "LoadingUtil.h"
 #import "LoadingView.h"
 #import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
-#import "ASIHTTPRequest.h"
 #import "ShareNewsView.h"
+#import "ASIHTTPRequest.h"
+#import "NSString+SBJSON.h"
 @interface BannerViewController ()<UIWebViewDelegate,ASIHTTPRequestDelegate>
 {
+    BOOL isGetStatus;
+    
     NavView* navView;
     HttpUtils* httpUtil;
     LoadingView* loadingView;
-    
     ShareNewsView* shareNewsView;
-    BOOL isGetStatus;
 }
 @end
 

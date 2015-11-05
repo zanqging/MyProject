@@ -8,6 +8,7 @@
 
 #import "RegisteViewController.h"
 #import "TDUtil.h"
+#import "APService.h"
 #import "UConstants.h"
 #import "DialogUtil.h"
 #import "GlobalDefine.h"
@@ -20,8 +21,10 @@
 #import "MMExampleDrawerVisualStateManager.h"
 @interface RegisteViewController ()<UITextFieldDelegate,UIScrollViewDelegate>
 {
-    UIScrollView* scrollView;
     HttpUtils* httpUtils;
+    
+    UIScrollView* scrollView;
+    UIActivityIndicatorView* activity;
 }
 @property(retain,nonatomic)MMDrawerController* drawerController;
 @end
@@ -30,11 +33,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //背景
     self.view.backgroundColor=ColorTheme;
+    
     //隐藏导航栏
     [self.navigationController.navigationBar setHidden:YES];
+    
     //设置标题
     self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
+    
+    //设置属性
     self.navView.imageView.alpha=1;
     [self.navView setTitle:@"注册"];
     self.navView.titleLable.textColor=WriteColor;
@@ -46,8 +55,10 @@
     [self.view addSubview:self.navView];
     
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.navView), HEIGHT(self.view)-POS_Y(self.navView))];
+    
     scrollView.backgroundColor = BackColor;
     [scrollView setContentSize:CGSizeMake(WIDTH(scrollView), HEIGHT(scrollView)+100)];
+    
     [self.view addSubview:scrollView];
     
     UIView* view =[[UIView alloc]initWithFrame:CGRectMake(0, 30, WIDTH(self.view), 230)];
@@ -58,21 +69,21 @@
     
     // 忘记密码
     UIImageView* imgView =[[UIImageView alloc]initWithFrame:CGRectMake(30, 30, 15, 15)];
-    imgView.contentMode = UIViewContentModeScaleAspectFill;
     imgView.image = IMAGENAMED(@"shoujihao");
+    imgView.contentMode = UIViewContentModeScaleAspectFill;
     [view addSubview:imgView];
     
     
     UILabel* label =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, Y(imgView)-5, 40, 25)];
-    label.textAlignment = NSTextAlignmentRight;
     label.text =@"手机";
+    label.textAlignment = NSTextAlignmentRight;
     [view addSubview:label];
     
-    self.phoneTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), WIDTH(self.view)-POS_X(label)-5, 30)];
+    self.phoneTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), WIDTH(self.view)-POS_X(label)-100, 30)];
     self.phoneTextField.tag=1004;
     self.phoneTextField.delegate=self;
-    self.phoneTextField.font = SYSTEMBOLDFONT(18);
     self.phoneTextField.layer.borderWidth = 1;
+    self.phoneTextField.font = SYSTEMFONT(16);
     self.phoneTextField.placeholder = @"请输入您的手机号";
     self.phoneTextField.returnKeyType = UIReturnKeyDone;
     self.phoneTextField.borderStyle =UITextBorderStyleNone;
@@ -86,44 +97,45 @@
     [view addSubview:self.phoneTextField];
     
     UIImageView* lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label), POS_Y(self.phoneTextField)+10, WIDTH(self.view)-X(label)-20, 1)];
+    
     lineImgView.backgroundColor = BackColor;
     [view addSubview:lineImgView];
     
     
     imgView =[[UIImageView alloc]initWithFrame:CGRectMake(X(imgView), POS_Y(self.phoneTextField)+30, 15, 15)];
-    imgView.contentMode = UIViewContentModeScaleAspectFill;
     imgView.image = IMAGENAMED(@"yanzhengma");
+    imgView.contentMode = UIViewContentModeScaleAspectFill;
     [view addSubview:imgView];
     
     
     label =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, Y(imgView)-5, 40, 25)];
-    label.textAlignment = NSTextAlignmentRight;
     label.text =@"";
+    label.textAlignment = NSTextAlignmentRight;
     [view addSubview:label];
     
     self.codeTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), 110, 30)];
     self.codeTextField.tag=1005;
-    self.codeTextField.placeholder = @"请输入验证码";
     self.codeTextField.delegate=self;
-    self.codeTextField.font = SYSTEMBOLDFONT(18);
     self.codeTextField.layer.borderWidth = 1;
-    self.codeTextField.layer.shadowColor=WriteColor.CGColor;
-    self.codeTextField.layer.borderColor = WriteColor.CGColor;
+    self.codeTextField.font = SYSTEMFONT(16);
+    self.codeTextField.placeholder = @"请输入验证码";
     self.codeTextField.returnKeyType = UIReturnKeyDone;
     self.codeTextField.borderStyle =UITextBorderStyleNone;
+    self.codeTextField.layer.shadowColor=WriteColor.CGColor;
+    self.codeTextField.layer.borderColor = WriteColor.CGColor;
     self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.codeTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.codeTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:self.codeTextField];
     
     self.codeButton = [[JKCountDownButton alloc]initWithFrame:CGRectMake(POS_X(self.codeTextField), Y(self.codeTextField)-5, 90, 35)];
-    self.codeButton.layer.cornerRadius = 5;
     self.codeButton.layer.borderWidth = 1;
-    [self.codeButton setTitle:@"获取验证码" forState:UIControlStateNormal];
+    self.codeButton.layer.cornerRadius = 5;
     [self.codeButton.titleLabel setFont:SYSTEMFONT(13)];
     self.codeButton.layer.borderColor = ColorTheme.CGColor;
-    [self.codeButton addTarget:self action:@selector(sendMessage:) forControlEvents:UIControlEventTouchUpInside];
+    [self.codeButton setTitle:@"获取验证码" forState:UIControlStateNormal];
     [self.codeButton setTitleColor:ColorTheme forState:UIControlStateNormal];
+    [self.codeButton addTarget:self action:@selector(sendMessage:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:self.codeButton];
     
     __block RegisteViewController * cSelf = self;
@@ -169,13 +181,13 @@
     label.text =@"密码";
     [view addSubview:label];
 
-    self.passTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), WIDTH(self.view)-POS_X(label)-5, 30)];
+    self.passTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), WIDTH(self.phoneTextField), 30)];
     self.passTextField.tag=1004;
     self.passTextField.delegate=self;
-    self.passTextField.font = SYSTEMBOLDFONT(18);
-    self.passTextField.placeholder = @"请输入密码";
     self.passTextField.layer.borderWidth = 1;
     self.passTextField.secureTextEntry = YES;
+    self.passTextField.font = SYSTEMFONT(16);
+    self.passTextField.placeholder = @"请输入密码";
     self.passTextField.returnKeyType = UIReturnKeyDone;
     self.passTextField.borderStyle =UITextBorderStyleNone;
     self.passTextField.layer.shadowColor=WriteColor.CGColor;
@@ -188,19 +200,18 @@
     lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label), POS_Y(self.passTextField)+10, WIDTH(self.view)-X(label)-20, 1)];
     lineImgView.backgroundColor = BackColor;
     [view addSubview:lineImgView];
-    
 
     self.passRepeatTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, POS_Y(self.passTextField)+20, WIDTH(self.phoneTextField), HEIGHT(self.phoneTextField))];
     self.passRepeatTextField.tag=1004;
     self.passRepeatTextField.delegate=self;
     self.passRepeatTextField.layer.borderWidth = 1;
-    self.passRepeatTextField.font = SYSTEMBOLDFONT(18);
     self.passRepeatTextField.secureTextEntry = YES;
+    self.passRepeatTextField.font = SYSTEMFONT(16);
     self.passRepeatTextField.placeholder = @"请重复密码";
-    self.passRepeatTextField.layer.shadowColor=WriteColor.CGColor;
-    self.passRepeatTextField.layer.borderColor = WriteColor.CGColor;
     self.passRepeatTextField.returnKeyType = UIReturnKeyDone;
     self.passRepeatTextField.borderStyle =UITextBorderStyleNone;
+    self.passRepeatTextField.layer.shadowColor=WriteColor.CGColor;
+    self.passRepeatTextField.layer.borderColor = WriteColor.CGColor;
     self.passRepeatTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.passRepeatTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.passRepeatTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -237,6 +248,9 @@
 
 -(void)protocolAction:(id)sender
 {
+    //收起键盘
+    [self resignKeyboard];
+    
     PrivacyViewController* controller = [[PrivacyViewController alloc]init];
     controller.serverUrl = useragreement;
     controller.title = @"返回";
@@ -256,7 +270,7 @@
     if (phoneNumber) {
         if ([TDUtil validateMobile:phoneNumber]) {
             NSString* serverUrl = [SEND_MESSAGE_CODE stringByAppendingFormat:@"0/"];
-            [httpUtils getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:phoneNumber,@"telephone", nil] type:0 delegate:self sel:@selector(requestSendeCode:)];
+            [httpUtils getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:phoneNumber,@"tel", nil] type:0 delegate:self sel:@selector(requestSendeCode:)];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"手机号码格式不正确"];
         }
@@ -312,14 +326,40 @@
          return NO;
     }
     
-    
+    //加密
     password = [TDUtil encryptPhoneNumWithMD5:phoneNumber passString:password];
+    
+    NSString* regId = [APService registrationID];
+    
     NSDictionary* dic =[[NSMutableDictionary alloc]init];
     [dic setValue:code forKey:@"code"];
-    [dic setValue:@"1" forKey:@"system"];
-    [dic setValue:phoneNumber forKey:@"telephone"];
-    [dic setValue:password forKey:@"password"];
-    [httpUtils getDataFromAPIWithOps:USER_REGIST postParam:dic type:0 delegate:self sel:@selector(requestRegiste:)];
+    [dic setValue:regId forKey:@"regid"];
+    [dic setValue:phoneNumber forKey:@"tel"];
+    [dic setValue:password forKey:@"passwd"];
+    [dic setValue:@"2.1.0" forKey:@"version"];
+    
+    //ios 使用：1，Android 使用:2；
+    NSString* serverUrl = [USER_REGIST stringByAppendingString:@"1/"];
+    
+    //加载动画
+    //加载动画控件
+    if (!activity) {
+        //进度
+        activity = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(WIDTH(self.regietButton)/3-18, HEIGHT(self.regietButton)/2-15, 30, 30)];//指定进度轮的大小
+        [activity setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];//设置进度轮显示类型
+        [self.regietButton addSubview:activity];
+    }else{
+        if (!activity.isAnimating) {
+            [activity startAnimating];
+        }
+    }
+    [activity setColor:ColorTheme];
+    
+    //开始加载动画
+    [activity startAnimating];
+    
+    
+    [httpUtils getDataFromAPIWithOps:serverUrl postParam:dic type:0 delegate:self sel:@selector(requestRegiste:)];
     return YES;
 }
 
@@ -368,13 +408,11 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"验证码发送成功!" ];
-            NSLog(@"验证码发送成功!");
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         }else{
              [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
-            NSLog(@"验证码发送失败!");
             [self.codeButton stop];
         }
     }
@@ -387,17 +425,15 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
             NSLog(@"注册成功!");
             NSUserDefaults* data =[NSUserDefaults standardUserDefaults];
             [data setValue:@"YES" forKey:@"isLogin"];
-            [data setValue:@"NO" forKey:@"isAnimous"];
             [data setValue:self.phoneTextField.text forKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
             UIViewController* controller =[storyBoard instantiateViewControllerWithIdentifier:@"HomeTabController"];
-            
             
             UserInfoViewController* userInfoController = [[UserInfoViewController alloc]init];
             self.drawerController = [[MMDrawerController alloc]
@@ -424,16 +460,17 @@
         }else{
             NSString* msg =[jsonDic valueForKey:@"msg"];
              [[DialogUtil sharedInstance]showDlg:self.view textOnly:msg];
-            NSLog(@"注册失败!");
-            
         }
+        [activity stopAnimating];
     }
 
 }
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
-    
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    [activity stopAnimating];
 }
 - (void)viewDidAppear:(BOOL)animated
 {

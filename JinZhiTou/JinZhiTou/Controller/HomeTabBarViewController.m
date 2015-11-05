@@ -86,16 +86,12 @@
 
     
     httpUtils = [[HttpUtils alloc]init];
-    //上传
-    [self uploadRegistrationID];
     //检测用户是否已经登录
     [self isUserHasLogin];
 
     //发送短信
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(alert:) name:@"alert" object:nil];
     
-    //发送短信
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(uploadRegistrationID) name:@"uploadRegistrationID" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateStatus) name:@"updateStatus" object:nil];
     
     
@@ -460,15 +456,6 @@
     }];
 }
 
--(void)uploadRegistrationID
-{
-    httpUtils=[[HttpUtils alloc]init];
-    NSString* registrationID = [APService registrationID];
-    NSLog(@"%@",registrationID);
-    [httpUtils getDataFromAPIWithOps:REG_ID postParam:[NSDictionary dictionaryWithObjectsAndKeys:registrationID,@"regid", nil] type:0 delegate:self sel:@selector(requestUploadTokean:)];
-}
-
-
 -(void)hasNewMessage
 {
     [httpUtils getDataFromAPIWithOps:hasnewtopic postParam:nil type:0 delegate:self sel:@selector(requestNewMessage:)];
@@ -622,7 +609,7 @@
             
             //加密
             NSLog(@"password:%@",password);
-            [dic setValue:phone forKey:@"telephone"];
+            [dic setValue:phone forKey:@"tel"];
             [dic setValue:password forKey:@"password"];
             
             if ([TDUtil isValidString:phone] && [TDUtil isValidString:password]) {

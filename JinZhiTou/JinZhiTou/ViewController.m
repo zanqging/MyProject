@@ -7,17 +7,9 @@
 //
 
 #import "ViewController.h"
-#import "TDUtil.h"
 #import "MJRefresh.h"
-#import "HttpUtils.h"
-#import "DialogUtil.h"
-#import "UConstants.h"
-#import "LoadingView.h"
-#import "LoadingUtil.h"
 #import "UIImage+Crop.h"
 #import "CycleHeader.h"
-#import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
 #import "DAKeyboardControl.h"
 #import "PECropViewController.h"
 #import "BannerViewController.h"
@@ -38,9 +30,7 @@
     NSInteger currentPage;
     NSString* conId,* atConId;
     
-    HttpUtils* httpUtils;
     CycleHeader* headerView;
-    LoadingView* loadingView;
     WeiboTableViewCell* currentSelectedCell;
 }
 @property(retain,nonatomic)CustomImagePickerController* customPicker;
@@ -53,12 +43,14 @@
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
     
-    //TabBarItem 设置
+    //==============================TabBarItem 设置==============================//
     UIImage* image=IMAGENAMED(@"btn-quanzi-cheng");
     image=[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [self.tabBarItem setSelectedImage:image];
     [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:ColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
+     //==============================TabBarItem 设置==============================//
     
+     //==============================导航栏区域 设置==============================//
     self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     self.navView.imageView.alpha=0;
     [self.navView setTitle:@"金指投"];
@@ -69,6 +61,7 @@
     [self.navView.rightButton setImage:IMAGENAMED(@"circle_publish") forState:UIControlStateNormal];
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(publishAction:)]];
     [self.view addSubview:self.navView];
+     //==============================导航栏区域 设置==============================//
     
     self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-70)];
     self.tableView.bounces=YES;
@@ -142,10 +135,6 @@
 //        viewSelf.tableView.frame = tableViewFrame;
     } constraintBasedActionHandler:nil];
     
-    //网络加载
-    httpUtils = [[HttpUtils alloc]init];
-    loadingView = [LoadingUtil shareinstance:self.view];
-    [LoadingUtil show:loadingView];
     [self loadData];
     
     //添加监听
@@ -171,7 +160,7 @@
 //    }
 //    self.dataArray = array;
     NSString* serverUrl = [CYCLE_CONTENT_LIST stringByAppendingFormat:@"%ld/",currentPage];
-    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestData:)];
+    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestData:)];
 }
 
 
@@ -251,7 +240,7 @@
 {
     NSMutableArray* uploadFiles =[[dic valueForKey:@"userInfo"] valueForKey:@"uploadFiles"];
     NSString* content = [[dic valueForKey:@"userInfo"] valueForKey:@"content"];
-    [httpUtils getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:[NSDictionary dictionaryWithObject:content forKey:@"content"] files:uploadFiles postName:@"file" type:0 delegate:self sel:@selector(requestPublishContent:)];
+    [self.httpUtil getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:[NSDictionary dictionaryWithObject:content forKey:@"content"] files:uploadFiles postName:@"file" type:0 delegate:self sel:@selector(requestPublishContent:)];
 }
 
 -(void)UserInfoSetting:(id)sender
@@ -276,12 +265,9 @@
     }
     
     [textView resignFirstResponder];
-    if(!httpUtils){
-        httpUtils = [[HttpUtils alloc]init];
-    }
     
     NSString* serverUrl = [CYCLE_CONTENT_REPLY stringByAppendingFormat:@"%@/",conId];
-    [httpUtils getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:content,@"content",atConId,@"at", nil] type:0 delegate:self sel:@selector(requestReply:)];
+    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:content,@"content",atConId,@"at", nil] type:0 delegate:self sel:@selector(requestReply:)];
     return true;
 }
 -(void)publishAction:(id)sender
@@ -610,7 +596,7 @@
 //上传身份证
 -(void)uploadUserPic:(NSInteger)id
 {
-    [httpUtils getDataFromAPIWithOps:CYCLE_CONTENT_BACKGROUND_UPLOAD postParam:nil file:STATIC_USER_BACKGROUND_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUploadHeaderImg:)];
+    [self.httpUtil getDataFromAPIWithOps:CYCLE_CONTENT_BACKGROUND_UPLOAD postParam:nil file:STATIC_USER_BACKGROUND_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUploadHeaderImg:)];
 }
 
 
@@ -688,8 +674,6 @@
             if ([status integerValue]==-1) {
                 [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"内容已加载完毕!"];
             }
-            
-            [LoadingUtil close:loadingView];
         }else{
             
         }
@@ -768,10 +752,4 @@
     }
 }
 
-
-
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    NSLog(@"%@",request.responseString);
-}
 @end

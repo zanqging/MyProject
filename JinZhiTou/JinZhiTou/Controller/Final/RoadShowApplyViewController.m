@@ -124,7 +124,7 @@
     
     NSDictionary* dic = [[NSMutableDictionary alloc]init];
     [dic setValue:userName forKey:@"name"];
-    [dic setValue:userPhone forKey:@"telephone"];
+    [dic setValue:userPhone forKey:@"tel"];
     [dic setValue:company forKey:@"company"];
     [dic setValue:videoName forKey:@"vcr"];
     

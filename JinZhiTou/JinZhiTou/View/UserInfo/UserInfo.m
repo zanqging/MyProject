@@ -136,18 +136,4 @@
     self->_dataArray = dataArray;
     [self.tableView reloadData];
 }
-
--(void)setIsAmious:(BOOL)isAmious
-{
-    self->_isAmious = isAmious;
-    if (self->_isAmious) {
-        [self.tableView removeFromSuperview];
-        
-        //背景
-        UIImageView* imgView = [[UIImageView alloc]initWithFrame:self.frame];
-        imgView.image = IMAGENAMED(@"kuang");
-        [self addSubview:imgView];
-    }
-}
-
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface ModifyViewController : UIViewController
+#import "RootViewController.h"
+@interface ModifyViewController : RootViewController
 @property(assign,nonatomic)int type;
 @end

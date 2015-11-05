@@ -38,9 +38,9 @@
     [view  addSubview:imgView];
     
     //设置button样式
-    self.registeButton = [[UIButton alloc]initWithFrame:CGRectMake(30, 100 , WIDTH(self.view)-60, 40)];
+    self.registeButton = [[UIButton alloc]initWithFrame:CGRectMake(30, 120 , WIDTH(self.view)-60, 40)];
     [self.registeButton addTarget:self action:@selector(registAction:) forControlEvents:UIControlEventTouchUpInside];
-     self.registeButton.titleLabel.font = SYSTEMFONT(14);
+     self.registeButton.titleLabel.font = SYSTEMFONT(18);
     [self.registeButton setTitle:@"注册" forState:UIControlStateNormal];
     self.registeButton.layer.cornerRadius = 5;
     self.registeButton.layer.borderColor = ColorTheme.CGColor;
@@ -51,26 +51,13 @@
     self.loginButon = [[UIButton alloc]initWithFrame:CGRectMake(X(self.registeButton),POS_Y(self.registeButton)+10, WIDTH(self.registeButton), 40)];
     self.loginButon.userInteractionEnabled = YES;
     [self.loginButon addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
-    self.loginButon.titleLabel.font = SYSTEMFONT(14);
+    self.loginButon.titleLabel.font = SYSTEMFONT(18);
     self.loginButon.layer.borderColor = ColorTheme.CGColor;
     self.loginButon.layer.borderWidth = 1;
     self.loginButon.layer.cornerRadius = 5;
     [self.loginButon setTitle:@"登录" forState:UIControlStateNormal];
     [self.loginButon setTitleColor:ColorTheme forState:UIControlStateNormal];
     [view addSubview:self.loginButon];
-    
-
-    
-    
-    UIButton* btnActionRight = [[UIButton alloc]initWithFrame:CGRectMake(X(self.loginButon), POS_Y(self.loginButon)+5, WIDTH(self.loginButon), HEIGHT(self.loginButon))];
-    [btnActionRight setTitle:@"游客入口" forState:UIControlStateNormal];
-    btnActionRight.titleLabel.font = SYSTEMFONT(14);
-    btnActionRight.layer.borderColor = ColorTheme.CGColor;
-    btnActionRight.layer.borderWidth = 1;
-    btnActionRight.layer.cornerRadius = 5;
-    [btnActionRight setTitleColor:ColorTheme forState:UIControlStateNormal];
-    [btnActionRight addTarget:self action:@selector(animousAction:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:btnActionRight];
     
     
 }
@@ -88,38 +75,7 @@
     UIViewController* controller =[storyBoard instantiateViewControllerWithIdentifier:@"loginViewController"];
     [self.navigationController pushViewController:controller animated:YES];
 }
--(void)animousAction:(id)sender
-{
-    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
-    [data setValue:@"YES" forKey:@"isAnimous"];
-    
-    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    UIViewController* controller =[storyBoard instantiateViewControllerWithIdentifier:@"HomeTabController"];
-    
-    UserInfoViewController* userInfoController = [[UserInfoViewController alloc]init];
-    self.drawerController = [[MMDrawerController alloc]
-                             initWithCenterViewController:controller
-                             leftDrawerViewController:userInfoController
-                             rightDrawerViewController:nil];
-    [self.drawerController setShowsShadow:NO];
-    [self.drawerController setRestorationIdentifier:@"MMDrawer"];
-    [self.drawerController setMaximumLeftDrawerWidth:280.0];
-    [self.drawerController setOpenDrawerGestureModeMask:MMOpenDrawerGestureModeBezelPanningCenterView];
-    [self.drawerController setCloseDrawerGestureModeMask:MMCloseDrawerGestureModeAll];
-    
-    [self.drawerController
-     setDrawerVisualStateBlock:^(MMDrawerController *drawerController, MMDrawerSide drawerSide, CGFloat percentVisible) {
-         MMDrawerControllerDrawerVisualStateBlock block;
-         block = [[MMExampleDrawerVisualStateManager sharedManager]
-                  drawerVisualStateBlockForDrawerSide:drawerSide];
-         if(block){
-             block(drawerController, drawerSide, percentVisible);
-         }
-         
-     }];
 
-    [self.navigationController pushViewController:self.drawerController animated:YES];
-}
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];

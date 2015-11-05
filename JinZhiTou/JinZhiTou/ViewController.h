@@ -7,12 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
+#import "RootViewController.h"
 #import "WeiboTableViewCell.h"
-@interface ViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
+@interface ViewController : RootViewController<UITableViewDataSource,UITableViewDelegate>
 @property (retain, nonatomic)UITableView *tableView;
 @property(retain,nonatomic)NSMutableArray* dataArray;
-@property(retain,nonatomic)NavView* navView;
 @property(assign,nonatomic)BOOL isEndOfPageSize;
 
 -(void)loadData;
