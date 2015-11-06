@@ -109,7 +109,7 @@
         [self addSubview:dateTimeLabel];
         
         //图片内容
-        NSArray* pics =[self.dic valueForKey:@"pics"];
+        NSArray* pics =[self.dic valueForKey:@"pic"];
         NSInteger value = pics.count;
         NSInteger number = value/3;
         
@@ -195,7 +195,7 @@
         [criticalListButton addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:criticalListButton];
         
-        NSMutableArray* dataArray = [self.dic valueForKey:@"likers"];
+        NSMutableArray* dataArray = [self.dic valueForKey:@"like"];
         [priseButton setTitle:[NSString stringWithFormat:@"%ld",dataArray.count] forState:UIControlStateNormal];
         [priseListButton setTitle:[NSString stringWithFormat:@"赞  %ld",dataArray.count] forState:UIControlStateNormal];
         
@@ -213,7 +213,7 @@
 
 -(void)showImage:(UITapGestureRecognizer*)sender
 {
-    NSMutableArray* dataArray = [self.dic valueForKey:@"pics"];
+    NSMutableArray* dataArray = [self.dic valueForKey:@"pic"];
     
     MWPhoto* photo;
     NSMutableArray* thumbs = [NSMutableArray new];

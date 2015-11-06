@@ -21,6 +21,20 @@
     loadingView.view = view;
     return loadingView;
 }
+/**
+ *  根据设定rect大小定制加载视图
+ *
+ *  @param view  要将加载页面添加的父视图
+ *  @param frame 要定制的视图大小
+ *
+ *  @return 加载页面实例
+ */
++(LoadingView*)shareinstance:(UIView *)view frame:(CGRect)frame
+{
+    LoadingView* loadingView = [[LoadingView alloc]initWithFrame:frame];
+    loadingView.view = view;
+    return loadingView;
+}
 
 /**
  *  当前视图显示加载页视图

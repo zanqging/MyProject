@@ -20,6 +20,7 @@
 #import "NSString+SBJSON.h"
 @interface RootViewController : UIViewController<LoadingViewDelegate>
 @property(assign,nonatomic)int code;
+@property(assign,nonatomic)CGRect loadingViewFrame;
 @property(assign,nonatomic)BOOL startLoading;
 @property(assign,nonatomic)BOOL isTransparent;
 @property(retain,nonatomic)NavView* navView;

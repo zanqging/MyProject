@@ -9,7 +9,7 @@
 #import "WMTableViewController.h"
 #import "TDUtil.h"
 #import "WMPageConst.h"
-#import "RoadShowHomeTableViewCell.h"
+#import "FinalContentTableViewCell.h"
 @interface WMTableViewController ()
 
 @end
@@ -57,7 +57,7 @@
 #pragma mark - Table view data source
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 100;
+    return 140;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -68,17 +68,29 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    RoadShowHomeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"WMCell"];
-    if (cell == nil) {
-        cell = [[RoadShowHomeTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"WMCell"];
-    }
-    
     NSInteger row = indexPath.row;
-    NSDictionary* dic = [self.dataArray objectAtIndex:row];
-    [cell setImageName:[dic valueForKey:@"img"]];
-    [cell setCompanyName:[dic valueForKey:@"company"]];
-    cell.accessoryType = UITableViewCellAccessoryNone;
-    return cell;
+    static NSString *reuseIdetify = @"FinialListView";
+    FinalContentTableViewCell *cellInstance = (FinalContentTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
+    if (!cellInstance) {
+        cellInstance = [[FinalContentTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 190)];
+    }
+    NSDictionary* dic = self.dataArray[row];
+    NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
+    __block FinalContentTableViewCell* cell = cellInstance;
+    [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+        if (image) {
+            cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+        }
+    }];
+    
+    cellInstance.title = [dic valueForKey:@"company"];
+    cellInstance.content = [dic valueForKey:@"project_summary"];
+    cellInstance.start = [[dic valueForKey:@"stage"] valueForKey:@"start"];
+    cellInstance.typeDescription = [dic valueForKey:@"addr"];
+    cellInstance.backgroundColor = ClearColor;
+    cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    return cellInstance;
 }
 
 

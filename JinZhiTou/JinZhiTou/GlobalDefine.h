@@ -187,7 +187,7 @@
 //用户手机验证码登陆
 #define  USER_LOGIN @"login/"
 //检测用户是否已经登录
-#define ISLOGIN @"issessionvalid/"
+#define ISLOGIN @"valsession/"
 //待融资
 #define WAIT_FINACE @"waitforfinance/"
 //已融资

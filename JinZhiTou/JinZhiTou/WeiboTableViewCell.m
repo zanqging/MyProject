@@ -289,7 +289,7 @@
 
 -(void)showImage:(UITapGestureRecognizer*)sender
 {
-    NSMutableArray* dataArray = [self.dic valueForKey:@"pics"];
+    NSMutableArray* dataArray = [self.dic valueForKey:@"pic"];
     
     MWPhoto* photo;
     NSMutableArray* thumbs = [NSMutableArray new];
@@ -388,7 +388,7 @@
         [self.nameLabel sizeToFit];
         
         //内容
-        content = [[dic valueForKey:@"position"] objectAtIndex:0];
+        content = [dic valueForKey:@"position"];
         if (content) {
             attributedString = [[NSMutableAttributedString alloc] initWithString:content];
             [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
@@ -503,7 +503,7 @@
         [self addSubview:self.dateTimeLabel];
         
         
-        NSArray* pics =[self.dic valueForKey:@"pics"];
+        NSArray* pics =[self.dic valueForKey:@"pic"];
         NSInteger value = pics.count;
         NSInteger number = value/3;
         
@@ -569,7 +569,7 @@
         
         
         //点赞
-        NSMutableArray* dataPriseArray = [self.dic valueForKey:@"likers"];
+        NSMutableArray* dataPriseArray = [self.dic valueForKey:@"like"];
         self.priseButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.criticalButton)-50, Y(self.criticalButton), WIDTH(self.criticalButton), HEIGHT(self.criticalButton))];
         [self.priseButton setTitleColor:FONT_COLOR_GRAY forState:UIControlStateNormal];
         [self.priseButton setTitle:[NSString stringWithFormat:@"%ld",dataPriseArray.count] forState:UIControlStateNormal];
@@ -587,7 +587,7 @@
 -(void)setPriseListData
 {
     //点赞评论区域
-    NSArray* dataPriseArray = [self.dic valueForKey:@"likers"];
+    NSArray* dataPriseArray = [self.dic valueForKey:@"like"];
     if (!self.priseView) {
         self.priseView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView)+5, WIDTH(self.funView), 13)];
         [self addSubview:self.priseView];

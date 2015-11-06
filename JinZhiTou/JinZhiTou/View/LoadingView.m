@@ -85,7 +85,7 @@
             refreshButton.layer.borderWidth =1;
             refreshButton.layer.cornerRadius =15;
             refreshButton.layer.borderColor = ColorTheme.CGColor;
-            [refreshButton setTitle:@"刷新" forState:UIControlStateNormal];
+            [refreshButton setTitle:@"立即重载" forState:UIControlStateNormal];
             [refreshButton setTitleColor:ColorTheme forState:UIControlStateNormal];
             [refreshButton setImage:IMAGENAMED(@"shuaxin") forState:UIControlStateNormal];
             [refreshButton addTarget:self action:@selector(refresh) forControlEvents:UIControlEventTouchUpInside];

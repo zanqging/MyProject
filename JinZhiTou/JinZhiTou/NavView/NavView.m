@@ -200,4 +200,36 @@
         }
     }
 }
+
+-(void)setMenuArray:(NSMutableArray *)menuArray
+{
+    self->_menuArray = menuArray;
+    if (self.menuArray && self.menuArray.count>0) {
+        [self.titleLable removeFromSuperview];
+        UILabel* label;
+        float pos_x = 50;
+        float width = (WIDTH(self)-100)/self.menuArray.count;
+        for (int i = 0; i<self.menuArray.count; i++) {
+            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, 0, width, HEIGHT(self))];
+            label.textColor = WriteColor;
+            if (self.currentSelectedIndex ==i) {
+                label.font = SYSTEMBOLDFONT(18);
+            }else{
+                label.font  =SYSTEMFONT(16);
+            }
+            label.tag = i+1000;
+            label.text = self.menuArray[i];
+            label.userInteractionEnabled  = YES;
+            [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)]];
+            label.textAlignment  =NSTextAlignmentCenter;
+            [self addSubview:label];
+            pos_x+=width;
+        }
+    }
+}
+
+-(void)tapAction:(id)sender
+{
+    
+}
 @end

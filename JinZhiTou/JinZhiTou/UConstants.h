@@ -49,6 +49,7 @@
 #define Main_Screen_Width       [[UIScreen mainScreen] bounds].size.width
 
 // View 坐标(x,y)和宽高(width,height)
+#define FRAME(v)                (v).frame
 #define X(v)                    (v).frame.origin.x
 #define Y(v)                    (v).frame.origin.y
 #define POS_X(v)                (v).frame.origin.x+(v).frame.size.width

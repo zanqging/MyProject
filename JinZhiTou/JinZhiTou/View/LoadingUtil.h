@@ -11,6 +11,8 @@
 @interface LoadingUtil : UIView
 //单例
 +(LoadingView*)shareinstance:(UIView*)view;
+//单例
++(LoadingView*)shareinstance:(UIView*)view frame:(CGRect)frame;
 //显示
 +(void)showLoadingView:(UIView*)view;
 //使用实例显示

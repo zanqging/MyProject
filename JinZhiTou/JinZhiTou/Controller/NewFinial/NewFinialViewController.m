@@ -39,8 +39,6 @@
     [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:ColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
     
     //设置标题
-    self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
-    self.navView.imageView.alpha=0;
     [self.navView setTitle:@"金指投"];
     self.navView.titleLable.textColor=WriteColor;
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
@@ -58,13 +56,19 @@
     //开始加载
     self.startLoading  =YES;
     
-    NSMutableDictionary* dataDic = [[NSMutableDictionary alloc]init];
-    [dataDic setValue:@"陈生珠" forKey:@"name"];
-    [dataDic setValue:@"632223199011260314" forKey:@"idno"];
-    [dataDic setValue:@"他家的" forKey:@"company"];
-    [dataDic setValue:@"会计" forKey:@"position"];
-    [dataDic setValue:@"陕西 西安" forKey:@"addr"];
-    [self.httpUtil getDataFromAPIWithOps:@"userinfo/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
+//    NSMutableDictionary* dataDic = [[NSMutableDictionary alloc]init];
+//    [dataDic setValue:@"陈生珠" forKey:@"name"];
+//    [dataDic setValue:@"632223199011260314" forKey:@"idno"];
+//    [dataDic setValue:@"他家的" forKey:@"company"];
+//    [dataDic setValue:@"会计" forKey:@"position"];
+//    [dataDic setValue:@"陕西 西安" forKey:@"addr"];
+//    [self.httpUtil getDataFromAPIWithOps:@"userinfo/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
+    
+//        NSMutableDictionary* dataDic = [[NSMutableDictionary alloc]init];
+//        [dataDic setValue:@"1,2,13" forKey:@"qualification"];
+//        [dataDic setValue:@"北京金指投信息科技有限公司" forKey:@"institute"];
+//        [dataDic setValue:@"他家的" forKey:@"legalperson"];
+//        [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
     
 }
 
@@ -309,13 +313,13 @@
     
 }
 
-
--(void)requestUserInfo:(ASIHTTPRequest *)request{
-    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-    
-    [[DialogUtil sharedInstance]showDlg:self.view textOnly:jsonString];
-}
+//
+//-(void)requestUserInfo:(ASIHTTPRequest *)request{
+//    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+//    NSLog(@"返回:%@",jsonString);
+//    
+//    [[DialogUtil sharedInstance]showDlg:self.view textOnly:jsonString];
+//}
 
 -(void)requestNewsTagData:(ASIHTTPRequest *)request{
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];

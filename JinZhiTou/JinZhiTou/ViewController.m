@@ -197,11 +197,11 @@
         //重构数组,
         //用户id
         [dic setValue:@"YES" forKey:@"flag"];
-        [dic setValue:postArray forKey:@"pics"];
+        [dic setValue:postArray forKey:@"pic"];
         [dic setValue:@"刚刚" forKey:@"datetime"];
         [dic setValue:content forKey:@"content"];
         [dic setValue:[dataDefault valueForKey:@"userId"] forKey:@"uid"];
-        [dic setValue:[dataDefault valueForKey:@"city"] forKey:@"city"];
+//        [dic setValue:[dataDefault valueForKey:@"city"] forKey:@"city"];
         [dic setValue:[dataDefault valueForKey:@"name"] forKey:@"name"];
         [dic setValue:[dataDefault valueForKey:@"photo"] forKey:@"photo"];
         [dic setValue:[dataDefault valueForKey:@"STATIC_USER_TYPE"] forKey:@"position"];
@@ -353,20 +353,20 @@
     if (dic) {
         if ([[dic valueForKey:@"is_like"] boolValue]) {
             NSDictionary* dicTemp = self.dataArray[indexPath.row];
-            NSMutableArray* array = [dicTemp valueForKey:@"likers"];
+            NSMutableArray* array = [dicTemp valueForKey:@"like"];
             [array insertObject:dic atIndex:0];
-            [dicTemp setValue:array forKey:@"likers"];
+            [dicTemp setValue:array forKey:@"like"];
             self.dataArray[indexPath.row] = dicTemp;
         }else{
             NSDictionary* dicTemp = self.dataArray[indexPath.row];
-            NSMutableArray* array = [dicTemp valueForKey:@"likers"];
+            NSMutableArray* array = [dicTemp valueForKey:@"like"];
             for (int i= 0 ;i<array.count;i++) {
                 NSDictionary* d = array[i];
                 if ([[d valueForKey:@"uid"]integerValue]==[[dic valueForKey:@"uid"] integerValue]) {
                     [array removeObject:d];
                 }
             }
-            [dicTemp setValue:array forKey:@"likers"];
+            [dicTemp setValue:array forKey:@"like"];
             self.dataArray[indexPath.row] = dicTemp;
         }
         [self.tableView reloadData];
@@ -434,8 +434,8 @@
     NSDictionary* dic = self.dataArray[indexpath.row];
     //内容
     NSString* content = [dic valueForKey:@"content"];
-    NSInteger picsCount = [[dic valueForKey:@"pics"] count];
-    NSInteger likersCount = [[dic valueForKey:@"likers"] count];
+    NSInteger picsCount = [[dic valueForKey:@"pic"] count];
+    NSInteger likersCount = [[dic valueForKey:@"like"] count];
     NSInteger commentCount = [[dic valueForKey:@"comment"] count];
     
     

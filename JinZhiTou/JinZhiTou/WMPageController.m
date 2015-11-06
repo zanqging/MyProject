@@ -82,6 +82,8 @@
 
 - (void)setSelectIndex:(int)selectIndex {
     _selectIndex = selectIndex;
+    [self refresh];
+    self.isTransparent = YES;
     if (self.menuView) {
         [self.menuView selectItemAtIndex:selectIndex];
     }
@@ -183,10 +185,12 @@
     if (self.selectIndex != 0) {
         [self.menuView selectItemAtIndex:self.selectIndex];
     }
+    
+    self.loadingViewFrame = CGRectMake(0, POS_Y(self.menuView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.menuView));
 }
 
 - (void)layoutChildViewControllers {
-    int currentPage = (int)self.scrollView.contentOffset.x / _viewWidth;
+    int currentPage = fabs(self.scrollView.contentOffset.x / _viewWidth);
     int start = currentPage == 0 ? currentPage : (currentPage - 1);
     int end = (currentPage == self.titles.count - 1) ? currentPage : (currentPage + 1);
     for (int i = start; i <= end; i++) {
@@ -235,7 +239,6 @@
     [self.scrollView addSubview:viewController.view];
     [self.displayVC setObject:viewController forKey:@(index)];
     
-    self.currentViewController =(WMTableViewController*)viewController;
     [self backToPositionIfNeeded:viewController atIndex:index];
 }
 
@@ -339,10 +342,12 @@
     
     //设置标题
     [self.navView setTitle:@"金指投"];
+    NSMutableArray* menuArray = @[@"项目库",@"智囊团",@"投资人"];
+    self.navView.menuArray  =menuArray;
     self.navView.titleLable.textColor=WriteColor;
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
-    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
-    [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
+//    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
+//    [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
     [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
     
     
@@ -364,9 +369,6 @@
     
     
     self.title = @"投融资";
-    // 传值 / KVC 第一个控制器是 Table / view / Collection
-    self.values = @[@22, @{@"name":@"Mark", @"age": @22}, @"Mark"];
-    self.keys = @[@"age", @"model",@"name"];
 
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -376,12 +378,17 @@
     [self addViewControllerAtIndex:self.selectIndex];
     self.currentViewController = self.displayVC[@(self.selectIndex)];
     
-    
-    
     [self setViewFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-110)];
-    
+    self.loadingViewFrame = CGRectMake(0, POS_Y(self.navView)+self.menuHeight, WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-self.menuHeight-kBottomBarHeight);
+    [self refresh];
+}
+
+-(void)refresh
+{
     //网络请求
-    [self.httpUtil getDataFromAPIWithOps:@"project/0/0/"  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+    self.startLoading  =YES;
+    NSString* srverUrl = [NSString stringWithFormat:@"project/%d/%d/",self.selectIndex,0];
+    [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -445,6 +452,8 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     _selectIndex = (int)scrollView.contentOffset.x / _viewWidth;
+    [self refresh];
+    self.isTransparent = YES;
     self.currentViewController = self.displayVC[@(self.selectIndex)];
     [self postFullyDisplayedNotificationWithCurrentIndex:self.selectIndex];
 }
@@ -468,18 +477,21 @@
 #pragma mark - WMMenuView Delegate
 - (void)menuView:(WMMenuView *)menu didSelesctedIndex:(NSInteger)index currentIndex:(NSInteger)currentIndex {
     NSInteger gap = (NSInteger)labs(index - currentIndex);
-    _selectIndex = (int)index;
+    if (_selectIndex != (int)index) {
+//        _selectIndex = (int)index;
+        self.selectIndex = (int)index;
+    }
     _animate = NO;
     CGPoint targetP = CGPointMake(_viewWidth*index, 0);
-    
     [self.scrollView setContentOffset:targetP animated:gap > 1 ? NO : self.pageAnimatable];
     if (gap > 1 || !self.pageAnimatable) {
         // 由于不触发 -scrollViewDidScroll: 手动处理控制器
         [self layoutChildViewControllers];
         self.currentViewController = self.displayVC[@(self.selectIndex)];
-        
+
         [self postFullyDisplayedNotificationWithCurrentIndex:(int)index];
     }
+    
 }
 
 - (CGFloat)menuView:(WMMenuView *)menu widthForItemAtIndex:(NSInteger)index {
@@ -512,6 +524,7 @@
     if(jsonDic!=nil)
     {
         self.dataDic = [jsonDic valueForKey:@"data"];
+        self.startLoading  =NO;
         
     }else{
         self.isNetRequestError = YES;

@@ -42,7 +42,11 @@
     self->_isNetRequestError = isNetRequestError;
     if (self.isNetRequestError) {
         if (!loadingView) {
-            loadingView = [LoadingUtil shareinstance:self.view];
+            if (self.loadingViewFrame.size.height>0) {
+                loadingView =[LoadingUtil shareinstance:self.view frame:self.loadingViewFrame];
+            }else{
+                loadingView = [LoadingUtil shareinstance:self.view];
+            }
             loadingView.delegate  =self;
         }
         loadingView.isTransparent  = NO;
@@ -59,9 +63,15 @@
     self->_startLoading  = startLoading;
     if (self.startLoading) {
         if (!loadingView) {
-            loadingView = [LoadingUtil shareinstance:self.view];
+            if (self.loadingViewFrame.size.height>0) {
+                loadingView =[LoadingUtil shareinstance:self.view frame:self.loadingViewFrame];
+            }else{
+                loadingView = [LoadingUtil shareinstance:self.view];
+            }
             loadingView.delegate  =self;
         }
+        self.isNetRequestError  =NO;
+        loadingView.isTransparent  = NO;
         [LoadingUtil show:loadingView];
     }else{
         [LoadingUtil close:loadingView];
@@ -74,6 +84,11 @@
     loadingView.isTransparent  =isTransparent;
 }
 
+-(void)setLoadingViewFrame:(CGRect)loadingViewFrame
+{
+    self->_loadingViewFrame =loadingViewFrame;
+    
+}
 
 - (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];
     

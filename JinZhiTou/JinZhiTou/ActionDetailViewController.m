@@ -421,7 +421,7 @@
                 
                 //列表
                 if (self.selectIndex==1) {
-                    self.dataArray = [self.dic valueForKey:@"likers"];
+                    self.dataArray = [self.dic valueForKey:@"like"];
                 }else{
                     self.dataArray = [self.dic valueForKey:@"comment"];
                 }

@@ -9,23 +9,21 @@
 #import <UIKit/UIKit.h>
 #import "UIImageView+WebCache.h"
 @interface FinalContentTableViewCell : UITableViewCell
+{
+    UIView* view;
+    UILabel* itemLabel;
+    UILabel* itemValueLabel;
+}
 @property (retain,nonatomic) UIImageView *imgView;
-@property (retain, nonatomic)UILabel *titleLabel;
-@property (retain, nonatomic)UILabel *contentLabel;
-
 @property (retain, nonatomic)UILabel *typeLabel;
-@property (retain, nonatomic)UILabel *collectDataLabelView;
-@property (retain, nonatomic)UILabel *priseDataLabel;
+@property (retain, nonatomic)UILabel *titleLabel;
 
-@property (retain, nonatomic)UILabel *voteDataLabel;
-
-@property (retain, nonatomic)UIButton *collecteImgView;
-
-@property (retain, nonatomic)UIButton *priseImgView;
 @property(retain,nonatomic)NSString* title;
 @property(retain,nonatomic)NSString* content;
 @property(retain,nonatomic)NSString* typeDescription;
-@property(assign,nonatomic)NSInteger collectionData;
-@property(assign,nonatomic)NSInteger priseData;
+
+@property(retain,nonatomic)NSDictionary* start;
+@property(retain,nonatomic)NSDictionary* end;
+
 @end
 

@@ -25,10 +25,12 @@
 @property(assign,nonatomic)BOOL isHasNewMessage;
 @property(retain,nonatomic)UIButton* rightButton;
 @property(retain,nonatomic)UIImageView* imageView;
+@property(retain,nonatomic)NSMutableArray* menuArray;
 
 //触摸感应区域
 @property(retain,nonatomic)UIView* leftTouchView;
 @property(retain,nonatomic)UIView* rightTouchView;
+@property(assign,nonatomic)int currentSelectedIndex;
 
 -(void)setNavAnimation:(NSString*)type offset:(CGPoint)offset;
 @end
