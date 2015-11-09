@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "UIImageView+WebCache.h"
+@protocol RoadShowHeaderDelegate <NSObject>
+
+-(void)collect;
+-(void)prise;
+@end
 @interface RoadShowHeader : UIView
 {
     BOOL flagLike;
@@ -41,4 +46,7 @@
 @property(retain,nonatomic)NSString* introduceImage;
 @property(retain,nonatomic)UIImageView* imgPlay; //播放
 @property(retain,nonatomic)UIImageView* introduceImgview;  //项目简介图片
+@property(retain,nonatomic)id <RoadShowHeaderDelegate>delegate;
 @end
+
+

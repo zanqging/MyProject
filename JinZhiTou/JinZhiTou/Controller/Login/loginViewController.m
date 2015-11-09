@@ -7,21 +7,14 @@
 //
 
 #import "loginViewController.h"
-#import "TDUtil.h"
 #import "APService.h"
-#import "HttpUtils.h"
-#import "DialogUtil.h"
-#import "UConstants.h"
-#import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
-#import "ASIFormDataRequest.h"
 #import "MMDrawerController.h"
 #import "RegisteViewController.h"
 #import "UserInfoViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ForgetPassViewController.h"
 #import "MMExampleDrawerVisualStateManager.h"
-@interface loginViewController ()<ASIHTTPRequestDelegate,UITextFieldDelegate>
+@interface loginViewController ()<UITextFieldDelegate>
 {
     UIActivityIndicatorView* activity;
     UIScrollView* scrollView;
@@ -44,9 +37,6 @@
     self.view.backgroundColor=ColorTheme;
     
     //==============================导航栏区域开始==============================//
-    self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
-    
-    //设置导航栏属性
     self.navView.imageView.alpha=1;
     [self.navView setTitle:@"登录"];
     self.navView.titleLable.textColor=WriteColor;
@@ -55,9 +45,6 @@
     
     //添加事件
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
-    
-    //添加到视图
-    [self.view addSubview:self.navView];
     //==============================导航栏区域结束==============================//
     
 
@@ -229,8 +216,6 @@
     [self resignKeyboard];
     
     //初始化网络请求对象
-    HttpUtils* httpUtil =[[HttpUtils alloc]init];
-    
     //获取数据
     NSString* phoneNumber =self.phoneTextField.text;
     password = self.passwordTextField.text;
@@ -275,14 +260,13 @@
         }
     }
     [activity setColor:ColorTheme];
-    activity.backgroundColor  =ColorTheme;
     
     //开始加载动画
     [activity startAnimating];
     
     
     //开始请求
-    [httpUtil getDataFromAPIWithOps:USER_LOGIN postParam:dic type:1 delegate:self sel:@selector(requestLogin:)];
+    [self.httpUtil getDataFromAPIWithOps:USER_LOGIN postParam:dic type:0 delegate:self sel:@selector(requestLogin:)];
     
     return YES;
 }

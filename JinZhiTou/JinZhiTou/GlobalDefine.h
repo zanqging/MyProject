@@ -179,7 +179,7 @@
 //融资计划
 #define FINANCE_PLAN @"financeplan/"
 //投资人列表
-#define  INVEST_LIST  @"projectinvestorlist/"
+#define  INVEST_LIST  @"investlist/"
 //核心团队
 #define  COREMEMBER @"coremember/"
 //手机验证码发送
@@ -440,7 +440,8 @@
 #define HOME_DATA @"home/"
 //客服热线
 #define HOME_TEL @"customservice/"
-
+//投资人
+#define INVESTLIST  @"investlist/"
 
 //==============================第三期App研发接口==============================//
 

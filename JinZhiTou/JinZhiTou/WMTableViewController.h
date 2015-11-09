@@ -8,8 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol WMtableViewCellDelegate <NSObject>
+
+-(void)wmTableViewController:(id)wmTableViewController tapIndexPath:(NSIndexPath*)indexPath data:(NSDictionary*)dic;
+
+@end
+
 @interface WMTableViewController : UITableViewController
 @property(assign,nonatomic)int type;
+@property(retain,nonatomic)id <WMtableViewCellDelegate>delegate;
 @property (nonatomic, copy) NSNumber *age;
 @property(retain,nonatomic)NSMutableArray* dataArray;
 @end
+

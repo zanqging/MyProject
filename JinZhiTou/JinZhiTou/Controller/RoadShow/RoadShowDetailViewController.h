@@ -7,12 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
+#import "RootViewController.h"
 #import "RoadShowTableViewCell.h"
 
-@interface RoadShowDetailViewController : UIViewController
+@interface RoadShowDetailViewController : RootViewController
 @property(assign,nonatomic)int type;
-@property (retain, nonatomic)NavView *navView;
 @property(retain,nonatomic)NSString* backTitle;
 @property(retain,nonatomic)NSMutableDictionary * dic;
 

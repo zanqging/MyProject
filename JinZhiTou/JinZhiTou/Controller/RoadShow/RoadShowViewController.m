@@ -170,7 +170,11 @@
 //==============================TableView区域开始==============================//
 -(void)tableView:(UITableView *)tableViewInstance didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
+    controller.type=1;
+    controller.title = self.navView.title;
+    controller.dic = dataArray[indexPath.row];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 

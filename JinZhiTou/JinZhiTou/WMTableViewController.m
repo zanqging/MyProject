@@ -68,6 +68,12 @@
     return self.dataArray.count;
 }
 
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([_delegate respondsToSelector:@selector(wmTableViewController:tapIndexPath:data:)]) {
+        [_delegate wmTableViewController:self tapIndexPath:indexPath data:self.dataArray[indexPath.row]];
+    }
+}
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger row = indexPath.row;
     static NSString *reuseIdetify = @"FinialListView";

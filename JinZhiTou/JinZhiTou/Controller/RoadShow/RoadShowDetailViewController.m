@@ -7,21 +7,12 @@
 //
 
 #import "RoadShowDetailViewController.h"
-#import "TDUtil.h"
 #import "FoldView.h"
 #import "ShareView.h"
-#import "HttpUtils.h"
-#import "DialogUtil.h"
 #import "MenuPopView.h"
-#import "UConstants.h"
-#import "GlobalDefine.h"
-#import "LoadingUtil.h"
-#import "LoadingView.h"
 #import "RoadShowFooter.h"
 #import "RoadShowHeader.h"
-#import "NSString+SBJSON.h"
 #import "RoadShowBottom.h"
-#import "ASIFormDataRequest.h"
 #import "VoteViewController.h"
 #import "TeamShowViewController.h"
 #import "RoadShowViewController.h"
@@ -35,18 +26,16 @@
 #import "movieViewController.h"
 #import "UserTraceViewController.h"
 #define LIMIT_FONT_NUMBER 16
-@interface RoadShowDetailViewController ()<ASIHTTPRequestDelegate>
+@interface RoadShowDetailViewController ()<RoadShowHeaderDelegate>
 {
     UIScrollView* scrollView;
     NSString* checkIndex; //权限监测
     bool isPriseSelected;
     bool isCollectSelected;
     
-    HttpUtils* httpUtils;
     RoadShowHeader* header;
     RoadShowFooter* footer ;
     MenuPopView* menuPopView;
-    LoadingView * loadingView;
     RoadShowBottom* bottomView;
     
     NSDictionary* dataDic;
@@ -64,10 +53,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //网络初始化
-    httpUtils = [[HttpUtils alloc]init];
     //设置标题
-    self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     self.navView.imageView.alpha=1;
     [self.navView setTitle:@"路演详情"];
     self.navView.titleLable.textColor=WriteColor;
@@ -78,8 +64,6 @@
     
     [self.navView.rightButton setImage:IMAGENAMED(@"share") forState:UIControlStateNormal];
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doShare)]];
-    
-    [self.view addSubview:self.navView];
     
     scrollView =[[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-50)];
     scrollView.backgroundColor = BackColor;
@@ -92,11 +76,9 @@
     [bottomView.btnFunction addTarget:self action:@selector(goRoadShow:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:bottomView];
     
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(teamShowAction:) name:@"teamShow" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(collect:) name:@"collect" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(prise:) name:@"prise" object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -275,42 +257,40 @@
     }
 }
 //收藏
--(void)collect:(NSDictionary*)dic
+-(void)collect
 {
     NSInteger index = [[self.dic valueForKey:@"id"] integerValue];
     NSString* url = [COLLECTE stringByAppendingFormat:@"%ld/",(long)index];
-    NSDictionary* dictionary = [[NSMutableDictionary alloc]init];
     index=0;
     if (isCollectSelected) {
-        index = 0;
+        index = 1;
         isCollectSelected = NO;
     }else{
-        index = 1;
+        index = 0;
         isCollectSelected = YES;
     }
     header.isCollect = isCollectSelected;
-    [dictionary setValue:[NSString stringWithFormat:@"%ld",(long)index] forKey:@"action"];
+    url  =[url stringByAppendingString:[NSString stringWithFormat:@"%ld",(long)index]];
     
-    [httpUtils getDataFromAPIWithOps:url postParam:dictionary type:0 delegate:self sel:@selector(requestCollecte:)];
+    [self.httpUtil getDataFromAPIWithOps:url type:0 delegate:self sel:@selector(requestCollecte:) method:@"GET"];
 }
 
 //点赞
--(void)prise:(NSDictionary*)dic
+-(void)prise
 {
     NSInteger index = [[self.dic valueForKey:@"id"] integerValue];
     NSString* url = [PRISE stringByAppendingFormat:@"%ld/",(long)index];
-    NSDictionary* dictionary = [[NSMutableDictionary alloc]init];
     index=0;
     if (isPriseSelected) {
-        index = 0;
+        index = 1;
         isPriseSelected = NO;
     }else{
-        index = 1;
+        index = 0;
         isPriseSelected = YES;
     }
     header.isLike = isPriseSelected;
-    [dictionary setValue:[NSString stringWithFormat:@"%ld",(long)index] forKey:@"action"];
-    [httpUtils getDataFromAPIWithOps:url postParam:dictionary type:0 delegate:self sel:@selector(requestPrise:)];
+    url = [url stringByAppendingString:[NSString stringWithFormat:@"%ld/",(long)index]];
+    [self.httpUtil getDataFromAPIWithOps:url  type:0 delegate:self sel:@selector(requestPrise:) method:@"GET"];
 }
 -(void)loadProjectDetail
 {
@@ -332,13 +312,12 @@
     [dic setValue:@"商业模式" forKey:@"title"];
     [contentArray addObject:dic];
     
-    loadingView = [LoadingUtil shareinstance:self.view];
+
+    self.startLoading  =YES;
     
     if (self.dic) {
         NSString* url = [PROJECT_DETAIL stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
-        [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestProjectDetail:)];
-        
-        [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
+        [self.httpUtil getDataFromAPIWithOps:url type:0 delegate:self sel:@selector(requestProjectDetail:) method:@"GET"];
     }
     
 }
@@ -509,9 +488,9 @@
     if (isAnimous) {
         [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未登录，请先登录",@"msg",@"取消",@"cancel",@"去登录",@"sure",@"3",@"type", nil]];
     }else{
-        loadingView.isTransparent = YES;
-        [LoadingUtil show:loadingView];
-        [httpUtils getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestIsInvestor:)];
+        self.startLoading  =YES;
+        self.isTransparent  =YES;
+        [self.httpUtil getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestIsInvestor:)];
     }
     
     
@@ -535,7 +514,7 @@
     }else{
         checkIndex=@"1";
         //监测是否是投资人
-        [httpUtils getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestInvestCheck:)];
+        [self.httpUtil getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestInvestCheck:)];
     }
 }
 
@@ -550,7 +529,7 @@
     }else{
         checkIndex=@"2";
         //监测是否是投资人
-        [httpUtils getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestInvestCheck:)];
+        [self.httpUtil getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestInvestCheck:)];
     }
 }
 -(void)back:(id)sender
@@ -573,8 +552,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] == -1) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0 || [code intValue] == 2) {
             dataDic = [jsonDic valueForKey:@"data"];
             
             NSDictionary* stageDic = [dataDic valueForKey:@"stage"];
@@ -592,11 +571,12 @@
                 height = 350;
             }
             header = [[RoadShowHeader alloc]initWithFrame:CGRectMake(0,0, WIDTH(self.view), height)];
+            header.delegate = self;
             [header.introduceImgview setUserInteractionEnabled: YES];
             [header.introduceImgview addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playMedia:)]];
             
             //公司简介项目图片
-            [header setIntroduceImage:[dataDic valueForKey:@"project_img"]];
+            [header setIntroduceImage:[dataDic valueForKey:@"img"]];
             
             NSInteger colorHex = [[stageDic valueForKey:@"color"] integerValue];
             NSString* hexNumber = [TDUtil ToHex:colorHex];
@@ -607,9 +587,9 @@
             header.type = index;
             
             //点赞数
-            [header setPriserNum:[[dataDic valueForKey:@"like_sum"] integerValue]];
+            [header setPriserNum:[[dataDic valueForKey:@"like"] integerValue]];
             //收藏数
-            [header setCollecteNum:[[dataDic valueForKey:@"collect_sum"] integerValue]];
+            [header setCollecteNum:[[dataDic valueForKey:@"collect"] integerValue]];
             
             [header setLeftNum:[dataDic valueForKey:@"participator2plan"]];
             if ([[stageDic valueForKey:@"flag"] intValue]!=1) {
@@ -619,7 +599,7 @@
             }
             
             //状态
-            NSString* mediaUrl = [dataDic valueForKey:@"project_video"];
+            NSString* mediaUrl = [dataDic valueForKey:@"video"];
             
             NSDictionary* dicStage = [stageDic valueForKey:@"start"];
             
@@ -659,7 +639,7 @@
             header.isLike = isLike;
             header.mediaUrl = mediaUrl;
             header.isCollect = isCollect;
-            header.status = [stageDic valueForKey:@"status"];
+            header.status = [stageDic valueForKey:@"code"];
             [scrollView addSubview:header];
             
             
@@ -686,16 +666,15 @@
             
             
             
-            NSDictionary* dic = [dataDic valueForKey:@"project_event"];
-            NSString* event = [dic valueForKey:@"event_detail"];
-            if (event.class != NSNull.class) {
+            NSString* event = [dataDic valueForKey:@"event"];
+            if ([TDUtil isValidString:event]) {
                 footer = [[RoadShowFooter alloc]initWithFrame:CGRectMake(0, POS_Y(bussinessModelView), WIDTH(self.view), 700)];
                 //新闻名称
-                [footer.titleLabel  setText:[dic valueForKey:@"event_title"]];
+                //[footer.titleLabel  setText:[dic valueForKey:@"event_title"]];
                 //日期
-                [footer.dateTimeLabel  setText:[dic valueForKey:@"event_date"]];
+               // [footer.dateTimeLabel  setText:[dic valueForKey:@"event_date"]];
                 //公司重大新闻
-                [footer setContent:[dic valueForKey:@"event_detail"]];
+                [footer setContent:event];
                 //底部
                 [scrollView addSubview:footer];
             }
@@ -711,16 +690,14 @@
                 [bussinessModelView.nextViews addObject:footer];
             }
             
-            NSString* content = [dataDic valueForKey:@"company_profile"];
+            NSString* content = [dataDic valueForKey:@"profile"];
             companyIntroduceView.content  =content;
-            content = [dataDic valueForKey:@"project_desc"];
+            content = [dataDic valueForKey:@"business"];
             mainbussinesView.content = content;
-            content = [dataDic valueForKey:@"business_model"];
+            content = [dataDic valueForKey:@"model"];
             bussinessModelView.content =content;
             
-           
-            
-            [LoadingUtil close:loadingView];
+            self.startLoading = NO;
             //更新布局
             [self updateLayout];
             NSLog(@"%@",NSStringFromCGSize(scrollView.contentSize));
@@ -800,7 +777,7 @@
         if ([status intValue] == 0 || [status intValue] == -1) {
             if (self.type ==1) {
                 NSString* url = [JOIN_ROADSHOW stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
-                [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestJoinroadShow:)];
+                [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestJoinroadShow:)];
             }else{
                 UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
                 FinialApplyViewController* controller = (FinialApplyViewController*)[storyBoard instantiateViewControllerWithIdentifier:@"FinialApply"];
@@ -816,7 +793,7 @@
                 [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             }
         }
-        [LoadingUtil close:loadingView];
+        self.startLoading  =NO;
     }
 }
 
@@ -891,7 +868,7 @@
             });
             
         }
-        [LoadingUtil close:loadingView];
+        self.startLoading  =NO;
     }
 }
 
@@ -918,9 +895,5 @@
             self.navigationController.interactivePopGestureRecognizer.enabled = YES;
         }
     }
-}
--(void)dealloc
-{
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 @end

@@ -63,12 +63,16 @@
 
 -(void)collect:(UITapGestureRecognizer*)sender
 {
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"collect" object:nil];
+    if ([_delegate respondsToSelector:@selector(collect)]) {
+        [_delegate collect];
+    }
 }
 
 -(void)prise:(UITapGestureRecognizer*)sender
 {
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"prise" object:nil ];
+    if ([_delegate respondsToSelector:@selector(prise)]) {
+        [_delegate prise];
+    }
 }
 
 -(void)setType:(int)type

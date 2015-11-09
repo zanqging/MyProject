@@ -9,7 +9,8 @@
 #import "WMPageController.h"
 #import "WMPageConst.h"
 #import "WMTableViewController.h"
-@interface WMPageController () <WMMenuViewDelegate,UIScrollViewDelegate,navViewDelegate> {
+#import "RoadShowDetailViewController.h"
+@interface WMPageController () <WMMenuViewDelegate,UIScrollViewDelegate,navViewDelegate,WMtableViewCellDelegate> {
     CGFloat _viewHeight;
     CGFloat _viewWidth;
     CGFloat _viewX;
@@ -147,9 +148,15 @@
     _viewY = self.viewFrame.origin.y;
     // 重新计算各个控制器视图的宽高
     _childViewFrames = [NSMutableArray array];
-    for (int i = 0; i < self.titles.count; i++) {
-        CGRect frame = CGRectMake(i*_viewWidth, 0, _viewWidth, _viewHeight);
+    
+    if (self.titles.count==0) {
+        CGRect frame = CGRectMake(0, 0, _viewWidth, _viewHeight);
         [_childViewFrames addObject:[NSValue valueWithCGRect:frame]];
+    }else{
+        for (int i = 0; i < self.titles.count; i++) {
+            CGRect frame = CGRectMake(i*_viewWidth, 0, _viewWidth, _viewHeight);
+            [_childViewFrames addObject:[NSValue valueWithCGRect:frame]];
+        }
     }
 }
 
@@ -168,26 +175,33 @@
 }
 
 - (void)addMenuView {
-    CGRect frame = CGRectMake(_viewX, _viewY, _viewWidth, self.menuHeight);
-    WMMenuView *menuView = [[WMMenuView alloc] initWithFrame:frame buttonItems:self.titles backgroundColor:self.menuBGColor norSize:self.titleSizeNormal selSize:self.titleSizeSelected norColor:self.titleColorNormal selColor:self.titleColorSelected];
-    menuView.delegate = self;
-    menuView.style = self.menuViewStyle;
-    menuView.progressHeight = self.progressHeight;
-    if (self.titleFontName) {
-        menuView.fontName = self.titleFontName;
-    }
-    if (self.progressColor) {
-        menuView.lineColor = self.progressColor;
-    }
-    [self.view addSubview:menuView];
-    self.menuView = menuView;
-    // 如果设置了初始选择的序号，那么选中该item
-    if (self.selectIndex != 0) {
-        [self.menuView selectItemAtIndex:self.selectIndex];
+    if (self.titles.count>0) {
+        CGRect frame = CGRectMake(_viewX, _viewY, _viewWidth, self.menuHeight);
+        WMMenuView *menuView = [[WMMenuView alloc] initWithFrame:frame buttonItems:self.titles backgroundColor:self.menuBGColor norSize:self.titleSizeNormal selSize:self.titleSizeSelected norColor:self.titleColorNormal selColor:self.titleColorSelected];
+        menuView.delegate = self;
+        menuView.style = self.menuViewStyle;
+        menuView.progressHeight = self.progressHeight;
+        if (self.titleFontName) {
+            menuView.fontName = self.titleFontName;
+        }
+        if (self.progressColor) {
+            menuView.lineColor = self.progressColor;
+        }
+        [self.view addSubview:menuView];
+        self.menuView = menuView;
+        // 如果设置了初始选择的序号，那么选中该item
+        if (self.selectIndex != 0) {
+            [self.menuView selectItemAtIndex:self.selectIndex];
+        }
+        self.loadingViewFrame = CGRectMake(0, POS_Y(self.menuView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.menuView));
+    }else{
+        self.loadingViewFrame = CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view));
     }
     
-    self.loadingViewFrame = CGRectMake(0, POS_Y(self.menuView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.menuView));
+    
+    
 }
+
 
 - (void)layoutChildViewControllers {
     int currentPage = fabs(self.scrollView.contentOffset.x / _viewWidth);
@@ -398,13 +412,32 @@
     [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
 }
 
+
+-(void)finialCommicuteList
+{
+    //网络请求
+    self.startLoading  =YES;
+    NSString* srverUrl = [INVEST_LIST stringByAppendingFormat:@"%d/",0];
+    [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+}
+
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     // 计算宽高及子控制器的视图frame
     [self calculateSize];
-    CGRect scrollFrame = CGRectMake(_viewX, _viewY + self.menuHeight, _viewWidth, _viewHeight);
+    CGRect scrollFrame;
+    if (self.titles.count>0) {
+        scrollFrame = CGRectMake(_viewX, _viewY + self.menuHeight, _viewWidth, _viewHeight);
+    }else{
+        scrollFrame = CGRectMake(_viewX, _viewY, _viewWidth, _viewHeight);
+    }
     self.scrollView.frame = scrollFrame;
-    self.scrollView.contentSize = CGSizeMake(self.titles.count*_viewWidth, _viewHeight-self.menuHeight);
+    if (self.titles.count>0) {
+        self.scrollView.contentSize = CGSizeMake(self.titles.count*_viewWidth, _viewHeight-self.menuHeight);
+    }else{
+        self.scrollView.contentSize = CGSizeMake(self.titles.count*_viewWidth, _viewHeight);
+    }
+    
     [self.scrollView setContentOffset:CGPointMake(self.selectIndex*_viewWidth, 0)];
 
     self.currentViewController.view.frame = [self.childViewFrames[self.selectIndex] CGRectValue];
@@ -442,11 +475,19 @@
 {
     NSLog(@"点击:%d",index);
     self.menuSelectIndex = index;
+    self.selectIndex = 0;
     switch (self.menuSelectIndex) {
         case 0:
+            _titles  =@[@"待融资",@"融资中", @"已融资", @"预选项目"];
+            self.itemsWidths =  @[@(70),@(70),@(70),@(70)];
+            self.menuView.items = _titles;
+            [self resetMenuView];
             [self refresh];
             break;
         case 1:
+            _titles  =@[];
+            self.itemsWidths =  @[];
+            self.menuView.items = _titles;
             [self resetMenuView];
             [self thinkTank];
             break;
@@ -483,7 +524,19 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     _selectIndex = (int)scrollView.contentOffset.x / _viewWidth;
-    [self refresh];
+    switch (self.menuSelectIndex) {
+        case 0:
+            [self refresh];
+            break;
+        case 1:
+            [self thinkTank];
+            break;
+        case 2:
+            [self thinkTank];
+            break;
+        default:
+            break;
+    }
     self.isTransparent = YES;
     self.currentViewController = self.displayVC[@(self.selectIndex)];
     [self postFullyDisplayedNotificationWithCurrentIndex:self.selectIndex];
@@ -504,7 +557,15 @@
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
     _targetX = targetContentOffset->x;
 }
-
+#pragma WMTableViewController
+- (void)wmTableViewController:(id)wmTableViewController tapIndexPath:(NSIndexPath *)indexPath data:(NSDictionary *)dic
+{
+    RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
+    controller.dic = [NSMutableDictionary dictionaryWithDictionary:dic];
+    controller.type=1;
+    controller.title = self.navView.title;
+    [self.navigationController pushViewController:controller animated:YES];
+}
 #pragma mark - WMMenuView Delegate
 - (void)menuView:(WMMenuView *)menu didSelesctedIndex:(NSInteger)index currentIndex:(NSInteger)currentIndex {
     NSInteger gap = (NSInteger)labs(index - currentIndex);
@@ -519,7 +580,6 @@
         // 由于不触发 -scrollViewDidScroll: 手动处理控制器
         [self layoutChildViewControllers];
         self.currentViewController = self.displayVC[@(self.selectIndex)];
-
         [self postFullyDisplayedNotificationWithCurrentIndex:(int)index];
     }
     
@@ -544,13 +604,16 @@
 {
     [super setDataDic:dataDic];
     if (self.menuSelectIndex==0) {
-        self.currentViewController.dataArray = [self.dataDic valueForKey:@"data"];
+        self.currentViewController.dataArray = (NSMutableArray*)self.dataDic;
     }else if (self.menuSelectIndex==1){
         self.currentViewController.dataArray = (NSMutableArray*)self.dataDic;
     }else{
         self.currentViewController.dataArray = (NSMutableArray*)self.dataDic;
     }
     self.currentViewController.type = self.menuSelectIndex;
+    if (!self.currentViewController.delegate) {
+        self.currentViewController.delegate  = self;
+    }
 }
 
 -(void)requestFinished:(ASIHTTPRequest *)request
