@@ -51,9 +51,12 @@
         nameLabel.text = [dic valueForKey:@"name"];
         [headerImgView sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"photo"]] placeholderImage:IMAGENAMED(@"coremember")];
         
-        NSString* atLabel = [dic valueForKey:@"at_label"];
         NSString* atName = [dic valueForKey:@"at_name"];
-        NSString* suffix =  [dic valueForKey:@"label_suffix"];
+        NSString* atLabel = @"";
+        NSString* suffix  =@":";
+        if(atName && ![atName isEqualToString:@""]){
+            atLabel = @"回复";
+        }
         NSString* content =  [dic valueForKey:@"content"];
         NSString* str = @"";
         if (atLabel) {

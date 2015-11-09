@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface WMTableViewController : UITableViewController
+@property(assign,nonatomic)int type;
 @property (nonatomic, copy) NSNumber *age;
 @property(retain,nonatomic)NSMutableArray* dataArray;
 @end

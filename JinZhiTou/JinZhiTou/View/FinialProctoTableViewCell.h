@@ -13,7 +13,8 @@
     UIImageView* imgView;
     UILabel* label;
 }
-
+@property(retain,nonatomic)NSString* unSelectedImageName;
+@property(retain,nonatomic)NSString* selectedImageName;
 @property(assign,nonatomic)BOOL isSelected;
 -(void)setImageWithName:(NSString*)name setText:(NSString*)text;
 @end

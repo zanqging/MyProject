@@ -30,8 +30,23 @@
         self.titleLabel.font = SYSTEMFONT(16);
         self.titleLabel.textColor = FONT_COLOR_RED;
         [view addSubview:self.titleLabel];
+        
+        UILabel* label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel)+5, 50, 25)];
+        label.tag =1001;
+        label.font = SYSTEMFONT(14);
+        label.textColor  = FONT_COLOR_GRAY;
+        [TDUtil setLabelMutableText:label content:@"行业领域:" lineSpacing:0 headIndent:0];
+        [view addSubview:label];
+        
+        
+        label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(label)+10, 50, 25)];
+        label.tag =1002;
+        label.font = SYSTEMFONT(14);
+        label.textColor  = FONT_COLOR_GRAY;
+        [TDUtil setLabelMutableText:label content:@"路演时间:" lineSpacing:0 headIndent:0];
+        [view addSubview:label];
     
-//        
+
 //        UIButton* btnAction = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self)-100, HEIGHT(view)/2-40, 70, 30)];
 //        [btnAction setTitle:@"我要投资" forState:UIControlStateNormal];
 //        [btnAction.titleLabel setFont:SYSTEMFONT(14)];
@@ -40,10 +55,11 @@
 //        [btnAction.layer setBorderColor:ColorTheme.CGColor];
 //        [btnAction setTitleColor:ColorTheme forState:UIControlStateNormal];
 //        [view addSubview:btnAction];
-        self.backgroundColor = BackColor;
+        
+        
         self.layer.cornerRadius = 5;
         self.layer.masksToBounds = YES;
-        
+        self.backgroundColor = BackColor;
         
     }
     return self;
@@ -66,34 +82,47 @@
 {
     self->_typeDescription=typeDescription;
     if (self.typeDescription) {
-        //描述
-        self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(itemLabel)+5, WIDTH(itemLabel), 21)];
-        self.typeLabel.font = SYSTEMFONT(14);
-        self.typeLabel.textColor = FONT_COLOR_GRAY;
-        [view addSubview:self.typeLabel];
-        
-        [TDUtil setLabelMutableText:self.typeLabel content:self.typeDescription lineSpacing:0 headIndent:0];
+        UILabel* label = (UILabel*)[view viewWithTag:1001];
+        UILabel* valueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 50, HEIGHT(label))];
+        valueLabel.font  = SYSTEMFONT(14);
+        valueLabel.textColor = label.textColor;
+        [TDUtil setLabelMutableText:valueLabel content:self.typeDescription lineSpacing:0 headIndent:0];
+        [view addSubview:valueLabel];
     }
 }
 
--(void)setStart:(NSDictionary *)start
+-(void)setRoadShowTime:(NSString *)roadShowTime
 {
-    self->_start = start;
-    if (self.start) {
-        //描述
-        itemLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.titleLabel)+5, WIDTH(self.titleLabel), 21)];
-        itemLabel.font = SYSTEMFONT(14);
-        itemLabel.textColor =FONT_COLOR_BLACK;
-        [view addSubview:itemLabel];
-        
-        [TDUtil setLabelMutableText:itemLabel content:[self.start valueForKey:@"name"] lineSpacing:0 headIndent:0];
-        
-        itemValueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(itemLabel)+5, Y(itemLabel), WIDTH(self.titleLabel), 21)];
-        itemValueLabel.font = SYSTEMFONT(14);
-        itemValueLabel.textColor =ColorTheme;
-        [view addSubview:itemValueLabel];
-        
-        [TDUtil setLabelMutableText:itemValueLabel content:[self.start valueForKey:@"datetime"] lineSpacing:0 headIndent:0];
+    self->_roadShowTime  =roadShowTime;
+    if (self.roadShowTime) {
+        UILabel* label = (UILabel*)[view viewWithTag:1002];
+        UILabel* valueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 50, HEIGHT(label))];
+        valueLabel.textColor = ColorTheme;
+        valueLabel.font  = SYSTEMFONT(14);
+        [TDUtil setLabelMutableText:valueLabel content:self.roadShowTime lineSpacing:0 headIndent:0];
+        [view addSubview:valueLabel];
     }
 }
+
+
+//-(void)setStart:(NSDictionary *)start
+//{
+//    self->_start = start;
+//    if (self.start) {
+//        //描述
+//        itemLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.titleLabel)+5, WIDTH(self.titleLabel), 21)];
+//        itemLabel.font = SYSTEMFONT(14);
+//        itemLabel.textColor =FONT_COLOR_BLACK;
+//        [view addSubview:itemLabel];
+//        
+//        [TDUtil setLabelMutableText:itemLabel content:[self.start valueForKey:@"name"] lineSpacing:0 headIndent:0];
+//        
+//        itemValueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(itemLabel)+5, Y(itemLabel), WIDTH(self.titleLabel), 21)];
+//        itemValueLabel.font = SYSTEMFONT(14);
+//        itemValueLabel.textColor =ColorTheme;
+//        [view addSubview:itemValueLabel];
+//        
+//        [TDUtil setLabelMutableText:itemValueLabel content:[self.start valueForKey:@"datetime"] lineSpacing:0 headIndent:0];
+//    }
+//}
 @end

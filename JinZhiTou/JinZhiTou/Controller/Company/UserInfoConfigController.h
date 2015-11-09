@@ -9,13 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "RootViewController.h"
 #import "CustomImagePickerController.h"
-@interface FinialAuthViewController : RootViewController
-{
-    int selectedIndex;
-}
+@interface UserInfoConfigController : RootViewController
 @property(assign,nonatomic)int type;
 @property(retain,nonatomic)NSString* titleStr;
-@property(retain,nonatomic)UITableView* tableView;
 @property(retain,nonatomic)NSMutableArray* dataArray;
+@property(retain,nonatomic)NSMutableArray* foundationSizeRange;
+@property(retain,nonatomic)NSMutableArray* industoryList;
+@property(retain,nonatomic)NSMutableArray* companyDataArray;
 @property(retain,nonatomic)CustomImagePickerController* customPicker;
 @end

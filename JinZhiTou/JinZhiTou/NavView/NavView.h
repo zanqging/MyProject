@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol navViewDelegate <NSObject>
+
+-(void)navView:(id)navView tapIndex:(int)index;
+
+@end
+
+
 @interface NavView : UIView
 {
     UIButton* leftButton;
@@ -16,7 +23,7 @@
 //    NSString* title;
     CGRect frameCurrent;
 }
-
+@property(retain,nonatomic)id <navViewDelegate> delegate;
 @property(assign,nonatomic)BOOL isLocation;
 @property(retain,nonatomic)UIView* backView;
 @property(retain,nonatomic)NSString* title;

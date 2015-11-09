@@ -37,7 +37,7 @@
         [view addSubview:self.contentLabel];
         
         //描述
-        self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, POS_Y(self.contentLabel)+5, WIDTH(self.contentLabel)+10, 51)];
+        self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, POS_Y(self.contentLabel)+5, WIDTH(self.contentLabel)+10, 21)];
         self.typeLabel.numberOfLines = 3;
         self.typeLabel.font = SYSTEMFONT(13);
         self.typeLabel.textColor = FONT_COLOR_GRAY;

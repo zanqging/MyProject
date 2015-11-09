@@ -9,7 +9,7 @@
 #import "WMPageController.h"
 #import "WMPageConst.h"
 #import "WMTableViewController.h"
-@interface WMPageController () <WMMenuViewDelegate,UIScrollViewDelegate> {
+@interface WMPageController () <WMMenuViewDelegate,UIScrollViewDelegate,navViewDelegate> {
     CGFloat _viewHeight;
     CGFloat _viewWidth;
     CGFloat _viewX;
@@ -343,6 +343,7 @@
     //设置标题
     [self.navView setTitle:@"金指投"];
     NSMutableArray* menuArray = @[@"项目库",@"智囊团",@"投资人"];
+    self.navView.delegate  = self;
     self.navView.menuArray  =menuArray;
     self.navView.titleLable.textColor=WriteColor;
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
@@ -352,7 +353,7 @@
     
     
     NSArray *viewControllers = @[[WMTableViewController class]];
-    NSArray *titles = @[@"待融资", @"已融资", @"预选项目"];
+    NSArray *titles = @[@"待融资",@"融资中", @"已融资", @"预选项目"];
     
     _viewControllerClasses = [NSArray arrayWithArray:viewControllers];
     _titles = [NSArray arrayWithArray:titles];
@@ -365,15 +366,13 @@
     self.titleColorSelected = [UIColor whiteColor];
     self.titleColorNormal = [UIColor colorWithRed:168.0/255.0 green:20.0/255.0 blue:4/255.0 alpha:1];
     self.progressColor = [UIColor colorWithRed:168.0/255.0 green:20.0/255.0 blue:4/255.0 alpha:1];
-    self.itemsWidths = @[@(70),@(100),@(70)]; // 这里可以设置不同的宽度
+    self.itemsWidths = @[@(70),@(70),@(70),@(70)]; // 这里可以设置不同的宽度
     
     
     self.title = @"投融资";
 
-    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     [self addScrollView];
-//    [self addMenuView];
     
     [self addViewControllerAtIndex:self.selectIndex];
     self.currentViewController = self.displayVC[@(self.selectIndex)];
@@ -387,7 +386,15 @@
 {
     //网络请求
     self.startLoading  =YES;
-    NSString* srverUrl = [NSString stringWithFormat:@"project/%d/%d/",self.selectIndex,0];
+    NSString* srverUrl = [NSString stringWithFormat:@"project/%d/%d/",self.selectIndex+1,0];
+    [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+}
+
+-(void)thinkTank
+{
+    //网络请求
+    self.startLoading  =YES;
+    NSString* srverUrl = [THINKTANK stringByAppendingFormat:@"%d/",0];
     [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
 }
 
@@ -430,6 +437,30 @@
     }
 }
 
+#pragma NavViewDelegate
+-(void)navView:(id)navView tapIndex:(int)index
+{
+    NSLog(@"点击:%d",index);
+    self.menuSelectIndex = index;
+    switch (self.menuSelectIndex) {
+        case 0:
+            [self refresh];
+            break;
+        case 1:
+            [self resetMenuView];
+            [self thinkTank];
+            break;
+        case 2:
+            _titles  =@[@"个人投资人",@"机构投资人"];
+            self.itemsWidths = @[@(100),@(100)]; // 这里可以设置不同的宽度
+            self.menuView.items = _titles;
+            [self resetMenuView];
+            [self thinkTank];
+            break;
+        default:
+            break;
+    }
+}
 #pragma mark - UIScrollView Delegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self layoutChildViewControllers];
@@ -512,7 +543,14 @@
 -(void)setDataDic:(NSMutableDictionary *)dataDic
 {
     [super setDataDic:dataDic];
-    self.currentViewController.dataArray = [self.dataDic valueForKey:@"data"];
+    if (self.menuSelectIndex==0) {
+        self.currentViewController.dataArray = [self.dataDic valueForKey:@"data"];
+    }else if (self.menuSelectIndex==1){
+        self.currentViewController.dataArray = (NSMutableArray*)self.dataDic;
+    }else{
+        self.currentViewController.dataArray = (NSMutableArray*)self.dataDic;
+    }
+    self.currentViewController.type = self.menuSelectIndex;
 }
 
 -(void)requestFinished:(ASIHTTPRequest *)request

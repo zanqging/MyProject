@@ -317,7 +317,7 @@
     }
     NSString* serverUrl = [CYCLE_CONTENT_PRISE stringByAppendingFormat:@"%@/%d/",[self.dic
                                                                                   valueForKey:@"id"],![[self.dic valueForKey:@"is_like"] boolValue]];
-    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestPriseFinished:)];
+    [httpUtils getDataFromAPIWithOps:serverUrl type:0 delegate:self sel:@selector(requestPriseFinished:) method:@"GET"];
     
 }
 

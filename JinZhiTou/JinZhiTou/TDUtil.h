@@ -487,4 +487,20 @@
  *  @param dic        服务器返回值
  */
 + (void)serverResultJudge:(id)controller dic:(NSMutableDictionary*)dic;
+/**
+ *  校验用户真实姓名
+ *
+ *  @param name <#name description#>
+ *
+ *  @return <#return value description#>
+ */
++ (BOOL) validateUserName:(NSString *)name;
+/**
+ *  身份证校验
+ *
+ *  @param identityCard 身份证号号码
+ *
+ *  @return 是否
+ */
++ (BOOL) validateIdentityCard: (NSString *)identityCard;
 @end

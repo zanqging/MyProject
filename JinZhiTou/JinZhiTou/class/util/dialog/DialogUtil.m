@@ -202,18 +202,19 @@
 }
 
 - (void)showDlg:(UIView *) view textOnly:(NSString *) label {
-	
-	MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
-	
-	// Configure for text only and offset down
-	hud.mode = MBProgressHUDModeText;
-	hud.labelText = label;
-	hud.margin = 10.f;
-	hud.yOffset = 150.f;
-    hud.color  =ColorTheme;
-	hud.removeFromSuperViewOnHide = YES;
-	
-	[hud hide:YES afterDelay:1];
+    if (label && ![label isEqualToString:@""]) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+        
+        // Configure for text only and offset down
+        hud.mode = MBProgressHUDModeText;
+        hud.labelText = label;
+        hud.margin = 10.f;
+        hud.yOffset = 150.f;
+        hud.color  =ColorTheme;
+        hud.removeFromSuperViewOnHide = YES;
+        
+        [hud hide:YES afterDelay:1];
+    }
 }
 
 - (void)showDlg:(UIView *) view withColor:(UIColor *) color {

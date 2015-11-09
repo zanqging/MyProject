@@ -9,6 +9,7 @@
 #import "WMTableViewController.h"
 #import "TDUtil.h"
 #import "WMPageConst.h"
+#import "ThinkTankTableViewCell.h"
 #import "FinalContentTableViewCell.h"
 @interface WMTableViewController ()
 
@@ -57,7 +58,7 @@
 #pragma mark - Table view data source
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 140;
+    return 130;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -70,27 +71,76 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger row = indexPath.row;
     static NSString *reuseIdetify = @"FinialListView";
-    FinalContentTableViewCell *cellInstance = (FinalContentTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
-    if (!cellInstance) {
-        cellInstance = [[FinalContentTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 190)];
-    }
-    NSDictionary* dic = self.dataArray[row];
-    NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
-    __block FinalContentTableViewCell* cell = cellInstance;
-    [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
-        if (image) {
-            cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+    if (self.type==0) {
+        FinalContentTableViewCell *cellInstance = (FinalContentTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
+        if (!cellInstance) {
+            cellInstance = [[FinalContentTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 190)];
         }
-    }];
+        NSDictionary* dic = self.dataArray[row];
+        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
+        __block FinalContentTableViewCell* cell = cellInstance;
+        [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+            if (image) {
+                cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+            }
+        }];
+        
+        
+        cellInstance.backgroundColor = ClearColor;
+        cellInstance.title = [dic valueForKey:@"company"];
+        cellInstance.roadShowTime = [dic valueForKey:@"roashow" ];
+        cellInstance.typeDescription = [dic valueForKey:@"tag"];
+        cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        return cellInstance;
+    }else if(self.type==1){
+        static NSString *reuseIdetify = @"FinialThinkView";
+        ThinkTankTableViewCell *cellInstance = (ThinkTankTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
+        if (!cellInstance) {
+            float height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
+            cellInstance = [[ThinkTankTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
+        }
+        
+        NSDictionary* dic = self.dataArray[row];
+        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"photo"]];
+        __block ThinkTankTableViewCell* cell = cellInstance;
+        [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+            if (image) {
+                cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+            }
+        }];
+        
+        cellInstance.title = [dic valueForKey:@"name"];
+        cellInstance.content = [dic valueForKey:@"company"];
+        cellInstance.typeDescription =  [dic valueForKey:@"position"];;
+        cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        return cellInstance;
+    }else{
+        static NSString *reuseIdetify = @"FinialThinkView";
+        ThinkTankTableViewCell *cellInstance = (ThinkTankTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
+        if (!cellInstance) {
+            float height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
+            cellInstance = [[ThinkTankTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
+        }
+        
+        NSDictionary* dic = self.dataArray[row];
+        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"photo"]];
+        __block ThinkTankTableViewCell* cell = cellInstance;
+        [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+            if (image) {
+                cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+            }
+        }];
+        
+        cellInstance.title = [dic valueForKey:@"name"];
+        cellInstance.content = [dic valueForKey:@"company"];
+        cellInstance.typeDescription =  [dic valueForKey:@"position"];;
+        cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        return cellInstance;
+    }
     
-    cellInstance.title = [dic valueForKey:@"company"];
-    cellInstance.content = [dic valueForKey:@"project_summary"];
-    cellInstance.start = [[dic valueForKey:@"stage"] valueForKey:@"start"];
-    cellInstance.typeDescription = [dic valueForKey:@"addr"];
-    cellInstance.backgroundColor = ClearColor;
-    cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
-    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    return cellInstance;
 }
 
 

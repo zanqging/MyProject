@@ -62,7 +62,7 @@
 -(void)setSuffix:(NSString *)suffix
 {
     self->_suffix = suffix;
-    if (self.atString) {
+    if (self.atName) {
         [self.atSuffixLabel setFrame:CGRectMake(POS_X(self.atNameLabel), 10, 10, HEIGHT(self.nameLabel))];
     }else{
         [self.atSuffixLabel setFrame:CGRectMake(POS_X(self.nameLabel), 10, 10, HEIGHT(self.nameLabel))];

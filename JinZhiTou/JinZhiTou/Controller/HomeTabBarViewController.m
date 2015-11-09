@@ -458,12 +458,12 @@
 
 -(void)hasNewMessage
 {
-    [httpUtils getDataFromAPIWithOps:hasnewtopic postParam:nil type:0 delegate:self sel:@selector(requestNewMessage:)];
+    [httpUtils getDataFromAPIWithOps:hasnewtopic type:0 delegate:self sel:@selector(requestNewMessage:) method:@"GET"];
 }
 
 -(void)hasNewSystemMessage
 {
-    [httpUtils getDataFromAPIWithOps:hasnewmsg postParam:nil type:0 delegate:self sel:@selector(requestSystemMessage:)];
+    [httpUtils getDataFromAPIWithOps:hasnewmsg  type:0 delegate:self sel:@selector(requestSystemMessage:) method:@"GET"];
 }
 
 -(void)NewFinialUpdateInfo

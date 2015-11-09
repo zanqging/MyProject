@@ -228,8 +228,18 @@
     }
 }
 
--(void)tapAction:(id)sender
+-(void)tapAction:(UITapGestureRecognizer*)sender
 {
+    for (int i = 0; i<self.menuArray.count; i++) {
+        UILabel* label = [self viewWithTag:i+1000];
+        label.font  = SYSTEMFONT(16);
+    }
     
+    UILabel* label = (UILabel*)sender.view;
+    label.font  = SYSTEMBOLDFONT(18);
+    
+    if ([_delegate respondsToSelector:@selector(navView:tapIndex:)]) {
+        [_delegate navView:self tapIndex:(int)(label.tag-1000)];
+    }
 }
 @end

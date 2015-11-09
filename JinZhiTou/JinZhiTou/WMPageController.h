@@ -60,6 +60,12 @@ typedef NS_ENUM(NSUInteger, WMPageControllerCachePolicy){
 @property (nonatomic, assign) int selectIndex;
 
 /**
+ *  menu设置选中几号 item
+ *  To select item at index
+ */
+@property (nonatomic, assign) int menuSelectIndex;
+
+/**
  *  点击相邻的 MenuItem 是否触发翻页动画 (当当前选中与点击Item相差大于1是不触发)
  *  Whether to animate when press the MenuItem, if distant between the selected and the pressed is larger than 1,never animate.
  */

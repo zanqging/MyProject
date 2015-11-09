@@ -1329,4 +1329,26 @@
             break;
     }
 }
+
+//用户名
++ (BOOL) validateUserName:(NSString *)name
+{
+    NSString *userNameRegex = @"^[A-Za-z0-9]{6,20}+$";
+    NSPredicate *userNamePredicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",userNameRegex];
+    BOOL B = [userNamePredicate evaluateWithObject:name];
+    return B;
+}
+
+//身份证号
++ (BOOL) validateIdentityCard: (NSString *)identityCard
+{
+    BOOL flag;
+    if (identityCard.length <= 0) {
+        flag = NO;
+        return flag;
+    }
+    NSString *regex2 = @"^(\\d{14}|\\d{17})(\\d|[xX])$";
+    NSPredicate *identityCardPredicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",regex2];
+    return [identityCardPredicate evaluateWithObject:identityCard];
+}
 @end

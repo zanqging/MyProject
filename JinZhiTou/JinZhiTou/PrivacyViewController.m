@@ -69,7 +69,7 @@
 
 -(void)loadData
 {
-    [httpUtil getDataFromAPIWithOps:self.serverUrl postParam:nil type:0 delegate:self sel:@selector(requestData:)];
+    [httpUtil getDataFromAPIWithOps:self.serverUrl type:0 delegate:self sel:@selector(requestData:) method:@"GET"];
 }
 -(void)back:(id)sender
 {

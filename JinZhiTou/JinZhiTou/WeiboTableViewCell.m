@@ -115,7 +115,7 @@
     if([self.dic valueForKey:@"id"]){
         NSString* serverUrl = [CYCLE_CONTENT_PRISE stringByAppendingFormat:@"%@/%d/",[self.dic
                                                                                       valueForKey:@"id"],[[self.dic valueForKey:@"is_like"] boolValue]];
-        [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestPriseFinished:)];
+        [httpUtils getDataFromAPIWithOps:serverUrl  type:0 delegate:self sel:@selector(requestPriseFinished:) method:@"GET"];
     }
     
 }
@@ -187,9 +187,12 @@
 {
     NSDictionary* dic  = self.dataArray[indexPath.row];
     NSString* name  = [dic valueForKey:@"name"];
-    NSString* atLabel = [dic valueForKey:@"at_label"];
     NSString* atName = [dic valueForKey:@"at_name"];
-    NSString* suffix =  [dic valueForKey:@"label_suffix"];
+    NSString* atLabel = @"";
+    NSString* suffix  =@":";
+    if(atName && ![atName isEqualToString:@""]){
+        atLabel = @"回复";
+    }
     NSString* content =  [dic valueForKey:@"content"];
     NSString* str = name;
     if (atLabel) {
@@ -237,9 +240,12 @@
     
     NSDictionary* dic  = self.dataArray[indexPath.row];
     NSString* name  = [dic valueForKey:@"name"];
-    NSString* atLabel = [dic valueForKey:@"at_label"];
     NSString* atName = [dic valueForKey:@"at_name"];
-    NSString* suffix =  [dic valueForKey:@"label_suffix"];
+    NSString* atLabel = @"";
+    NSString* suffix  =@":";
+    if(atName && ![atName isEqualToString:@""]){
+        atLabel = @"回复";
+    }
     NSString* content =  [dic valueForKey:@"content"];
     NSString* str = name;
     if (name) {
@@ -638,9 +644,12 @@
     for (int i=0; i<self.dataArray.count; i++) {
         NSDictionary* dic  = self.dataArray[i];
         NSString* name  = [dic valueForKey:@"name"];
-        NSString* atLabel = [dic valueForKey:@"at_label"];
         NSString* atName = [dic valueForKey:@"at_name"];
-        NSString* suffix =  [dic valueForKey:@"label_suffix"];
+        NSString* atLabel = @"";
+        NSString* suffix  =@":";
+        if(atName && ![atName isEqualToString:@""]){
+            atLabel = @"回复";
+        }
         NSString* content =  [dic valueForKey:@"content"];
         NSString* str = name;
         if (atLabel) {
@@ -805,8 +814,8 @@
     NSLog(@"返回:%@",jsonString);
     NSMutableDictionary * dic =[jsonString JSONValue];
     if (dic!=nil) {
-        NSString* status = [dic valueForKey:@"status"];
-        if ([status integerValue]==0) {
+        NSString* code = [dic valueForKey:@"code"];
+        if ([code integerValue]==0) {
             if ([_delegate respondsToSelector:@selector(weiboTableViewCell:refresh:)]) {
                 [_delegate weiboTableViewCell:self refresh:YES];
             }

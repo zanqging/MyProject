@@ -51,8 +51,6 @@
      //==============================TabBarItem 设置==============================//
     
      //==============================导航栏区域 设置==============================//
-    self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
-    self.navView.imageView.alpha=0;
     [self.navView setTitle:@"金指投"];
     self.navView.titleLable.textColor=WriteColor;
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
@@ -60,7 +58,6 @@
     
     [self.navView.rightButton setImage:IMAGENAMED(@"circle_publish") forState:UIControlStateNormal];
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(publishAction:)]];
-    [self.view addSubview:self.navView];
      //==============================导航栏区域 设置==============================//
     
     self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-70)];
@@ -140,6 +137,9 @@
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContentNotification:) name:@"publishContent" object:nil];
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContent:) name:@"publish" object:nil];
+    
+    //加载动画
+    self.startLoading  =YES;
 }
 
 /**
@@ -166,6 +166,10 @@
 
 -(void)refreshProject
 {
+    //加载动画
+    self.startLoading = YES;
+    self.isTransparent = YES;
+    
     isRefresh =YES;
     currentPage = 0;
     [self loadData];
@@ -173,6 +177,9 @@
 
 -(void)loadProject
 {
+    //加载动画
+    self.startLoading = YES;
+    self.isTransparent = YES;
     isRefresh =NO;
     if (!self.isEndOfPageSize) {
         currentPage++;
@@ -469,9 +476,12 @@
         NSMutableArray* array  = [dic valueForKey:@"comment"];
         NSDictionary* dic  = array[i];
         NSString* name  = [dic valueForKey:@"name"];
-        NSString* atLabel = [dic valueForKey:@"at_label"];
         NSString* atName = [dic valueForKey:@"at_name"];
-        NSString* suffix =  [dic valueForKey:@"label_suffix"];
+        NSString* atLabel = @"";
+        NSString* suffix  =@":";
+        if(atName && ![atName isEqualToString:@""]){
+            atLabel = @"回复";
+        }
         NSString* content =  [dic valueForKey:@"content"];
         NSString* str = name;
         if (atLabel) {
@@ -645,10 +655,10 @@
     NSLog(@"返回:%@",jsonString);
     NSMutableDictionary * dic =[jsonString JSONValue];
     if (dic!=nil) {
-        NSString* status = [dic valueForKey:@"status"];
+        NSString* code = [dic valueForKey:@"code"];
         NSMutableArray* dataArray = [NSMutableArray new];
         NSMutableArray* arrayData = [dic valueForKey:@"data"];
-        if ([status integerValue]==0  || [status integerValue]==-1) {
+        if ([code integerValue]==0  || [code integerValue]==2) {
             if (isRefresh) {
                 dataArray = arrayData;
             }else{
@@ -670,14 +680,19 @@
             }else{
                 [self.tableView.footer endRefreshing];
             }
-            
-            if ([status integerValue]==-1) {
-                [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"内容已加载完毕!"];
-            }
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
+            self.startLoading = NO;
         }else{
-            
+            self.isNetRequestError = YES;
         }
     }
+    self.isNetRequestError = YES;
+}
+
+-(void)refresh
+{
+    [self refreshProject];
+    self.isTransparent = NO;
 }
 
 /**
@@ -692,8 +707,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
             headerView.headerBackView.image  =[TDUtil loadContent:STATIC_USER_BACKGROUND_PIC];
         }
         

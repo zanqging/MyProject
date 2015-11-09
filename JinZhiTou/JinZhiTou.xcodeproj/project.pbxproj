@@ -13,6 +13,7 @@
 		4501400A1B943024000F8A97 /* MMDrawerVisualState.m in Sources */ = {isa = PBXBuildFile; fileRef = 450140051B943024000F8A97 /* MMDrawerVisualState.m */; };
 		4501400B1B943024000F8A97 /* UIViewController+MMDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450140071B943024000F8A97 /* UIViewController+MMDrawerController.m */; };
 		4501400E1B943DF9000F8A97 /* MMExampleDrawerVisualStateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4501400D1B943DF9000F8A97 /* MMExampleDrawerVisualStateManager.m */; };
+		4501ABBF1BEDEABA006EA357 /* UserInfoConfigController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4501ABBE1BEDEABA006EA357 /* UserInfoConfigController.m */; };
 		450876281B8F6414006EFC1A /* StartPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450876271B8F6414006EFC1A /* StartPageViewController.m */; };
 		4508762D1B8F644E006EFC1A /* SlideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4508762A1B8F644E006EFC1A /* SlideView.m */; };
 		450876311B8F647C006EFC1A /* SlideViewStartPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 450876301B8F647C006EFC1A /* SlideViewStartPage.m */; };
@@ -345,6 +346,7 @@
 		45F8294A1B6C64DB0044F6F0 /* FinialPersonTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F829491B6C64DB0044F6F0 /* FinialPersonTableViewCell.m */; };
 		45F8294D1B6C79150044F6F0 /* FinialPlanTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F8294C1B6C79150044F6F0 /* FinialPlanTableViewCell.m */; };
 		45F829501B6D38730044F6F0 /* FinialSubmmitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F8294F1B6D38730044F6F0 /* FinialSubmmitViewController.m */; };
+		45F8A40F1BED9321002177C9 /* UserInfoConfigView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F8A40E1BED9321002177C9 /* UserInfoConfigView.m */; };
 		45F90B131B709C67005E8D15 /* NewFinialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F90B121B709C67005E8D15 /* NewFinialViewController.m */; };
 		45F93B531B637311004526F5 /* MJRefreshAutoFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F93B291B637311004526F5 /* MJRefreshAutoFooter.m */; };
 		45F93B541B637311004526F5 /* MJRefreshBackFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F93B2B1B637311004526F5 /* MJRefreshBackFooter.m */; };
@@ -405,6 +407,8 @@
 		450140071B943024000F8A97 /* UIViewController+MMDrawerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+MMDrawerController.m"; sourceTree = "<group>"; };
 		4501400C1B943DF9000F8A97 /* MMExampleDrawerVisualStateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMExampleDrawerVisualStateManager.h; sourceTree = "<group>"; };
 		4501400D1B943DF9000F8A97 /* MMExampleDrawerVisualStateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMExampleDrawerVisualStateManager.m; sourceTree = "<group>"; };
+		4501ABBD1BEDEABA006EA357 /* UserInfoConfigController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserInfoConfigController.h; path = Controller/Company/UserInfoConfigController.h; sourceTree = "<group>"; };
+		4501ABBE1BEDEABA006EA357 /* UserInfoConfigController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserInfoConfigController.m; path = Controller/Company/UserInfoConfigController.m; sourceTree = "<group>"; };
 		450876261B8F6414006EFC1A /* StartPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartPageViewController.h; sourceTree = "<group>"; };
 		450876271B8F6414006EFC1A /* StartPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartPageViewController.m; sourceTree = "<group>"; };
 		450876291B8F644E006EFC1A /* SlideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideView.h; sourceTree = "<group>"; };
@@ -1003,6 +1007,8 @@
 		45F8294C1B6C79150044F6F0 /* FinialPlanTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FinialPlanTableViewCell.m; path = Controller/Final/TableViewCell/FinialPlanTableViewCell.m; sourceTree = "<group>"; };
 		45F8294E1B6D38730044F6F0 /* FinialSubmmitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FinialSubmmitViewController.h; path = Controller/Final/FinialSubmmitViewController.h; sourceTree = "<group>"; };
 		45F8294F1B6D38730044F6F0 /* FinialSubmmitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FinialSubmmitViewController.m; path = Controller/Final/FinialSubmmitViewController.m; sourceTree = "<group>"; };
+		45F8A40D1BED9321002177C9 /* UserInfoConfigView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserInfoConfigView.h; path = View/UserInfo/UserInfoConfigView.h; sourceTree = "<group>"; };
+		45F8A40E1BED9321002177C9 /* UserInfoConfigView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserInfoConfigView.m; path = View/UserInfo/UserInfoConfigView.m; sourceTree = "<group>"; };
 		45F90B111B709C67005E8D15 /* NewFinialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewFinialViewController.h; path = Controller/NewFinial/NewFinialViewController.h; sourceTree = "<group>"; };
 		45F90B121B709C67005E8D15 /* NewFinialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewFinialViewController.m; path = Controller/NewFinial/NewFinialViewController.m; sourceTree = "<group>"; };
 		45F93B281B637311004526F5 /* MJRefreshAutoFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJRefreshAutoFooter.h; sourceTree = "<group>"; };
@@ -1418,6 +1424,8 @@
 				45326EF71B732A7F0044F8C1 /* UserInfoHeader.m */,
 				45326F011B7358DB0044F8C1 /* UserInfo.h */,
 				45326F021B7358DB0044F8C1 /* UserInfo.m */,
+				45F8A40D1BED9321002177C9 /* UserInfoConfigView.h */,
+				45F8A40E1BED9321002177C9 /* UserInfoConfigView.m */,
 			);
 			name = UserInfo;
 			sourceTree = "<group>";
@@ -1978,6 +1986,8 @@
 			children = (
 				45A2AD8F1B70FD4D00751F78 /* CompanyViewController.h */,
 				45A2AD901B70FD4D00751F78 /* CompanyViewController.m */,
+				4501ABBD1BEDEABA006EA357 /* UserInfoConfigController.h */,
+				4501ABBE1BEDEABA006EA357 /* UserInfoConfigController.m */,
 				45A2AD921B7108EF00751F78 /* FinialAuthViewController.h */,
 				45A2AD931B7108EF00751F78 /* FinialAuthViewController.m */,
 				45A2ADAE1B727CB900751F78 /* FinialAuthDetailViewController.h */,
@@ -2809,6 +2819,7 @@
 				4532718E1B74A5360044F8C1 /* UserInfoSettingViewController.m in Sources */,
 				45495BD01B60DA02007A17FD /* UIImage+Cut.m in Sources */,
 				45FCD02C1B75E15A009AD6E3 /* SBJsonWriter.m in Sources */,
+				45F8A40F1BED9321002177C9 /* UserInfoConfigView.m in Sources */,
 				4581155C1B80150C006EEBBC /* ThinkTankViewController.m in Sources */,
 				4543EB0A1BD08E100041DCBD /* MWPhotoBrowser.m in Sources */,
 				45495C151B60DA91007A17FD /* PinYinForObjc.m in Sources */,
@@ -2901,6 +2912,7 @@
 				450876371B8F656A006EFC1A /* BoxModel.m in Sources */,
 				45A2ADA01B71A08B00751F78 /* PhotoAdd.m in Sources */,
 				453E23E21B7E2CA30023BB00 /* FinialSuccessViewController.m in Sources */,
+				4501ABBF1BEDEABA006EA357 /* UserInfoConfigController.m in Sources */,
 				45ECCF001B61FED40013CA73 /* WaterFLayout.m in Sources */,
 				45E2DDCF1B68CA13008F2942 /* ShowCommentViewController.m in Sources */,
 				458631FA1B66226000F06688 /* FinalContentTableViewCell.m in Sources */,

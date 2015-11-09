@@ -384,8 +384,8 @@
             }];
             cellInstance.title = [dic valueForKey:@"company_name"];
             NSMutableArray* arry  =[dic valueForKey:@"industry_type"];
-            cellInstance.content = [dic valueForKey:@"project_summary"];
-            cellInstance.start  = [dic valueForKey:@"start"];
+//            cellInstance.content = [dic valueForKey:@"project_summary"];
+//            cellInstance.start  = [dic valueForKey:@"start"];
 //            cellInstance.priseData = [[dic valueForKey:@"like_sum"] integerValue];
 //            cellInstance.collectionData = [[dic valueForKey:@"collect_sum"] integerValue];
             NSString* str=@"";

@@ -12,9 +12,12 @@
 #import "MJRefresh.h"
 #import "SwitchSelect.h"
 #import "INSViewController.h"
+#import "UserInfoConfigView.h"
 #import "NewFinialTableViewCell.h"
 #import "HomeTabBarViewController.h"
-@interface NewFinialViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,ASIHTTPRequestDelegate,TypeShowDelegate>
+#import "FinialAuthViewController.h"
+#import "UserInfoConfigController.h"
+@interface NewFinialViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,ASIHTTPRequestDelegate,TypeShowDelegate,UserInfoConigDelegate>
 {
     BOOL isRefresh;
     int currentpage;
@@ -70,8 +73,24 @@
 //        [dataDic setValue:@"他家的" forKey:@"legalperson"];
 //        [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
     
+   
+    
+    UserInfoConfigController* controller = [[UserInfoConfigController alloc]init];
+    [self.navigationController presentViewController:controller animated:YES completion:^(void){
+        UserInfoConfigView* configView = [[UserInfoConfigView alloc]initWithFrame:self.view.frame];
+        configView.delegate = self;
+        [self.view addSubview:configView];
+    }];
+    
 }
 
+-(void)userInfoConfigView:(id)userInfoConfigView selectedIndex:(int)index data:(NSDictionary *)data
+{
+    FinialAuthViewController* controller = [[FinialAuthViewController alloc]init];
+    controller.type = index;
+    controller.titleStr = @"首页";
+    [self.navigationController pushViewController:controller animated:YES];
+}
 
 -(void)userInteractionEnabled:(NSDictionary*)dic
 

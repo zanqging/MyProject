@@ -7,6 +7,7 @@
 //
 
 #import "FinialProctoTableViewCell.h"
+#import "TDUtil.h"
 #import "UConstants.h"
 #import "GlobalDefine.h"
 @implementation FinialProctoTableViewCell
@@ -17,7 +18,7 @@
         imgView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:imgView];
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, 10, WIDTH(self)-POS_X(imgView)-70, 50)];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, 10, WIDTH(self)-POS_X(imgView)-60, 50)];
         label.numberOfLines = 0 ;
         label.font = SYSTEMFONT(14);
         label.textColor =FONT_COLOR_GRAY;
@@ -33,17 +34,15 @@
 -(void)setImageWithName:(NSString *)name setText:(NSString *)text
 {
     if (name) {
+        self.unSelectedImageName = name;
+        self.selectedImageName = [self.unSelectedImageName substringToIndex:[self.unSelectedImageName length]-2];
         imgView.image = IMAGENAMED(name);
     }
     
     if (text) {
-        NSMutableAttributedString * attributedString1 = [[NSMutableAttributedString alloc] initWithString:text];
-        NSMutableParagraphStyle * paragraphStyle1 = [[NSMutableParagraphStyle alloc] init];
-        [paragraphStyle1 setLineSpacing:5];
-        [attributedString1 addAttribute:NSParagraphStyleAttributeName value:paragraphStyle1 range:NSMakeRange(0, [text length])];
-        [label setAttributedText:attributedString1];
-        [label sizeToFit];
+        [TDUtil setLabelMutableText:label content:text lineSpacing:3 headIndent:0];
     }
+    
 }
 
 
@@ -52,8 +51,12 @@
     self->_isSelected = isSelected;
     if (self.isSelected) {
         self.backgroundColor = CELL_SELECTED_COLOR;
+        label.textColor = ColorTheme;
+        imgView.image = IMAGENAMED(self.selectedImageName);
     }else{
         self.backgroundColor = WriteColor;
+        label.textColor = FONT_COLOR_GRAY;
+        imgView.image = IMAGENAMED(self.unSelectedImageName);
     }
     
 }

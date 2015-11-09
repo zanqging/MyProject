@@ -286,8 +286,6 @@
 #define  UserGender @"gender/"
 //用户类型修改
 #define  UserType @"modifypositiontype/"
-//检测用户是否已经登录
-#define ISLOGIN @"issessionvalid/"
 //我创建的项目
 #define  MY_CREATE_PROJECT @"mycreateproject/"
 //我投资的项目
@@ -377,7 +375,7 @@
 
 //消息推送
 //是否有新的系统通知
-#define hasnewmsg @"hassysteminform/"
+#define hasnewmsg @"hasinform/"
 //系统通知列表
 #define msgread @"msgread/"
 //设置消息已读
@@ -385,7 +383,7 @@
 //删除系统通知消息
 #define deletemsgread @"deletesysteminform/"
 //是否有消息回复
-#define hasnewtopic @"hasnewtopic/"
+#define hasnewtopic @"hastopic/"
 //消息回复列表
 #define topicread @"topicread/"
 //设置已读
