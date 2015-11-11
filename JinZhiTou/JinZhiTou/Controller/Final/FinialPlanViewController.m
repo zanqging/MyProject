@@ -7,19 +7,9 @@
 //
 
 #import "FinialPlanViewController.h"
-#import "TDUtil.h"
-#import "HttpUtils.h"
-#import "LoadingUtil.h"
-#import "LoadingView.h"
-#import "UConstants.h"
-#import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
-#import "ASIFormDataRequest.h"
 #import "FinialPersonTableViewCell.h"
 @interface FinialPlanViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
-    HttpUtils* httpUtils;
-    LoadingView* loadingView;
     NSMutableArray* dataArray;
     NSMutableDictionary* dicData; //返回投资列表
 }
@@ -29,14 +19,13 @@
 @implementation FinialPlanViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.startLoading = YES;
     //初始化网络
-    httpUtils = [[HttpUtils alloc]init];
     self.view.backgroundColor = ColorTheme;
     //隐藏导航栏
     [self.navigationController.navigationBar setHidden:YES];
     
     //设置标题
-    self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     self.navView.imageView.alpha=1;
     [self.navView setTitle:@"融资计划"];
     self.navView.titleLable.textColor=WriteColor;
@@ -44,7 +33,6 @@
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:@"项目详情" forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
-    [self.view addSubview:self.navView];
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
@@ -64,14 +52,9 @@
     [dataArray addObject:@"释放比例"];
     [dataArray addObject:@"资金用途"];
     [dataArray addObject:@"退出方式"];
-    
     //加载视图
-    loadingView = [LoadingUtil shareinstance:self.view];
-    [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
-    
-    
     NSString* url = [FINANCE_PLAN stringByAppendingFormat:@"%ld/",(long)self.projectId];
-    [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestFinacePlan:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestFinacePlan:)];
 }
 
 -(void)back:(id)sender
@@ -101,19 +84,19 @@
         double share2give = [[dicData valueForKey:@"share2give"] doubleValue]*100;
         switch (row) {
             case 0:
-                cell.rightLabel.text = [[[dicData valueForKey:@"plan_finance"] stringValue] stringByAppendingString:@"万"];
+                cell.rightLabel.text = [[[dicData valueForKey:@"planfinance"] stringValue] stringByAppendingString:@"万"];
                 break;
             case 1:
-                cell.rightLabel.text = [dicData valueForKey:@"finance_pattern"];
+                cell.rightLabel.text = @"股权融资";
                 break;
             case 2:
                 cell.rightLabel.text = [[NSString stringWithFormat:@"%.2f",share2give] stringByAppendingString:@"%"];
                 break;
             case 3:
-                cell.textView.text  =[dicData valueForKey:@"fund_purpose"];
+                cell.textView.text  =[dicData valueForKey:@"usage"];
                 break;
             case 4:
-                cell.rightLabel.text = [dicData valueForKey:@"quit_way"];
+                cell.rightLabel.text = [dicData valueForKey:@"quitway"];
                 break;
             default:
                 break;
@@ -160,8 +143,7 @@
         if ([status intValue] == 0 || [status intValue] == -1) {
             dicData = [jsonDic valueForKey:@"data"];
             [self.tableView reloadData];
-            
-            [LoadingUtil closeLoadingView:loadingView];
+            self.startLoading  = NO;
         }
         
     }
@@ -170,8 +152,20 @@
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
-    
+    self.isNetRequestError = YES;
 }
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.view sendSubviewToBack:self.tableView];
+}
+
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];

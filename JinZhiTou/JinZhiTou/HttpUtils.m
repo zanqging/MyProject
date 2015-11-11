@@ -130,6 +130,9 @@
     NSURL* url = [NSURL URLWithString:[SERVICE_URL stringByAppendingString:urlStr]];
     NSLog(@"请求地址:%@",url);
     self.requestInstance=[ASIFormDataRequest requestWithURL:url];
+    if (!postDic) {
+        [self.requestInstance setRequestMethod:@"GET"];
+    }
     if (postDic!=nil) {
         for (int i=0; i<postDic.count; i++) {
             NSString* key=[[postDic allKeys] objectAtIndex:i];
@@ -163,6 +166,9 @@
     self.isRequestSuccessed=@"NO";
     NSURL* url = [NSURL URLWithString:[SERVICE_URL stringByAppendingString:urlStr]];
     self.requestInstance=[ASIFormDataRequest requestWithURL:url];
+    if (!postDic) {
+        [self.requestInstance setRequestMethod:@"GET"];
+    }
     if (postDic!=nil) {
         for (int i=0; i<postDic.count; i++) {
             NSString* key=[[postDic allKeys] objectAtIndex:i];

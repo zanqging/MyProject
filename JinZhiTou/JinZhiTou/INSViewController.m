@@ -160,11 +160,6 @@
                 str = [str stringByAppendingFormat:@"%@/",arr[i]];
                 tableView.separatorStyle  =UITableViewCellSeparatorStyleSingleLine;
             }
-            
-            cell.typeLabel.text = str;
-            cell.priseLabel.text = [[dic valueForKey:@"like_sum"] stringValue];
-            cell.colletcteLabel.text = [[dic valueForKey:@"collect_sum"] stringValue];
-            cell.timeLabel.text = [dic valueForKey:@"roadshow_start_datetime"];
             cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             tableView.contentSize = CGSizeMake(WIDTH(tableView), 190*self.dataArray.count+100);

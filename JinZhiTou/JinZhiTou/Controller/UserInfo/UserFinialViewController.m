@@ -7,26 +7,15 @@
 //
 
 #import "UserFinialViewController.h"
-#import "TDUtil.h"
-#import "HttpUtils.h"
 #import "MJRefresh.h"
-#import "DialogUtil.h"
-#import "UConstants.h"
-#import "LoadingUtil.h"
-#import "LoadingView.h"
 #import "SwitchSelect.h"
-#import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
-#import "ASIFormDataRequest.h"
-#import "UserCollecteTableViewCell.h"
 #import "MMDrawerController.h"
+#import "UserCollecteTableViewCell.h"
 #import "RoadShowDetailViewController.h"
 @interface UserFinialViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,ASIHTTPRequestDelegate>
 {
     BOOL isRefresh;
     int currentpage;
-    HttpUtils* httpUtils;
-    LoadingView* loadingView;
     UIScrollView* scrollView;
 }
 @end
@@ -37,7 +26,6 @@
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
     //设置标题
-    self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     self.navView.imageView.alpha=1;
     [self.navView setTitle:@"我的投融资"];
     self.navView.titleLable.textColor=WriteColor;
@@ -45,7 +33,6 @@
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:self.navTitle forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
-    [self.view addSubview:self.navView];
     
     //头部
     [self addSwitchView];
@@ -59,20 +46,19 @@
     self.tableView.showsVerticalScrollIndicator=NO;
     self.tableView.showsHorizontalScrollIndicator=NO;
     self.tableView.backgroundColor=BackColor;
-    self.tableView.separatorStyle=UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
     [self.tableView removeFromSuperview];
     [self.view addSubview:self.tableView];
+    [self.tableView  setTableHeaderView:[[UIView alloc]initWithFrame:CGRectZero]];
     
     [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
-    
-    httpUtils = [[HttpUtils alloc]init];
-    loadingView = [LoadingUtil shareinstance:self.view];
-    
     [self refreshProject];
 }
 
 -(void)refreshProject
 {
+    self.startLoading  =YES;
+    
     isRefresh =YES;
     currentpage = 0;
     switch (self.selectedIndex) {
@@ -182,23 +168,22 @@
 {
     //添加加载页面
     if (isRefresh) {
-        loadingView.isTransparent = YES;
+        self.isTransparent = YES;
     }
-    [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
-    
+    self.startLoading  =YES;
     NSString* str = [MY_CREATE_PROJECT stringByAppendingFormat:@"%d/",currentpage];
-    [httpUtils getDataFromAPIWithOps:str postParam:nil type:0 delegate:self sel:@selector(requestRoadShowData:)];
+    [self.httpUtil getDataFromAPIWithOps:str postParam:nil type:0 delegate:self sel:@selector(requestRoadShowData:)];
     
 }
 -(void)loadFinialData
 {
     if (isRefresh) {
-        loadingView.isTransparent = YES;
+        self.isTransparent = YES;
     }
-    [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
+    self.startLoading = YES;
     
     NSString* str = [MY_FINIAL_PROJECT stringByAppendingFormat:@"%d/",currentpage];
-    [httpUtils getDataFromAPIWithOps:str postParam:nil type:0 delegate:self sel:@selector(requestFinalData:)];
+    [self.httpUtil getDataFromAPIWithOps:str postParam:nil type:0 delegate:self sel:@selector(requestFinalData:)];
     
 }
 
@@ -237,23 +222,17 @@
         cell.titleLabel.text = [dic valueForKey:@"company_name"];
         cell.desclabel.text = [dic valueForKey:@"project_summary"];
         cell.typeLabel.text = [NSString stringWithFormat:@"%@/%@/%@",[dic valueForKey:@"province"],[dic valueForKey:@"city"],[dic valueForKey:@"industry_type"][0]];
-        cell.timeLabel.text = [NSString stringWithFormat:@"%@:%@",[dicStage valueForKey:@"name"],[dicStage valueForKey:@"datetime"]];
-        cell.colletcteLabel.text = [[dic valueForKey:@"collect_sum"] stringValue];
-        cell.priseLabel.text = [[dic valueForKey:@"like_sum"] stringValue];
         cell.backgroundColor = WriteColor;
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
     }else{
         NSDictionary* dic  =self.dataFinialArray[indexPath.row];
-        NSDictionary* dicStage = [[dic valueForKey:@"stage"] valueForKey:@"start"];
+//        NSDictionary* dicStage = [[dic valueForKey:@"stage"] valueForKey:@"start"];
         [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"thumbnail"]] placeholderImage:IMAGENAMED(@"loading")];
         cell.titleLabel.text = [dic valueForKey:@"company_name"];
         cell.desclabel.text = [dic valueForKey:@"project_summary"];
         cell.typeLabel.text = [NSString stringWithFormat:@"%@/%@/%@",[dic valueForKey:@"province"],[dic valueForKey:@"city"],[dic valueForKey:@"industry_type"][0]];
-        cell.timeLabel.text = [NSString stringWithFormat:@"%@:%@",[dicStage valueForKey:@"name"],[dicStage valueForKey:@"datetime"]];
-        cell.colletcteLabel.text = [[dic valueForKey:@"collect_sum"] stringValue];
-        cell.priseLabel.text = [[dic valueForKey:@"like_sum"] stringValue];
         cell.backgroundColor = WriteColor;
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -279,6 +258,7 @@
     self->_dataCreateArray = dataCreateArray;
     if (self.dataCreateArray.count<=0) {
         self.tableView.isNone = YES;
+        self.tableView.content = @"暂无上传项目";
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }else{
         self.tableView.isNone = NO;
@@ -292,6 +272,7 @@
     self->_dataFinialArray = dataFinialArray;
     if (self.dataFinialArray.count<=0) {
         self.tableView.isNone = YES;
+        self.tableView.content = @"暂无投资项目";
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }else{
         self.tableView.isNone = NO;
@@ -309,7 +290,6 @@
     {
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0 || [status intValue] ==-1) {
-            [self.tableView setIsNone:NO];
             if (isRefresh) {
                 self.dataCreateArray = [jsonDic valueForKey:@"data"];
             }else{
@@ -332,7 +312,11 @@
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         
         //关闭加载视图
-        [LoadingUtil closeLoadingView:loadingView];
+        self.startLoading  =NO;
+    }else{
+        
+        self.isNetRequestError = YES;
+        self.content = @"抱歉，主人！服务器开小差啦！";
     }
 }
 
@@ -369,14 +353,16 @@
         }
        
         //关闭加载视图
-        [LoadingUtil closeLoadingView:loadingView];
+        self.startLoading = NO;
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
     }
 }
--(void)requestFailed:(ASIHTTPRequest *)request
+
+-(void)refresh
 {
-    
+    [self refreshProject];
 }
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -388,10 +374,6 @@
         }
         
     }
-}
--(void)dealloc
-{
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];

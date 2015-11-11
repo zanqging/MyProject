@@ -58,7 +58,9 @@
 -(void)teamShowAction:(UITapGestureRecognizer*)sender
 {
     NSInteger tag = sender.view.tag;
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"teamShow" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%ld",(long)tag],@"tag", nil]];
+    if ([_delegate respondsToSelector:@selector(roadShowHeader:tapTag:)]) {
+        [_delegate roadShowHeader:self tapTag:(int)tag];
+    }
 }
 
 -(void)collect:(UITapGestureRecognizer*)sender

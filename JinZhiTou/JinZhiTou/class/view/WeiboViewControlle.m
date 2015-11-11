@@ -46,10 +46,9 @@
 
 - (void)viewDidLoad
 {
-  
     [super viewDidLoad];
+    self.view.backgroundColor  =ColorTheme;
     //设置标题
-    self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     self.navView.imageView.alpha=1;
     [self.navView setTitle:@"评论"];
     self.navView.titleLable.textColor=WriteColor;
@@ -59,7 +58,6 @@
     
     [self.navView.rightButton setImage:IMAGENAMED(@"fapiao") forState:UIControlStateNormal];
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(critical:)]];
-    [self.view addSubview:self.navView];
     
     
     self.tableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight)];
@@ -71,8 +69,6 @@
     [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshData:) loadAction:@selector(loadData:)];
     _first=YES;
     
-    httpUtils = [[HttpUtils alloc]init];
-    loadingView = [LoadingUtil shareinstance:self.view];
     
     isRefresh = YES;
     [self loadData];
@@ -86,9 +82,9 @@
         NSString* url  =[TOPIC stringByAppendingFormat:@"%ld/",(long)self.project_id];
         NSMutableDictionary* dic  =[[NSMutableDictionary alloc]init];
         [dic setValue:str forKey:@"content"];
-        [dic setValue:atTopId forKey:@"at_topic"];
+        [dic setValue:atTopId forKey:@"at"];
         
-        [httpUtils getDataFromAPIWithOps:url postParam:dic type:0 delegate:self sel:@selector(requestSubmmit:)];
+        [self.httpUtil getDataFromAPIWithOps:url postParam:dic type:0 delegate:self sel:@selector(requestSubmmit:)];
     }else{
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请先输入内容"];
     }
@@ -101,15 +97,14 @@
         _first = NO;
     }else{
         
-        loadingView.isTransparent  =YES;
+        self.isTransparent  =YES;
     }
     if (!isRefresh) {
         currentPage++;
     }
-    
-    [LoadingUtil show:loadingView];
+    self.startLoading = YES;
     NSString* url = [REPLYLIST stringByAppendingFormat:@"%ld/%d/",(long)self.project_id,currentPage];
-    [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestReplyData:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestReplyData:)];
 }
 
 -(void)refreshData:(id)sender
@@ -176,12 +171,12 @@
     NSDictionary* dic =self.dataArray[row];
     
 
+    cell.topicId = [dic valueForKey:@"id"];
     cell.titleStr = [dic valueForKey:@"name"];
     cell.isInvestor = [[dic valueForKey:@"investor"] boolValue];
-    [cell.logo sd_setImageWithURL:[dic valueForKey:@"img"] placeholderImage:IMAGENAMED(@"coremember")];
-    cell.time.text = [dic valueForKey:@"create_datetime"];
+    [cell.logo sd_setImageWithURL:[dic valueForKey:@"photo"] placeholderImage:IMAGENAMED(@"coremember")];
+    cell.time.text = [dic valueForKey:@"date"];
     cell.content =[dic valueForKey:@"content"];
-    cell.topicId = [dic valueForKey:@"id"];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     return cell;
@@ -209,7 +204,7 @@
         if (lines<0) {
             lines =1;
         }
-        CGFloat height = lines*20+120;
+        CGFloat height = lines*20+80;
         return height;
     }
         return 0;
@@ -283,7 +278,7 @@
             NSDictionary* dic ;
             for (int i = 0; i<dataArray.count; i++) {
                 dic =dataArray[i];
-                [_images addObject:[dic valueForKey:@"img"]];
+                [_images addObject:[dic valueForKey:@"photo"]];
                  [_contents addObject:[dic valueForKey:@"content"]];
             }
             
@@ -301,16 +296,13 @@
                 [self.dataArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
                 [self.tableView reloadData];
             }
-            
-             [LoadingUtil close:loadingView];
+            self.startLoading = NO;
         }else{
-            loadingView.isError = YES;
-            loadingView.content = @"网络请求失败!";
+            self.isNetRequestError = YES;
         }
         self.tableView.content = [jsonDic valueForKey:@"msg"];
     }else{
-        loadingView.isError = YES;
-        loadingView.content = @"网络请求失败!";
+        self.isNetRequestError = YES;
     }
     
     if (isRefresh) {
@@ -329,7 +321,7 @@
     {
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0) {
-            loadingView.isError = NO;
+            self.isNetRequestError = NO;
             self.tableView.content = [jsonDic valueForKey:@"msg"];
             
             currentPage = 0;
@@ -341,14 +333,6 @@
     }
 }
 
-
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    NSString* jsonString =[TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-    loadingView.isError = YES;
-    loadingView.content = @"网络请求失败!";
-}
 
 -(void)dealloc
 {

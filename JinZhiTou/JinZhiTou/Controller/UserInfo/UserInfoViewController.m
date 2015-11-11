@@ -132,22 +132,16 @@
     [dic setValue:@"Authenticate" forKey:@"imageName"];
     [array addObject:dic];
     
-    dic =[[NSMutableDictionary alloc]init];
-    [dic setValue:@"4" forKey:@"index"];
-    [dic setValue:@"进度查看" forKey:@"title"];
-    [dic setValue:@"false" forKey:@"isBedEnable"];
-    [dic setValue:@"Investment" forKey:@"imageName"];
-    [array addObject:dic];
     
     dic =[[NSMutableDictionary alloc]init];
-    [dic setValue:@"5" forKey:@"index"];
+    [dic setValue:@"4" forKey:@"index"];
     [dic setValue:@"邀请好友" forKey:@"title"];
     [dic setValue:@"false" forKey:@"isBedEnable"];
     [dic setValue:@"Invite" forKey:@"imageName"];
     [array addObject:dic];
     
     dic =[[NSMutableDictionary alloc]init];
-    [dic setValue:@"6" forKey:@"index"];
+    [dic setValue:@"5" forKey:@"index"];
     [dic setValue:@"关于我们" forKey:@"title"];
     [dic setValue:@"false" forKey:@"isBedEnable"];
     [dic setValue:@"Related" forKey:@"imageName"];
@@ -160,12 +154,11 @@
 {
    
     NSString* indexStr = [self.dataArray[indexPath.row] valueForKey:@"index"];
-    if (indexStr.integerValue == 5) {
+    if (indexStr.integerValue == 4) {
         [self ShareAction];
     }else{
         [[NSNotificationCenter defaultCenter]postNotificationName:@"userInfoAction" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:indexStr,@"index",nil]];
     }
-    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

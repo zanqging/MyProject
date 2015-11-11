@@ -164,11 +164,12 @@
     UIScrollView *scrollView = [[UIScrollView alloc] init];
     
     scrollView.pagingEnabled = YES;
+    scrollView.bounces  =NO;
     scrollView.backgroundColor = [UIColor whiteColor];
     scrollView.delegate = self;
     scrollView.showsVerticalScrollIndicator = NO;
     scrollView.showsHorizontalScrollIndicator = NO;
-    scrollView.bounces = self.bounces;
+//    scrollView.bounces = self.bounces;
     
     [self.view addSubview:scrollView];
     self.scrollView = scrollView;
@@ -356,9 +357,9 @@
     
     //设置标题
     [self.navView setTitle:@"金指投"];
-    NSMutableArray* menuArray = @[@"项目库",@"智囊团",@"投资人"];
+    NSArray* menuArray = @[@"项目库",@"智囊团",@"投资人"];
     self.navView.delegate  = self;
-    self.navView.menuArray  =menuArray;
+    self.navView.menuArray  =[NSMutableArray arrayWithArray:menuArray];
     self.navView.titleLable.textColor=WriteColor;
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
 //    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
@@ -417,7 +418,7 @@
 {
     //网络请求
     self.startLoading  =YES;
-    NSString* srverUrl = [INVEST_LIST stringByAppendingFormat:@"%d/",0];
+    NSString* srverUrl = [FINIAL_COMM stringByAppendingFormat:@"%d/%d/",self.selectIndex,0];
     [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
 }
 
@@ -429,7 +430,7 @@
     if (self.titles.count>0) {
         scrollFrame = CGRectMake(_viewX, _viewY + self.menuHeight, _viewWidth, _viewHeight);
     }else{
-        scrollFrame = CGRectMake(_viewX, _viewY, _viewWidth, _viewHeight);
+        scrollFrame = CGRectMake(_viewX, _viewY, _viewWidth, _viewHeight+self.menuHeight);
     }
     self.scrollView.frame = scrollFrame;
     if (self.titles.count>0) {
@@ -496,7 +497,7 @@
             self.itemsWidths = @[@(100),@(100)]; // 这里可以设置不同的宽度
             self.menuView.items = _titles;
             [self resetMenuView];
-            [self thinkTank];
+            [self finialCommicuteList];
             break;
         default:
             break;
@@ -516,6 +517,11 @@
         CGFloat rate = contentOffsetX / _viewWidth;
         [self.menuView slideMenuAtProgress:rate];
     }
+    
+    CGPoint point =scrollView.contentOffset;
+    if (point.x<0) {
+        [scrollView setContentOffset:CGPointMake(0, 0)];
+    }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -532,7 +538,7 @@
             [self thinkTank];
             break;
         case 2:
-            [self thinkTank];
+            [self finialCommicuteList];
             break;
         default:
             break;
@@ -542,9 +548,14 @@
     [self postFullyDisplayedNotificationWithCurrentIndex:self.selectIndex];
 }
 
+
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     self.currentViewController = self.displayVC[@(self.selectIndex)];
     [self postFullyDisplayedNotificationWithCurrentIndex:self.selectIndex];
+    CGPoint point =scrollView.contentOffset;
+    if (point.x<0) {
+        [scrollView setContentOffset:CGPointMake(0, 0)];
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {

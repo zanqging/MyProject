@@ -367,18 +367,17 @@
             name = @"AuthConfig";
             break;
         case 5:
-            name = @"aboutMe";
-            break;
-        case 6:
-            name = @"aboutMe";
+            name = @"aboutUs";
             break;
         default:
             break;
     }
     UIViewController* controller;
-    if (index==4) {
-        controller=[[UserTraceViewController alloc]init];
-    }else if (index ==6){
+    if(index ==1){
+        UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        controller = [storyBoard instantiateViewControllerWithIdentifier:@"SystemMessage"];
+        
+    }else if (index ==5){
         controller = [[AboutUsViewController alloc]init];
     }else{
         controller= [storyBoard instantiateViewControllerWithIdentifier:name];

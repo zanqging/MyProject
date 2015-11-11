@@ -7,17 +7,8 @@
 //
 
 #import "UserTraceViewController.h"
-#import "TDUtil.h"
-#import "DialogUtil.h"
-#import "UConstants.h"
-#import "HttpUtils.h"
 #import "MJRefresh.h"
-#import "LoadingUtil.h"
-#import "LoadingView.h"
-#import "GlobalDefine.h"
 #import "SwitchSelect.h"
-#import "NSString+SBJSON.h"
-#import "ASIFormDataRequest.h"
 #import "AuthTraceTableViewCell.h"
 #import "FinialAuthViewController.h"
 #import "RoadShowApplyViewController.h"
@@ -25,8 +16,6 @@
 #import "RoadShowDetailViewController.h"
 @interface UserTraceViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,ASIHTTPRequestDelegate,LoadingViewDelegate>
 {
-    HttpUtils* httpUtil;
-    LoadingView* loadingView;
     
     bool isRefresh;
     BOOL isLastPage;
@@ -41,7 +30,6 @@
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
     //设置标题
-    self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     self.navView.imageView.alpha=1;
     [self.navView setTitle:@"进度查看"];
     self.navView.titleLable.textColor=WriteColor;
@@ -49,7 +37,6 @@
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:@"个人中心" forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
-    [self.view addSubview:self.navView];
     //头部
     [self addSwitchView];
     
@@ -69,12 +56,8 @@
     
     [self loadData];
     
-    //初始化网络请求对象
-    httpUtil = [[HttpUtils alloc]init];
     //加载页
-    loadingView = [LoadingUtil shareinstance:self.view];
-    loadingView.delegate = self;
-    [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
+    self.startLoading  = YES;
     
     //加载数据
     [self refreshProject];
@@ -130,15 +113,15 @@
 
 -(void)loadMyRoadShowData
 {
-    [httpUtil getDataFromAPIWithOps:MY_ROADSHOW_APPLY postParam:nil type:0 delegate:self sel:@selector(requestRoadShowData:)];
+    [self.httpUtil getDataFromAPIWithOps:MY_ROADSHOW_APPLY postParam:nil type:0 delegate:self sel:@selector(requestRoadShowData:)];
 }
 -(void)loadMyParticateData
 {
-    [httpUtil getDataFromAPIWithOps:MY_PARTICATE postParam:nil type:0 delegate:self sel:@selector(requestRoadShowData:)];
+    [self.httpUtil getDataFromAPIWithOps:MY_PARTICATE postParam:nil type:0 delegate:self sel:@selector(requestRoadShowData:)];
 }
 -(void)loadMyAuthData
 {
-    [httpUtil getDataFromAPIWithOps:MY_AUTH postParam:nil type:0 delegate:self sel:@selector(requestRoadShowData:)];
+    [self.httpUtil getDataFromAPIWithOps:MY_AUTH postParam:nil type:0 delegate:self sel:@selector(requestRoadShowData:)];
 }
 
 -(void)addSwitchView
@@ -396,7 +379,7 @@
 -(void)refresh
 {
     [self loadMyRoadShowData];
-    loadingView.isError =NO;
+    self.isNetRequestError = NO;
     
 }
 
@@ -411,7 +394,6 @@
     if (jsonDic!=nil) {
         NSString* status =[jsonDic valueForKey:@"status"];
         if([status intValue] == 0 || [status intValue] ==-1){
-            [LoadingUtil closeLoadingView:loadingView];
             self.dataArray= nil;
             self.dataArray = [jsonDic valueForKey:@"data"];
             
@@ -419,14 +401,13 @@
                 isLastPage = YES;
                 self.isEndOfPageSize = YES;
             }
+            self.startLoading  = NO;
         }else{
-            loadingView.isError = YES;
-            loadingView.content = @"网络请求失败!";
+            self.isNetRequestError  =YES;
         }
         self.tableView.content = [jsonDic valueForKey:@"msg"];
     }else{
-        loadingView.isError = YES;
-        loadingView.content = @"网络请求失败!";
+        self.isNetRequestError =YES;
     }
     
     if (isRefresh) {
@@ -434,14 +415,6 @@
     }else{
         [self.tableView.footer endRefreshing];
     }
-}
-
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    NSString* jsonString =[TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-    loadingView.isError = YES;
-    loadingView.content = @"网络请求失败!";
 }
 
 -(void)viewWillAppear:(BOOL)animated

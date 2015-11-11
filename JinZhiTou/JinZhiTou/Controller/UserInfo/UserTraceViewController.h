@@ -7,13 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
+#import "RootViewController.h"
 #import "UITableViewCustomView.h"
-@interface UserTraceViewController : UIViewController
-@property(assign,nonatomic)NSInteger currentSelected;
-@property (retain, nonatomic)NavView *navView;
-@property (nonatomic,assign)BOOL isEndOfPageSize;
-@property(retain,nonatomic)NSMutableArray* dataArray;
+@interface UserTraceViewController : RootViewController
 @property(retain,nonatomic)NSString* titleStr;
+@property (nonatomic,assign)BOOL isEndOfPageSize;
+@property(assign,nonatomic)NSInteger currentSelected;
+@property(retain,nonatomic)NSMutableArray* dataArray;
 @property (retain, nonatomic)UITableViewCustomView *tableView;
 @end

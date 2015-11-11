@@ -47,7 +47,7 @@
 {
     float version = [[[UIDevice currentDevice] systemVersion] floatValue];
     UIImage *backgroundImage = [UIImage imageNamed:@"titlebar"];
-    navigationController.navigationItem.title=@"照相啊";
+    navigationController.navigationItem.title=@"照相";
     if (version >= 5.0) {//titlebar
         [navigationController.navigationBar setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
     }

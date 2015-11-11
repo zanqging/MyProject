@@ -17,6 +17,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = ColorTheme;
     //初始化网络请求对象
     self.httpUtil  =[[HttpUtils alloc]init];
     //导航栏设置
@@ -90,6 +91,14 @@
     
 }
 
+-(void)setContent:(NSString *)content
+{
+    self->_content  =content;
+    if ([TDUtil isValidString:self.content]) {
+        loadingView.content  = self.content;
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];
     
     [MobClick beginLogPageView:self.navView.title];
@@ -100,7 +109,16 @@
     [MobClick endLogPageView:self.navView.title];
 }
 
+
+
 //==============================网络请求处理开始==============================//
+-(void)requestFinished:(ASIHTTPRequest *)request
+{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    self.isNetRequestError = YES;
+}
+
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
@@ -109,6 +127,10 @@
 }
 //==============================网络请求处理结束==============================//
 
+-(void)resetLoadingView
+{
+    [self.view bringSubviewToFront:loadingView];
+}
 
 -(void)refresh
 {

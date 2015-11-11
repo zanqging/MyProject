@@ -7,6 +7,7 @@
 //
 
 #import "RoadShowViewController.h"
+#import "APService.h"
 #import "WaterFLayout.h"
 #import "ASIHTTPRequest.h"
 #import "NSString+SBJSON.h"
@@ -17,6 +18,7 @@
 #import "RoadShowHomeHeaderView.h"
 #import "RoadShowHomeTableViewCell.h"
 #import "RoadShowDetailViewController.h"
+#import <AudioToolbox/AudioToolbox.h>
 @interface RoadShowViewController ()<LoadingViewDelegate,WaterFDelegate,UITableViewDataSource,UITableViewDelegate,RoadShowHomeDelegate>
 {
     DialogView* dialogView;
@@ -78,8 +80,61 @@
     
     [self updateNewMessage:nil];
     
+//    [self.httpUtil getDataFromAPIWithOps:WECHAT_OPENID postParam:[NSDictionary dictionaryWithObject:@"weixichenshengzhu" forKey:@"openid"] type:0 delegate:self sel:@selector(requestFinished:)];
+    //NSString* serverUrl = [WECHAT_OPENID stringByAppendingString:@"weixichenshengzhu/"];
+//    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
+//    [self.httpUtil getDataFromAPIWithOps:USER_LOGIN postParam:[NSDictionary dictionaryWithObject:@"weixichenshengzhu" forKey:@"openid"] type:0 delegate:self sel:@selector(requestFinished:)];
+    
+//    NSString* serverUrl = [SEND_MESSAGE_CODE stringByAppendingFormat:@"0/1/"];
+//    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:@"18729342354",@"tel",@"weixichenshengzhu",@"openid", nil] type:0 delegate:self sel:@selector(requestFinished:)];
+    
+
+//    [self.httpUtil getDataFromAPIWithOps:USER_REGIST postParam:[NSDictionary dictionaryWithObjectsAndKeys:@"18729342354",@"tel",@"4070",@"code",@"陈生珠",@"nikename",@"weixichenshengzhu",@"openid", nil] type:0 delegate:self sel:@selector(requestFinished:)];
+ 
+//    NSString* serverUrl = [USER_REGIST stringByAppendingFormat:@"1/"];
+//    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:@"18729342354",@"tel",@"4070",@"code",@"陈生珠",@"nikename",@"weixichenshengzhu",@"openid",@"214325",@"regid",nil] file:STATIC_USER_HEADER_PIC postName:@"file" type:0  delegate:self sel:@selector(requestFinished:)];
+    
+//    [self.httpUtil getDataFromAPIWithOps:USER_LOGIN postParam:[NSDictionary dictionaryWithObjectsAndKeys:@"18729342354",@"tel",@"4070",@"code",@"陈生珠",@"nikename",@"weixichenshengzhu",@"openid",@"214325",@"regid",nil] type:0 delegate:self sel:@selector(requestFinished:)];
+    
+    //播放音效
+    [self playSoundEffect:@"message.caf"];
 }
 
+/**
+ *  播放完成回调函数
+ *
+ *  @param soundID    系统声音ID
+ *  @param clientData 回调时传递的数据
+ */
+void soundCompleteCallback(SystemSoundID soundID,void * clientData){
+    NSLog(@"播放已完成....");
+}
+
+
+/**
+ *  播放音效
+ *
+ *  @param fileName 音频文件名称
+ */
+-(void)playSoundEffect:(NSString*)fileName
+{
+    //取得播放视频文件在系统中的路径
+    NSString* audioFile = [[NSBundle mainBundle]pathForResource:fileName ofType:nil];
+    //NSUrl 格式化
+    NSURL* url = [NSURL URLWithString:audioFile];
+    //获得系统声音播放ID
+    SystemSoundID soundID = 0;
+    /**
+     * inFileUrl:音频文件url
+     * outSystemSoundID:声音id（此函数会将音效文件加入到系统音频服务中并返回一个长整形ID）
+     */
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &soundID);
+    //回调函数
+    AudioServicesAddSystemSoundCompletion(soundID, NULL, NULL, soundCompleteCallback, NULL);
+    //播放音频
+    AudioServicesPlaySystemSound(soundID);
+//    AudioServicesPlayAlertSound(soundID);
+}
 -(void)updateNewMessage:(NSDictionary*)dic
 {
     NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];

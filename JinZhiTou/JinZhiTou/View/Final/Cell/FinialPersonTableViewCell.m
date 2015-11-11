@@ -36,7 +36,6 @@
     
     self.personImgview.layer.cornerRadius = 25;
     self.personImgview.layer.masksToBounds = YES;
-    
 }
 
 - (void)awakeFromNib {

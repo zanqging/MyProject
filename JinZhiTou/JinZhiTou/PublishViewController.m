@@ -66,9 +66,8 @@
     float w =(WIDTH(self.view)-50)/4;
     self.btnSelect = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, w, w)];
     [self.btnSelect addTarget:self action:@selector(showSecureTextEntryAlert) forControlEvents:UIControlEventTouchUpInside];
-    [self.btnSelect setTitle:@"+" forState:UIControlStateNormal];
+    [self.btnSelect setImage:IMAGENAMED(@"AddGroupMemberBtnHL") forState:UIControlStateNormal];
     [self.btnSelect.titleLabel setFont:[UIFont fontWithName:@"Arial" size:75]];
-    [self.btnSelect setBackgroundColor:[UIColor lightGrayColor]];
     [self.btnSelect setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.imgContentView addSubview:self.btnSelect];
     

@@ -7,24 +7,12 @@
 //
 
 #import "UserCollecteViewController.h"
-#import "TDUtil.h"
-#import "DialogUtil.h"
-#import "UConstants.h"
-#import "HttpUtils.h"
 #import "MJRefresh.h"
-#import "LoadingUtil.h"
-#import "LoadingView.h"
-#import "GlobalDefine.h"
 #import "SwitchSelect.h"
-#import "NSString+SBJSON.h"
-#import "ASIFormDataRequest.h"
 #import "UserCollecteTableViewCell.h"
 #import "RoadShowDetailViewController.h"
-@interface UserCollecteViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,ASIHTTPRequestDelegate,LoadingViewDelegate>
+@interface UserCollecteViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,LoadingViewDelegate>
 {
-    HttpUtils* httpUtil;
-    LoadingView* loadingView;
-    
     bool isRefresh;
     BOOL isLastPage;
     NSInteger currentPage;
@@ -39,7 +27,6 @@
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
     //设置标题
-    self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     self.navView.imageView.alpha=1;
     [self.navView setTitle:@"我的收藏"];
     self.navView.titleLable.textColor=WriteColor;
@@ -47,7 +34,6 @@
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:@"个人中心" forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
-    [self.view addSubview:self.navView];
     
     //头部
     [self addSwitchView];
@@ -61,20 +47,13 @@
     self.tableView.showsVerticalScrollIndicator=NO;
     self.tableView.showsHorizontalScrollIndicator=NO;
     self.tableView.backgroundColor=BackColor;
-    self.tableView.separatorStyle=UITableViewCellSeparatorStyleSingleLine;
-    [self.tableView removeFromSuperview];
+    self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.tableView];
+    [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     
     [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
     
-    [self loadData];
-    
-    //初始化网络请求对象
-    httpUtil = [[HttpUtils alloc]init];
-    //加载页
-    loadingView = [LoadingUtil shareinstance:self.view];
-    loadingView.delegate = self;
-    [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
+    self.startLoading = YES;
     
     //加载数据
     [self loadCollecteData];
@@ -137,27 +116,27 @@
 -(void)loadCollecteData
 {
     NSString* url = [MY_COLLECTE_ROADSHOW stringByAppendingFormat:@"%ld/",(long)currentPage];
-    [httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestCollectData:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestCollectData:)];
 }
 -(void)loadThinkTankData
 {
     NSString* url = [MY_COLLECTE_THINKTANK stringByAppendingFormat:@"%ld/",(long)currentPage];
-    [httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestCollectData:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestCollectData:)];
 }
 -(void)loadFinacingData
 {
     NSString* url = [MY_COLLECTE_FINANCING stringByAppendingFormat:@"%ld/",(long)currentPage];
-    [httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestCollectData:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestCollectData:)];
 }
 -(void)loadFinacedData
 {
     NSString* url = [MY_COLLECTE_FINANCED stringByAppendingFormat:@"%ld/",(long)currentPage];
-    [httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestCollectData:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestCollectData:)];
 }
 
 -(void)addSwitchView
 {
-    NSMutableArray* array=[NSMutableArray arrayWithObjects: @"微路演",@"融资中",@"已融资",@"投资人", nil];
+    NSMutableArray* array=[NSMutableArray arrayWithObjects: @"待融资",@"融资中",@"已融资", nil];
     
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 50)];
      scrollView.backgroundColor =WriteColor;
@@ -224,24 +203,6 @@
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
--(void)loadData
-{
-    NSMutableArray* array = [[NSMutableArray alloc]init];
-    NSMutableDictionary* dic =[[NSMutableDictionary alloc]init];
-    [dic setValue:@"xiaoxihuifu" forKey:@"imageName"];
-    [dic setValue:@"消息回复" forKey:@"title"];
-    [array addObject:dic];
-    
-//    [dic setValue:@"jindu" forKey:@"imageName"];
-//    [dic setValue:@"进度查看" forKey:@"title"];
-//    [array addObject:dic];
-    
-    [dic setValue:@"xiaoxihuifu" forKey:@"imageName"];
-    [dic setValue:@"消息通知" forKey:@"title"];
-    [array addObject:dic];
-    
-    self.dataArray=array;
-}
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     RoadShowDetailViewController* controller =[[RoadShowDetailViewController alloc]init];
@@ -252,13 +213,13 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 190;
+    return 100;
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
     //声明静态字符串对象，用来标记重用单元格
-    NSString* TableDataIdentifier=@"UserCollecteViewCell";
+    static  NSString* TableDataIdentifier=@"UserCollecteViewCell";
     //用TableDataIdentifier标记重用单元格
     UserCollecteTableViewCell* cell=(UserCollecteTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
     //如果单元格未创建，则需要新建
@@ -268,22 +229,10 @@
     
     NSDictionary* dic = self.dataArray[indexPath.row];
     
-    [cell.imgview sd_setImageWithURL:[dic valueForKey:@"thumbnail"] placeholderImage:IMAGENAMED(@"loading")];
-    cell.titleLabel.text = [dic valueForKey:@"company_name"];
+    [cell.imgview sd_setImageWithURL:[dic valueForKey:@"img"] placeholderImage:IMAGENAMED(@"loading")];
+    cell.titleLabel.text = [dic valueForKey:@"company"];
     cell.desclabel.text = [dic valueForKey:@"project_summary"];
-    
-    NSArray* arr = [dic valueForKey:@"industry_type"];
-    NSString* str =@"";
-    for (int i = 0; i<arr.count; i++) {
-        str = [str stringByAppendingFormat:@"%@/",arr[i]];
-    }
-    
-    cell.typeLabel.text = str;
-    cell.priseLabel.text = [[dic valueForKey:@"like_sum"] stringValue];
-    cell.colletcteLabel.text = [[dic valueForKey:@"collect_sum"] stringValue];
-    cell.timeLabel.text = [dic valueForKey:@"roadshow_start_datetime"];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     tableView.contentSize = CGSizeMake(WIDTH(tableView), 190*self.dataArray.count+100);
     return cell;
 }
@@ -299,10 +248,8 @@
     self->_dataArray = dataArray;
     if (self.dataArray.count<=0) {
         self.tableView.isNone = YES;
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }else{
         self.tableView.isNone = NO;
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     }
     [self.tableView reloadData];
 }
@@ -311,7 +258,7 @@
 -(void)refresh
 {
     [self loadCollecteData];
-    loadingView.isError =NO;
+    self.isNetRequestError  =NO;
     
 }
 
@@ -326,21 +273,18 @@
     if (jsonDic!=nil) {
         NSString* status =[jsonDic valueForKey:@"status"];
         if([status intValue] == 0 || [status intValue] ==-1){
-            [LoadingUtil closeLoadingView:loadingView];
             self.dataArray = [jsonDic valueForKey:@"data"];
-            
             if ([status integerValue] == -1) {
                 isLastPage = YES;
                 self.isEndOfPageSize = YES;
             }
+            self.startLoading =NO;
         }else{
-            loadingView.isError = YES;
-            loadingView.content = @"网络请求失败!";
+            self.isNetRequestError  = YES;
         }
         self.tableView.content = [jsonDic valueForKey:@"msg"];
     }else{
-        loadingView.isError = YES;
-        loadingView.content = @"网络请求失败!";
+        self.isNetRequestError = YES;
     }
     
     if (isRefresh) {
@@ -348,14 +292,6 @@
     }else{
         [self.tableView.footer endRefreshing];
     }
-}
-
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    NSString* jsonString =[TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-    loadingView.isError = YES;
-    loadingView.content = @"网络请求失败!";
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -369,9 +305,5 @@
         }
         
     }
-}
--(void)dealloc
-{
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 @end

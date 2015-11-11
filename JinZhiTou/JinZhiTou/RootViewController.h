@@ -27,6 +27,8 @@
 @property(retain,nonatomic)HttpUtils* httpUtil;
 @property(assign,nonatomic)BOOL isNetRequestError;
 @property(retain,nonatomic)NSMutableDictionary* dataDic;
+@property(retain,nonatomic)NSString* content;
 
 -(void)refresh;
+-(void)resetLoadingView;
 @end

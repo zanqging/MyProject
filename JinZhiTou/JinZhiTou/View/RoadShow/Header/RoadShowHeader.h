@@ -12,6 +12,7 @@
 
 -(void)collect;
 -(void)prise;
+-(void)roadShowHeader:(id)roadShowHeader tapTag:(int)tag;
 @end
 @interface RoadShowHeader : UIView
 {

@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
+#import "RootViewController.h"
 
-@interface FinialPlanViewController : UIViewController
-@property (strong, nonatomic)NavView *navView;
+@interface FinialPlanViewController : RootViewController
 @property(assign,nonatomic)NSInteger projectId;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 

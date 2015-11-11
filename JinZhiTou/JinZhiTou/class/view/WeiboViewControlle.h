@@ -7,31 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
-#import "HttpUtils.h"
-#import "UConstants.h"
-#import "LoadingView.h"
-#import "LoadingUtil.h"
-#import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
-#import "ASIFormDataRequest.h"
+#import "RootViewController.h"
 #import "UITableViewCustomView.h"
 #define WeiboUpdateNotification  @"WeiboUpdateNotification"
-@interface WeiboViewControlle : UIViewController<UIActionSheetDelegate,UITableViewDataSource,UITableViewDelegate>
+@interface WeiboViewControlle : RootViewController<UIActionSheetDelegate,UITableViewDataSource,UITableViewDelegate>
 {
     BOOL  animationEnd;
     
     void(^_block)(NSString*string);
-    LoadingView* loadingView;
-    HttpUtils* httpUtils;
     NSMutableArray * _artArr;
     NSIndexPath *_deletePath;
     NSMutableDictionary * _artDic;
 }
 @property(nonatomic,strong)NSArray*datas;
-@property(retain,nonatomic)NavView* navView;
 @property(retain,nonatomic)NSString* titleStr;
-@property(nonatomic,strong) UIView * superView;
+@property(nonatomic,strong)UIView * superView;
 @property(assign,nonatomic)NSInteger project_id;
 @property(assign,nonatomic)BOOL isEndOfPageSize;
 @property(retain,nonatomic)NSMutableArray* dataArray;

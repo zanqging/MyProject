@@ -546,8 +546,8 @@
     NSLog(@"返回:%@",jsonString);
     NSMutableDictionary * dic =[jsonString JSONValue];
     if (dic!=nil) {
-        NSString* status = [dic valueForKey:@"status"];
-        if ([status integerValue]==0) {
+        NSString* code = [dic valueForKey:@"code"];
+        if ([code integerValue]==0) {
             //进度查看
             double delayInSeconds = 1.0;
             //__block RoadShowDetailViewController* bself = self;
@@ -662,7 +662,7 @@
         _imagePicker.cameraDevice=UIImagePickerControllerCameraDeviceRear;//设置使用哪个摄像头，这里设置为后置摄像头
         if (isVideo) {
             _imagePicker.mediaTypes=@[(NSString *)kUTTypeMovie];
-            _imagePicker.videoQuality=UIImagePickerControllerQualityTypeIFrame1280x720;
+            _imagePicker.videoQuality=UIImagePickerControllerQualityTypeIFrame1280x720;  //设置视频质量大小
             _imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModeVideo;//设置摄像头模式（拍照，录制视频）
             
         }else{
@@ -686,10 +686,22 @@
         AVAssetImageGenerator *generate1 = [[AVAssetImageGenerator alloc] initWithAsset:asset1];
         generate1.appliesPreferredTrackTransform = YES;
         NSError *err = NULL;
-        CMTime time = CMTimeMake(1, 2);
-        CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
-        cutImage = [[UIImage alloc] initWithCGImage:oneRef];
+//        CMTime time = CMTimeMake(1, 2);
+//        CGImageRef oneRef = [generate1 copyCGImageAtTime:time actualTime:NULL error:&err];
         
+        CMTime time=CMTimeMakeWithSeconds(2, 10);//CMTime是表示电影时间信息的结构体，第一个参数表示是视频第几秒，第二个参数表示每秒帧数.(如果要活的某一秒的第几帧可以使用CMTimeMake方法)
+        
+        CMTime actualTime;
+        CGImageRef cgImage= [generate1 copyCGImageAtTime:time actualTime:&actualTime error:&err];
+        if(err){
+            NSLog(@"截取视频缩略图时发生错误，错误信息：%@",err.localizedDescription);
+            return;
+        }
+        CMTimeShow(actualTime);
+        
+        cutImage = [[UIImage alloc] initWithCGImage:cgImage];
+        
+        CGImageRelease(cgImage);
         
         loadingVideView.isLoaded = YES;
         loadingVideView.isComplete = NO;

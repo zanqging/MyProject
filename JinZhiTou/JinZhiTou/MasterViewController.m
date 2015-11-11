@@ -7,23 +7,14 @@
 //
 
 #import "MasterViewController.h"
-#import "TDUtil.h"
 #import "ReplyView.h"
 #import "MJRefresh.h"
-#import "HttpUtils.h"
-#import "UConstants.h"
-#import "DialogUtil.h"
-#import "LoadingUtil.h"
-#import "LoadingView.h"
-#import "GlobalDefine.h"
 #import "SwipeableCell.h"
-#import "NSString+SBJSON.h"
 #import "WeiboViewControlle.h"
 #import "SystemSwipableCell.h"
 #import "BannerViewController.h"
 #import "UserTraceViewController.h"
 #import "RoadShowDetailViewController.h"
-#import "ASIFormDataRequest.h"
 
 @interface MasterViewController () <SwipeableCellDelegate,UITableViewDataSource,UITextViewDelegate,UITableViewDelegate,ReplyDelegate,SystemSwipableCellDelegate> {
     BOOL isRefresh;
@@ -32,9 +23,7 @@
     NSString* atTopId;
     NSInteger rowCount;
     
-    HttpUtils* httpUtils;
     ReplyView* replyView;
-    LoadingView* loadingView;
     SwipeableCell* currentCell;
 }
 @property (nonatomic, strong) NSMutableArray *cellsCurrentlyEditing;
@@ -42,13 +31,20 @@
 
 @implementation MasterViewController
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = ColorTheme;
     [self.navigationController.navigationBar setHidden:YES];
     //设置标题
-    self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     self.navView.imageView.alpha=1;
     [self.navView setTitle:@"消息回复"];
     self.navView.titleLable.textColor=WriteColor;
@@ -57,8 +53,6 @@
     [self.navView.leftButton setTitle:@"与我相关" forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
-    self.navView.title  =self.titleStr;
-    [self.view addSubview:self.navView];
     
     [self.tableView setFrame:CGRectMake(0, POS_Y(self.navView)+20, WIDTH(self.tableView), HEIGHT(self.view)-POS_Y(self.navView)-40)];
      [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
@@ -70,15 +64,14 @@
     self.cellsCurrentlyEditing = [NSMutableArray array];
     
     rowCount = 0;
-    
-    httpUtils = [[HttpUtils alloc]init];
-    loadingView = [LoadingUtil shareinstance:self.view];
-    [LoadingUtil show:loadingView];
-    [self.view bringSubviewToFront:loadingView];
-    
+    self.startLoading =YES;
     [self refreshProject];
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    NSLog(@"zhixing");
+}
 
 -(void)refreshProject
 {
@@ -88,10 +81,10 @@
     
     if (self.type==0) {
         NSString * url = [MY_TOPIC_LIST stringByAppendingString:[NSString stringWithFormat:@"%ld/",(long)currentPage]];
-        [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestTopicList:)];
+        [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestTopicList:)];
     }else{
         NSString * url = [MY_SYSTEM_LIST stringByAppendingString:[NSString stringWithFormat:@"%ld/",(long)currentPage]];
-        [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestTopicList:)];
+        [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestTopicList:)];
     }
     
 }
@@ -104,7 +97,7 @@
         if (!self.isEndOfPageSize) {
             currentPage++;
             NSString * url = [MY_TOPIC_LIST stringByAppendingString:[NSString stringWithFormat:@"%ld/",(long)currentPage]];
-            [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestTopicList:)];
+            [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestTopicList:)];
         }else{
             [self.tableView.footer endRefreshing];
             isRefresh =NO;
@@ -114,7 +107,7 @@
         if (!self.isEndOfPageSize) {
             currentPage++;
             NSString * url = [MY_SYSTEM_LIST stringByAppendingString:[NSString stringWithFormat:@"%ld/",(long)currentPage]];
-            [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestTopicList:)];
+            [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestTopicList:)];
         }else{
             [self.tableView.footer endRefreshing];
             isRefresh =NO;
@@ -128,7 +121,7 @@
     NSString* serverUrl;
     if (self.type==0) {
         serverUrl= [settopicread stringByAppendingFormat:@"%d/",0];
-        [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestReadFinished:)];
+        [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestReadFinished:)];
     }
 }
 
@@ -186,7 +179,7 @@
     if (self.type==0) {
         SwipeableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
         [cell.titleLabel setText: [dic valueForKey:@"name"]];
-        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
+        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"photo"]];
         [cell.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"coremember")];
         [cell setItemText:[dic valueForKey:@"content"]];
         cell.delegate = self;
@@ -228,7 +221,6 @@
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else {
         //3
-        NSLog(@"Unhandled editing style! %d", editingStyle);
     }
 }
 
@@ -243,7 +235,7 @@
     }
     
     currentCell = swipCell;
-    [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
+    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
 }
 
 - (void)buttonTwoActionForItem:(NSDictionary*)dic swipCell:(id)swipCell
@@ -268,7 +260,7 @@
     if (self.type!=0) {
         NSDictionary* dic = cell.dic;
         NSString* serverUrl= [setsysteminform stringByAppendingFormat:@"%@/",[dic valueForKey:@"id"]];
-        [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestReadFinished:)];
+        [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestReadFinished:)];
         
         [self notification:dic];
     }else{
@@ -287,9 +279,9 @@
         NSString* url  =[TOPIC stringByAppendingFormat:@"%ld/",(long)self.project_id];
         NSMutableDictionary* dic  =[[NSMutableDictionary alloc]init];
         [dic setValue:text forKey:@"content"];
-        [dic setValue:atTopId forKey:@"at_topic"];
+        [dic setValue:atTopId forKey:@"at"];
         
-        [httpUtils getDataFromAPIWithOps:url postParam:dic type:0 delegate:self sel:@selector(requestSubmmit:)];
+        [self.httpUtil getDataFromAPIWithOps:url postParam:dic type:0 delegate:self sel:@selector(requestSubmmit:)];
     }else{
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请先输入内容"];
     }
@@ -412,9 +404,6 @@
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-
-
-
 -(void)requestFinished:(ASIHTTPRequest *)request{
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);
@@ -467,7 +456,6 @@
                     [self.tableView reloadData];
                 }
             }
-            [LoadingUtil close:loadingView];
             
             if ([status integerValue]==-1) {
                 [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
@@ -487,7 +475,7 @@
     {
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0) {
-            loadingView.isError = NO;
+            self.isNetRequestError =NO;
             self.tableView.content = [jsonDic valueForKey:@"msg"];
             currentPage = 0;
         }
@@ -505,17 +493,4 @@
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"系统错误!"];
     }
 }
-
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-    [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"系统错误!"];
-}
--(void)dealloc
-{
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
-}
-
-
 @end

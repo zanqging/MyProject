@@ -7,15 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
+#import "RootViewController.h"
 #import "UITableViewCustomView.h"
-@interface MasterViewController : UIViewController
-@property(retain,nonatomic)NavView* navView;
+@interface MasterViewController : RootViewController
 @property(assign,nonatomic)NSInteger type;
 @property(retain,nonatomic)NSString* titleStr;
 @property(assign,nonatomic)NSInteger project_id;
 @property(assign,nonatomic)BOOL isEndOfPageSize;
 @property(retain,nonatomic)NSMutableArray* dataArray;
-@property (weak, nonatomic) IBOutlet UITableViewCustomView *tableView;
+@property (retain, nonatomic)UITableViewCustomView *tableView;
 
 @end

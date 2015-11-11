@@ -235,7 +235,7 @@
 //公司状态
 #define COMPANY_STATUS @"companystatus/"
 //我要路演
-#define ROAD_SHOW @"wantroadshow/"
+#define ROAD_SHOW @"upload/"
 //我要投资
 #define INVEST @"wantinvest/"
 //修改性别
@@ -257,7 +257,7 @@
 //我的收藏
 #define MY_COLLECT @"mycollect/"
 //收藏的路演项目
-#define MY_COLLECTE_ROADSHOW @"collectroadshow/"
+#define MY_COLLECTE_ROADSHOW @"collectfinance/"
 //收藏的正在融资
 #define MY_COLLECTE_FINANCING @"collectfinancing/"
 //收藏的融资结束
@@ -287,9 +287,9 @@
 //用户类型修改
 #define  UserType @"modifypositiontype/"
 //我创建的项目
-#define  MY_CREATE_PROJECT @"mycreateproject/"
+#define  MY_CREATE_PROJECT @"myupload/"
 //我投资的项目
-#define MY_FINIAL_PROJECT @"myinvestproject/"
+#define MY_FINIAL_PROJECT @"myinvest/"
 //根据日期获取菜谱
 #define MY_INVEST_LIST @"myinvestorauthentication/"
 //我的认证列表
@@ -319,7 +319,7 @@
 //回复
 #define TOPIC @"topic/"
 //我的消息回复
-#define MY_TOPIC_LIST @"topicread/"
+#define MY_TOPIC_LIST @"mytopiclist/"
 //我的系统通知
 #define MY_SYSTEM_LIST @"systeminform/"
 //关于路演
@@ -385,9 +385,9 @@
 //是否有消息回复
 #define hasnewtopic @"hastopic/"
 //消息回复列表
-#define topicread @"topicread/"
+#define topicread @"mytopiclist/"
 //设置已读
-#define settopicread @"settopicread/"
+#define settopicread @"readtopic/"
 
 #define setsysteminform @"setsysteminform/"
 //新三板更新数据
@@ -442,6 +442,10 @@
 #define HOME_TEL @"customservice/"
 //投资人
 #define INVESTLIST  @"investlist/"
+//微信OpenId
+#define WECHAT_OPENID  @"openid/"
+//投资人
+#define FINIAL_COMM @"investor/"
 
 //==============================第三期App研发接口==============================//
 

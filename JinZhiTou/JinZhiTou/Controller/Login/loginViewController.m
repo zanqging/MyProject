@@ -242,6 +242,7 @@
     NSString* regId = [APService registrationID];
     //装载数据
     NSDictionary* dic =[[NSMutableDictionary alloc]init];
+
     [dic setValue:regId forKey:@"regid"];
     [dic setValue:phoneNumber forKey:@"tel"];
     [dic setValue:@"2.1.0" forKey:@"version"];
@@ -337,7 +338,8 @@
             [data setValue:self.phoneTextField.text forKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
             [data setValue:password forKey:STATIC_USER_PASSWORD];
             [data setValue:@"YES" forKey:@"isLogin"];
-            [data setValue:@"NO" forKey:@"isAnimous"];
+            [data setValue:[[jsonDic valueForKey:@"data"] valueForKey:@"auth"] forKey:@"auth"];
+            [data setValue:[[jsonDic valueForKey:@"data"] valueForKey:@"info"] forKey:@"info"];
             
             UserInfoViewController* userInfoController = [[UserInfoViewController alloc]init];
             self.drawerController = [[MMDrawerController alloc]

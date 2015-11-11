@@ -77,8 +77,6 @@
     [self.view addSubview:bottomView];
     
     [[NSNotificationCenter defaultCenter]removeObserver:self];
-    
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(teamShowAction:) name:@"teamShow" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -458,9 +456,8 @@
     }
 }
 
--(void)teamShowAction:(NSDictionary*)dic
+-(void)roadShowHeader:(id)roadShowHeader tapTag:(int)tag
 {
-    NSInteger tag =[[[dic valueForKey:@"userInfo"]valueForKey:@"tag"] integerValue];
     if (tag==10001 || tag==10002) {
         [self FinancePlanViewController:nil];
     }else if(tag==10003 || tag==10004){
@@ -507,15 +504,19 @@
 
 -(void)FinancePlanViewController:(id)sender
 {
-    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
-    BOOL isAnimous = [[data valueForKey:@"isAnimous"] boolValue];
-    if (isAnimous) {
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未登录，请先登录",@"msg",@"取消",@"cancel",@"去登录",@"sure",@"3",@"type", nil]];
+    NSUserDefaults* dataDefault = [NSUserDefaults standardUserDefaults];
+    BOOL isAuth = [[dataDefault valueForKey:@"auth"] boolValue];
+    if (isAuth) {
+        UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        FinialPlanViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinancePlanViewController"];
+        controller.projectId =[[self.dic valueForKey:@"id"] integerValue];
+        [self.navigationController pushViewController:controller animated:YES];
     }else{
-        checkIndex=@"1";
-        //监测是否是投资人
-        [self.httpUtil getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestInvestCheck:)];
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您当前还需要进行身份认证",@"msg",@"取消",@"cancel",@"去认证",@"sure",checkIndex,@"type", nil]];
     }
+    
+
 }
 
 
@@ -786,12 +787,7 @@
                 [self.navigationController pushViewController:controller animated:YES];
             }
         }else{
-            if ([status intValue] == -9) {
-                
-                [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"取消",@"cancel",@"去认证",@"sure",checkIndex,@"type", nil]];
-            }else{
-                [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
-            }
+            [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         }
         self.startLoading  =NO;
     }
@@ -812,10 +808,7 @@
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0 || [status intValue] == -1) {
             if ([checkIndex isEqualToString:@"1"]) {
-                UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-                FinialPlanViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinancePlanViewController"];
-                controller.projectId =[[self.dic valueForKey:@"id"] integerValue];
-                [self.navigationController pushViewController:controller animated:YES];
+                
                 
             }else{
                 UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];

@@ -224,6 +224,7 @@
 		454BF2E31B8E9AB700F1FEE5 /* SearchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 454BF2E21B8E9AB700F1FEE5 /* SearchTableViewCell.m */; };
 		454BF2E61B8EAC8600F1FEE5 /* SearchTableViewHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 454BF2E51B8EAC8600F1FEE5 /* SearchTableViewHeader.m */; };
 		454BF2E91B8EE86300F1FEE5 /* MenuPopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 454BF2E81B8EE86300F1FEE5 /* MenuPopView.m */; };
+		454E21AB1BF2F38F00DEE0E7 /* message.caf in Resources */ = {isa = PBXBuildFile; fileRef = 454E21AA1BF2F38E00DEE0E7 /* message.caf */; };
 		455405F61B7C509100D969FF /* LoadingUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 455405F51B7C509100D969FF /* LoadingUtil.m */; };
 		45631F7B1B5A3A7E009FA35D /* SphereMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 45631F7A1B5A3A7E009FA35D /* SphereMenu.m */; };
 		45631F7F1B5A48CE009FA35D /* DataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 45631F7E1B5A48CE009FA35D /* DataModel.m */; };
@@ -775,6 +776,7 @@
 		454BF2E51B8EAC8600F1FEE5 /* SearchTableViewHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchTableViewHeader.m; sourceTree = "<group>"; };
 		454BF2E71B8EE86300F1FEE5 /* MenuPopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuPopView.h; path = View/MenuPopView.h; sourceTree = "<group>"; };
 		454BF2E81B8EE86300F1FEE5 /* MenuPopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MenuPopView.m; path = View/MenuPopView.m; sourceTree = "<group>"; };
+		454E21AA1BF2F38E00DEE0E7 /* message.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = message.caf; sourceTree = "<group>"; };
 		455405F41B7C509100D969FF /* LoadingUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoadingUtil.h; path = View/LoadingUtil.h; sourceTree = "<group>"; };
 		455405F51B7C509100D969FF /* LoadingUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoadingUtil.m; path = View/LoadingUtil.m; sourceTree = "<group>"; };
 		45631F791B5A3A7E009FA35D /* SphereMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SphereMenu.h; sourceTree = "<group>"; };
@@ -1231,6 +1233,7 @@
 		451F488B1B53604900C91B4A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				454E21AA1BF2F38E00DEE0E7 /* message.caf */,
 				45FD34391BB53DC60065739E /* code.png */,
 				451A3C321BB11F38008BE22C /* youyuan.ttf */,
 			);
@@ -2598,6 +2601,7 @@
 				4543EB921BD0ABB80041DCBD /* PlayButtonOverlayLarge@3x.png in Resources */,
 				451B52C01BA66E3500388E5C /* NavBarIconSearchBar2_blue.png in Resources */,
 				4543EB821BD0ABB80041DCBD /* ImageError@2x.png in Resources */,
+				454E21AB1BF2F38F00DEE0E7 /* message.caf in Resources */,
 				45F93B611B637311004526F5 /* MJRefresh.bundle in Resources */,
 				451A3C331BB11F38008BE22C /* youyuan.ttf in Resources */,
 				451B52BF1BA66E3500388E5C /* NavBarIconSearchBar_blue@2x.png in Resources */,

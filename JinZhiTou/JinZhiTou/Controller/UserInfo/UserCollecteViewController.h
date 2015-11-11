@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
+#import "RootViewController.h"
 #import "UITableViewCustomView.h"
-@interface UserCollecteViewController : UIViewController
-@property (retain, nonatomic)NavView *navView;
+@interface UserCollecteViewController : RootViewController
 @property (nonatomic,assign)BOOL isEndOfPageSize;
 @property(retain,nonatomic)NSMutableArray* dataArray;
 @property (retain, nonatomic)UITableViewCustomView *tableView;
