@@ -15,5 +15,4 @@
 @property (strong, nonatomic) UIImageView *imgview;
 @property (strong, nonatomic) UILabel *titleLabel;
 @property (strong, nonatomic) UILabel *desclabel;
-@property (strong, nonatomic) UILabel *typeLabel;
 @end

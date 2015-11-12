@@ -103,8 +103,11 @@
 
 
 //主题色
-#define ColorTheme  [UIColor colorWithRed:0xcb/256. green:0x02/256. blue:0x02/256. alpha:1]
+//#define ColorTheme  [UIColor colorWithRed:0xcb/256. green:0x02/256. blue:0x02/256. alpha:1]
 //#define ColorTheme  [UIColor colorWithRed:0xdc/256. green:0x47/256. blue:0x1c/256. alpha:1]
+#define ColorTheme  [UIColor colorWithRed:46.0/255. green:45.0/256. blue:51.0/255. alpha:1]
+//#define ColorTheme  [UIColor colorWithRed:166.0/255. green:176.0/256. blue:178.0/255. alpha:1]
+#define ColorFontBlueTheme  [UIColor colorWithRed:0.0/255 green:0.0/255 blue:204/55 alpha:1]
 #define ColorCompanyTheme  [UIColor colorWithRed:0xd4/256. green:0xa2/256. blue:0x25/256. alpha:1]
 #define ColorTheme2  [UIColor colorWithRed:0xe6/256. green:0x97/256. blue:0x85/256. alpha:1]
 #define BackColor [UIColor colorWithRed:245.0/255 green:245.0/255 blue:244.0/255 alpha:1]
@@ -143,6 +146,8 @@
 
 //红色字体
 #define FONT_COLOR_GRAY [UIColor colorWithRed:114.0/255 green:114.0/255 blue:114.0/255 alpha:1]
+//连接颜色
+#define FONT_LINK_COLOR_GRAY [UIColor colorWithRed:0/255 green:128.0/255 blue:0/255 alpha:1]
 
 //溯源背景颜色数组
 #define ORINGINL_COLORS [NSMutableArray arrayWithObjects:ORINGINL_MORNING,ORINGINL_TAKEN,ORINGINL_FRESH,ORINGINL_COOKING,ORINGINL_DISPATCH,ORINGINL_DISPATCH,ORINGINL_COOKING,ORINGINL_COOKING,nil]

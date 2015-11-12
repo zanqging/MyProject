@@ -102,6 +102,8 @@ typedef NS_ENUM(NSUInteger, INSSearchBarState)
  */
 - (void)searchBarDone:(INSSearchBar *)searchBar;
 
+
+
 @end
 
 /**
@@ -126,8 +128,10 @@ typedef NS_ENUM(NSUInteger, INSSearchBarState)
  *  The (optional) delegate is responsible for providing values necessary for state change animations of the search bar. @see INSSearchBarDelegate.
  */
 
-@property (nonatomic, weak) id<INSSearchBarDelegate>	delegate;
+@property (nonatomic, weak) id<INSSearchBarDelegate>delegate;
 
 - (void)changeStateIfPossible:(UITapGestureRecognizer *)gestureRecognizer;
+
+-(void)showSearchBar:(id)sender;
 
 @end

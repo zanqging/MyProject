@@ -20,6 +20,11 @@
         self.backgroundColor = WriteColor;
         self.layer.borderColor = BackColor.CGColor;
         
+        
+        UIImageView* imgView = [[UIImageView alloc]initWithFrame:self.frame];
+        imgView.tag=30001;
+        imgView.backgroundColor  = ColorBeef;
+        [self addSubview:imgView];
     }
     return self;
 }
@@ -54,7 +59,7 @@
         //[self.titleLabel removeFromSuperview];
         //[self.descLabel removeFromSuperview];
         self.titleLabel.text = @"视频上传完成";
-        self.descLabel.text = @"(可简单介绍公司,项目,团队等,需1-2分钟视频)";
+        self.descLabel.text = @"(介绍公司,项目,团队等,需1-2分钟视频)";
     }
     
 }
@@ -115,5 +120,18 @@
 {
     self->_progress = progress;
     loadingView.progress = self.progress;
+}
+
+-(void)setDoneImage:(UIImage *)doneImage
+{
+    self->_doneImage = doneImage;
+     UIImageView* imgView =[self viewWithTag:30001];
+    if (self.doneImage) {
+        imgView.image  =doneImage;
+        imgView.backgroundColor =  ColorBeef;
+    }else{
+       
+        [imgView removeFromSuperview];
+    }
 }
 @end

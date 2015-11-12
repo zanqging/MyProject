@@ -186,13 +186,44 @@ static const float kSphereDamping = 0.3;
     [self removeSnapBehaviors];
     
     if (self.expanded) {
+        angleNum = 360.0;
+        [self endAnimation];
         [self shrinkSubmenu];
+        //旋转
     } else {
+        angleNum = 120;
+        [self startAnimation];
         [self expandSubmenu];
     }
     
     self.expanded = !self.expanded;
 }
+
+
+- (void)startAnimation
+
+{
+    
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.4];
+    [UIView setAnimationDelegate:self];
+//    [UIView setAnimationDidStopSelector:@selector(endAnimation)];
+    self.start.transform = CGAffineTransformMakeRotation(angleNum * (M_PI /180.0f));
+    [UIView commitAnimations];
+    
+}
+
+-(void)endAnimation
+
+{
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.4];
+    [UIView setAnimationDelegate:self];
+    //    [UIView setAnimationDidStopSelector:@selector(endAnimation)];
+    self.start.transform = CGAffineTransformMakeRotation(angleNum * (M_PI /180.0f));
+    [UIView commitAnimations];
+}
+
 
 - (void)expandSubmenu
 {

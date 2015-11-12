@@ -27,14 +27,13 @@
         self.titleLabel.textColor = ColorTheme;
         [view addSubview:self.titleLabel];
         
-        self.desclabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel), WIDTH(self.titleLabel), 21)];
+        self.desclabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel)+5, WIDTH(self.titleLabel), 21)];
+        self.desclabel.numberOfLines = 4;
+        self.desclabel.lineBreakMode  =NSLineBreakByWordWrapping;
         self.desclabel.font = SYSTEMFONT(14);
         [view addSubview:self.desclabel];
         
-        self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.desclabel), WIDTH(self.titleLabel), 21)];
-        self.typeLabel.font = SYSTEMFONT(14);
-        [view addSubview:self.typeLabel];
-        
+        [self performSelector:@selector(layout:) withObject:nil afterDelay:0.1];
     }
     return self;
 }

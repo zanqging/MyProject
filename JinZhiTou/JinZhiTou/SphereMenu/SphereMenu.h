@@ -8,7 +8,9 @@
 @end
 
 @interface SphereMenu : UIView
-
+{
+    float angleNum;
+}
 @property (weak, nonatomic) id<SphereMenuDelegate> delegate;
 @property(assign,nonatomic)BOOL selected;
 - (instancetype)initWithStartPoint:(CGPoint)startPoint

@@ -7,13 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RootViewController.h"
 #import "UITableViewCustomView.h"
 #import "SearchTableViewCell.h"
-@interface INSViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,searchTableViewCellDelegate>
+@interface INSViewController : RootViewController<UITableViewDataSource,UITableViewDelegate,searchTableViewCellDelegate>
 {
     SearchTableViewCell* searchTableViewCell;
 }
 @property(retain,nonatomic)UITableViewCustomView* tableView;
 @property(retain,nonatomic)NSMutableArray* dataArray;
 @property(assign,nonatomic)NSInteger type;
+@property(retain,nonatomic)NSString* titleContent;
 @end

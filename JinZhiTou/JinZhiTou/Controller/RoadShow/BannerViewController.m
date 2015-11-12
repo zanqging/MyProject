@@ -7,25 +7,11 @@
 //
 
 #import "BannerViewController.h"
-#import "TDUtil.h"
-#import "NavView.h"
 #import "ShareView.h"
-#import "HttpUtils.h"
-#import "DialogUtil.h"
-#import "UConstants.h"
-#import "LoadingUtil.h"
-#import "LoadingView.h"
-#import "GlobalDefine.h"
 #import "ShareNewsView.h"
-#import "ASIHTTPRequest.h"
-#import "NSString+SBJSON.h"
-@interface BannerViewController ()<UIWebViewDelegate,ASIHTTPRequestDelegate>
+@interface BannerViewController ()<UIWebViewDelegate>
 {
     BOOL isGetStatus;
-    
-    NavView* navView;
-    HttpUtils* httpUtil;
-    LoadingView* loadingView;
     ShareNewsView* shareNewsView;
 }
 @end
@@ -36,29 +22,26 @@
     [super viewDidLoad];
     //设置背景颜色
     self.view.backgroundColor=ColorTheme;
-    httpUtil = [[HttpUtils alloc]init];
     //隐藏导航栏
     [self.navigationController.navigationBar setHidden:YES];
     //设置标题
-    navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
-    navView.imageView.alpha=1;
-    [navView setTitle:self.titleStr];
-    navView.titleLable.textColor=WriteColor;
+    self.navView.imageView.alpha=1;
+    [self.navView setTitle:self.titleStr];
+    self.navView.titleLable.textColor=WriteColor;
     
-    [navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [navView.leftButton setTitle:self.title forState:UIControlStateNormal];
-    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
+    [self.navView.leftButton setTitle:self.title forState:UIControlStateNormal];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
     if (self.type == 3) {
-        [navView.rightButton setImage:IMAGENAMED(@"share") forState:UIControlStateNormal];
-        [navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(ShareAction)]];
+        [self.navView.rightButton setImage:IMAGENAMED(@"share") forState:UIControlStateNormal];
+        [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(ShareAction)]];
     }
-    [self.view addSubview:navView];
+    [self.view addSubview:self.navView];
     
-    self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView))];
+    self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView))];
     self.webView.delegate = self;
     [self.view addSubview:self.webView];
-    loadingView = [LoadingUtil shareinstance:self.view];
     
      [self loadUrl];
     
@@ -85,8 +68,7 @@
     self->_dic  = dic;
     isGetStatus = YES;
     NSString* serverUrl = [NEWS_LIKE stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
-    [httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
-    [httpUtil.requestInstance setRequestMethod:@"GET"];
+    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
 }
 
 
@@ -106,7 +88,7 @@
 
 -(void)shareNews:(NSNotification*)dic
 {
-    shareNewsView = [[ShareNewsView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView))];
+    shareNewsView = [[ShareNewsView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView))];
     shareNewsView.dic = self.dic;
     [self.view addSubview:shareNewsView];
 }
@@ -127,7 +109,7 @@
 -(void)likeAction:(id)sender
 {
     NSString* url = [NEWS_LIKE stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
-    [httpUtil getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:[self.dic valueForKey:@"status"] forKey:@"flag"] type:0 delegate:self sel:@selector(requestFinished:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:[self.dic valueForKey:@"status"] forKey:@"flag"] type:0 delegate:self sel:@selector(requestFinished:)];
 }
 
 -(void)publishContent:(NSNotification*)dic
@@ -138,18 +120,18 @@
     [tempDic setValue:[self.dic valueForKey:@"id"] forKey:@"news"];
     
     
-    [httpUtil getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:tempDic type:0 delegate:self sel:@selector(requestPublishContent:)];
+    [self.httpUtil getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:tempDic type:0 delegate:self sel:@selector(requestPublishContent:)];
 }
 
 
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
-    [LoadingUtil show:loadingView];
+//    self.startLoading = YES;
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    [LoadingUtil close:loadingView];
+//    self.startLoading =NO;
 }
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
@@ -204,12 +186,5 @@
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
         }
     }
-}
-
-
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
 }
 @end

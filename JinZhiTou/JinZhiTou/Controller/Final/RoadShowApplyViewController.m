@@ -420,11 +420,11 @@
                           //NSDictionary* dic = [resp valueForKey:@"data"];
                           
                           [[DialogUtil sharedInstance]showDlg:self.view textOnly:[resp valueForKey:@"msg"]];
-                          
                           loadingVideView.isLoaded = YES;
                           loadingVideView.uploadStart = NO;
                           loadingVideView.imgage = IMAGENAMED(@"vido_successful");
                           loadingVideView.isComplete = YES;
+                          loadingVideView.doneImage  =cutImage;
                       }
                   }
               } option:options];
@@ -438,9 +438,9 @@
     NSLog(@"返回:%@",jsonString);
     NSMutableDictionary * dic =[jsonString JSONValue];
     if (dic!=nil) {
-        NSString* status = [dic valueForKey:@"status"];
-        if ([status integerValue] ==0 ) {
-            token = [dic valueForKey:@"data"];
+        NSString* code = [dic valueForKey:@"code"];
+        if ([code integerValue] ==0 ) {
+            token = [[dic valueForKey:@"data"] valueForKey:@"token"];
             isVideo = YES;
             [self presentViewController:self.imagePicker animated:YES completion:nil];
         }
@@ -662,8 +662,9 @@
         _imagePicker.cameraDevice=UIImagePickerControllerCameraDeviceRear;//设置使用哪个摄像头，这里设置为后置摄像头
         if (isVideo) {
             _imagePicker.mediaTypes=@[(NSString *)kUTTypeMovie];
-            _imagePicker.videoQuality=UIImagePickerControllerQualityTypeIFrame1280x720;  //设置视频质量大小
+            _imagePicker.videoQuality=UIImagePickerControllerQualityTypeMedium;  //设置视频质量大小
             _imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModeVideo;//设置摄像头模式（拍照，录制视频）
+            _imagePicker.videoMaximumDuration = 60;
             
         }else{
             _imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModePhoto;

@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>zh_CN</string>
 	<key>CFBundleDisplayName</key>
@@ -47,13 +49,13 @@
 		<true/>
 	</dict>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>您是否愿意授权味你获取地理位置信息访问</string>
+	<string>您是否愿意授权金指投获取地理位置信息访问</string>
 	<key>NSLocationUsageDescription</key>
-	<string>您是否愿意授权味你获取地理位置信息访问</string>
+	<string>您是否愿意授权金指投获取地理位置信息访问</string>
 	<key>NSLocationWhenInUseDescription</key>
-	<string>您是否愿意授权味你获取地理位置信息访问</string>
+	<string>您是否愿意授权金指投获取地理位置信息访问</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>您是否愿意授权味你访问相册</string>
+	<string>您是否愿意授权金指投访问相册</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>youyuan.ttf</string>

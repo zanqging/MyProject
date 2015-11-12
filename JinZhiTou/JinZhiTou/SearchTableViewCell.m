@@ -46,7 +46,7 @@
         label.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
         label.userInteractionEnabled = YES;
         label.backgroundColor = WriteColor;
-        label.text = [array[i] valueForKey:key];
+        label.text = array[i];
         label.textAlignment = NSTextAlignmentCenter;
         [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchResult:)]];
         label.layer.borderColor = BackColor.CGColor;

@@ -189,7 +189,7 @@
         if (!v) {
             UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.imageView)+25, Y(leftButton)+18, 7, 7)];
             imgView.tag =40001;
-            imgView.backgroundColor = [UIColor whiteColor];
+            imgView.backgroundColor = [UIColor redColor];
             imgView.layer.cornerRadius = 3.5;
             imgView.layer.masksToBounds = YES;
             [self addSubview:imgView];

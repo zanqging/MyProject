@@ -18,5 +18,7 @@
 @property(retain,nonatomic)NSMutableDictionary* dataDic;
 @property(retain,nonatomic)NSMutableArray* viewsArray;
 @property(retain,nonatomic)CycleScrollView* mainScorllView;//Banner
+
+-(id)initWithFrame:(CGRect)frame withData:(NSDictionary*)data;
 @end
 

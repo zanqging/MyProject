@@ -101,6 +101,7 @@
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
     //启动页隐藏状态栏
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
     //将导航条添加到视图
     [self.window addSubview:self.iNav.view];
     //设置整个视图背景颜色

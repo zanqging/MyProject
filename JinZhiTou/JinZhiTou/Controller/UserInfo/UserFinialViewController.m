@@ -221,7 +221,6 @@
         [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"thumbnail"]] placeholderImage:IMAGENAMED(@"loading")];
         cell.titleLabel.text = [dic valueForKey:@"company_name"];
         cell.desclabel.text = [dic valueForKey:@"project_summary"];
-        cell.typeLabel.text = [NSString stringWithFormat:@"%@/%@/%@",[dic valueForKey:@"province"],[dic valueForKey:@"city"],[dic valueForKey:@"industry_type"][0]];
         cell.backgroundColor = WriteColor;
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -232,7 +231,6 @@
         [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"thumbnail"]] placeholderImage:IMAGENAMED(@"loading")];
         cell.titleLabel.text = [dic valueForKey:@"company_name"];
         cell.desclabel.text = [dic valueForKey:@"project_summary"];
-        cell.typeLabel.text = [NSString stringWithFormat:@"%@/%@/%@",[dic valueForKey:@"province"],[dic valueForKey:@"city"],[dic valueForKey:@"industry_type"][0]];
         cell.backgroundColor = WriteColor;
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

@@ -6,8 +6,9 @@
 //  Copyright (c) 2015年 yq. All rights reserved.
 //
 #import <UIKit/UIKit.h>
-#import "WMPageController.h"
 #import "WMPageConst.h"
+#import "WMPageController.h"
+#import "INSViewController.h"
 #import "WMTableViewController.h"
 #import "RoadShowDetailViewController.h"
 @interface WMPageController () <WMMenuViewDelegate,UIScrollViewDelegate,navViewDelegate,WMtableViewCellDelegate> {
@@ -362,8 +363,8 @@
     self.navView.menuArray  =[NSMutableArray arrayWithArray:menuArray];
     self.navView.titleLable.textColor=WriteColor;
     [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
-//    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
-//    [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
+    [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
     [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
     
     
@@ -395,6 +396,19 @@
     [self setViewFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-110)];
     self.loadingViewFrame = CGRectMake(0, POS_Y(self.navView)+self.menuHeight, WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-self.menuHeight-kBottomBarHeight);
     [self refresh];
+}
+
+-(void)userInfoAction:(id)sender
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"userInfo" object:nil];
+}
+
+
+-(void)searchAction:(id)sender
+{
+    INSViewController* controller =[[INSViewController alloc]init];
+    controller.title = self.navView.title;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 -(void)refresh

@@ -135,6 +135,7 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     AudioServicesPlaySystemSound(soundID);
 //    AudioServicesPlayAlertSound(soundID);
 }
+
 -(void)updateNewMessage:(NSDictionary*)dic
 {
     NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
@@ -180,6 +181,7 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:@"userInfo" object:nil];
 }
+
 
 
 #pragma ASIHttpRequester

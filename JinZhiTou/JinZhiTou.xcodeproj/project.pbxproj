@@ -288,6 +288,7 @@
 		45D49D931B82336F00EC529F /* ZHTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D49D871B82336F00EC529F /* ZHTableViewController.m */; };
 		45D49D941B82336F00EC529F /* sex.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45D49D881B82336F00EC529F /* sex.plist */; };
 		45D49D951B82336F00EC529F /* jobType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45D49D891B82336F00EC529F /* jobType.plist */; };
+		45DD8EA41BF4393C00921673 /* CreditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DD8EA31BF4393C00921673 /* CreditTableViewCell.m */; };
 		45DEACEE1B437879001EDA5D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DEACED1B437879001EDA5D /* main.m */; };
 		45DEACF11B437879001EDA5D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DEACF01B437879001EDA5D /* AppDelegate.m */; };
 		45DEACF91B437879001EDA5D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45DEACF81B437879001EDA5D /* Images.xcassets */; };
@@ -891,6 +892,8 @@
 		45D49D871B82336F00EC529F /* ZHTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHTableViewController.m; sourceTree = "<group>"; };
 		45D49D881B82336F00EC529F /* sex.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = sex.plist; sourceTree = "<group>"; };
 		45D49D891B82336F00EC529F /* jobType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = jobType.plist; sourceTree = "<group>"; };
+		45DD8EA21BF4393C00921673 /* CreditTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreditTableViewCell.h; sourceTree = "<group>"; };
+		45DD8EA31BF4393C00921673 /* CreditTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreditTableViewCell.m; sourceTree = "<group>"; };
 		45DEACE81B437879001EDA5D /* JinZhiTou.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JinZhiTou.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45DEACEC1B437879001EDA5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45DEACED1B437879001EDA5D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -2141,6 +2144,8 @@
 				454BF2E21B8E9AB700F1FEE5 /* SearchTableViewCell.m */,
 				454BF2E41B8EAC8600F1FEE5 /* SearchTableViewHeader.h */,
 				454BF2E51B8EAC8600F1FEE5 /* SearchTableViewHeader.m */,
+				45DD8EA21BF4393C00921673 /* CreditTableViewCell.h */,
+				45DD8EA31BF4393C00921673 /* CreditTableViewCell.m */,
 			);
 			name = TabBarSearch;
 			sourceTree = "<group>";
@@ -2753,6 +2758,7 @@
 				45FCD0591B75E216009AD6E3 /* UIImage+GIF.m in Sources */,
 				452609B41BDF0963006776B2 /* QNFormUpload.m in Sources */,
 				4543EB0C1BD08E100041DCBD /* MWTapDetectingView.m in Sources */,
+				45DD8EA41BF4393C00921673 /* CreditTableViewCell.m in Sources */,
 				45FCD05B1B75E216009AD6E3 /* UIImage+WebP.m in Sources */,
 				45F93B5F1B637311004526F5 /* MJRefreshNormalHeader.m in Sources */,
 				452609AB1BDF0963006776B2 /* QNEtag.m in Sources */,

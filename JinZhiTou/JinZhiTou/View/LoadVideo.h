@@ -19,6 +19,7 @@
 @property(assign,nonatomic)BOOL uploadStart;
 @property(retain,nonatomic)UIImage* imgage;
 @property(retain,nonatomic)UILabel* descLabel;
+@property(retain,nonatomic)UIImage* doneImage;
 @property(retain,nonatomic)UILabel* titleLabel;
 @property(retain,nonatomic)UIImageView* imgView;
 @property(retain,nonatomic)UIImageView* thumailView;

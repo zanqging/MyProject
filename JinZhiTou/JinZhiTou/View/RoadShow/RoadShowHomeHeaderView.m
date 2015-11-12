@@ -9,11 +9,20 @@
 #import "RoadShowHomeHeaderView.h"
 #import "UConstants.h"
 #import "GlobalDefine.h"
+#import "INSViewController.h"
 #import "BannerViewController.h"
 #import "UIImageView+WebCache.h"
 #import <QuartzCore/QuartzCore.h>
 #import "RoadShowDetailViewController.h"
 @implementation RoadShowHomeHeaderView
+
+-(id)initWithFrame:(CGRect)frame withData:(NSDictionary *)data
+{
+    if (self = [self initWithFrame:frame]) {
+        
+    }
+    return self;
+}
 -(id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
@@ -28,13 +37,15 @@
         
         //新手指南
         UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(self.mainScorllView)+10, WIDTH(self.mainScorllView)-20, 30)];
-        label.text = @"新手指南:一分钟了解众筹!!!";
         label.tag=1001;
         label.font=SYSTEMFONT(14);
         label.layer.cornerRadius = 5;
         label.layer.masksToBounds= YES;
+        label.userInteractionEnabled = YES;
         label.textColor  =ColorCompanyTheme;
         label.backgroundColor  =WriteColor;
+        label.userInteractionEnabled = YES;
+        [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(notificationAction:)]];
         [self addSubview:label];
         
         label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(label)+5, WIDTH(label), 40)];
@@ -45,6 +56,8 @@
         label.layer.masksToBounds= YES;
         label.textColor  =FONT_COLOR_GRAY;
         label.backgroundColor  =WriteColor;
+        label.userInteractionEnabled  =YES;
+        [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(creditSearchAction:)]];
         label.textAlignment = NSTextAlignmentCenter;
         [self addSubview:label];
         
@@ -125,8 +138,15 @@
             }
         };
         
+        //公告
+        UILabel* label = [self viewWithTag:1001];
+        NSString* announcement = [[self.dataDic valueForKey:@"announcement"] valueForKey:@"title"];
+        if ([TDUtil isValidString:announcement]) {
+            label.text = announcement;
+        }
+        
         //平台信息
-        UILabel* label =[self viewWithTag:1002];
+        label =[self viewWithTag:1002];
     
         
         NSMutableArray* array =[self.dataDic valueForKey:@"platform"];
@@ -162,4 +182,32 @@
 
     }
 }
+
+/**
+ *  企业征信查询
+ *
+ *  @param sender sender
+ */
+-(void)creditSearchAction:(id)sender
+{
+    INSViewController* controller =[[INSViewController alloc]init];
+    controller.type = 3;
+    controller.title = @"首页";
+    controller.titleContent = @"企业征信查询";
+    if ([_delegate respondsToSelector:@selector(roadShowHome:controller:)]) {
+        [_delegate roadShowHome:self controller:controller];
+    }
+}
+
+-(void)notificationAction:(id)sender
+{
+    BannerViewController* controller =[[BannerViewController alloc]init];
+    controller.title = @"首页";
+    controller.titleStr = @"公告";
+    controller.url = [NSURL URLWithString:[[self.dataDic valueForKey:@"announcement"] valueForKey:@"url"]];
+    if ([_delegate respondsToSelector:@selector(roadShowHome:controller:)]) {
+        [_delegate roadShowHome:self controller:controller];
+    }
+}
+
 @end
