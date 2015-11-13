@@ -19,6 +19,8 @@
 #import "RoadShowHomeTableViewCell.h"
 #import "RoadShowDetailViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
+
+#import "WeChatBindController.h"
 @interface RoadShowViewController ()<LoadingViewDelegate,WaterFDelegate,UITableViewDataSource,UITableViewDelegate,RoadShowHomeDelegate>
 {
     DialogView* dialogView;
@@ -63,7 +65,7 @@
    [self.view addSubview:self.tableView];
     
     //头部
-    headerView = [[RoadShowHomeHeaderView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), HEIGHT(self.view)*0.618+30)];
+    headerView = [[RoadShowHomeHeaderView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), HEIGHT(self.view)*0.5)];
    [self.tableView setTableHeaderView:headerView];
    [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     //加载Banner数据
@@ -98,6 +100,9 @@
     
     //播放音效
     [self playSoundEffect:@"message.caf"];
+    
+    WeChatBindController* controller  = [[WeChatBindController alloc]init];
+    [self.navigationController presentViewController:controller animated:YES completion:nil];
 }
 
 /**
@@ -254,10 +259,10 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     }
     NSInteger row = indexPath.row;
     NSDictionary* dic = dataArray[row];
-    [cellInstance setTime:[dic valueForKey:@"time"]];
     [cellInstance setImageName:[dic valueForKey:@"img"]];
-    [cellInstance setProess:[dic valueForKey:@"process"]];
+    [cellInstance setHasFinance:[dic valueForKey:@"planfinance"]];
     [cellInstance setCompanyName:[dic valueForKey:@"company"]];
+    [cellInstance setDateTime:[dic valueForKey:@"date"]];
     cellInstance.selectionStyle = UITableViewCellSelectionStyleDefault;
     cellInstance.selectionStyle = UITableViewCellSelectionStyleNone;
     return cellInstance;

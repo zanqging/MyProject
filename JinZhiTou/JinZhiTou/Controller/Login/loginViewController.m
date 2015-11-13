@@ -157,6 +157,7 @@
     
     //将忘记密码按钮添加至滚动视图
     [scrollView addSubview:btnActionLeft];
+    
     //==============================滚动时图子视图添加开始==============================//
 
     
@@ -242,8 +243,8 @@
     NSString* regId = [APService registrationID];
     //装载数据
     NSDictionary* dic =[[NSMutableDictionary alloc]init];
-
-    [dic setValue:regId forKey:@"regid"];
+    [dic setValue:@"21432" forKey:@"regid"];
+//    [dic setValue:regId forKey:@"regid"];
     [dic setValue:phoneNumber forKey:@"tel"];
     [dic setValue:@"2.1.0" forKey:@"version"];
     [dic setValue:password forKey:@"passwd"];

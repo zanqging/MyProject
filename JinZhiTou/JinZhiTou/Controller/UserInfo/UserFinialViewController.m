@@ -217,7 +217,6 @@
     
     if (self.selectedIndex==0) {
         NSDictionary* dic  =self.dataCreateArray[indexPath.row];
-        NSDictionary* dicStage = [[dic valueForKey:@"stage"] valueForKey:@"start"];
         [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"thumbnail"]] placeholderImage:IMAGENAMED(@"loading")];
         cell.titleLabel.text = [dic valueForKey:@"company_name"];
         cell.desclabel.text = [dic valueForKey:@"project_summary"];

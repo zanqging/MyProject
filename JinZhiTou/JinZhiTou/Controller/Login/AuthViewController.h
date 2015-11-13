@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
-@interface AuthViewController : UIViewController
+#import "RootViewController.h"
+@interface AuthViewController : RootViewController
 
 @property (retain, nonatomic) UIButton *loginButon;
 @property (retain, nonatomic) UIButton *registeButton;

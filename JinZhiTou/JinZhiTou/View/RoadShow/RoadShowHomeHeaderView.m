@@ -36,7 +36,7 @@
         [view addSubview:self.mainScorllView];
         
         //新手指南
-        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(self.mainScorllView)+10, WIDTH(self.mainScorllView)-20, 30)];
+        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(self.mainScorllView)+10, WIDTH(self.mainScorllView)/2-10, 30)];
         label.tag=1001;
         label.font=SYSTEMFONT(14);
         label.layer.cornerRadius = 5;
@@ -48,7 +48,7 @@
         [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(notificationAction:)]];
         [self addSubview:label];
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(label)+5, WIDTH(label), 40)];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(label), HEIGHT(label))];
         label.tag=1002;
         label.text = @"征信查询";
         label.font=SYSTEMFONT(16);
@@ -62,7 +62,7 @@
         [self addSubview:label];
         
         //精选项目
-        view = [[UIView alloc]initWithFrame:CGRectMake(0, HEIGHT(self)-31, WIDTH(self), 30)];
+        view = [[UIView alloc]initWithFrame:CGRectMake(10, HEIGHT(self)-31, WIDTH(self)-20, 30)];
         view.backgroundColor = WriteColor;
         [self addSubview:view];
         
@@ -142,7 +142,7 @@
         UILabel* label = [self viewWithTag:1001];
         NSString* announcement = [[self.dataDic valueForKey:@"announcement"] valueForKey:@"title"];
         if ([TDUtil isValidString:announcement]) {
-            label.text = announcement;
+            label.text = [NSString stringWithFormat:@"   %@",announcement];
         }
         
         //平台信息
@@ -160,7 +160,7 @@
             //成果融资额度
             label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 30)];
             label.textAlignment = NSTextAlignmentCenter;
-            label.textColor = ColorTheme;
+            label.textColor = ColorTheme2;
             label.backgroundColor  =WriteColor;
             label.text = [NSString stringWithFormat:@"%@",value];
             [self addSubview:label];

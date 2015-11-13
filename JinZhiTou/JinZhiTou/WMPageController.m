@@ -396,7 +396,25 @@
     [self setViewFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-110)];
     self.loadingViewFrame = CGRectMake(0, POS_Y(self.navView)+self.menuHeight, WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-self.menuHeight-kBottomBarHeight);
     [self refresh];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
+    
+    [self updateNewMessage:nil];
 }
+
+-(void)updateNewMessage:(NSDictionary*)dic
+{
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    NSInteger newMessageCount = [[dataStore valueForKey:@"NewMessageCount"] integerValue];
+    NSInteger systemMessageCount = [[dataStore valueForKey:@"SystemMessageCount"] integerValue];
+    if (newMessageCount+systemMessageCount>0) {
+        [self.navView setIsHasNewMessage:YES];
+    }else{
+        [self.navView setIsHasNewMessage:NO];
+    }
+    
+}
+
 
 -(void)userInfoAction:(id)sender
 {

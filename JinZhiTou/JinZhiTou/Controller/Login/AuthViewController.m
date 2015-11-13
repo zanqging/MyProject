@@ -7,13 +7,14 @@
 //
 
 #import "AuthViewController.h"
-#import <QuartzCore/QuartzCore.h>
+#import "WXApi.h"
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #import "MMDrawerController.h"
+#import <QuartzCore/QuartzCore.h>
 #import "UserInfoViewController.h"
 #import "MMExampleDrawerVisualStateManager.h"
-@interface AuthViewController ()
+@interface AuthViewController ()<WXApiDelegate>
 {
     UIScrollView* scrollView;
 }
@@ -24,6 +25,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.navView removeFromSuperview];
+    
     self.view.backgroundColor=ColorTheme;
     
     //隐藏导航栏
@@ -59,9 +62,46 @@
     [self.loginButon setTitleColor:ColorTheme forState:UIControlStateNormal];
     [view addSubview:self.loginButon];
     
+    //微信登录
+    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2-35, POS_Y(self.loginButon)+20, 70, 70)];
+    imgView.image = IMAGENAMED(@"weixin");
+    imgView.userInteractionEnabled = YES;
+    [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(sendAuthRequest)]];
+    imgView.contentMode  = UIViewContentModeScaleAspectFill;
+    [view addSubview:imgView];
+    
+    
+    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self.view), POS_Y(imgView)+5, WIDTH(self.view), 21)];
+    label.text  =@"使用微信登录";
+    [view addSubview:label];
+}
+
+-(void)sendAuthRequest
+{
+    //构造SendAuthReq结构体
+    SendAuthReq* req =[[SendAuthReq alloc ] init];
+    req.scope = @"snsapi_userinfo" ;
+    req.state = @"JInZhT" ;
+    //第三方向微信终端发送一个SendAuthReq消息结构
+//    [WXApi sendReq:req];
+    [WXApi sendAuthReq:req viewController:self delegate:self];
+}
+-(void) onReq:(BaseReq*)req
+{
     
 }
 
+-(void)onResp:(BaseResp *)resp
+{
+    SendAuthResp* res = (SendAuthResp*)resp;
+    if (res.errCode==0) {
+        NSString* code = res.code;
+        NSString* url = @"https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx33aa0167f6a81dac&secret=bc5e2b89553589bf7d9e568545793842&code=%@&grant_type=authorization_code";
+        url = [NSString stringWithFormat:url,code];
+        
+        [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
+    }
+}
 
 -(void)registAction:(id)sender
 {
@@ -87,6 +127,21 @@
         }
         
     }
+}
+
+-(void)requestFinished:(ASIHTTPRequest*)request
+{
+    //项目详情
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        
+        
+    }
+
 }
 -(void)dealloc
 {

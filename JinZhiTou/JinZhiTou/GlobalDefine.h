@@ -105,8 +105,8 @@
 //主题色
 //#define ColorTheme  [UIColor colorWithRed:0xcb/256. green:0x02/256. blue:0x02/256. alpha:1]
 //#define ColorTheme  [UIColor colorWithRed:0xdc/256. green:0x47/256. blue:0x1c/256. alpha:1]
-#define ColorTheme  [UIColor colorWithRed:46.0/255. green:45.0/256. blue:51.0/255. alpha:1]
-//#define ColorTheme  [UIColor colorWithRed:166.0/255. green:176.0/256. blue:178.0/255. alpha:1]
+//#define ColorTheme  [UIColor colorWithRed:46.0/255. green:45.0/256. blue:51.0/255. alpha:1]
+#define ColorTheme  [UIColor colorWithRed:81.0/255. green:81.0/256. blue:81.0/255. alpha:1]
 #define ColorFontBlueTheme  [UIColor colorWithRed:0.0/255 green:0.0/255 blue:204/55 alpha:1]
 #define ColorCompanyTheme  [UIColor colorWithRed:0xd4/256. green:0xa2/256. blue:0x25/256. alpha:1]
 #define ColorTheme2  [UIColor colorWithRed:0xe6/256. green:0x97/256. blue:0x85/256. alpha:1]

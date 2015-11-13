@@ -22,9 +22,11 @@
         
         [self addSubview:view];
         
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10,WIDTH(self)-100, 25)];
+        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10,WIDTH(self)-100, 40)];
+        self.timeLabel.numberOfLines  =2;
         self.titleLabel.font  =SYSTEMBOLDFONT(16);
         self.titleLabel.textColor = FONT_COLOR_BLACK;
+        self.timeLabel.lineBreakMode  =NSLineBreakByWordWrapping;
         [view addSubview:self.titleLabel];
         
         self.desclabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel), WIDTH(self.titleLabel)/2, 21)];

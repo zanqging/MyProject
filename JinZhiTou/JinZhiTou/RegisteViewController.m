@@ -269,7 +269,7 @@
     NSString* phoneNumber =self.phoneTextField.text;
     if (phoneNumber) {
         if ([TDUtil validateMobile:phoneNumber]) {
-            NSString* serverUrl = [SEND_MESSAGE_CODE stringByAppendingFormat:@"0/"];
+            NSString* serverUrl = [SEND_MESSAGE_CODE stringByAppendingFormat:@"0/0/"];
             [httpUtils getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:phoneNumber,@"tel", nil] type:0 delegate:self sel:@selector(requestSendeCode:)];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"手机号码格式不正确"];

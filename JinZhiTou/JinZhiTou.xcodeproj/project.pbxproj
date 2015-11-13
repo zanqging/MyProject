@@ -232,6 +232,8 @@
 		4565A2051B9D41CF00FA040A /* TypeShow.m in Sources */ = {isa = PBXBuildFile; fileRef = 4565A2041B9D41CF00FA040A /* TypeShow.m */; };
 		4565A2081B9D5A3E00FA040A /* NewFinialTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4565A2071B9D5A3D00FA040A /* NewFinialTableViewCell.m */; };
 		457E04281B7060E500BC4161 /* ForgetPassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457E04271B7060E500BC4161 /* ForgetPassViewController.m */; };
+		457F70EC1BF56C91004241A0 /* WeChatBindController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457F70EB1BF56C91004241A0 /* WeChatBindController.m */; };
+		457F70EE1BF56EB0004241A0 /* brave.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 457F70ED1BF56EB0004241A0 /* brave.jpg */; };
 		4581152B1B7EDFB0006EEBBC /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4581152A1B7EDFB0006EEBBC /* MessageUI.framework */; };
 		4581152D1B7EE612006EEBBC /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4581152C1B7EE612006EEBBC /* Security.framework */; };
 		4581152F1B7EE61D006EEBBC /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4581152E1B7EE61D006EEBBC /* libiconv.dylib */; };
@@ -794,6 +796,9 @@
 		4565A2071B9D5A3D00FA040A /* NewFinialTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewFinialTableViewCell.m; path = View/UserInfo/Cell/NewFinialTableViewCell.m; sourceTree = "<group>"; };
 		457E04261B7060E500BC4161 /* ForgetPassViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ForgetPassViewController.h; path = Controller/Login/ForgetPassViewController.h; sourceTree = "<group>"; };
 		457E04271B7060E500BC4161 /* ForgetPassViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ForgetPassViewController.m; path = Controller/Login/ForgetPassViewController.m; sourceTree = "<group>"; };
+		457F70EA1BF56C91004241A0 /* WeChatBindController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeChatBindController.h; path = Controller/Company/WeChatBindController.h; sourceTree = "<group>"; };
+		457F70EB1BF56C91004241A0 /* WeChatBindController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WeChatBindController.m; path = Controller/Company/WeChatBindController.m; sourceTree = "<group>"; };
+		457F70ED1BF56EB0004241A0 /* brave.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = brave.jpg; sourceTree = "<group>"; };
 		4581152A1B7EDFB0006EEBBC /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		4581152C1B7EE612006EEBBC /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4581152E1B7EE61D006EEBBC /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -1236,6 +1241,7 @@
 		451F488B1B53604900C91B4A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				457F70ED1BF56EB0004241A0 /* brave.jpg */,
 				454E21AA1BF2F38E00DEE0E7 /* message.caf */,
 				45FD34391BB53DC60065739E /* code.png */,
 				451A3C321BB11F38008BE22C /* youyuan.ttf */,
@@ -1977,6 +1983,8 @@
 			children = (
 				459AC93F1B6F39020050E817 /* AuthViewController.h */,
 				459AC9401B6F39020050E817 /* AuthViewController.m */,
+				457F70EA1BF56C91004241A0 /* WeChatBindController.h */,
+				457F70EB1BF56C91004241A0 /* WeChatBindController.m */,
 				459AC9421B6F442E0050E817 /* loginViewController.h */,
 				459AC9431B6F442E0050E817 /* loginViewController.m */,
 				459AC9451B6F4F050050E817 /* RegisteViewController.h */,
@@ -2631,6 +2639,7 @@
 				4543EB861BD0ABB80041DCBD /* ImageSelectedOff@3x.png in Resources */,
 				451B52BE1BA66E3500388E5C /* NavBarIconSearchBar_blue.png in Resources */,
 				45D49D8B1B82336F00EC529F /* city.plist in Resources */,
+				457F70EE1BF56EB0004241A0 /* brave.jpg in Resources */,
 				451B52C51BA66F5500388E5C /* NavBarIconSearchCircle_blue@2x.png in Resources */,
 				4511CC211BA2B6E300A9D00A /* movieBackward@2x.png in Resources */,
 				4500828E1B4A5ABD00AAF722 /* Main.storyboard in Resources */,
@@ -2742,6 +2751,7 @@
 				453271761B748FEC0044F8C1 /* UserNameTableViewCell.m in Sources */,
 				45A2ADB01B727CB900751F78 /* FinialAuthDetailViewController.m in Sources */,
 				4532717C1B7490170044F8C1 /* UserPhoneTableViewCell.m in Sources */,
+				457F70EC1BF56C91004241A0 /* WeChatBindController.m in Sources */,
 				45A2ADB31B72811200751F78 /* AuthTraceTableViewCell.m in Sources */,
 				45A2AD9A1B7109F100751F78 /* CompanyFinial.m in Sources */,
 				45F829471B6B62470044F6F0 /* FinialPersonTableViewController.m in Sources */,

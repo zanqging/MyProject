@@ -137,9 +137,28 @@
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContentNotification:) name:@"publishContent" object:nil];
      [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContent:) name:@"publish" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
+    
+    [self updateNewMessage:nil];
     
     //加载动画
     self.startLoading  =YES;
+}
+
+/**
+ *  消息提示
+ *
+ *  @param dic 通知数据
+ */
+-(void)updateNewMessage:(NSDictionary*)dic
+{
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    NSInteger newMessageCount = [[dataStore valueForKey:@"NewMessageCount"] integerValue];
+    NSInteger systemMessageCount = [[dataStore valueForKey:@"SystemMessageCount"] integerValue];
+    if (newMessageCount+systemMessageCount>0) {
+        [self.navView setIsHasNewMessage:YES];
+    }
+    
 }
 
 /**

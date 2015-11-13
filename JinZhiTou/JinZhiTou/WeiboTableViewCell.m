@@ -394,9 +394,9 @@
         [self.nameLabel sizeToFit];
         
         //内容
-        content = [dic valueForKey:@"position"];
-        if (content) {
-            attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+         NSArray* arr = [dic valueForKey:@"position"];
+        if (arr) {
+            attributedString = [[NSMutableAttributedString alloc] initWithString:arr[0]];
             [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
             self.jobLabel.attributedText = attributedString;//ios 6
             [self.jobLabel sizeToFit];

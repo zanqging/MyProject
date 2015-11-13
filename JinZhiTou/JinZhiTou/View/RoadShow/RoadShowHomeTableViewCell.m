@@ -65,37 +65,31 @@
     //融资进度
     UILabel* labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelContent), POS_Y(labelContent), 50, 20)];
     labelProess.font =SYSTEMFONT(14);
+    labelProess.text = @"已筹:";
     [contentView addSubview:labelProess];
-    if (self.proess) {
-        [TDUtil setLabelMutableText:labelProess content:[self.proess valueForKey:@"key"] lineSpacing:0 headIndent:0];
-    }
     
     
     labelProess = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(labelProess), Y(labelProess), 50, HEIGHT(labelProess))];
     labelProess.font =SYSTEMFONT(14);
-    labelProess.textColor = ColorTheme;
+    labelProess.text =[NSString stringWithFormat:@"%@万",self.hasFinance];
+    labelProess.textColor = ColorTheme2;
     [contentView addSubview:labelProess];
-    if(self.proess){
-        [TDUtil setLabelMutableText:labelProess content:[self.proess valueForKey:@"value"] lineSpacing:0 headIndent:0];
-    }
+
     
-    labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelContent), POS_Y(labelProess)+5, 50, 20)];
+    
+    labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelContent), POS_Y(labelProess)+5, 70, 20)];
+    labelProess.text = @"众筹时间:";
     labelProess.font =SYSTEMFONT(14);
     [contentView addSubview:labelProess];
-    
-    if(self.time){
-         [TDUtil setLabelMutableText:labelProess content:[self.time valueForKey:@"key"] lineSpacing:0 headIndent:0];
-    }
+
    
     
-    labelProess = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(labelProess), Y(labelProess), 50, HEIGHT(labelProess))];
+    labelProess = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(labelProess), Y(labelProess), 150, HEIGHT(labelProess))];
+    labelProess.text = self.dateTime;
     labelProess.font =SYSTEMFONT(14);
-    labelProess.textColor = ColorTheme;
+    labelProess.textColor = ColorTheme2;
     [contentView addSubview:labelProess];
     
-    if (self.time) {
-        [TDUtil setLabelMutableText:labelProess content:[self.time valueForKey:@"value"] lineSpacing:0 headIndent:0];
-    }
     
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
