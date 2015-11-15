@@ -481,14 +481,25 @@
 -(void)goRoadShow:(id)sender
 {
     NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
-    BOOL isAnimous = [[data valueForKey:@"isAnimous"] boolValue];
-    if (isAnimous) {
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未登录，请先登录",@"msg",@"取消",@"cancel",@"去登录",@"sure",@"3",@"type", nil]];
-    }else{
-        self.startLoading  =YES;
-        self.isTransparent  =YES;
-        [self.httpUtil getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestIsInvestor:)];
+    NSString*  auth = [data valueForKey:@"auth"];
+    if (![auth isKindOfClass:NSNull.class]) {
+        if (auth) {
+            if([auth isEqualToString:@"true"]){
+                if (self.type ==1) {
+                    NSString* url = [JOIN_ROADSHOW stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
+                    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestJoinroadShow:)];
+                }else{
+                    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+                    FinialApplyViewController* controller = (FinialApplyViewController*)[storyBoard instantiateViewControllerWithIdentifier:@"FinialApply"];
+                    controller.titleStr = self.navView.title;
+                    controller.projectId = [[self.dic valueForKey:@"id"] integerValue];
+                    [self.navigationController pushViewController:controller animated:YES];
+                }
+            }
+        }
     }
+
+    
     
     
 }
@@ -761,36 +772,6 @@
         [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
     }
     
-}
-/**
- *  是否已认证
- *
- *  @param request
- */
--(void)requestIsInvestor:(ASIHTTPRequest *)request{
-    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-    NSMutableDictionary* jsonDic = [jsonString JSONValue];
-    
-    if(jsonDic!=nil)
-    {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] == -1) {
-            if (self.type ==1) {
-                NSString* url = [JOIN_ROADSHOW stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
-                [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestJoinroadShow:)];
-            }else{
-                UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-                FinialApplyViewController* controller = (FinialApplyViewController*)[storyBoard instantiateViewControllerWithIdentifier:@"FinialApply"];
-                controller.titleStr = self.navView.title;
-                controller.projectId = [[self.dic valueForKey:@"id"] integerValue];
-                [self.navigationController pushViewController:controller animated:YES];
-            }
-        }else{
-            [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
-        }
-        self.startLoading  =NO;
-    }
 }
 
 /**

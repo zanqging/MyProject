@@ -10,7 +10,7 @@
 #import "CycleScrollView.h"
 @protocol RoadShowHomeDelegate <NSObject>
 
--(void)roadShowHome:(id)roadShowHome controller:(UIViewController*)controller;
+-(void)roadShowHome:(id)roadShowHome controller:(UIViewController*)controller type:(int)type;
 @end
 
 @interface RoadShowHomeHeaderView : UIView

@@ -468,7 +468,7 @@
     if (self.titles.count>0) {
         self.scrollView.contentSize = CGSizeMake(self.titles.count*_viewWidth, _viewHeight-self.menuHeight);
     }else{
-        self.scrollView.contentSize = CGSizeMake(self.titles.count*_viewWidth, _viewHeight);
+        self.scrollView.contentSize = CGSizeMake(_viewWidth, _viewHeight);
     }
     
     [self.scrollView setContentOffset:CGPointMake(self.selectIndex*_viewWidth, 0)];

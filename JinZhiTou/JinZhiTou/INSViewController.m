@@ -307,7 +307,7 @@
     header.title =[NSString stringWithFormat:@"包含\"%@\"的搜索结果",searchBar.searchField.text];
     NSString* url;
     if (self.type==0) {
-        url= [PROJECT_SEARCH stringByAppendingFormat:@"%d/%ld/",0,currentPage];
+        url= [PROJECT_SEARCH stringByAppendingFormat:@"%ld/",currentPage];
     }else if(self.type==3){
         url= HOME_CREDIT;
     }else{
@@ -317,10 +317,7 @@
     if ([TDUtil isValidString:value]) {
         self.isTransparent = YES;
         self.startLoading  = YES;
-        NSString* key = @"value";
-        if (self.type==3) {
-            key = @"wd";
-        }
+        NSString* key = @"wd";
         [self.httpUtil getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:value forKey:key] type:0 delegate:self sel:@selector(requestSearch:)];
     }
 }

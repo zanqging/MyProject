@@ -79,7 +79,7 @@
         companyLabel.font = FONT(@"Arial", 14);
         [self addSubview:companyLabel];
         
-        companyLabel.text = [[dic valueForKey:@"position"] objectAtIndex:0];
+        companyLabel.text = [dic valueForKey:@"position"];
         
         
         industoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(nameLabel), POS_Y(nameLabel)+5, WIDTH(nameLabel)+WIDTH(companyLabel), HEIGHT(nameLabel))];

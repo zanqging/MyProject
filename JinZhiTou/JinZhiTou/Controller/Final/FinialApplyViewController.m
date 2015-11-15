@@ -7,35 +7,16 @@
 //
 
 #import "FinialApplyViewController.h"
-#import "TDUtil.h"
-#import "NavView.h"
-#import "HttpUtils.h"
-#import "UConstants.h"
 #import "FinialKind.h"
-#import "DialogUtil.h"
-#import "LoadingUtil.h"
-#import "LoadingView.h"
-#import "AutoShowView.h"
-#import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
-#import "ASIFormDataRequest.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UserFinialViewController.h"
 #import "FinialSuccessViewController.h"
 @interface FinialApplyViewController ()<UIScrollViewDelegate,UITextFieldDelegate,ASIHTTPRequestDelegate>
 {
     int currentSelect;
-    
-    NavView* navView;
-    HttpUtils* httpUtils;
-    LoadingView* loadingView;
-    AutoShowView* autoView;
-    
-    BOOL isChooseID;
     BOOL isShowInfoView;
     
     NSInteger currentTag;
-    NSDictionary* currentDic;
     UIScrollView* scrollView;
     
 }
@@ -48,36 +29,24 @@
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
     //设置标题
-    navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
-    navView.imageView.alpha=1;
-    [navView setTitle:@"投资"];
-    navView.titleLable.textColor=WriteColor;
+    self.navView.imageView.alpha=1;
+    [self.navView setTitle:@"投资"];
+    self.navView.titleLable.textColor=WriteColor;
     
-    [navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [navView.leftButton setTitle:@"项目详情" forState:UIControlStateNormal];
-    [navView.leftButton setTitle:self.titleStr forState:UIControlStateNormal];
-    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
-    [self.view addSubview:navView];
+    [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
+    [self.navView.leftButton setTitle:@"项目详情" forState:UIControlStateNormal];
+    [self.navView.leftButton setTitle:self.titleStr forState:UIControlStateNormal];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
     [self addView];
     
-    //网络初始化
-    httpUtils = [[HttpUtils alloc]init];
     //数据初始化
     currentSelect=1;
     currentTag=20002;
-    
-    
-    //加载数据
-    
-    [self loadData];
-    
-    //添加监听
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(infoDetailView:) name:@"autoSelect" object:nil];
 }
 -(void)addView
 {
-    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView))];
+    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView))];
     scrollView.tag =40001;
     scrollView.delegate=self;
     scrollView.bounces = NO;
@@ -112,27 +81,12 @@
     view.backgroundColor  =WriteColor;
     [scrollView addSubview:view];
     
-    UILabel* lable = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(view), 50)];
-    lable.textAlignment = NSTextAlignmentCenter;
-    lable.text = @"点击选择您的投资人身份";
-    lable.tag =500001;
-    lable.font  =SYSTEMBOLDFONT(18);
-    lable.userInteractionEnabled = YES;
-    lable.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
-    [lable addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectID:)]];
-    [view addSubview:lable];
     
-    
-    view = [[UIImageView alloc]initWithFrame:CGRectMake(X(view), POS_Y(view)+1, WIDTH(view), 50)];
-    view.tag=30002;
     view.userInteractionEnabled =YES;
     view.backgroundColor  =WriteColor;
-    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(lable), WIDTH(view), 1)];
-    imgView.backgroundColor = BackColor;
-    [view addSubview:imgView];
     
     //投资额度
-    lable = [[UILabel alloc]initWithFrame:CGRectMake(0, 10, WIDTH(scrollView)*1/4, 30)];
+    UILabel* lable = [[UILabel alloc]initWithFrame:CGRectMake(0, 10, WIDTH(scrollView)*1/4, 30)];
     lable.text = @"投资额度";
     lable.font = SYSTEMFONT(16);
     lable.textAlignment = NSTextAlignmentRight;
@@ -168,239 +122,28 @@
     [scrollView addSubview:btnAction];
 }
 
--(void)infoDetailView:(NSDictionary*)dic
-{
-    NSDictionary* item =[[dic valueForKey:@"userInfo"] valueForKey:@"item"];
-    if (item) {
-        isChooseID=YES;
-    }
-    currentDic = item;
-    
-    UILabel* label =(UILabel*)[scrollView viewWithTag:500001];
-    label.text = [item valueForKey:@"company"];
-    label.textColor = ColorCompanyTheme;
-    
-    NSString* url =[INVESTINFO stringByAppendingFormat:@"%@/",[item valueForKey:@"id"]];
-    [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestIDInfoDetail:)];
-}
-
--(void)IDInfoDetail:(NSDictionary*)dic
-{
-    if (dic && !isShowInfoView) {
-        UIView* seelectView = [scrollView viewWithTag:30001];
-        UIView* view = [[UIView alloc]initWithFrame:CGRectMake(10, POS_Y(seelectView)+10, WIDTH(self.view)-20, 200)];
-        view.tag = 30001;
-        view.backgroundColor = WriteColor;
-        
-        //开始动画
-        UIView* infoView = [scrollView viewWithTag:30002];
-        UIView* btnActionView = [scrollView viewWithTag:30004];
-        
-        CGRect frame =seelectView.frame;
-        CGRect btnFrame = btnActionView.frame;
-        
-        frame.origin.y=POS_Y(view)+10;
-        btnFrame.origin.y = frame.origin.y+ btnFrame.size.height + 50;
-        [infoView removeFromSuperview];
-        [scrollView addSubview:infoView];
-        [UIView animateWithDuration:0.5 animations:^(void){
-            [infoView setFrame:frame];
-            [btnActionView setFrame:btnFrame];
-        }];
-        
-        //职位
-        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, 20,WIDTH(scrollView)*1/4, 30)];
-        label.textColor = ColorFontNormal;
-        label.font = SYSTEMBOLDFONT(16);
-        label.tag =10001;
-        label.textAlignment = NSTextAlignmentRight;
-        [view addSubview:label];
-        
-        //输入职位
-        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(view)-POS_X(label)-20, 30)];
-        label.font  =SYSTEMFONT(16);
-        label.tag =10002;
-        label.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
-        [view addSubview:label];
-        
-        UIImageView* lineImgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label), WIDTH(self.view), 1)];
-        lineImgView.backgroundColor = BackColor;
-        [view addSubview:lineImgView];
-        
-        
-        label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(label)+10, WIDTH(scrollView)*1/4, 30)];
-        label.tag =10003;
-        label.font = SYSTEMBOLDFONT(16);
-        label.textColor = ColorFontNormal;
-        label.textAlignment = NSTextAlignmentRight;
-        [view addSubview:label];
-        
-        //输入职位
-        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(view)-POS_X(label)-20, 30)];
-        label.font  =SYSTEMFONT(16);
-        label.tag =10004;
-        label.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
-        [view addSubview:label];
-        
-        lineImgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label), WIDTH(self.view), 1)];
-        lineImgView.backgroundColor = BackColor;
-        [view addSubview:lineImgView];
-    
-        label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(label)+10, WIDTH(scrollView)*1/4, 30)];
-        label.tag =10005;
-        label.font = SYSTEMBOLDFONT(16);
-        label.textColor = ColorFontNormal;
-        label.textAlignment = NSTextAlignmentRight;
-        [view addSubview:label];
-        
-        
-        //输入职位
-        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label),150, 30)];
-        label.tag =10006;
-        label.font  =SYSTEMFONT(16);
-        label.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
-        [view addSubview:label];
-        
-        lineImgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label), WIDTH(self.view), 1)];
-        lineImgView.backgroundColor = BackColor;
-        [view addSubview:lineImgView];
-        
-        
-        label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(label)+10, WIDTH(scrollView)*1/4, 30)];
-        label.tag =10007;
-        label.font = SYSTEMBOLDFONT(16);
-        label.textColor = ColorFontNormal;
-        label.textAlignment = NSTextAlignmentRight;
-        [view addSubview:label];
-        
-        //输入职位
-        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(view)-POS_X(label)-20, 30)];
-        label.font  =SYSTEMFONT(16);
-        label.tag =10008;
-        label.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
-        [view addSubview:label];
-        [scrollView addSubview:view];
-        
-        lineImgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label), WIDTH(self.view), 1)];
-        lineImgView.backgroundColor = BackColor;
-        [view addSubview:lineImgView];
-        
-        isShowInfoView = YES;
-    }
-    if([[dic valueForKey:@"investor_type"] intValue] == 0){
-        
-        
-        UILabel* label =(UILabel*) [scrollView viewWithTag:10001];
-        label.text = @"真实姓名";
-        
-        label =(UILabel*) [scrollView viewWithTag:10002];
-        label.text = [dic valueForKey:@"real_name"];
-        
-        
-        label =(UILabel*) [scrollView viewWithTag:10003];
-        label.text =@"手机号码";
-        
-        label =(UILabel*) [scrollView viewWithTag:10004];
-        label.text = [dic valueForKey:@"tel"];
-        
-        
-        label =(UILabel*) [scrollView viewWithTag:10005];
-        label.text = @"公司名称";
-        
-        
-        label =(UILabel*) [scrollView viewWithTag:10006];
-        label.text = [dic valueForKey:@"company"];
-        
-        label =(UILabel*) [scrollView viewWithTag:10007];
-        label.text = @"注册地址";
-        
-        
-        NSString* str =  [[dic valueForKey:@"province"] stringByAppendingString: [dic valueForKey:@"city"]];
-        label =(UILabel*) [scrollView viewWithTag:10008];
-        label.text =str;
-        
-    }else{
-        UILabel* label =(UILabel*) [scrollView viewWithTag:10001];
-        label.text = @"用户类型";
-        
-        label =(UILabel*) [scrollView viewWithTag:10002];
-        label.text = [[dic valueForKey:@"investor_type"] intValue]==0?@"自然投资者":@"机构投资者";
-        
-        
-        label =(UILabel*) [scrollView viewWithTag:10003];
-        label.text =@"公司名称";
-        
-        label =(UILabel*) [scrollView viewWithTag:10004];
-        label.text = [dic valueForKey:@"company"];
-        
-        
-        label =(UILabel*) [scrollView viewWithTag:10005];
-        label.text = @"投资领域";
-        
-        
-        NSString* str=@"";
-        NSMutableArray* arr =[dic valueForKey:@"industry"];
-        for (int i=0; i<arr.count; i++) {
-            str = [str stringByAppendingFormat:@" %@",arr[i]];
-        }
-        label =(UILabel*) [scrollView viewWithTag:10006];
-        label.text = str;
-        
-        label =(UILabel*) [scrollView viewWithTag:10007];
-        label.text = @"基金规模";
-        
-        label =(UILabel*) [scrollView viewWithTag:10008];
-        label.text = [dic valueForKey:@"fund_size_range"];
-       
-    }
-    
-}
-
--(void)selectID:(id)sender
-{
-    autoView.isHidden = NO;
-    autoView.layer.zPosition =1000;
-    [autoView removeFromSuperview];
-    [scrollView addSubview:autoView];
-    autoView.backgroundColor  = BlackColor;
-}
-
 -(void)finialSubmmit:(id)sender
 {
-
-    
-    if (!isChooseID) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请先选择投资人身份"];
+    UIView* view = [scrollView viewWithTag:30001];
+    UITextField* textField = (UITextField*)[view viewWithTag:500001];
+    NSString* mount =textField.text;
+    mount = [mount stringByReplacingOccurrencesOfString:@"万元" withString:@""];
+    if (!mount  || [mount isEqualToString:@""]) {
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入投资金额"];
     }else{
-        UIView* view = [scrollView viewWithTag:30002];
-        UITextField* textField = (UITextField*)[view viewWithTag:500001];
-        NSString* mount =textField.text;
-        mount = [mount stringByReplacingOccurrencesOfString:@"万元" withString:@""];
-        if (!mount  || [mount isEqualToString:@""]) {
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入投资金额"];
-        }else{
-            [self resignKeyboard];
-            
-            NSString* url = [INVEST stringByAppendingFormat:@"%ld/",(long)self.projectId];
-            NSMutableDictionary* dic = [[NSMutableDictionary alloc]init];
-            
-            [dic setValue:mount forKey:@"invest_amount"];
-            [dic setValue:[currentDic valueForKey:@"id"] forKey:@"investor"];
-            [dic setValue:[NSString stringWithFormat:@"%d",currentSelect] forKey:@"flag"];
-            [httpUtils getDataFromAPIWithOps:url postParam:dic type:0 delegate:self sel:@selector(requestFinialSubmmmit:)];
-            loadingView.isTransparent = YES;
-            [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
-        }
+        [self resignKeyboard];
+        
+        NSString* url = [INVEST stringByAppendingFormat:@"%ld/%d/",(long)self.projectId,currentSelect];
+        NSMutableDictionary* dic = [[NSMutableDictionary alloc]init];
+        
+        [dic setValue:mount forKey:@"amount"];
+        [dic setValue:[NSString stringWithFormat:@"%d",currentSelect] forKey:@"flag"];
+        [self.httpUtil getDataFromAPIWithOps:url postParam:dic type:0 delegate:self sel:@selector(requestFinialSubmmmit:)];
+        self.startLoading  =YES;
+        self.isTransparent  =YES;
     }
 }
 
--(void)loadData
-{
-    loadingView = [LoadingUtil shareinstance:self.view];
-    loadingView.isTransparent = NO;
-    [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
-    [httpUtils getDataFromAPIWithOps:MY_INVESTID postParam:nil type:0 delegate:self sel:@selector(requestInvestList:)];
-}
 
 -(void)doAction:(UITapGestureRecognizer*)recognizer
 {
@@ -445,7 +188,7 @@
 #pragma UITextFieldDelegate
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    [scrollView setContentOffset:CGPointMake(0, 220)];
+    
 }
 -(void)textFieldDidEndEditing:(UITextField *)textField
 {
@@ -455,7 +198,6 @@
             textStr = [NSString stringWithFormat:@" %@万元",textStr];
         }
         textField.text = textStr;
-        [scrollView setContentOffset:CGPointMake(0, 0)];
     }
     [textField resignFirstResponder];
 }
@@ -470,7 +212,6 @@
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    [scrollView setContentOffset:CGPointMake(0,0)];
     return YES;
 }
 
@@ -479,46 +220,7 @@
     
 }
 
-#pragma ASIHttpRequeste
--(void)requestInvestList:(ASIHTTPRequest *)request
-{
-    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-    NSMutableDictionary* jsonDic = [jsonString JSONValue];
-    
-    if(jsonDic!=nil)
-    {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] == -1) {
-            autoView = [[AutoShowView alloc]initWithFrame:CGRectMake(10, 100, WIDTH(self.view)-20, 150)];
-            autoView.dataArray =[jsonDic valueForKey:@"data"];
-            autoView.tag = 100001;
-            autoView.isHidden = YES;
-            autoView.title=@"company";
-            autoView.backgroundColor = GreenColor;
-            [scrollView addSubview:autoView];
-            
-            [LoadingUtil closeLoadingView:loadingView];
-        }
-        
-    }
-}
 
--(void)requestIDInfoDetail:(ASIHTTPRequest *)request
-{
-    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-    NSMutableDictionary* jsonDic = [jsonString JSONValue];
-    
-    if(jsonDic!=nil)
-    {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] == -1) {
-            NSDictionary* data = [jsonDic valueForKey:@"data"];
-            [self IDInfoDetail:data];
-        }
-    }
-}
 
 -(void)requestFinialSubmmmit:(ASIHTTPRequest *)request
 {
@@ -528,9 +230,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] == -1) {
-            [LoadingUtil closeLoadingView:loadingView];
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
             [[DialogUtil sharedInstance] showDlg:self.view textOnly:@"信息提交成功!"];
             
             FinialSuccessViewController* controller =[[FinialSuccessViewController alloc]init];
@@ -540,7 +241,7 @@
             [self.navigationController pushViewController:controller animated:YES];
             
         }else{
-            if ([status intValue] == 1) {
+            if ([code intValue] == 1) {
                 double delayInSeconds = 1.0;
                 //__block RoadShowDetailViewController* bself = self;
                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -548,13 +249,13 @@
                     UserFinialViewController* controller = [[UserFinialViewController alloc]init];
                     //来现场
                     controller.selectedIndex =1;
-                    controller.navTitle =  navView.title;
+                    controller.navTitle =  self.navView.title;
                     [self.navigationController pushViewController:controller animated:YES];
                 });
             }
-            [LoadingUtil closeLoadingView:loadingView];
             [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         }
+        self.startLoading = NO;
     }
 }
 -(void)requestFailed:(ASIHTTPRequest *)request

@@ -34,14 +34,15 @@
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:@"返回" forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
-    
+    [self.navView.rightButton setTitle:@"保存" forState:UIControlStateNormal];
+    [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(commitData)]];
     [self addPersonalView];
 
 }
 
 -(void)back:(id)sender
 {
-//    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -184,12 +185,12 @@
     [view addSubview:lineView];
     
     
-    UIButton* btnAction =[[UIButton alloc]initWithFrame:CGRectMake(60, POS_Y(view)+20, WIDTH(scrollView)-120, 35)];
-    btnAction.layer.cornerRadius =5;
-    btnAction.backgroundColor = ColorTheme;
-    [btnAction setTitle:@"提交资料" forState:UIControlStateNormal];
-    [btnAction addTarget:self action:@selector(commitData) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:btnAction];
+//    UIButton* btnAction =[[UIButton alloc]initWithFrame:CGRectMake(60, POS_Y(view)+20, WIDTH(scrollView)-120, 35)];
+//    btnAction.layer.cornerRadius =5;
+//    btnAction.backgroundColor = ColorTheme;
+//    [btnAction setTitle:@"提交资料" forState:UIControlStateNormal];
+//    [btnAction addTarget:self action:@selector(commitData) forControlEvents:UIControlEventTouchUpInside];
+//    [scrollView addSubview:btnAction];
 }
 
 
@@ -214,11 +215,6 @@
     if (![TDUtil isValidString:userName]) {
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:nameTextField.placeholder];
         return NO;
-    }else{
-        if (![TDUtil validateUserName:userName]) {
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"真实姓名输入错误"];
-            return NO;
-        }
     }
     
     if (![TDUtil isValidString:IDNumber]) {
@@ -275,10 +271,10 @@
     if (dic!=nil) {
         NSString* code =[dic valueForKey:@"code"];
         if ([code integerValue]==0) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil];
             [self dismissViewControllerAnimated:YES completion:nil];
-        }else{
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
         }
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
     }
 }
 //*********************************************************网络请求结束*****************************************************//

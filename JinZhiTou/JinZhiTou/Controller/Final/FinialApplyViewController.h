@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface FinialApplyViewController : UIViewController
+#import "RootViewController.h"
+@interface FinialApplyViewController : RootViewController
 @property(assign,nonatomic)NSInteger projectId;
 @property(retain,nonatomic)NSString* titleStr;
 @end

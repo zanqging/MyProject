@@ -243,10 +243,8 @@
     NSString* regId = [APService registrationID];
     //装载数据
     NSDictionary* dic =[[NSMutableDictionary alloc]init];
-    [dic setValue:@"21432" forKey:@"regid"];
-//    [dic setValue:regId forKey:@"regid"];
+    [dic setValue:regId forKey:@"regid"];
     [dic setValue:phoneNumber forKey:@"tel"];
-    [dic setValue:@"2.1.0" forKey:@"version"];
     [dic setValue:password forKey:@"passwd"];
     
     //加载动画
@@ -338,8 +336,18 @@
             NSUserDefaults* data =[NSUserDefaults standardUserDefaults];
             [data setValue:self.phoneTextField.text forKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
             [data setValue:password forKey:STATIC_USER_PASSWORD];
-            [data setValue:@"YES" forKey:@"isLogin"];
-            [data setValue:[[jsonDic valueForKey:@"data"] valueForKey:@"auth"] forKey:@"auth"];
+
+            NSString* auth =[[[jsonDic valueForKey:@"data"] valueForKey:@"auth"] stringValue] ;
+            if ([auth isKindOfClass:NSNull.class]) {
+                auth = @"None";
+            }else if (auth){
+                if ([auth boolValue]) {
+                    auth = @"true";
+                }else{
+                    auth  =@"false";
+                }
+            }
+            [data setValue:(NSString*)auth forKey:@"auth"];
             [data setValue:[[jsonDic valueForKey:@"data"] valueForKey:@"info"] forKey:@"info"];
             
             UserInfoViewController* userInfoController = [[UserInfoViewController alloc]init];

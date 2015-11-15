@@ -231,6 +231,7 @@
 		45631F821B5A4AAB009FA35D /* SphereMenuItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45631F811B5A4AAB009FA35D /* SphereMenuItemView.m */; };
 		4565A2051B9D41CF00FA040A /* TypeShow.m in Sources */ = {isa = PBXBuildFile; fileRef = 4565A2041B9D41CF00FA040A /* TypeShow.m */; };
 		4565A2081B9D5A3E00FA040A /* NewFinialTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4565A2071B9D5A3D00FA040A /* NewFinialTableViewCell.m */; };
+		45735E161BF6B90B00CC8964 /* AnnounceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45735E151BF6B90B00CC8964 /* AnnounceView.m */; };
 		457E04281B7060E500BC4161 /* ForgetPassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457E04271B7060E500BC4161 /* ForgetPassViewController.m */; };
 		457F70EC1BF56C91004241A0 /* WeChatBindController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457F70EB1BF56C91004241A0 /* WeChatBindController.m */; };
 		457F70EE1BF56EB0004241A0 /* brave.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 457F70ED1BF56EB0004241A0 /* brave.jpg */; };
@@ -794,6 +795,8 @@
 		4565A2041B9D41CF00FA040A /* TypeShow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TypeShow.m; path = View/TypeShow.m; sourceTree = "<group>"; };
 		4565A2061B9D5A3D00FA040A /* NewFinialTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewFinialTableViewCell.h; path = View/UserInfo/Cell/NewFinialTableViewCell.h; sourceTree = "<group>"; };
 		4565A2071B9D5A3D00FA040A /* NewFinialTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewFinialTableViewCell.m; path = View/UserInfo/Cell/NewFinialTableViewCell.m; sourceTree = "<group>"; };
+		45735E141BF6B90B00CC8964 /* AnnounceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnounceView.h; path = View/announce/AnnounceView.h; sourceTree = "<group>"; };
+		45735E151BF6B90B00CC8964 /* AnnounceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnnounceView.m; path = View/announce/AnnounceView.m; sourceTree = "<group>"; };
 		457E04261B7060E500BC4161 /* ForgetPassViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ForgetPassViewController.h; path = Controller/Login/ForgetPassViewController.h; sourceTree = "<group>"; };
 		457E04271B7060E500BC4161 /* ForgetPassViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ForgetPassViewController.m; path = Controller/Login/ForgetPassViewController.m; sourceTree = "<group>"; };
 		457F70EA1BF56C91004241A0 /* WeChatBindController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeChatBindController.h; path = Controller/Company/WeChatBindController.h; sourceTree = "<group>"; };
@@ -1273,6 +1276,7 @@
 		451F48A01B5368D800C91B4A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				45735E131BF6B8C400CC8964 /* announce */,
 				453441331BE0B67300802410 /* Cycle */,
 				4584DAAF1BAAB84A00560724 /* ProjectShare */,
 				45DED88D1BA0217800B4D393 /* IndustoryView */,
@@ -1901,6 +1905,15 @@
 			children = (
 			);
 			name = FinialTableViewCell;
+			sourceTree = "<group>";
+		};
+		45735E131BF6B8C400CC8964 /* announce */ = {
+			isa = PBXGroup;
+			children = (
+				45735E141BF6B90B00CC8964 /* AnnounceView.h */,
+				45735E151BF6B90B00CC8964 /* AnnounceView.m */,
+			);
+			name = announce;
 			sourceTree = "<group>";
 		};
 		458115461B7F7539006EEBBC /* THProgressView */ = {
@@ -2844,6 +2857,7 @@
 				4543EB0A1BD08E100041DCBD /* MWPhotoBrowser.m in Sources */,
 				45495C151B60DA91007A17FD /* PinYinForObjc.m in Sources */,
 				4511CC1F1BA2B6E300A9D00A /* ALMoviePlayerControls.m in Sources */,
+				45735E161BF6B90B00CC8964 /* AnnounceView.m in Sources */,
 				45ECCEFE1B61FED40013CA73 /* WaterFallHeader.m in Sources */,
 				458631F71B65C98D00F06688 /* FinalKindTableViewCell.m in Sources */,
 				451ACAC01B7C81940045DD5E /* BannerViewController.m in Sources */,

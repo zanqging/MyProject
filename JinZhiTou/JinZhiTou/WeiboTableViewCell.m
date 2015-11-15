@@ -394,10 +394,10 @@
         [self.nameLabel sizeToFit];
         
         //内容
-         NSArray* arr = [dic valueForKey:@"position"];
+         NSString* arr = [dic valueForKey:@"position"];
         if (arr) {
-            attributedString = [[NSMutableAttributedString alloc] initWithString:arr[0]];
-            [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+            attributedString = [[NSMutableAttributedString alloc] initWithString:arr];
+            [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [arr length])];
             self.jobLabel.attributedText = attributedString;//ios 6
             [self.jobLabel sizeToFit];
         }
@@ -422,7 +422,7 @@
             [self.shareView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(shareContentTaped:)]];
             //分享图片
             self.shareImgView = [[UIImageView alloc]initWithFrame:CGRectMake(12, 12, 50, 50)];
-            [self.shareImgView sd_setImageWithURL:[NSURL URLWithString:[[self.dic valueForKey:@"share"] valueForKey:@"src"]] placeholderImage:IMAGENAMED(@"loading")];
+            [self.shareImgView sd_setImageWithURL:[NSURL URLWithString:[[self.dic valueForKey:@"share"] valueForKey:@"img"]] placeholderImage:IMAGENAMED(@"loading")];
             [self.shareView addSubview:self.shareImgView];
             
             //分享文字

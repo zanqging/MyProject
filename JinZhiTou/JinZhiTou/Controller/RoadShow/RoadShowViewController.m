@@ -8,20 +8,24 @@
 
 #import "RoadShowViewController.h"
 #import "APService.h"
+#import "AnnounceView.h"
 #import "WaterFLayout.h"
 #import "ASIHTTPRequest.h"
 #import "NSString+SBJSON.h"
 #import "CycleScrollView.h"
+#import "UserInfoConfigView.h"
 #import "UIImageView+WebCache.h"
 #import "BannerViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "RoadShowHomeHeaderView.h"
+#import "FinialAuthViewController.h"
+#import "UserInfoConfigController.h"
 #import "RoadShowHomeTableViewCell.h"
 #import "RoadShowDetailViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 
 #import "WeChatBindController.h"
-@interface RoadShowViewController ()<LoadingViewDelegate,WaterFDelegate,UITableViewDataSource,UITableViewDelegate,RoadShowHomeDelegate>
+@interface RoadShowViewController ()<LoadingViewDelegate,WaterFDelegate,UITableViewDataSource,UITableViewDelegate,RoadShowHomeDelegate,UserInfoConigDelegate>
 {
     DialogView* dialogView;
     RoadShowHomeHeaderView* headerView;
@@ -54,7 +58,7 @@
 
     //==============================tableView 设置==============================//
     self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-113)];
-    self.tableView.bounces=YES;
+    self.tableView.bounces=NO;
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
     self.tableView.allowsSelection=YES;
@@ -65,7 +69,7 @@
    [self.view addSubview:self.tableView];
     
     //头部
-    headerView = [[RoadShowHomeHeaderView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), HEIGHT(self.view)*0.5)];
+    headerView = [[RoadShowHomeHeaderView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), HEIGHT(self.view)*0.5-15)];
    [self.tableView setTableHeaderView:headerView];
    [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     //加载Banner数据
@@ -81,6 +85,16 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
     
     [self updateNewMessage:nil];
+    
+    NSUserDefaults* dataDefaults = [NSUserDefaults standardUserDefaults];
+    if (![[dataDefaults valueForKey:@"auth"] boolValue]) {
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showAuthView:) name:@"showAuth" object:nil];
+    }
+    
+
+    if (![[dataDefaults valueForKey:@"info"] boolValue]) {
+        [self announViewShow:nil];
+    }
     
 //    [self.httpUtil getDataFromAPIWithOps:WECHAT_OPENID postParam:[NSDictionary dictionaryWithObject:@"weixichenshengzhu" forKey:@"openid"] type:0 delegate:self sel:@selector(requestFinished:)];
     //NSString* serverUrl = [WECHAT_OPENID stringByAppendingString:@"weixichenshengzhu/"];
@@ -100,9 +114,36 @@
     
     //播放音效
     [self playSoundEffect:@"message.caf"];
+   // WeChatBindController* controller  = [[WeChatBindController alloc]init];
+    //[self.navigationController presentViewController:controller animated:YES completion:nil];
     
-    WeChatBindController* controller  = [[WeChatBindController alloc]init];
-    [self.navigationController presentViewController:controller animated:YES completion:nil];
+}
+
+-(void)announViewShow:(id)sender
+{
+    AnnounceView* announceView =[[AnnounceView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 40)];
+    announceView.tag=60001;
+    [announceView setAnnounContent:@"您还未完善信息" middleContent:@"立即完善" endContent:@""];
+    [announceView.contentLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userinfoConfig:)]];
+    [self.view addSubview:announceView];
+}
+
+-(void)userinfoConfig:(id)sender
+{
+    UserInfoConfigController* controller =[[UserInfoConfigController alloc]init];
+    [self roadShowHome:nil controller:controller type:1];
+   
+}
+
+
+-(void)showAuthView:(NSDictionary*)dic
+{
+    UserInfoConfigView* configView =[[UserInfoConfigView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.view))];
+    configView.delegate  =self;
+    [self.view addSubview:configView];
+    
+    UIView* view = [self.view viewWithTag:60001];
+    [view removeFromSuperview];
 }
 
 /**
@@ -222,10 +263,23 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     [self loadHomeData];
 }
 
-//==============================RoadShowDelegate==============================//
--(void)roadShowHome:(id)roadShowHome controller:(UIViewController *)controller
+
+-(void)userInfoConfigView:(id)userInfoConfigView selectedIndex:(int)index data:(NSDictionary *)data
 {
+    FinialAuthViewController* controller = [[FinialAuthViewController alloc]init];
+    controller.type = index;
+    controller.titleStr = @"首页";
     [self.navigationController pushViewController:controller animated:YES];
+}
+
+//==============================RoadShowDelegate==============================//
+-(void)roadShowHome:(id)roadShowHome controller:(UIViewController *)controller type:(int)type
+{
+    if (type==0) {
+        [self.navigationController pushViewController:controller animated:YES];
+    }else{
+        [self.navigationController presentViewController:controller animated:YES completion:nil];
+    }
 }
 //==============================RoadShowDelegate==============================//
 

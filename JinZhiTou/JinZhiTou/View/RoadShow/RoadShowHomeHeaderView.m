@@ -36,7 +36,7 @@
         [view addSubview:self.mainScorllView];
         
         //新手指南
-        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(self.mainScorllView)+10, WIDTH(self.mainScorllView)/2-10, 30)];
+        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(self.mainScorllView)+5, WIDTH(self.mainScorllView)/2-10, 30)];
         label.tag=1001;
         label.font=SYSTEMFONT(14);
         label.layer.cornerRadius = 5;
@@ -45,6 +45,7 @@
         label.textColor  =ColorCompanyTheme;
         label.backgroundColor  =WriteColor;
         label.userInteractionEnabled = YES;
+        label.textAlignment =NSTextAlignmentCenter;
         [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(notificationAction:)]];
         [self addSubview:label];
         
@@ -73,9 +74,12 @@
         [view addSubview:label];
 
         self.backgroundColor = BackColor;
+        
         }
     return self;
 }
+
+
 
 -(void)setDataDic:(NSMutableDictionary *)dataDic
 {
@@ -121,8 +125,8 @@
                     controller.titleStr = @"金指投";
                     controller.title = @"首页";
                     controller.url =[NSURL URLWithString:urlStr];
-                    if ([roadShow.delegate respondsToSelector:@selector(roadShowHome:controller:)]) {
-                        [roadShow.delegate roadShowHome:roadShow controller:controller];
+                    if ([roadShow.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+                        [roadShow.delegate roadShowHome:roadShow controller:controller type:0];
                     }
                 }
 
@@ -132,8 +136,8 @@
                 NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:projectId forKey:@"id"];
                 controller.dic = dic;
                 controller.title =@"微路演";
-                if ([roadShow.delegate respondsToSelector:@selector(roadShowHome:controller:)]) {
-                    [roadShow.delegate roadShowHome:roadShow controller:controller];
+                if ([roadShow.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+                    [roadShow.delegate roadShowHome:roadShow controller:controller type:0];
                 }
             }
         };
@@ -142,7 +146,7 @@
         UILabel* label = [self viewWithTag:1001];
         NSString* announcement = [[self.dataDic valueForKey:@"announcement"] valueForKey:@"title"];
         if ([TDUtil isValidString:announcement]) {
-            label.text = [NSString stringWithFormat:@"   %@",announcement];
+            label.text = [NSString stringWithFormat:@"%@",announcement];
         }
         
         //平台信息
@@ -151,21 +155,21 @@
         
         NSMutableArray* array =[self.dataDic valueForKey:@"platform"];
         NSDictionary* dic;
-        float pos_x = 0,pos_y=POS_Y(label)+5;
+        float pos_x = 10,pos_y=POS_Y(label)+5;
         for (int i=0;i<array.count;i++) {
             dic = [array objectAtIndex:i];
             NSString* key = [dic valueForKey:@"key"];
             NSString* value = [dic valueForKey:@"value"];
             
             //成果融资额度
-            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 30)];
+            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2-10, 25)];
             label.textAlignment = NSTextAlignmentCenter;
             label.textColor = ColorTheme2;
             label.backgroundColor  =WriteColor;
             label.text = [NSString stringWithFormat:@"%@",value];
             [self addSubview:label];
             
-            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label), WIDTH(self)/2, 20)];
+            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2-10, 25)];
             label.font = SYSTEMFONT(14);
             label.textColor = FONT_COLOR_GRAY;
             label.backgroundColor  =WriteColor;
@@ -194,8 +198,8 @@
     controller.type = 3;
     controller.title = @"首页";
     controller.titleContent = @"企业征信查询";
-    if ([_delegate respondsToSelector:@selector(roadShowHome:controller:)]) {
-        [_delegate roadShowHome:self controller:controller];
+    if ([_delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+        [_delegate roadShowHome:self controller:controller type:0];
     }
 }
 
@@ -205,8 +209,8 @@
     controller.title = @"首页";
     controller.titleStr = @"公告";
     controller.url = [NSURL URLWithString:[[self.dataDic valueForKey:@"announcement"] valueForKey:@"url"]];
-    if ([_delegate respondsToSelector:@selector(roadShowHome:controller:)]) {
-        [_delegate roadShowHome:self controller:controller];
+    if ([_delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+        [_delegate roadShowHome:self controller:controller type:0];
     }
 }
 

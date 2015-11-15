@@ -37,12 +37,12 @@
 -(void)layerOut:(id)sender
 {
     //内容视图
-    contentView  =[[UIView alloc]initWithFrame:CGRectMake(10, 0, WIDTH(self)-20, HEIGHT(self)-10)];
+    contentView  =[[UIView alloc]initWithFrame:CGRectMake(10, 0, WIDTH(self)-20, HEIGHT(self)-5)];
     contentView.backgroundColor  = WriteColor;
     [self addSubview:contentView];
     
     //图片
-    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 90, HEIGHT(contentView))];
+    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 90, HEIGHT(contentView)-10)];
     imgView.contentMode = UIViewContentModeScaleAspectFill;
     imgView.layer.masksToBounds = YES;
     [contentView addSubview:imgView];
@@ -63,7 +63,7 @@
     }
     
     //融资进度
-    UILabel* labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelContent), POS_Y(labelContent), 50, 20)];
+    UILabel* labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelContent), POS_Y(labelContent)+5, 50, 20)];
     labelProess.font =SYSTEMFONT(14);
     labelProess.text = @"已筹:";
     [contentView addSubview:labelProess];

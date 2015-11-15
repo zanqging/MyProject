@@ -776,11 +776,11 @@
     NSLog(@"返回:%@",jsonString);
     NSMutableDictionary * dic =[jsonString JSONValue];
     if (dic!=nil) {
-        NSString* status = [dic valueForKey:@"status"];
-        if ([status integerValue] == 0) {
+        NSString* code = [dic valueForKey:@"code"];
+        if ([code integerValue] == 0) {
             NSDictionary* dataDic = [dic valueForKey:@"data"];
             [self.dataArray replaceObjectAtIndex:0 withObject:dataDic];
-            [self.tableView reloadData];
+//            [self.tableView reloadData];
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
         }
     }
