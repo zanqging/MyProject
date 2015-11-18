@@ -7,17 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
+#import "RootViewController.h"
 #import "JKCountDownButton.h"
-@interface ForgetPassViewController : UIViewController
+@interface ForgetPassViewController : RootViewController
 @property(assign,nonatomic)int type;
 @property(assign,nonatomic) BOOL isCountDown;
-@property (strong, nonatomic) NavView *navView;
-@property (strong, nonatomic) UIButton *configBtn;
-@property (strong, nonatomic) UIView *subView;
-@property (strong, nonatomic) UITextField *phoneTextField;
-@property (strong, nonatomic) UITextField *passTextField;
-@property (strong, nonatomic) UITextField *codeTextField;
-@property (strong, nonatomic) JKCountDownButton *codeButton;
-@property (strong, nonatomic) UITextField *passRepeatTextField;
+@property (retain, nonatomic) IBOutlet UILabel *proctoLabel;
+@property (retain, nonatomic) IBOutlet UIButton *regietButton;
+@property (retain, nonatomic) IBOutlet UITextField *passTextField;
+@property (retain, nonatomic) IBOutlet UITextField *codeTextField;
+@property (retain, nonatomic) IBOutlet UITextField *phoneTextField;
+@property (retain, nonatomic) IBOutlet JKCountDownButton *codeButton;
+@property (retain, nonatomic) IBOutlet UITextField *passRepeatTextField;
 @end

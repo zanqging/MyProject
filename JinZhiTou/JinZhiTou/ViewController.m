@@ -53,7 +53,7 @@
      //==============================导航栏区域 设置==============================//
     [self.navView setTitle:@"金指投"];
     self.navView.titleLable.textColor=WriteColor;
-    [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
+    [self.navView.leftButton setImage:IMAGENAMED(@"shuruphone") forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     
     [self.navView.rightButton setImage:IMAGENAMED(@"circle_publish") forState:UIControlStateNormal];
@@ -186,9 +186,6 @@
 -(void)refreshProject
 {
     //加载动画
-    self.startLoading = YES;
-    self.isTransparent = YES;
-    
     isRefresh =YES;
     currentPage = 0;
     [self loadData];
@@ -197,8 +194,6 @@
 -(void)loadProject
 {
     //加载动画
-    self.startLoading = YES;
-    self.isTransparent = YES;
     isRefresh =NO;
     if (!self.isEndOfPageSize) {
         currentPage++;

@@ -32,6 +32,14 @@
         label.text = @"成为金指投认证投资人";
         [view addSubview:label];
         
+        
+        UIButton* btnAction =[[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self)-50, 5, 20, 20)];
+        [btnAction setTitleColor:ColorTheme2 forState:UIControlStateNormal];
+        [btnAction setTitle:@"X" forState:UIControlStateNormal];
+        [btnAction addTarget:self action:@selector(removewFromSuperView:) forControlEvents:UIControlEventTouchUpInside];
+        [view addSubview:btnAction];
+        
+        
         view.layer.cornerRadius = 5;
         view.layer.masksToBounds  =YES;
         
@@ -40,7 +48,6 @@
         lineView.backgroundColor =BackColor;
         [view addSubview:lineView];
     
-        
         self.personalView = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(label), WIDTH(self), (HEIGHT(view)-HEIGHT(label))/2)];
         self.personalView.tag=1000;
         

@@ -17,12 +17,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    CAGradientLayer *gradient = [CAGradientLayer layer];
-    CGRect rect = CGRectMake(0, 0, WIDTH(self.view), kTopBarHeight+kStatusBarHeight);
-    gradient.frame = rect;
-    gradient.colors = [NSArray arrayWithObjects:(id)ColorTheme.CGColor,
-                       (id)[UIColor colorWithRed:129.0/255 green:129.0/255 blue:129./255 alpha:1].CGColor,nil];
-    [self.view.layer insertSublayer:gradient atIndex:0];
+//    CAGradientLayer *gradient = [CAGradientLayer layer];
+//    CGRect rect = CGRectMake(0, 0, WIDTH(self.view), kTopBarHeight+kStatusBarHeight);
+//    gradient.frame = rect;
+//    gradient.colors = [NSArray arrayWithObjects:(id)ColorTheme.CGColor,
+//                       (id)[UIColor colorWithRed:129.0/255 green:129.0/255 blue:129./255 alpha:1].CGColor,nil];
+//    [self.view.layer insertSublayer:gradient atIndex:0];
     
     self.view.backgroundColor = ColorTheme;
     //初始化网络请求对象

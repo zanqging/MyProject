@@ -9,7 +9,9 @@
 #import "WMPageConst.h"
 #import "WMPageController.h"
 #import "INSViewController.h"
+#import "movieViewController.h"
 #import "WMTableViewController.h"
+#import <MediaPlayer/MediaPlayer.h>
 #import "RoadShowDetailViewController.h"
 @interface WMPageController () <WMMenuViewDelegate,UIScrollViewDelegate,navViewDelegate,WMtableViewCellDelegate> {
     CGFloat _viewHeight;
@@ -29,6 +31,7 @@
 @property (nonatomic, strong) NSCache *memCache;
 // 收到内存警告的次数
 @property (nonatomic, assign) int memoryWarningCount;
+@property (nonatomic,strong) movieViewController * moviePlayer;//视频播放控制器
 @end
 
 @implementation WMPageController
@@ -362,7 +365,7 @@
     self.navView.delegate  = self;
     self.navView.menuArray  =[NSMutableArray arrayWithArray:menuArray];
     self.navView.titleLable.textColor=WriteColor;
-    [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
+    [self.navView.leftButton setImage:IMAGENAMED(@"shuruphone") forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
     [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
@@ -400,6 +403,92 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
     
     [self updateNewMessage:nil];
+    
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(myMovieFinishedCallback:)
+//                                                 name:MPMoviePlayerPlaybackDidFinishNotification
+//                                               object:nil];
+}
+
+/**
+ *  屏幕旋转
+ */
+-(void)onDeviceOrientationChange
+{
+    UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+    
+    CGRect frame1;
+    CGRect frame2;
+    if (isiPhone4) {
+        frame1 = CGRectMake(-kTopBarHeight-kStatusBarHeight-16, kTopBarHeight+kStatusBarHeight+16, HEIGHT(self.view), WIDTH(self.view));
+        frame2 = CGRectMake(0,0,WIDTH(self.view),HEIGHT(self.view));
+    }else if (isiPhone5){
+        frame1 = CGRectMake(-kTopBarHeight-kStatusBarHeight-60, kTopBarHeight+kStatusBarHeight+60, HEIGHT(self.view), WIDTH(self.view));
+        frame2 = CGRectMake(0,0,WIDTH(self.view),HEIGHT(self.view));
+    }else if (isiPhone6){
+        frame1 = CGRectMake(-kTopBarHeight-kStatusBarHeight-60, kTopBarHeight+kStatusBarHeight+60, HEIGHT(self.view), WIDTH(self.view));
+        frame2 = CGRectMake(0,0,WIDTH(self.view),HEIGHT(self.view));
+    }else if (isiPhone6P){
+        frame1 = CGRectMake(-kTopBarHeight-kStatusBarHeight-60, kTopBarHeight+kStatusBarHeight+60, HEIGHT(self.view), WIDTH(self.view));
+        frame2 = CGRectMake(0,0,WIDTH(self.view),HEIGHT(self.view));    }
+    
+    if (orientation == UIInterfaceOrientationLandscapeLeft) {
+        [_moviePlayer.view setFrame:frame1];
+        _moviePlayer.view.transform = CGAffineTransformMakeRotation(- M_PI_2);
+        _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
+    }
+    if (orientation == UIInterfaceOrientationLandscapeRight) {
+        [_moviePlayer.view setFrame:frame1];
+        _moviePlayer.view.transform = CGAffineTransformMakeRotation(M_PI_2);
+        _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
+    }
+    
+    if (UIInterfaceOrientationIsPortrait(orientation)) {
+        [_moviePlayer.view setFrame:frame1];
+        _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
+        _moviePlayer.view.transform = CGAffineTransformMakeRotation(0);
+    }
+    
+    if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
+        [_moviePlayer.view setFrame:frame2];
+        _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
+        _moviePlayer.view.transform = CGAffineTransformMakeRotation(M_PI_2*2);
+    }
+    
+    
+    if (orientation == UIInterfaceOrientationUnknown) {
+        [_moviePlayer.view setFrame:frame2];
+        _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
+        _moviePlayer.view.transform = CGAffineTransformMakeRotation(M_PI_2*2);
+    }
+    
+    if (orientation == UIInterfaceOrientationPortrait) {
+        [_moviePlayer.view setFrame:frame2];
+        _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
+        _moviePlayer.view.transform = CGAffineTransformMakeRotation(0);
+    }
+    
+    
+}
+-(void)playMedia:(NSString*)urlStr
+{
+    
+    NSString* str = urlStr;
+    if (str && ![str isEqualToString:@""]) {
+        NSURL* url = [NSURL URLWithString:str];
+        _moviePlayer = [[movieViewController alloc]init];
+        [_moviePlayer.moviePlayer setContentURL:url];
+        [_moviePlayer.moviePlayer prepareToPlay];
+        [self presentMoviePlayerViewControllerAnimated:_moviePlayer];
+        
+        //        [self.moviePlayer.moviePlayer setContentURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"test" ofType:@"mp4"]]];
+        self.moviePlayer.moviePlayer.fullscreen = YES;
+        self.moviePlayer.moviePlayer.controlStyle =MPMovieControlStyleFullscreen;
+        [self.moviePlayer.moviePlayer play];
+    }
 }
 
 -(void)updateNewMessage:(NSDictionary*)dic
@@ -450,7 +539,7 @@
 {
     //网络请求
     self.startLoading  =YES;
-    NSString* srverUrl = [FINIAL_COMM stringByAppendingFormat:@"%d/%d/",self.selectIndex,0];
+    NSString* srverUrl = [FINIAL_COMM stringByAppendingFormat:@"%d/%d/",self.selectIndex+1,0];
     [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
 }
 
@@ -609,6 +698,11 @@
     controller.title = self.navView.title;
     [self.navigationController pushViewController:controller animated:YES];
 }
+
+-(void)wmTableViewController:(id)wmTableViewController playMedia:(BOOL)playMedia data:(NSDictionary *)dic
+{
+    [self playMedia:[dic valueForKey:@"vcr"]];
+}
 #pragma mark - WMMenuView Delegate
 - (void)menuView:(WMMenuView *)menu didSelesctedIndex:(NSInteger)index currentIndex:(NSInteger)currentIndex {
     NSInteger gap = (NSInteger)labs(index - currentIndex);
@@ -653,7 +747,8 @@
     }else{
         self.currentViewController.dataArray = (NSMutableArray*)self.dataDic;
     }
-    self.currentViewController.type = self.menuSelectIndex;
+    self.currentViewController.type = self.selectIndex;
+    self.currentViewController.menuType = self.menuSelectIndex;
     if (!self.currentViewController.delegate) {
         self.currentViewController.delegate  = self;
     }

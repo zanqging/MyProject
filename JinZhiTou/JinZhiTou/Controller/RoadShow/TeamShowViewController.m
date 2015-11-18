@@ -8,15 +8,8 @@
 
 #import "TeamShowViewController.h"
 #import "Cell.h"
-#import "TDUtil.h"
-#import "NavView.h"
 #import "MJRefresh.h"
-#import "HttpUtils.h"
-#import "UConstants.h"
 #import "LineLayout.h"
-#import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
-#import "ASIFormDataRequest.h"
 #import "TeamDetailViewController.h"
 #import "ThinkTankTableViewCell.h"
 @interface TeamShowViewController ()<UITableViewDataSource , UITableViewDelegate,ASIHTTPRequestDelegate>
@@ -24,8 +17,6 @@
     BOOL isResetPosition;
     BOOL isRefresh;
     int currentPage;
-    HttpUtils* httpUtils;
-    NavView * navView;
     NSString* _identify;
 }
 
@@ -37,17 +28,16 @@
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
     //设置标题
-    navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
-    navView.imageView.alpha=1;
-    [navView setTitle:@"核心团队"];
-    navView.titleLable.textColor=WriteColor;
+    self.navView.imageView.alpha=1;
+    [self.navView setTitle:@"核心团队"];
+    self.navView.titleLable.textColor=WriteColor;
     
-    [navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [navView.leftButton setTitle:@"路演详情" forState:UIControlStateNormal];
-    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
-    [self.view addSubview:navView];
+    [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
+    [self.navView.leftButton setTitle:@"项目详情" forState:UIControlStateNormal];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
+    [self.view addSubview:self.navView];
     
-    self.tableView=[[UITableViewCustomView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView)) style:UITableViewStyleGrouped];
+    self.tableView=[[UITableViewCustomView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)) style:UITableViewStyleGrouped];
     self.tableView.bounces=YES;
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
@@ -64,8 +54,6 @@
     [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
 
     
-    //初始化网络对象
-    httpUtils = [[HttpUtils alloc]init];
     //加载数据啊
     [self loadData];
 }
@@ -74,6 +62,7 @@
 {
     isRefresh =YES;
     currentPage = 0;
+    self.startLoading  =YES;
     [self loadData];
 }
 
@@ -93,7 +82,7 @@
 -(void)loadData
 {
     NSString* url = [COREMEMBER stringByAppendingFormat:@"%ld/",(long)self.projectId];
-    [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestCoreMember:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestCoreMember:)];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -174,8 +163,8 @@
     NSMutableArray* jsonDic = [jsonString JSONValue];
     
     if (jsonDic) {
-        int status = [[jsonDic valueForKey:@"status"] intValue];
-        if (status==0 || status == -1) {
+        int code = [[jsonDic valueForKey:@"code"] intValue];
+        if (code==0) {
             self.dataArray = [jsonDic valueForKey:@"data"];
         }
         
@@ -186,6 +175,7 @@
         if (self.tableView.footer.isRefreshing) {
             [self.tableView.footer endRefreshing];
         }
+        self.startLoading = NO;
     }
 }
 

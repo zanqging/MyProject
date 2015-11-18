@@ -21,6 +21,7 @@
 #import <MessageUI/MessageUI.h>
 #import "PECropViewController.h"
 #import "AboutUsViewController.h"
+#import "UserInfoAuthController.h"
 #import "FinialAuthViewController.h"
 #import "UserFinialViewController.h"
 #import "UserTraceViewController.h"
@@ -44,10 +45,16 @@
     [self.tabBar insertSubview:view atIndex:0];
     self.tabBar.opaque = YES;
     
+    NSUserDefaults* data =[NSUserDefaults standardUserDefaults];
+    NSString* auth = [data valueForKey:@"auth"];
     //添加TabBar中间＋号视图
     NSMutableArray* dataArray=[[NSMutableArray alloc]init];
     DataModel* model=[[DataModel alloc]init];
-    [model setDesc1:@"我要认证"];
+    if ([auth boolValue]) {
+        [model setDesc1:@"认证信息"];
+    }else{
+        [model setDesc1:@"我要认证"];
+    }
     [model setDesc2:@"woyaorenzheng"];
     [dataArray addObject:model];
     
@@ -62,10 +69,10 @@
     [model setDesc2:@"woyaofenxiang"];
     [dataArray addObject:model];
     
-    model=[[DataModel alloc]init];
-    [model setDesc1:@"我要签到"];
-    [model setDesc2:@"woyaoqiandao"];
-    [dataArray addObject:model];
+//    model=[[DataModel alloc]init];
+//    [model setDesc1:@"我要签到"];
+//    [model setDesc2:@"woyaoqiandao"];
+//    [dataArray addObject:model];
     
     
     UIImage *startImage = [UIImage imageNamed:@"jiahao"];
@@ -97,31 +104,17 @@
     
     //检测更新
     [self checkUpdate];
-    
-    
-//    NSArray *array = [UIFont familyNames];
-//    
-//    NSString *familyName ;
-//    
-//    NSMutableArray *fontNames = [[NSMutableArray alloc] init];
-//    
-//    
-//    
-//    for(familyName in array)
-//        
-//    {
-//        
-//        NSArray *names = [UIFont fontNamesForFamilyName:familyName];
-//        
-//        [fontNames addObjectsFromArray:names];
-//        
-//    }
-//     NSLog(@"%@", fontNames);
-//     NSLog(@"完毕");
-    
+    //更新信息
     [self updateStatus];
+    //用户信息
+    [self userInfo];
     
     
+}
+
+-(void)userInfo
+{
+    [httpUtils getDataFromAPIWithOps:USERINFO postParam:nil type:0 delegate:self sel:@selector(requestUserInfo:)];
 }
 
 -(void)updateStatus
@@ -193,6 +186,9 @@
     }
     
     dialogView.type = [[dictionary valueForKey:@"type"] intValue];
+    if (dialogView.type==4) {
+        [dialogView hideCancelButton];
+    }
     [dialogView.cancelButton addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
     [dialogView.shureButton addTarget:self action:@selector(shure:) forControlEvents:UIControlEventTouchUpInside];
     [dialogView.cancelButton setTitle:[dictionary valueForKey:@"cancel"] forState:UIControlStateNormal];
@@ -222,7 +218,7 @@
     
     if (dialogView.type==3) {
         UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        UIViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"LoginController"];
+        UIViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"loginViewController"];
         [self.navigationController pushViewController:controller animated:YES];
         
         for(UIViewController* c in self.navigationController.childViewControllers){
@@ -230,11 +226,15 @@
                 [c removeFromParentViewController];
             }
         }
+    }else if(dialogView.type==4){
+        [dialogView removeFromSuperview];
     }else{
-        FinialAuthViewController* controller = [[FinialAuthViewController alloc]init];
-        controller.type = 1;
-        controller.titleStr = @"项目详情";
-        [self.navigationController pushViewController:controller animated:YES];
+//        FinialAuthViewController* controller = [[FinialAuthViewController alloc]init];
+//        controller.type = 1;
+//        controller.titleStr = @"项目详情";
+//        [self.navigationController pushViewController:controller animated:YES];
+        
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil];
     }
 }
 
@@ -292,10 +292,19 @@
 }
 -(void)AuthApplyAction
 {
-    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    FinialAuthViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"AuthConfig"];
-    controller.titleStr = @"首页";
-    [self.navigationController pushViewController:controller animated:YES];
+//    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+//    FinialAuthViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"AuthConfig"];
+//    controller.titleStr = @"首页";
+//    [self.navigationController pushViewController:controller animated:YES];
+    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
+    NSString* auth = [data valueForKey:@"auth"];
+    if ([auth boolValue]) {
+        UserInfoAuthController* controller = [[UserInfoAuthController alloc]init];
+        [self.navigationController pushViewController:controller animated:YES];
+    }else{
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil];
+    }
+    
 }
 -(void)ActionArriveAction
 {
@@ -581,7 +590,6 @@
         if ([status intValue] == 0) {
             
         }
-        
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
     }
 }
@@ -677,6 +685,40 @@
         }
     }
 }
+
+-(void)requestUserInfo:(ASIHTTPRequest*)request
+{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    if(jsonDic!=nil)
+    {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
+            NSDictionary* dic =[jsonDic valueForKey:@"data"];
+            NSUserDefaults* data =[NSUserDefaults standardUserDefaults];
+            [data setValue:[self formatDic:dic key:@"tel"] forKey:USER_STATIC_TEL];
+            [data setValue:[self formatDic:dic key:@"name"] forKey:USER_STATIC_NAME];
+            [data setValue:[self formatDic:dic key:@"idpic"] forKey:USER_STATIC_IDPIC];
+            [data setValue:[self formatDic:dic key:@"uid"] forKey:USER_STATIC_USER_ID];
+            [data setValue:[self formatDic:dic key:@"addr"] forKey:USER_STATIC_ADDRESS];
+            [data setValue:[self formatDic:dic key:@"gender"] forKey:USER_STATIC_GENDER];
+            [data setValue:[self formatDic:dic key:@"idno"] forKey:USER_STATIC_IDNUMBER];
+            [data setValue:[self formatDic:dic key:@"position"] forKey:USER_STATIC_POSITION];
+            [data setValue:[self formatDic:dic key:@"company"] forKey:USER_STATIC_COMPANY_NAME];
+            [data setValue:[self formatDic:dic key:@"nickname"] forKey:USER_STATIC_NICKNAME];
+        }
+    }
+}
+
+-(NSString*)formatDic:(NSDictionary*)dic key:(NSString*)key
+{
+    NSString* str = [dic valueForKey:key];
+    if (![str isKindOfClass:NSNull.class]) {
+        return str;
+    }
+    return nil;
+}
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     
@@ -691,5 +733,12 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     [[UIApplication sharedApplication]openURL:[NSURL URLWithString:ITUNES_URL]];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    //隐藏导航栏
+    [self.navigationController.navigationBar setHidden:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 @end

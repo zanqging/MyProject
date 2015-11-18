@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RootViewController.h"
 #import "PECropViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import <AVFoundation/AVFoundation.h>
-@interface RoadShowApplyViewController : UIViewController
+@interface RoadShowApplyViewController : RootViewController
 @property (strong ,nonatomic) AVPlayer *player;//播放器，用于录制完视频后播放视频
 @property(retain,nonatomic)UIImagePickerController* imagePicker;
 //播放器视图控制器

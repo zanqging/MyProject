@@ -16,13 +16,13 @@
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #import "NSString+SBJSON.h"
+#import "MasterViewController.h"
 #import "BannerViewController.h"
 #import "UserInfoViewController.h"
 #import "FinialAuthViewController.h"
 #import "StartPageViewController.h"
 #import "RoadShowDetailViewController.h"
 #import <TencentOpenAPI/TencentOAuth.h>
-#import "MasterViewController.h"
 #import "ActionDetailViewController.h"
 #import "UserTraceViewController.h"
 
@@ -72,7 +72,7 @@
         }else{
             
             UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-            UIViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"LoginController"];
+            UIViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"loginViewController"];
             self.iNav = [[UINavigationController alloc]initWithRootViewController:controller];
         }
     }else{

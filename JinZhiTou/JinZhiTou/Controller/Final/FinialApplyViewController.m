@@ -51,7 +51,6 @@
     scrollView.delegate=self;
     scrollView.bounces = NO;
     scrollView.backgroundColor=BackColor;
-    scrollView.contentSize = CGSizeMake(WIDTH(scrollView), HEIGHT(scrollView)+200);
     [self.view addSubview:scrollView];
     
     UITapGestureRecognizer* recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doAction:)];
@@ -96,12 +95,13 @@
     //输入投资额度
     UITextField* textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(lable)+10, Y(lable), 180, 30)];
     textField.tag =500001;
+    textField.enabled  =YES;
     textField.delegate = self;
     textField.font  =SYSTEMFONT(18);
     textField.userInteractionEnabled = YES;
-    textField.enabled  =YES;
     textField.returnKeyType = UIReturnKeyDone;
     textField.placeholder = @"投资额度:单位：万元";
+    textField.keyboardType  =UIKeyboardTypeDecimalPad;
     textField.autocorrectionType = UITextAutocorrectionTypeNo;
     textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -232,28 +232,31 @@
     {
         NSString* code = [jsonDic valueForKey:@"code"];
         if ([code intValue] == 0) {
-            [[DialogUtil sharedInstance] showDlg:self.view textOnly:@"信息提交成功!"];
+//            [[DialogUtil sharedInstance] showDlg:self.view textOnly:@"信息提交成功!"];
+//            
+//            FinialSuccessViewController* controller =[[FinialSuccessViewController alloc]init];
+//            controller.type=1;
+//            controller.titleStr= @"投资结果";
+//            controller.content =@"    尊敬的用户，您的投资申请已提交，48小时内会有工作人员与您联系，您也可以在“个人中心”－－“进度查看”中查看到审核进度。";
+//            [self.navigationController pushViewController:controller animated:YES];
             
-            FinialSuccessViewController* controller =[[FinialSuccessViewController alloc]init];
-            controller.type=1;
-            controller.titleStr= @"投资结果";
-            controller.content =@"    尊敬的用户，您的投资申请已提交，48小时内会有工作人员与您联系，您也可以在“个人中心”－－“进度查看”中查看到审核进度。";
-            [self.navigationController pushViewController:controller animated:YES];
+             [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
             
         }else{
-            if ([code intValue] == 1) {
-                double delayInSeconds = 1.0;
-                //__block RoadShowDetailViewController* bself = self;
-                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                    UserFinialViewController* controller = [[UserFinialViewController alloc]init];
-                    //来现场
-                    controller.selectedIndex =1;
-                    controller.navTitle =  self.navView.title;
-                    [self.navigationController pushViewController:controller animated:YES];
-                });
-            }
-            [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+//            if ([code intValue] == 1) {
+//                double delayInSeconds = 1.0;
+//                //__block RoadShowDetailViewController* bself = self;
+//                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+//                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+//                    UserFinialViewController* controller = [[UserFinialViewController alloc]init];
+//                    //来现场
+//                    controller.selectedIndex =1;
+//                    controller.navTitle =  self.navView.title;
+//                    [self.navigationController pushViewController:controller animated:YES];
+//                });
+//            }
+//            [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
         }
         self.startLoading = NO;
     }

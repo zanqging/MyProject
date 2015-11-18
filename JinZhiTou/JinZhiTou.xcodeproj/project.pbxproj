@@ -14,6 +14,9 @@
 		4501400B1B943024000F8A97 /* UIViewController+MMDrawerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450140071B943024000F8A97 /* UIViewController+MMDrawerController.m */; };
 		4501400E1B943DF9000F8A97 /* MMExampleDrawerVisualStateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4501400D1B943DF9000F8A97 /* MMExampleDrawerVisualStateManager.m */; };
 		4501ABBF1BEDEABA006EA357 /* UserInfoConfigController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4501ABBE1BEDEABA006EA357 /* UserInfoConfigController.m */; };
+		45041AC01BFACCE9007A299A /* UserInfoAuthController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45041ABF1BFACCE9007A299A /* UserInfoAuthController.m */; };
+		45041ACC1BFAD91B007A299A /* passed.png in Resources */ = {isa = PBXBuildFile; fileRef = 45041ACB1BFAD91B007A299A /* passed.png */; };
+		45041AD21BFB0026007A299A /* auth.png in Resources */ = {isa = PBXBuildFile; fileRef = 45041AD11BFB0026007A299A /* auth.png */; };
 		450876281B8F6414006EFC1A /* StartPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450876271B8F6414006EFC1A /* StartPageViewController.m */; };
 		4508762D1B8F644E006EFC1A /* SlideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4508762A1B8F644E006EFC1A /* SlideView.m */; };
 		450876311B8F647C006EFC1A /* SlideViewStartPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 450876301B8F647C006EFC1A /* SlideViewStartPage.m */; };
@@ -43,6 +46,9 @@
 		4511CC2E1BA2B6E300A9D00A /* moviePlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 4511CC1A1BA2B6E300A9D00A /* moviePlay.png */; };
 		4511CC2F1BA2B6E300A9D00A /* moviePlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4511CC1B1BA2B6E300A9D00A /* moviePlay@2x.png */; };
 		4511CC321BA2C6B700A9D00A /* movieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4511CC311BA2C6B700A9D00A /* movieViewController.m */; };
+		45158BA31BF96A920095CB91 /* FinalingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45158BA21BF96A920095CB91 /* FinalingTableViewCell.m */; };
+		45158BA61BF97BF80095CB91 /* FinalPersonTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45158BA51BF97BF70095CB91 /* FinalPersonTableViewCell.m */; };
+		45158BA91BF97CD30095CB91 /* FinalCompanyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45158BA81BF97CD30095CB91 /* FinalCompanyTableViewCell.m */; };
 		4515BBDF1BE9D92700B4D402 /* RoadShowHomeHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4515BBDE1BE9D92700B4D402 /* RoadShowHomeHeaderView.m */; };
 		4515BBE21BE9FBE400B4D402 /* LoadingViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4515BBE11BE9FBE400B4D402 /* LoadingViewDelegate.m */; };
 		4515BBE51BEA199900B4D402 /* RoadShowHomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4515BBE41BEA199900B4D402 /* RoadShowHomeTableViewCell.m */; };
@@ -231,6 +237,9 @@
 		45631F821B5A4AAB009FA35D /* SphereMenuItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45631F811B5A4AAB009FA35D /* SphereMenuItemView.m */; };
 		4565A2051B9D41CF00FA040A /* TypeShow.m in Sources */ = {isa = PBXBuildFile; fileRef = 4565A2041B9D41CF00FA040A /* TypeShow.m */; };
 		4565A2081B9D5A3E00FA040A /* NewFinialTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4565A2071B9D5A3D00FA040A /* NewFinialTableViewCell.m */; };
+		456ED38F1BFC3C220067685A /* ResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 456ED38E1BFC3C220067685A /* ResetPasswordViewController.m */; };
+		456ED3921BFC91C90067685A /* empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 456ED3901BFC91C90067685A /* empty.png */; };
+		456ED3931BFC91C90067685A /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = 456ED3911BFC91C90067685A /* error.png */; };
 		45735E161BF6B90B00CC8964 /* AnnounceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45735E151BF6B90B00CC8964 /* AnnounceView.m */; };
 		457E04281B7060E500BC4161 /* ForgetPassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457E04271B7060E500BC4161 /* ForgetPassViewController.m */; };
 		457F70EC1BF56C91004241A0 /* WeChatBindController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457F70EB1BF56C91004241A0 /* WeChatBindController.m */; };
@@ -263,7 +272,6 @@
 		458C9E1E1BD52BEC00F66916 /* UIReplyLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 458C9E1D1BD52BEC00F66916 /* UIReplyLabel.m */; };
 		45984A441BE8C159003D5F50 /* ModifyCompanyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45984A431BE8C159003D5F50 /* ModifyCompanyViewController.m */; };
 		45984A471BE8C6E3003D5F50 /* ModifyPositionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45984A461BE8C6E3003D5F50 /* ModifyPositionViewController.m */; };
-		459AC9411B6F39020050E817 /* AuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 459AC9401B6F39020050E817 /* AuthViewController.m */; };
 		459AC9441B6F442E0050E817 /* loginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 459AC9431B6F442E0050E817 /* loginViewController.m */; };
 		459AC9471B6F4F050050E817 /* RegisteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 459AC9461B6F4F050050E817 /* RegisteViewController.m */; };
 		45A2AD911B70FD4D00751F78 /* CompanyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A2AD901B70FD4D00751F78 /* CompanyViewController.m */; };
@@ -414,6 +422,10 @@
 		4501400D1B943DF9000F8A97 /* MMExampleDrawerVisualStateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMExampleDrawerVisualStateManager.m; sourceTree = "<group>"; };
 		4501ABBD1BEDEABA006EA357 /* UserInfoConfigController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserInfoConfigController.h; path = Controller/Company/UserInfoConfigController.h; sourceTree = "<group>"; };
 		4501ABBE1BEDEABA006EA357 /* UserInfoConfigController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserInfoConfigController.m; path = Controller/Company/UserInfoConfigController.m; sourceTree = "<group>"; };
+		45041ABE1BFACCE9007A299A /* UserInfoAuthController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserInfoAuthController.h; path = Controller/Company/UserInfoAuthController.h; sourceTree = "<group>"; };
+		45041ABF1BFACCE9007A299A /* UserInfoAuthController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserInfoAuthController.m; path = Controller/Company/UserInfoAuthController.m; sourceTree = "<group>"; };
+		45041ACB1BFAD91B007A299A /* passed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = passed.png; sourceTree = "<group>"; };
+		45041AD11BFB0026007A299A /* auth.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = auth.png; sourceTree = "<group>"; };
 		450876261B8F6414006EFC1A /* StartPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartPageViewController.h; sourceTree = "<group>"; };
 		450876271B8F6414006EFC1A /* StartPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartPageViewController.m; sourceTree = "<group>"; };
 		450876291B8F644E006EFC1A /* SlideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideView.h; sourceTree = "<group>"; };
@@ -456,6 +468,12 @@
 		4511CC1B1BA2B6E300A9D00A /* moviePlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "moviePlay@2x.png"; sourceTree = "<group>"; };
 		4511CC301BA2C6B700A9D00A /* movieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = movieViewController.h; path = Controller/RoadShow/movieViewController.h; sourceTree = "<group>"; };
 		4511CC311BA2C6B700A9D00A /* movieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = movieViewController.m; path = Controller/RoadShow/movieViewController.m; sourceTree = "<group>"; };
+		45158BA11BF96A920095CB91 /* FinalingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FinalingTableViewCell.h; path = Controller/Final/TableViewCell/FinalingTableViewCell.h; sourceTree = "<group>"; };
+		45158BA21BF96A920095CB91 /* FinalingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FinalingTableViewCell.m; path = Controller/Final/TableViewCell/FinalingTableViewCell.m; sourceTree = "<group>"; };
+		45158BA41BF97BF70095CB91 /* FinalPersonTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FinalPersonTableViewCell.h; sourceTree = "<group>"; };
+		45158BA51BF97BF70095CB91 /* FinalPersonTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FinalPersonTableViewCell.m; sourceTree = "<group>"; };
+		45158BA71BF97CD30095CB91 /* FinalCompanyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FinalCompanyTableViewCell.h; sourceTree = "<group>"; };
+		45158BA81BF97CD30095CB91 /* FinalCompanyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FinalCompanyTableViewCell.m; sourceTree = "<group>"; };
 		4515BBDD1BE9D92700B4D402 /* RoadShowHomeHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoadShowHomeHeaderView.h; path = View/RoadShow/RoadShowHomeHeaderView.h; sourceTree = "<group>"; };
 		4515BBDE1BE9D92700B4D402 /* RoadShowHomeHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RoadShowHomeHeaderView.m; path = View/RoadShow/RoadShowHomeHeaderView.m; sourceTree = "<group>"; };
 		4515BBE01BE9FBE400B4D402 /* LoadingViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingViewDelegate.h; sourceTree = "<group>"; };
@@ -795,6 +813,10 @@
 		4565A2041B9D41CF00FA040A /* TypeShow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TypeShow.m; path = View/TypeShow.m; sourceTree = "<group>"; };
 		4565A2061B9D5A3D00FA040A /* NewFinialTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewFinialTableViewCell.h; path = View/UserInfo/Cell/NewFinialTableViewCell.h; sourceTree = "<group>"; };
 		4565A2071B9D5A3D00FA040A /* NewFinialTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewFinialTableViewCell.m; path = View/UserInfo/Cell/NewFinialTableViewCell.m; sourceTree = "<group>"; };
+		456ED38D1BFC3C220067685A /* ResetPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPasswordViewController.h; sourceTree = "<group>"; };
+		456ED38E1BFC3C220067685A /* ResetPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResetPasswordViewController.m; sourceTree = "<group>"; };
+		456ED3901BFC91C90067685A /* empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty.png; sourceTree = "<group>"; };
+		456ED3911BFC91C90067685A /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error.png; sourceTree = "<group>"; };
 		45735E141BF6B90B00CC8964 /* AnnounceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnounceView.h; path = View/announce/AnnounceView.h; sourceTree = "<group>"; };
 		45735E151BF6B90B00CC8964 /* AnnounceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnnounceView.m; path = View/announce/AnnounceView.m; sourceTree = "<group>"; };
 		457E04261B7060E500BC4161 /* ForgetPassViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ForgetPassViewController.h; path = Controller/Login/ForgetPassViewController.h; sourceTree = "<group>"; };
@@ -847,8 +869,6 @@
 		45984A431BE8C159003D5F50 /* ModifyCompanyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ModifyCompanyViewController.m; path = Controller/ModifyCompanyViewController.m; sourceTree = "<group>"; };
 		45984A451BE8C6E3003D5F50 /* ModifyPositionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ModifyPositionViewController.h; path = Controller/ModifyPositionViewController.h; sourceTree = "<group>"; };
 		45984A461BE8C6E3003D5F50 /* ModifyPositionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ModifyPositionViewController.m; path = Controller/ModifyPositionViewController.m; sourceTree = "<group>"; };
-		459AC93F1B6F39020050E817 /* AuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AuthViewController.h; path = Controller/Login/AuthViewController.h; sourceTree = "<group>"; };
-		459AC9401B6F39020050E817 /* AuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AuthViewController.m; path = Controller/Login/AuthViewController.m; sourceTree = "<group>"; };
 		459AC9421B6F442E0050E817 /* loginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = loginViewController.h; path = Controller/Login/loginViewController.h; sourceTree = "<group>"; };
 		459AC9431B6F442E0050E817 /* loginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = loginViewController.m; path = Controller/Login/loginViewController.m; sourceTree = "<group>"; };
 		459AC9451B6F4F050050E817 /* RegisteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisteViewController.h; sourceTree = "<group>"; };
@@ -1244,8 +1264,12 @@
 		451F488B1B53604900C91B4A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				45041ACB1BFAD91B007A299A /* passed.png */,
+				45041AD11BFB0026007A299A /* auth.png */,
 				457F70ED1BF56EB0004241A0 /* brave.jpg */,
 				454E21AA1BF2F38E00DEE0E7 /* message.caf */,
+				456ED3901BFC91C90067685A /* empty.png */,
+				456ED3911BFC91C90067685A /* error.png */,
 				45FD34391BB53DC60065739E /* code.png */,
 				451A3C321BB11F38008BE22C /* youyuan.ttf */,
 			);
@@ -1961,12 +1985,18 @@
 				45F829491B6C64DB0044F6F0 /* FinialPersonTableViewCell.m */,
 				458631F51B65C98D00F06688 /* FinalKindTableViewCell.h */,
 				458631F61B65C98D00F06688 /* FinalKindTableViewCell.m */,
+				45158BA11BF96A920095CB91 /* FinalingTableViewCell.h */,
+				45158BA21BF96A920095CB91 /* FinalingTableViewCell.m */,
 				458631F81B66226000F06688 /* FinalContentTableViewCell.h */,
 				458631F91B66226000F06688 /* FinalContentTableViewCell.m */,
 				45F8294B1B6C79150044F6F0 /* FinialPlanTableViewCell.h */,
 				45F8294C1B6C79150044F6F0 /* FinialPlanTableViewCell.m */,
 				451A3C341BB143A0008BE22C /* ThinkTankTableViewCell.h */,
 				451A3C351BB143A0008BE22C /* ThinkTankTableViewCell.m */,
+				45158BA41BF97BF70095CB91 /* FinalPersonTableViewCell.h */,
+				45158BA51BF97BF70095CB91 /* FinalPersonTableViewCell.m */,
+				45158BA71BF97CD30095CB91 /* FinalCompanyTableViewCell.h */,
+				45158BA81BF97CD30095CB91 /* FinalCompanyTableViewCell.m */,
 			);
 			name = TableViewCell;
 			sourceTree = "<group>";
@@ -1994,12 +2024,12 @@
 		459AC93E1B6F38D90050E817 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				459AC93F1B6F39020050E817 /* AuthViewController.h */,
-				459AC9401B6F39020050E817 /* AuthViewController.m */,
 				457F70EA1BF56C91004241A0 /* WeChatBindController.h */,
 				457F70EB1BF56C91004241A0 /* WeChatBindController.m */,
 				459AC9421B6F442E0050E817 /* loginViewController.h */,
 				459AC9431B6F442E0050E817 /* loginViewController.m */,
+				456ED38D1BFC3C220067685A /* ResetPasswordViewController.h */,
+				456ED38E1BFC3C220067685A /* ResetPasswordViewController.m */,
 				459AC9451B6F4F050050E817 /* RegisteViewController.h */,
 				459AC9461B6F4F050050E817 /* RegisteViewController.m */,
 				457E04261B7060E500BC4161 /* ForgetPassViewController.h */,
@@ -2015,6 +2045,8 @@
 				45A2AD901B70FD4D00751F78 /* CompanyViewController.m */,
 				4501ABBD1BEDEABA006EA357 /* UserInfoConfigController.h */,
 				4501ABBE1BEDEABA006EA357 /* UserInfoConfigController.m */,
+				45041ABE1BFACCE9007A299A /* UserInfoAuthController.h */,
+				45041ABF1BFACCE9007A299A /* UserInfoAuthController.m */,
 				45A2AD921B7108EF00751F78 /* FinialAuthViewController.h */,
 				45A2AD931B7108EF00751F78 /* FinialAuthViewController.m */,
 				45A2ADAE1B727CB900751F78 /* FinialAuthDetailViewController.h */,
@@ -2628,6 +2660,7 @@
 				451B52C01BA66E3500388E5C /* NavBarIconSearchBar2_blue.png in Resources */,
 				4543EB821BD0ABB80041DCBD /* ImageError@2x.png in Resources */,
 				454E21AB1BF2F38F00DEE0E7 /* message.caf in Resources */,
+				456ED3921BFC91C90067685A /* empty.png in Resources */,
 				45F93B611B637311004526F5 /* MJRefresh.bundle in Resources */,
 				451A3C331BB11F38008BE22C /* youyuan.ttf in Resources */,
 				451B52BF1BA66E3500388E5C /* NavBarIconSearchBar_blue@2x.png in Resources */,
@@ -2636,8 +2669,11 @@
 				451B52C41BA66F5500388E5C /* NavBarIconSearchCircle_blue.png in Resources */,
 				451B52BA1BA66E3500388E5C /* NavBarIconSearch_blue.png in Resources */,
 				4543EB9F1BD0ABB80041DCBD /* VideoOverlay.png in Resources */,
+				45041AD21BFB0026007A299A /* auth.png in Resources */,
+				456ED3931BFC91C90067685A /* error.png in Resources */,
 				4543EBA01BD0ABB80041DCBD /* VideoOverlay@2x.png in Resources */,
 				458115591B7FA57C006EEBBC /* PushConfig.plist in Resources */,
+				45041ACC1BFAD91B007A299A /* passed.png in Resources */,
 				453E23E41B7ED07F0023BB00 /* read_me.txt in Resources */,
 				4511CC231BA2B6E300A9D00A /* movieBackwardSelected@2x.png in Resources */,
 				451B52BD1BA66E3500388E5C /* NavBarIconSearch_white@2x.png in Resources */,
@@ -2697,7 +2733,6 @@
 				458115681B803F7D006EEBBC /* ProgressTraceView.m in Sources */,
 				4543EB071BD08E100041DCBD /* MWGridCell.m in Sources */,
 				45A2AD941B7108EF00751F78 /* FinialAuthViewController.m in Sources */,
-				459AC9411B6F39020050E817 /* AuthViewController.m in Sources */,
 				45A2ADAD1B7208E300751F78 /* RoadShowApplyViewController.m in Sources */,
 				45E189E41B79E0500082225E /* ReplyMessageTableViewCell.m in Sources */,
 				453441361BE0B6AC00802410 /* ShareNewsView.m in Sources */,
@@ -2711,6 +2746,7 @@
 				4581153F1B7F1987006EEBBC /* LoadVideo.m in Sources */,
 				45E811FF1B671EA0009F840D /* RoadShowHeader.m in Sources */,
 				4511CC321BA2C6B700A9D00A /* movieViewController.m in Sources */,
+				45041AC01BFACCE9007A299A /* UserInfoAuthController.m in Sources */,
 				45FCD0511B75E216009AD6E3 /* SDImageCache.m in Sources */,
 				4543EADF1BD08DCB0041DCBD /* ActionHeader.m in Sources */,
 				45495C0C1B60DA6E007A17FD /* HttpUtils.m in Sources */,
@@ -2812,6 +2848,7 @@
 				45495BCF1B60DA02007A17FD /* UIImage+Alpha.m in Sources */,
 				45ECCEFD1B61FED40013CA73 /* WaterFallFooter.m in Sources */,
 				45E812121B678E84009F840D /* LineLayout.m in Sources */,
+				45158BA31BF96A920095CB91 /* FinalingTableViewCell.m in Sources */,
 				4517CDBE1B78C7ED00EFBB6A /* AFURLConnectionOperation.m in Sources */,
 				4501400E1B943DF9000F8A97 /* MMExampleDrawerVisualStateManager.m in Sources */,
 				4517CDC11B78C7ED00EFBB6A /* AFURLSessionManager.m in Sources */,
@@ -2900,6 +2937,7 @@
 				4545D0AC1BEB49DD00D21FB0 /* WMLoopView.m in Sources */,
 				45495C4F1B60EAEC007A17FD /* NavView.m in Sources */,
 				45E2DDC21B687778008F2942 /* InteractionViewController.m in Sources */,
+				45158BA91BF97CD30095CB91 /* FinalCompanyTableViewCell.m in Sources */,
 				45F93B591B637311004526F5 /* MJRefreshAutoNormalFooter.m in Sources */,
 				45326F161B7443CA0044F8C1 /* PaddingView.m in Sources */,
 				45FCD05E1B75E216009AD6E3 /* UIView+WebCacheOperation.m in Sources */,
@@ -2917,6 +2955,7 @@
 				45E189C21B7909CF0082225E /* MenuView.m in Sources */,
 				45326F131B74432C0044F8C1 /* NSString+MD5.m in Sources */,
 				4511CC1E1BA2B6E300A9D00A /* ALMoviePlayerController.m in Sources */,
+				456ED38F1BFC3C220067685A /* ResetPasswordViewController.m in Sources */,
 				4543EAE31BD08DCB0041DCBD /* ViewController.m in Sources */,
 				452609B71BDF0963006776B2 /* QNUploadOption.m in Sources */,
 				45A2ADAA1B71FFF900751F78 /* FinialKind.m in Sources */,
@@ -2969,6 +3008,7 @@
 				4517CD641B78586F00EFBB6A /* AutoShowView.m in Sources */,
 				4543EB091BD08E100041DCBD /* MWPhoto.m in Sources */,
 				45CF4EC01BE863210098C1F6 /* RootViewController.m in Sources */,
+				45158BA61BF97BF80095CB91 /* FinalPersonTableViewCell.m in Sources */,
 				452609B01BDF0963006776B2 /* QNSessionManager.m in Sources */,
 				4532719D1B751CAD0044F8C1 /* UserFinialViewController.m in Sources */,
 				4517CDBB1B78C7ED00EFBB6A /* AFHTTPSessionManager.m in Sources */,

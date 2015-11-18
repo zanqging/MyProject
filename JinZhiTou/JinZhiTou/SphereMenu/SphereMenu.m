@@ -186,13 +186,9 @@ static const float kSphereDamping = 0.3;
     [self removeSnapBehaviors];
     
     if (self.expanded) {
-        angleNum = 360.0;
-        [self endAnimation];
         [self shrinkSubmenu];
         //旋转
     } else {
-        angleNum = 120;
-        [self startAnimation];
         [self expandSubmenu];
     }
     
@@ -227,6 +223,9 @@ static const float kSphereDamping = 0.3;
 
 - (void)expandSubmenu
 {
+    angleNum = 120;
+    [self startAnimation];
+    
     for (int i = 0; i < self.count; i++) {
         [self.items[i] setAlpha:1];
         [self snapToPostionsWithIndex:i];
@@ -239,6 +238,9 @@ static const float kSphereDamping = 0.3;
 
 - (void)shrinkSubmenu
 {
+    angleNum = 360.0;
+    [self endAnimation];
+    
     for (int i = 0; i < self.count; i++) {
         [self snapToStartWithIndex:i];
     }

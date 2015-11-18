@@ -79,7 +79,7 @@
     [data removeObjectForKey:@"isLogin"];
 
     UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    UIViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"LoginController"];
+    UIViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"loginViewController"];
     [self.navigationController pushViewController:controller animated:YES];
     
     for(UIViewController* c in self.navigationController.childViewControllers){

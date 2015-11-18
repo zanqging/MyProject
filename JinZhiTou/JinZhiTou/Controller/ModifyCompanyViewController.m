@@ -53,10 +53,11 @@
     [TDUtil setLabelMutableText:label content:@"公司名称" lineSpacing:0 headIndent:0];
     [scrollView addSubview:label];
     
+    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
     //输入姓名
     textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label)-20, WIDTH(self.view)-POS_X(label)-60, 40)];
-    textField.placeholder = @"请输入公司名称";
     textField.font = SYSTEMFONT(16);
+    textField.text = [data valueForKey:USER_STATIC_COMPANY_NAME];
     textField.returnKeyType = UIReturnKeyDone;
     textField.borderStyle =UITextBorderStyleNone;
     textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -81,7 +82,10 @@
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入公司名称"];
     }else{
         [self.httpUtil getDataFromAPIWithOps:USERINFO_MODIFY_COMPANY_NAME postParam:[NSDictionary dictionaryWithObject:companyName forKey:@"company"] type:0 delegate:self sel:@selector(requestSave:)];
+        self.startLoading = YES;
+        self.isTransparent  =YES;
     }
+    
 }
 
 -(void)back:(id)sender
@@ -129,8 +133,10 @@
         NSString* code =[dic valueForKey:@"code"];
         if ([code integerValue]==0) {
             NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
-            [data setValue:textField.text forKey:STATIC_USER_NAME];
+            [data setValue:textField.text forKey:USER_STATIC_COMPANY_NAME];
+            [self back:nil];
         }
+        self.startLoading = NO;
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
     }
 }

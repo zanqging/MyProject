@@ -127,11 +127,11 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
-//    self.startLoading = YES;
+    self.startLoading = YES;
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-//    self.startLoading =NO;
+    self.startLoading =NO;
 }
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error

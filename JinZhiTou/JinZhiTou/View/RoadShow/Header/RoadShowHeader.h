@@ -34,7 +34,6 @@
 @property(assign,nonatomic)BOOL isCollect;
 @property(retain,nonatomic)UIColor* tinColor; //标签颜色
 @property(retain,nonatomic)NSString* status;
-@property(retain,nonatomic)NSString* leftNum;//剩余人数
 @property(retain,nonatomic)NSString* amout; //预融资总额
 @property(retain,nonatomic)NSString* industry;//行业
 @property(retain,nonatomic)NSString* showTime; //预路演时间

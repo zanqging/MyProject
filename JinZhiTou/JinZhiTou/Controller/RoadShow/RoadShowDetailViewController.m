@@ -55,7 +55,7 @@
     [super viewDidLoad];
     //设置标题
     self.navView.imageView.alpha=1;
-    [self.navView setTitle:@"路演详情"];
+    [self.navView setTitle:@"项目详情"];
     self.navView.titleLable.textColor=WriteColor;
     
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
@@ -405,7 +405,7 @@
             prototypeCell = [[RoadShowTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:RoadTableDataIdentifier];
         }
         
-        CGFloat height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
+//        CGFloat height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
         
         NSInteger row = indexPath.row;
         
@@ -497,6 +497,8 @@
                 }
             }
         }
+    }else{
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未进行投资人身份认证，请先认证",@"msg",@"取消",@"cancel",@"去认证",@"sure",@"0",@"type", nil]];
     }
 
     
@@ -534,15 +536,11 @@
 
 -(void)FinanceListViewController:(id)sender
 {
-    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
-    BOOL isAnimous = [[data valueForKey:@"isAnimous"] boolValue];
-    if (isAnimous) {
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未登录，请先登录",@"msg",@"取消",@"cancel",@"去登录",@"sure",@"3",@"type", nil]];
-    }else{
-        checkIndex=@"2";
-        //监测是否是投资人
-        [self.httpUtil getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestInvestCheck:)];
-    }
+    checkIndex=@"2";
+    //监测是否是投资人
+    [self.httpUtil getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestInvestCheck:)];
+    self.startLoading = YES;
+    self.isTransparent = YES;
 }
 -(void)back:(id)sender
 {
@@ -603,7 +601,6 @@
             //收藏数
             [header setCollecteNum:[[dataDic valueForKey:@"collect"] integerValue]];
             
-            [header setLeftNum:[dataDic valueForKey:@"participator2plan"]];
             if ([[stageDic valueForKey:@"flag"] intValue]!=1) {
                 //融资中或者融资结束
                 header.investAmout = [[dataDic valueForKey:@"invest_amount_sum"] stringValue];
@@ -651,7 +648,7 @@
             header.isLike = isLike;
             header.mediaUrl = mediaUrl;
             header.isCollect = isCollect;
-            header.status = [stageDic valueForKey:@"code"];
+            header.status = [[dataDic valueForKey:@"stage"] valueForKey:@"code"];
             [scrollView addSubview:header];
             
             
@@ -666,9 +663,6 @@
             mainbussinesView.imageView.image = IMAGENAMED(@"img2");
             mainbussinesView.labelTitle.text = @"主营业务";
             [scrollView addSubview:mainbussinesView];
-            
-            
-            
             
             bussinessModelView = [[FoldView alloc]initWithFrame:CGRectMake(0, POS_Y(mainbussinesView)+1, WIDTH(self.view), 150)];
             
@@ -774,6 +768,7 @@
     
 }
 
+
 /**
  *  权限检测
  *
@@ -786,8 +781,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] == -1) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
             if ([checkIndex isEqualToString:@"1"]) {
                 
                 
@@ -798,14 +793,16 @@
                 [self.navigationController pushViewController:controller animated:YES];
             }
         }else{
-            if ([status intValue] == -9) {
-                
-                [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"取消",@"cancel",@"去认证",@"sure",checkIndex,@"type", nil]];
+            if ([code intValue]==1) {
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
+            }else{
+                //重新登录
             }
         }
     }else{
         [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
     }
+    self.startLoading=NO;
 }
 
 //获取身份认证信息
@@ -816,30 +813,31 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] == -1) {
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
-            FinialSuccessViewController * controller =[[FinialSuccessViewController alloc]init];
-            controller.titleStr =@"来现场报名";
-            controller.content = @"    尊敬的用户，您的来现场申请已提交，48小时内会有工作人员与您联系，您也可以在“个人中心”－－“进度查看”中查看到审核进度。";
-            [self.navigationController pushViewController:controller animated:YES];
-            
-        }else if([status intValue] == 1){
-            [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
-            //[NSThread sleepForTimeInterval:2.0f];
-            //进度查看
-            double delayInSeconds = 1.0;
-            //__block RoadShowDetailViewController* bself = self;
-            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                UserTraceViewController* controller = [[UserTraceViewController alloc]init];
-                //来现场
-                controller.titleStr = self.navView.title;
-                controller.currentSelected = 1001;
-                [self.navigationController pushViewController:controller animated:YES];
-
-            
-            });
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
+//            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+//            FinialSuccessViewController * controller =[[FinialSuccessViewController alloc]init];
+//            controller.titleStr =@"来现场报名";
+//            controller.content = @"    尊敬的用户，您的来现场申请已提交，48小时内会有工作人员与您联系，您也可以在“个人中心”－－“进度查看”中查看到审核进度。";
+//            [self.navigationController pushViewController:controller animated:YES];
+             [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
+        }else if([code intValue] == 1){
+//            [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+//            //[NSThread sleepForTimeInterval:2.0f];
+//            //进度查看
+//            double delayInSeconds = 1.0;
+//            //__block RoadShowDetailViewController* bself = self;
+//            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+//            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+//                UserTraceViewController* controller = [[UserTraceViewController alloc]init];
+//                //来现场
+//                controller.titleStr = self.navView.title;
+//                controller.currentSelected = 1001;
+//                [self.navigationController pushViewController:controller animated:YES];
+//
+//            
+//            });
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
             
         }
         self.startLoading  =NO;

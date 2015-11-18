@@ -106,6 +106,7 @@
     
     //绘制虚线
     [cell layoutPre];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 

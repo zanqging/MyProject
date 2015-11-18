@@ -417,7 +417,7 @@
 }
 
 +(PaddingView*)textFieldPaddingView{
-    return [[PaddingView alloc] initWithFrame:CGRectMake(150, 10, 25, 25)];
+    return [[PaddingView alloc] initWithFrame:CGRectMake(0, 0, 35, 35)];
 }
 
 +(void)setTextFieldLeftPadding:(UITextField *)textField forImage:(NSString *)image

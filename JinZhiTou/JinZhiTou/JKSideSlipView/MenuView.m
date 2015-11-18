@@ -38,7 +38,7 @@
         navView.imageView.alpha=0;
         [navView setTitle:@"个人中心"];
         navView.titleLable.textColor=WriteColor;
-        [navView.rightButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
+        [navView.rightButton setImage:IMAGENAMED(@"shuruphone") forState:UIControlStateNormal];
         [navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(menu:)]];
         [self addSubview:navView];
         

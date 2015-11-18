@@ -11,7 +11,7 @@
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #import <QuartzCore/QuartzCore.h>
-#import "AuthViewController.h"
+#import "LoginViewController.h"
 #define  pageCount 5   //分页控制器控制两个视图页面
 @interface StartPageViewController ()<UIScrollViewDelegate>
 
@@ -129,7 +129,7 @@
 {
     NSUserDefaults* data =[NSUserDefaults standardUserDefaults];
     [data setValue:@"true" forKey:@"isStart"];
-    AuthViewController* controller=[[AuthViewController alloc]init];
+    loginViewController* controller=[[loginViewController alloc]init];
     [self.navigationController pushViewController:controller animated:NO];
     [self removeFromParentViewController];
 }

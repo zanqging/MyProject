@@ -22,6 +22,7 @@
     self.view.backgroundColor = ColorTheme;
     
     //==============================导航栏区域开始==============================//
+    self.navView.imageView.alpha=1;
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
     [self.navView.leftButton setTitle:@"设置" forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
@@ -44,10 +45,12 @@
     [TDUtil setLabelMutableText:label content:@"职位名称" lineSpacing:0 headIndent:0];
     [scrollView addSubview:label];
     
+    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
     //输入姓名
     textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label)-20, WIDTH(self.view)-POS_X(label)-60, 40)];
-    textField.placeholder = @"请输入职位";
     textField.font = SYSTEMFONT(16);
+    textField.placeholder = @"请输入职位";
+    textField.text  =[data valueForKey:USER_STATIC_POSITION];
     textField.returnKeyType = UIReturnKeyDone;
     textField.borderStyle =UITextBorderStyleNone;
     textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -72,6 +75,8 @@
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入职位"];
     }else{
         [self.httpUtil getDataFromAPIWithOps:USERINFO_MODIFY_POSITION postParam:[NSDictionary dictionaryWithObject:position forKey:@"position"] type:0 delegate:self sel:@selector(requestSave:)];
+        self.startLoading =YES;
+        self.isTransparent =YES;
     }
 }
 
@@ -120,9 +125,13 @@
         NSString* code =[dic valueForKey:@"code"];
         if ([code integerValue]==0) {
             NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
-            [data setValue:textField.text forKey:STATIC_USER_NAME];
+            [data setValue:textField.text forKey:USER_STATIC_POSITION];
+            
+            [self back:nil];
         }
+        self.startLoading =NO;
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
+        
     }
 }
 

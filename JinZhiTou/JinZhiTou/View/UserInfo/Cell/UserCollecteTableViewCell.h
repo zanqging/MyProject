@@ -12,7 +12,9 @@
 {
     UIView * view ;
 }
-@property (strong, nonatomic) UIImageView *imgview;
-@property (strong, nonatomic) UILabel *titleLabel;
-@property (strong, nonatomic) UILabel *desclabel;
+@property (retain, nonatomic) UIImageView *imgview;
+@property (retain, nonatomic) UILabel *titleLabel;
+@property(retain,nonatomic)UILabel* desclabel;
+@property(retain,nonatomic)NSString* start;
+@property(retain,nonatomic)NSString* end;
 @end

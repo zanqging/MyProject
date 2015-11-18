@@ -39,7 +39,6 @@
         [imageView1.image drawInRect:CGRectMake(0, 0, imageView1.frame.size.width, imageView1.frame.size.height)];
         CGContextSetLineCap(UIGraphicsGetCurrentContext(), kCGLineCapRound);  //设置线条终点形状
         
-        
         CGFloat lengths[] = {10,5};
         CGContextRef line = UIGraphicsGetCurrentContext();
         CGContextSetStrokeColorWithColor(line, BACKGROUND_LIGHT_GRAY_COLOR.CGColor);
@@ -51,21 +50,11 @@
         
         imageView1.image = UIGraphicsGetImageFromCurrentImageContext();
         
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(imageView1)+20, WIDTH(self), 25)];
-        self.titleLabel.font  =SYSTEMBOLDFONT(18);
-        self.titleLabel.textColor = FONT_COLOR_BLACK;
-        self.titleLabel.textAlignment  = NSTextAlignmentCenter;
-        [self addSubview:self.titleLabel];
-        
-        self.dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(self.titleLabel), WIDTH(self), 25)];
-        self.dateTimeLabel.font  =SYSTEMFONT(14);
-        self.dateTimeLabel.textAlignment  = NSTextAlignmentCenter;
-        [self addSubview:self.dateTimeLabel];
-        
-        textView = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(self.dateTimeLabel)+10, WIDTH(self)-20, HEIGHT(self)-100)];
+        textView = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(imageView1)+10, WIDTH(self)-20, HEIGHT(self)-100)];
         textView.font = SYSTEMFONT(16);
         textView.textColor = FONT_COLOR_GRAY;
         textView.numberOfLines = 4;
+        textView.textAlignment  =NSTextAlignmentCenter;
         textView.lineBreakMode = NSLineBreakByWordWrapping;
         [self addSubview:textView];
         
@@ -118,14 +107,14 @@
     
         //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
     
-        [paragraphStyle setLineSpacing:10.f];//调整行间距
-        [paragraphStyle setAlignment:NSTextAlignmentJustified];
-        [paragraphStyle setHeadIndent:-50];
+        [paragraphStyle setLineSpacing:5.f];//调整行间距
+        [paragraphStyle setAlignment:NSTextAlignmentCenter];
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
         [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
     
         textView.attributedText = attributedString;//ios 6
         [textView sizeToFit];
+        [textView setFrame:CGRectMake(0, Y(textView), WIDTH(self), HEIGHT(textView))];
         
         [self setFrame:CGRectMake(X(self), Y(self), WIDTH(self), POS_Y(textView)+70)];
         

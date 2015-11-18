@@ -17,7 +17,7 @@
 -(id)initWithFrame:(CGRect)frame{
     if (self=[super initWithFrame:frame]) {
         //透明背景
-        self.backgroundColor=[UIColor clearColor];
+        self.backgroundColor=ColorTheme;
         self.backView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 25, HEIGHT(self))];
         [self addSubview:self.backView];
         //返回箭头
@@ -246,33 +246,33 @@
     }
 }
 
-- (void)DrawGradientColor:(CGContextRef)context
-                     rect:(CGRect)clipRect
-                    point:(CGPoint) startPoint
-                    point:(CGPoint) endPoint
-                  options:(CGGradientDrawingOptions) options
-               startColor:(UIColor*)startColor
-                 endColor:(UIColor*)endColor
-{
-    UIColor* colors [2] = {startColor,endColor};
-    CGColorSpaceRef rgb =CGColorSpaceCreateDeviceRGB();
-    CGFloat colorComponents[8];
-    
-    for (int i = 0; i < 2; i++) {
-        UIColor *color = colors[i];
-        CGColorRef temcolorRef = color.CGColor;
-        
-        const CGFloat *components = CGColorGetComponents(temcolorRef);
-        for (int j = 0; j < 4; j++) {
-            colorComponents[i *4 + j] = components[j];
-        }
-    }
-    
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(rgb, colorComponents,NULL, 2);
-    
-    CGColorSpaceRelease(rgb);
-    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, options);
-    CGGradientRelease(gradient);
-}
+//- (void)DrawGradientColor:(CGContextRef)context
+//                     rect:(CGRect)clipRect
+//                    point:(CGPoint) startPoint
+//                    point:(CGPoint) endPoint
+//                  options:(CGGradientDrawingOptions) options
+//               startColor:(UIColor*)startColor
+//                 endColor:(UIColor*)endColor
+//{
+//    UIColor* colors [2] = {startColor,endColor};
+//    CGColorSpaceRef rgb =CGColorSpaceCreateDeviceRGB();
+//    CGFloat colorComponents[8];
+//    
+//    for (int i = 0; i < 2; i++) {
+//        UIColor *color = colors[i];
+//        CGColorRef temcolorRef = color.CGColor;
+//        
+//        const CGFloat *components = CGColorGetComponents(temcolorRef);
+//        for (int j = 0; j < 4; j++) {
+//            colorComponents[i *4 + j] = components[j];
+//        }
+//    }
+//    
+//    CGGradientRef gradient = CGGradientCreateWithColorComponents(rgb, colorComponents,NULL, 2);
+//    
+//    CGColorSpaceRelease(rgb);
+//    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, options);
+//    CGGradientRelease(gradient);
+//}
 
 @end

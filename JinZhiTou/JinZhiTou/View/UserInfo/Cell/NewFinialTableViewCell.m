@@ -34,9 +34,10 @@
         self.desclabel.font = SYSTEMFONT(12);
         [view addSubview:self.desclabel];
         
-        self.timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.desclabel), Y(self.desclabel), WIDTH(self.titleLabel)/2, 21)];
+        self.timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.desclabel), Y(self.desclabel), WIDTH(self.titleLabel)/2-20, 21)];
         self.timeLabel.textColor = FONT_COLOR_GRAY;
         self.timeLabel.font = SYSTEMFONT(12);
+        self.timeLabel.textAlignment = NSTextAlignmentRight;
         [view addSubview:self.timeLabel];
 
         self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.desclabel), WIDTH(self.titleLabel), 50)];

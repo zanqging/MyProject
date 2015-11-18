@@ -31,68 +31,49 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     //隐藏导航栏
-    [self.navigationController.navigationBar setHidden:YES];
     
     //设置背景色
     self.view.backgroundColor=ColorTheme;
     
     //==============================导航栏区域开始==============================//
-    self.navView.imageView.alpha=1;
-    [self.navView setTitle:@"登录"];
-    self.navView.titleLable.textColor=WriteColor;
-    [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [self.navView.leftButton setTitle:@"登陆注册" forState:UIControlStateNormal];
-    
-    //添加事件
-    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
-    //==============================导航栏区域结束==============================//
+    [self.navView removeFromSuperview];
     
 
-    CGRect frame = self.view.frame;
-    frame.origin.y = POS_Y(self.navView);
-    frame.size.height = HEIGHT(self.view)-POS_Y(self.navView);
+    UIImageView* imgView = [[UIImageView alloc]initWithFrame:FRAME(self.view)];
+    imgView.image = IMAGENAMED(@"denglu");
+    imgView.contentMode = UIViewContentModeScaleAspectFill;
     
+    //登录背景添加至滚动视图
+    [self.view addSubview:imgView];
+    
+    CGRect frame = self.view.frame;
     //==============================滚动时图区域开始==============================//
     scrollView = [[UIScrollView alloc]initWithFrame:frame];
-    scrollView.backgroundColor = WriteColor;
+    scrollView.backgroundColor = ClearColor;
     
     [self.view addSubview:scrollView];
     //==============================滚动时图区域开始==============================//
     
     //==============================滚动时图子视图添加开始==============================//
-    UIImageView* imgView = [[UIImageView alloc]initWithFrame:scrollView.frame];
-    imgView.image = IMAGENAMED(@"denglu");
-    
-    //登录背景添加至滚动视图
-    [scrollView addSubview:imgView];
-    
-    //标题
-    label = [[UILabel alloc]initWithFrame:CGRectMake(0, 40, WIDTH(self.view), 40)];
-    label.textColor = ColorTheme;
-    label.text =@"让梦想从这里启航";
-    label.font = SYSTEMFONT(30);
-    label.textAlignment = NSTextAlignmentCenter;
-    
-    //将标签添加至滚动视图
-    [scrollView addSubview:label];
     
     //手机号码输入框
-    self.phoneTextField = [[UITextField alloc]initWithFrame:CGRectMake(30, POS_Y(label)+20, WIDTH(self.view)-60, 45)];
+    self.phoneTextField = [[UITextField alloc]initWithFrame:CGRectMake(30,HEIGHT(self.view)/2-100, WIDTH(self.view)-60, 45)];
     
     //设置属性
     self.phoneTextField.tag=1004;
     self.phoneTextField.delegate=self;
     self.phoneTextField.font = SYSTEMFONT(16);
-    self.phoneTextField.textColor =ColorTheme;
+    self.phoneTextField.textColor =WriteColor;
     self.phoneTextField.placeholder = @"请输入手机号码";
     self.phoneTextField.returnKeyType = UIReturnKeyDone;
-    self.phoneTextField.layer.borderColor =ColorTheme.CGColor;
+    self.phoneTextField.backgroundColor =RGBACOLOR(203, 203, 203, 0.2);
+//    self.phoneTextField.layer.borderColor =RGBACOLOR(203, 203, 203, 0.3).CGColor;
     self.phoneTextField.keyboardType = UIKeyboardTypeDecimalPad;
     self.phoneTextField.layer.cornerRadius=HEIGHT(self.phoneTextField)/2;
     self.phoneTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.phoneTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.phoneTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.phoneTextField.layer.borderWidth =1;
+//    self.phoneTextField.layer.borderWidth =1;
     
     //设置输入框左侧图标
     [TDUtil setTextFieldLeftPadding:self.phoneTextField forImage:@"shuruphone"];
@@ -105,21 +86,22 @@
     
     //设置属性
     self.passwordTextField.delegate=self;
-    self.passwordTextField.layer.borderWidth =1;
+//    self.passwordTextField.layer.borderWidth =1;
     self.passwordTextField.secureTextEntry=YES;
     self.passwordTextField.secureTextEntry = YES;
     self.passwordTextField.font = SYSTEMFONT(16);
-    self.passwordTextField.textColor = ColorTheme;
+    self.passwordTextField.textColor = WriteColor;
     self.passwordTextField.placeholder =@"请输入登录密码";
     self.passwordTextField.returnKeyType = UIReturnKeyDone;
-    self.passwordTextField.layer.borderColor =ColorTheme.CGColor;
+//    self.passwordTextField.layer.borderColor =self.phoneTextField.backgroundColor.CGColor;
+    self.passwordTextField.backgroundColor  =self.phoneTextField.backgroundColor;
     self.passwordTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.passwordTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.passwordTextField.layer.cornerRadius=HEIGHT(self.passwordTextField)/2;
     self.passwordTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     
     //设置输入框左侧图标
-    [TDUtil setTextFieldLeftPadding:self.passwordTextField forImage:@"mima"];
+    [TDUtil setTextFieldLeftPadding:self.passwordTextField forImage:@"shurumima"];
     
     //密码输入框添加至滚动视图
     [scrollView addSubview:self.passwordTextField];
@@ -129,15 +111,29 @@
     self.loginButton = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(self.passwordTextField)+40, WIDTH(scrollView) - 60, 40)];
     
     //设置登录按钮属性
-    [self.loginButton.layer setCornerRadius:5];
     [self.loginButton.layer setBorderWidth:1];
-    [self.loginButton.layer setBorderColor:ColorTheme.CGColor];
+    [self.loginButton setBackgroundColor:RGBACOLOR(214, 48, 48, 1)];
     [self.loginButton setTitle:@"登录" forState:UIControlStateNormal];
-    [self.loginButton setTitleColor:ColorTheme forState:UIControlStateNormal];
+    [self.loginButton.layer setCornerRadius:HEIGHT(self.loginButton)/2];
+    [self.loginButton setTitleColor:WriteColor forState:UIControlStateNormal];
+    [self.loginButton.layer setBorderColor:RGBACOLOR(214, 48, 48, 1).CGColor];
     [self.loginButton addTarget:self action:@selector(doAction:) forControlEvents:UIControlEventTouchUpInside];
     
     //将登录按钮添加至滚动视图
     [scrollView addSubview:self.loginButton];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(X(self.loginButton), POS_Y(self.loginButton)+15, WIDTH(self.view)/2, 40)];
+    label.textColor = WriteColor;
+    label.font = SYSTEMFONT(14);
+    label.userInteractionEnabled = YES;
+    [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(registeAction:)]];
+    [scrollView addSubview:label];
+    
+    //设置UIButton特殊样式
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"还未注册？请点击注册"];
+    [str addAttribute:NSForegroundColorAttributeName value:self.loginButton.backgroundColor range:NSMakeRange(5, 5)];
+    label.attributedText = str;
+    
     
     //忘记密码按钮
     UIButton* btnActionLeft = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self.loginButton)*2/3+X(self.loginButton)+18, POS_Y(self.loginButton)+15, WIDTH(self.loginButton)/3, 40)];
@@ -146,10 +142,10 @@
     [btnActionLeft addTarget:self action:@selector(forgetAction:) forControlEvents:UIControlEventTouchUpInside];
     
     //设置UIButton特殊样式
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:@"忘记密码"];
+    str = [[NSMutableAttributedString alloc] initWithString:@"忘记密码"];
     NSRange strRange = {0,[str length]};
     [str addAttribute:NSFontAttributeName value:SYSTEMFONT(14) range:strRange];
-    [str addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:strRange];
+    [str addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:strRange];
     [str addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:strRange];
     
     //赋富文本值
@@ -159,10 +155,51 @@
     [scrollView addSubview:btnActionLeft];
     
     //==============================滚动时图子视图添加开始==============================//
+    
+    //==============================微信登录开始==============================//
+    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, POS_Y(btnActionLeft)+50, WIDTH(self.view)/2-50, 1)];
+    imgView.backgroundColor  =WriteColor;
+    [scrollView addSubview:imgView];
+    
+    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)-WIDTH(imgView)-10, Y(imgView), WIDTH(imgView), HEIGHT(imgView))];
+    imgView.backgroundColor  =WriteColor;
+    [scrollView addSubview:imgView];
+    
+    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2-20, Y(imgView)-40, 40, 40)];
+    imgView.image =IMAGENAMED(@"WeChatLogo");
+    imgView.layer.cornerRadius = 5;
+    imgView.layer.masksToBounds=YES;
+    imgView.userInteractionEnabled  =YES;
+    [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(WeChatAction:)]];
+    [scrollView addSubview:imgView];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(X(imgView)-20, POS_Y(imgView), WIDTH(imgView)+40, 21)];
+    label.textColor = WriteColor;
+    label.text = @"微信登录";
+    label.font  =SYSTEMFONT(14);
+    label.textAlignment = NSTextAlignmentCenter;
+    [scrollView addSubview:label];
+    //==============================微信登录结束==============================//
 
     
 }
 
+/**
+ *  微信登录
+ *
+ *  @param sender
+ */
+-(void)WeChatAction:(id)sender
+{
+    
+}
+
+
+/**
+ *  忘记密码
+ *
+ *  @param sender
+ */
 - (void)forgetAction:(id)sender
 {
     if (self.phoneTextField.isFirstResponder) {
@@ -179,6 +216,12 @@
     [self.navigationController pushViewController:controller animated:YES];
 }
 
+-(void)registeAction:(id)sender
+{
+    UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    RegisteViewController * controller = [board instantiateViewControllerWithIdentifier:@"RegisteController"];
+    [self.navigationController pushViewController:controller animated:YES];
+}
 - (void)back:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -243,7 +286,8 @@
     NSString* regId = [APService registrationID];
     //装载数据
     NSDictionary* dic =[[NSMutableDictionary alloc]init];
-    [dic setValue:regId forKey:@"regid"];
+//    [dic setValue:regId forKey:@"regid"];
+    [dic setValue:@"123" forKey:@"regid"];
     [dic setValue:phoneNumber forKey:@"tel"];
     [dic setValue:password forKey:@"passwd"];
     
@@ -259,7 +303,7 @@
             [activity startAnimating];
         }
     }
-    [activity setColor:ColorTheme];
+    [activity setColor:WriteColor];
     
     //开始加载动画
     [activity startAnimating];
@@ -275,9 +319,6 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     [scrollView setContentOffset:CGPointMake(0, 90) animated:YES];
-    [UIView animateWithDuration:0.5 animations:^(void){
-        [label setAlpha:0];
-    }];
 }
 
 - (void)resignKeyboard
@@ -294,17 +335,11 @@
 {
     [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
     [textField resignFirstResponder];
-    [UIView animateWithDuration:1 animations:^(void){
-        [label setAlpha:1];
-    }];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    [UIView animateWithDuration:1 animations:^(void){
-        [label setAlpha:1];
-    }];
     return YES;
 }
 
@@ -336,8 +371,9 @@
             NSUserDefaults* data =[NSUserDefaults standardUserDefaults];
             [data setValue:self.phoneTextField.text forKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
             [data setValue:password forKey:STATIC_USER_PASSWORD];
+            [data setValue:@"YES" forKey:@"isLogin"];
 
-            NSString* auth =[[[jsonDic valueForKey:@"data"] valueForKey:@"auth"] stringValue] ;
+            NSString* auth =[[jsonDic valueForKey:@"data"] valueForKey:@"auth"];
             if ([auth isKindOfClass:NSNull.class]) {
                 auth = @"None";
             }else if (auth){
@@ -395,6 +431,13 @@
     
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self.navigationController.navigationBar setHidden:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+}
 /**
  *  视图重绘
  *

@@ -104,9 +104,9 @@
 
 //主题色
 //#define ColorTheme  [UIColor colorWithRed:0xcb/256. green:0x02/256. blue:0x02/256. alpha:1]
-//#define ColorTheme  [UIColor colorWithRed:0xdc/256. green:0x47/256. blue:0x1c/256. alpha:1]
 //#define ColorTheme  [UIColor colorWithRed:46.0/255. green:45.0/256. blue:51.0/255. alpha:1]
 #define ColorTheme  [UIColor colorWithRed:81.0/255. green:81.0/256. blue:81.0/255. alpha:1]
+
 #define ColorFontBlueTheme  [UIColor colorWithRed:0.0/255 green:0.0/255 blue:204/55 alpha:1]
 #define ColorCompanyTheme  [UIColor colorWithRed:0xd4/256. green:0xa2/256. blue:0x25/256. alpha:1]
 #define ColorTheme2  [UIColor colorWithRed:0xe6/256. green:0x97/256. blue:0x85/256. alpha:1]
@@ -173,8 +173,6 @@
 #define ITUNES_URL @"https://itunes.apple.com/us/app/jin-zhi-tou-zhong-guo-cheng/id1024857089?mt=8"
 //版本更新
 #define VERSION_CHECK @"LastedVersion.action"
-//身份证正面
-#define ID_FORE @"idfore/"
 //Banner
 #define BANNER_LIST @"banner/"
 //微路演项目列表
@@ -186,7 +184,7 @@
 //投资人列表
 #define  INVEST_LIST  @"investlist/"
 //核心团队
-#define  COREMEMBER @"coremember/"
+#define  COREMEMBER @"member/"
 //手机验证码发送
 #define  SEND_MESSAGE_CODE @"sendcode/"
 //用户手机验证码登陆
@@ -203,6 +201,8 @@
 #define RECOMMEND_PROJECT @"recommendproject/"
 //用户注册
 #define USER_REGIST @"registe/"
+//重置密码
+#define USER_RESET_PW @"modifypasswd/"
 //忘记密码
 #define USER_FORGET_PWD @"resetpassword/"
 //修改 密码
@@ -223,12 +223,8 @@
 #define AUTHENTICATE  @"authenticate/"
 //上传名片
 #define UPLOAD_BUINESSCARD @"businesscard/"
-//上传身份证
-#define PROVINCE_LIST @"idfore/"
-//用户类型
-#define Position_Type @"positiontype/"
 //获取城市
-#define MODIFY_CITY @"provincecity/"
+#define MODIFY_CITY @"addr/"
 //添加公司
 #define ADD_COMPANY @"addcompany/"
 //公司信息
@@ -250,11 +246,11 @@
 //订单查询
 #define MODFIY_USER_IMAGE @"userimg/"
 //订单详情
-#define USERINFO @"generalinformation/"
+#define USERINFO @"userinfo/"
 //申请退款
 #define TOKEAN @"token/"
 //检测是否已经认证通过
-#define ISINVESTOR @"isinvestor/"
+#define ISINVESTOR @"myauth/"
 //我的身份认证信息
 #define MY_INVESTID @"myinvestorlist/"
 //身份认证详情
@@ -270,13 +266,11 @@
 //收藏的投资人
 #define MY_COLLECTE_THINKTANK @"collectthinktank/"
 //来现场
-#define JOIN_ROADSHOW @"participate/"
+#define JOIN_ROADSHOW @"attend/"
 //签到
 #define ACTIVITY @"activity/"
 //签到
 #define SIGNIN @"signin/"
-//用户基本信息
-#define USERINFO @"generalinformation/"
 //忌口列表
 #define UPLOAD_USER_PIC @"photo/"
 //获取头像
@@ -300,7 +294,7 @@
 //我的认证列表
 #define MENUTYPELIST @"myinvestorlist/"
 //核心团队成员详情
-#define TEAM_DETAIL @"corememberdetail/"
+#define TEAM_DETAIL @"memberdetail/"
 //智囊团详情
 #define THINK_DETAIL @"thinktankdetail/"
 //微信分享
@@ -339,10 +333,13 @@
 #define privacy @"privacy/"
 
 //修改地址
-#define editprovince @"provincecity/"
+#define editprovince @"addr/"
 
 //检测更新
 #define checkversion @"checkupdate/"
+
+//用户信息
+#define userinfo @"userinfo/"
 
 /**
  *
@@ -370,8 +367,6 @@
 //转发资讯
 #define SHARE_NEWS  @"sharenews/"
 
-//我的路演申请
-#define MY_ROADSHOW_APPLY @"myroadshow/"
 //来现场
 #define MY_PARTICATE  @"myparticipate/"
 //我的认证
@@ -452,6 +447,30 @@
 //投资人
 #define FINIAL_COMM @"investor/"
 
+//身份证号
+#define USER_STATIC_IDNUMBER @"user_static_ido"
+//真实姓名
+#define USER_STATIC_NAME @"user_static_name"
+//地址
+#define USER_STATIC_ADDRESS @"user_static_address"
+//地址
+#define USER_STATIC_COMPANY_NAME @"user_static_company"
+//地址
+#define USER_STATIC_POSITION @"user_static_position"
+//身份证图片地址
+#define USER_STATIC_IDPIC @"user_static_pic"
+//身份证图片路径
+#define USER_STATIC_IDPIC_PATH @"user_static_pic_path"
+//手机号码
+#define USER_STATIC_TEL @"user_static_tel"
+//性别
+#define USER_STATIC_GENDER @"user_static_gender"
+//昵称
+#define USER_STATIC_NICKNAME @"user_static_nickname"
+//头像
+#define USER_STATIC_HEADER_PIC @"user_static_header_pic"
+//用户id
+#define USER_STATIC_USER_ID @"user_static_user_id"
 //==============================第三期App研发接口==============================//
 
 //支持区域
@@ -465,6 +484,10 @@
 #define STATIC_USER_FIRST_START_APP @"isUserFirstStartApp"
 //用户账号名称
 #define STATIC_USER_NAME @"userName"
+//用户职位
+#define STATIC_USER_POSITION @"userPositionName"
+//公司名称
+#define STATIC_COMPANY_NAME @"userCompanyName"
 //用户密码
 #define STATIC_USER_PASSWORD @"userPassword"
 //用户Id
@@ -473,6 +496,8 @@
 #define STATIC_USER_COUNT_DAYS @"userCountDays"
 //用户头像
 #define STATIC_USER_DEFAULT_PIC @"userDefaultPic"
+//身份证号
+#define STATIC_USER_DEFAULT_ID_PIC @"userDefaultIDPic"
 //用户头像
 #define STATIC_USER_HEADER_PIC @"userDefaultHeaderPic"
 //用户头像

@@ -9,7 +9,7 @@
 #import "UserBasicInfoViewController.h"
 #import "ZHPickView.h"
 #import "ModifyViewController.h"
-#import "ForgetPassViewController.h"
+#import "ResetPasswordViewController.h"
 #import "ModifyCompanyViewController.h"
 #import "ModifyPositionViewController.h"
 #import "CustomImagePickerController.h"
@@ -58,9 +58,6 @@
     
     [self loadData];
     
-    //加载数据
-    [self loadPositionType];
-    
 }
 
 -(void)loadData
@@ -78,73 +75,52 @@
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"昵称" forKey:@"title"];
     [dic setValue:@"1" forKey:@"section"];
-    [dic setValue:[data valueForKey:STATIC_USER_NAME] forKey:@"subTitle"];
+    [dic setValue:[data valueForKey:USER_STATIC_NICKNAME] forKey:@"subTitle"];
     
     [settingDataArray addObject:dic];
     
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"真实姓名" forKey:@"title"];
     [dic setValue:@"1" forKey:@"section"];
-    [dic setValue:[data valueForKey:STATIC_USER_NAME] forKey:@"subTitle"];
+    [dic setValue:[data valueForKey:USER_STATIC_NAME] forKey:@"subTitle"];
+    
+    [settingDataArray addObject:dic];
+    
+    dic = [[NSMutableDictionary alloc]init];
+    [dic setValue:@"性别" forKey:@"title"];
+    [dic setValue:@"2" forKey:@"section"];
+    [dic setValue:[TDUtil Gender:[[data valueForKey:USER_STATIC_GENDER]intValue]] forKey:@"subTitle"];
+    [settingDataArray addObject:dic];
+    
+    dic = [[NSMutableDictionary alloc]init];
+    [dic setValue:@"手机号码" forKey:@"title"];
+    [dic setValue:@"0" forKey:@"section"];
+    [dic setValue:[data valueForKey:USER_STATIC_TEL] forKey:@"subTitle"];
     
     [settingDataArray addObject:dic];
     
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"公司名称" forKey:@"title"];
     [dic setValue:@"1" forKey:@"section"];
-    [dic setValue:[data valueForKey:STATIC_USER_NAME] forKey:@"subTitle"];
+    [dic setValue:[data valueForKey:USER_STATIC_COMPANY_NAME] forKey:@"subTitle"];
     
     [settingDataArray addObject:dic];
     
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"职位" forKey:@"title"];
     [dic setValue:@"1" forKey:@"section"];
-    [dic setValue:[data valueForKey:STATIC_USER_NAME] forKey:@"subTitle"];
+    [dic setValue:[data valueForKey:USER_STATIC_POSITION] forKey:@"subTitle"];
     
     [settingDataArray addObject:dic];
-    
-    
-    dic = [[NSMutableDictionary alloc]init];
-    [dic setValue:@"性别" forKey:@"title"];
-    [dic setValue:@"2" forKey:@"section"];
-    [dic setValue:[data valueForKey:STATIC_USER_GENDER] forKey:@"subTitle"];
-    
-    [settingDataArray addObject:dic];
-    
-    dic = [[NSMutableDictionary alloc]init];
-    [dic setValue:@"手机号码" forKey:@"title"];
-    [dic setValue:@"0" forKey:@"section"];
-    [dic setValue:[data valueForKey:STATIC_USER_DEFAULT_DISPATCH_PHONE] forKey:@"subTitle"];
-    
-    [settingDataArray addObject:dic];
-    
-    dic = [[NSMutableDictionary alloc]init];
-    [dic setValue:@"用户类型" forKey:@"title"];
-    [dic setValue:@"1" forKey:@"section"];
-    [dic setValue:[data valueForKey:STATIC_USER_TYPE] forKey:@"subTitle"];
-    
-    [settingDataArray addObject:dic];
-    
-//    dic = [[NSMutableDictionary alloc]init];
-//    [dic setValue:@"公司名称" forKey:@"title"];
-//    [dic setValue:@"1" forKey:@"section"];
-//    [dic setValue:@"查看详情" forKey:@"subTitle"];
-//    
-//    [settingDataArray addObject:dic];
-//    
-//    dic = [[NSMutableDictionary alloc]init];
-//    [dic setValue:@"职位" forKey:@"title"];
-//    [dic setValue:@"1" forKey:@"section"];
-//    [dic setValue:@"" forKey:@"subTitle"];
-//    
-//    [settingDataArray addObject:dic];
     
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"地区" forKey:@"title"];
     [dic setValue:@"1" forKey:@"section"];
     
-    NSString* str = [NSString stringWithFormat:@"%@%@",[data valueForKey:@"province"],[data valueForKey:@"city"]];
-    [dic setValue:str forKey:@"subTitle"];
+    if ([data valueForKey:@"province"]) {
+        NSString* str = [NSString stringWithFormat:@"%@%@",[data valueForKey:@"province"],[data valueForKey:@"city"]];
+        [dic setValue:str forKey:@"subTitle"];
+    }
     
     [settingDataArray addObject:dic];
     
@@ -157,10 +133,6 @@
 }
 
 
--(void)loadPositionType
-{
-    [httpUtils getDataFromAPIWithOps:Position_Type postParam:nil type:0 delegate:self sel:@selector(requestPositionType:)];
-}
 -(void)back:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -178,43 +150,27 @@
             ModifyViewController* controller = [[ModifyViewController alloc]init];
             controller.title = @"修改昵称";
             [self.navigationController pushViewController:controller animated:YES];
-            
-        }else if(row == 1){
-            _pickview=[[ZHPickView alloc] initPickviewWithPlistName:@"sex" isHaveNavControler:NO];
-            _pickview.delegate=self;
-            
-            [_pickview show];
-        }else if(row == 2){
+        }
+    }else if (indexPath.section == 2) {
+        if (indexPath.row == 0) {
             ModifyCompanyViewController* controller = [[ModifyCompanyViewController alloc]init];
             controller.title = @"修改公司名称";
             [self.navigationController pushViewController:controller animated:YES];
-            
-        }else if(row == 3){
+           
+        }else if(indexPath.row==1){
             ModifyPositionViewController* controller = [[ModifyPositionViewController alloc]init];
             controller.title = @"修改职位";
             [self.navigationController pushViewController:controller animated:YES];
-            
-        }else{
-            _pickview=[[ZHPickView alloc]initPickviewWithArray:typeArray isHaveNavControler:NO];
-            _pickview.delegate=self;
-            
-            [_pickview show];
-            
-        }
-        
-        
-    }else if (indexPath.section == 2) {
-        if (indexPath.row == 1) {
-            UIStoryboard * storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-            ForgetPassViewController * controller =[storyBoard instantiateViewControllerWithIdentifier:@"ModifyPasswordController"];
-            controller.type=1;
-            [self.navigationController pushViewController:controller animated:YES];
-        }else{
+        }else if(indexPath.row==2){
             _pickview=[[ZHPickView alloc] initPickviewWithPlistName:@"city" isHaveNavControler:NO];
             _pickview.backgroundColor = ClearColor;
             _pickview.delegate=self;
             
             [_pickview show];
+            
+        }else if(indexPath.row==3){
+            ResetPasswordViewController* controller =[[ResetPasswordViewController alloc]init];
+            [self.navigationController pushViewController:controller animated:YES];
         }
        
     }
@@ -253,8 +209,6 @@
         index = row+1;
     }else if (section ==2){
         index =row+5;
-    }else if (section ==3){
-        index =row+8;
     }else{
         Cell.isShowImg = YES;
         UIImage* image = [TDUtil loadContent:STATIC_USER_HEADER_PIC];
@@ -273,7 +227,6 @@
 {
     //用TableDataIdentifier标记重用单元格
     UserBasicInfoTableViewCell * Cell =(UserBasicInfoTableViewCell*) [tableView dequeueReusableCellWithIdentifier:identifier];
-    
     return Cell;
 }
 
@@ -292,7 +245,7 @@
             return 4;
             break;
         case 2:
-            return 5;
+            return 4;
             break;
         default:
             return 4;
@@ -444,29 +397,6 @@
     }
 }
 
--(void)requestPositionType:(ASIHTTPRequest *)request{
-    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-    NSMutableDictionary* jsonDic = [jsonString JSONValue];
-    
-    if(jsonDic!=nil)
-    {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
-            positionTypeArray = [jsonDic valueForKey:@"data"];
-            typeArray = [[NSMutableArray alloc]init];
-            NSDictionary *  dic;
-            for (int  i=0; i<positionTypeArray.count; i++) {
-                dic = positionTypeArray[i];
-                [typeArray addObject:[dic valueForKey:@"type_name"]];
-            }
-        }else{
-             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
-        }
-        
-       
-    }
-}
 
 -(void)requestModifyType:(ASIHTTPRequest *)request{
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
@@ -521,7 +451,13 @@
         
         NSString* province =(NSString*)pickView.state;
         NSString* city = (NSString*)pickView.city;
-        NSDictionary* dic = [NSDictionary dictionaryWithObjectsAndKeys:province,@"province",city,@"city",nil];
+        province = [province stringByReplacingOccurrencesOfString:@"省" withString:@""];
+        city = [city stringByReplacingOccurrencesOfString:@"市" withString:@""];
+        NSDictionary* dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@ %@",province,city],@"addr",nil];
+        
+        NSUserDefaults* userData = [NSUserDefaults standardUserDefaults];
+        [userData setValue:province forKey:@"province"];
+        [userData setValue:city forKey:@"city"];
         [httpUtils getDataFromAPIWithOps:editprovince postParam:dic type:0 delegate:self sel:@selector(requestUploadHeaderImg:)];
     }
 }
@@ -537,6 +473,9 @@
         }
         
     }
+    
+    [self loadData];
+    [self.tableView reloadData];
 }
 -(void)dealloc
 {

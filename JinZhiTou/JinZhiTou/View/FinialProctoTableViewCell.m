@@ -51,7 +51,7 @@
     self->_isSelected = isSelected;
     if (self.isSelected) {
         self.backgroundColor = CELL_SELECTED_COLOR;
-        label.textColor = ColorTheme;
+        label.textColor = ColorTheme2;
         imgView.image = IMAGENAMED(self.selectedImageName);
     }else{
         self.backgroundColor = WriteColor;

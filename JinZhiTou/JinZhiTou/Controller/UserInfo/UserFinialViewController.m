@@ -101,7 +101,7 @@
 
 -(void)addSwitchView
 {
-    NSMutableArray* array=[NSMutableArray arrayWithObjects: @"我所创建的项目",@"我所投资的项目",nil];
+    NSMutableArray* array=[NSMutableArray arrayWithObjects: @"我所上传的项目",@"我所投资的项目",nil];
     
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 50)];
     scrollView.backgroundColor =WriteColor;
@@ -124,10 +124,12 @@
     }
     
     [self.view addSubview:scrollView];
+    self.loadingViewFrame = CGRectMake(0, POS_Y(scrollView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(scrollView));
 }
 
 -(void)tapAction:(UITapGestureRecognizer*)sender
 {
+    self.isTransparent  =YES;
     SwitchSelect* switchView = (SwitchSelect*)sender.view;
     switchView.isSelected =YES;
     for ( UIView *  v in scrollView.subviews) {
@@ -201,7 +203,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 180;
+    return 100;
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -218,8 +220,7 @@
     if (self.selectedIndex==0) {
         NSDictionary* dic  =self.dataCreateArray[indexPath.row];
         [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"thumbnail"]] placeholderImage:IMAGENAMED(@"loading")];
-        cell.titleLabel.text = [dic valueForKey:@"company_name"];
-        cell.desclabel.text = [dic valueForKey:@"project_summary"];
+        cell.titleLabel.text = [dic valueForKey:@"company"];
         cell.backgroundColor = WriteColor;
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -227,12 +228,13 @@
     }else{
         NSDictionary* dic  =self.dataFinialArray[indexPath.row];
 //        NSDictionary* dicStage = [[dic valueForKey:@"stage"] valueForKey:@"start"];
-        [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"thumbnail"]] placeholderImage:IMAGENAMED(@"loading")];
-        cell.titleLabel.text = [dic valueForKey:@"company_name"];
-        cell.desclabel.text = [dic valueForKey:@"project_summary"];
+        [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"img"]] placeholderImage:IMAGENAMED(@"loading")];
+        cell.titleLabel.text = [dic valueForKey:@"company"];
+        cell.start = [dic valueForKey:@"start"];
+        cell.end = [dic valueForKey:@"stop"];
         cell.backgroundColor = WriteColor;
+        cell.accessoryType = UITableViewCellAccessoryNone;
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;

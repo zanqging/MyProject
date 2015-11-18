@@ -231,7 +231,8 @@
     
     [cell.imgview sd_setImageWithURL:[dic valueForKey:@"img"] placeholderImage:IMAGENAMED(@"loading")];
     cell.titleLabel.text = [dic valueForKey:@"company"];
-    cell.desclabel.text = [dic valueForKey:@"project_summary"];
+    cell.start = [dic valueForKey:@"start"];
+    cell.end = [dic valueForKey:@"stop"];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     tableView.contentSize = CGSizeMake(WIDTH(tableView), 190*self.dataArray.count+100);
     return cell;

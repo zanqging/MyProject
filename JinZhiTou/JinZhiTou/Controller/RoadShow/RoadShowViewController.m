@@ -52,7 +52,7 @@
     self.navView.imageView.alpha=0;
     [self.navView setTitle:@"金指投"];
     self.navView.titleLable.textColor=WriteColor;
-    [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
+    [self.navView.leftButton setImage:IMAGENAMED(@"shuruphone") forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     //==============================TabBarItem 设置==============================//
 
@@ -142,8 +142,12 @@
     configView.delegate  =self;
     [self.view addSubview:configView];
     
+    [[UIApplication sharedApplication].windows[0].rootViewController.view addSubview:configView];
+    
     UIView* view = [self.view viewWithTag:60001];
-    [view removeFromSuperview];
+    if (view) {
+        [view removeFromSuperview];
+    }
 }
 
 /**

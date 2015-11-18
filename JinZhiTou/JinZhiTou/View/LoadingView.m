@@ -73,14 +73,13 @@
         imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-60, 100, 120, 120)];
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:imageView];
-        imageView.image = IMAGENAMED(@"chucuo");
+        imageView.image = IMAGE(@"error", @"png");
         
         if (!labelMessage) {
             labelMessage = [[UILabel alloc]initWithFrame:CGRectMake(30, POS_Y(imageView)+10, WIDTH(self)-60, 70)];
             labelMessage.font = SYSTEMFONT(16);
             labelMessage.textAlignment = NSTextAlignmentCenter;
 
-            
             refreshButton = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self)/2-50, POS_Y(labelMessage), 100, 30)];
             refreshButton.layer.borderWidth =1;
             refreshButton.layer.cornerRadius =15;

@@ -59,7 +59,7 @@
         //[self.titleLabel removeFromSuperview];
         //[self.descLabel removeFromSuperview];
         self.titleLabel.text = @"视频上传完成";
-        self.descLabel.text = @"(介绍公司,项目,团队等,需1-2分钟视频)";
+//        self.descLabel.text = @"(介绍公司,项目,团队等,需1-2分钟视频)";
     }
     
 }

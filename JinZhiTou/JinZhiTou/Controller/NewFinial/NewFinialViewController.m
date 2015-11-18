@@ -42,7 +42,7 @@
     //设置标题
     [self.navView setTitle:@"金指投"];
     self.navView.titleLable.textColor=WriteColor;
-    [self.navView.leftButton setImage:IMAGENAMED(@"top-caidan") forState:UIControlStateNormal];
+    [self.navView.leftButton setImage:IMAGENAMED(@"shuruphone") forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     
     [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
@@ -164,10 +164,6 @@
 }
 -(void)loadNewsData:(NSInteger)index
 {
-    if (!self.startLoading) {
-        self.startLoading  = YES;
-        self.isTransparent = YES;
-    }
     //添加加载页面
     NSString* str = [NEWS stringByAppendingFormat:@"%ld/%d/",(long)index,currentpage];
     //[httpUtils getDataFromAPIWithOps:str postParam:nil type:0 delegate:self sel:@selector(requestNewsData:)];
@@ -400,7 +396,6 @@
 //=============================网络请求区域结束==============================//
 - (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
     
     // 禁用 iOS7 返回手势
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
@@ -409,13 +404,12 @@
         }
         
     }
-}
-
-- (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];
-    [super viewWillAppear:animated];
-    
     NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
     if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 }
 
 @end

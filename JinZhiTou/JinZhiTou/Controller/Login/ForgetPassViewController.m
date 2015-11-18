@@ -33,107 +33,74 @@
     [super viewDidLoad];
     //背景
     self.view.backgroundColor=ColorTheme;
-    
-    //隐藏导航栏
-    [self.navigationController.navigationBar setHidden:YES];
-    
-    //设置标题
-    self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
-    
     //设置属性
     self.navView.imageView.alpha=1;
-    [self.navView setTitle:@"注册"];
+    [self.navView setTitle:@"找回密码"];
     self.navView.titleLable.textColor=WriteColor;
     
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [self.navView.leftButton setTitle:@"登陆注册" forState:UIControlStateNormal];
+    [self.navView.leftButton setTitle:@"登录" forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
-    [self.view addSubview:self.navView];
+    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.navView), HEIGHT(self.view)-POS_Y(self.navView))];
+    imgView.contentMode  =UIViewContentModeScaleAspectFill;
+    imgView.image= IMAGENAMED(@"denglu");
+    [self.view addSubview:imgView];
     
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.navView), HEIGHT(self.view)-POS_Y(self.navView))];
     
-    scrollView.backgroundColor = BackColor;
+    scrollView.backgroundColor = ClearColor;
     [scrollView setContentSize:CGSizeMake(WIDTH(scrollView), HEIGHT(scrollView)+100)];
     
     [self.view addSubview:scrollView];
     
-    UIView* view =[[UIView alloc]initWithFrame:CGRectMake(0, 30, WIDTH(self.view), 230)];
-    view.backgroundColor = WriteColor;
-    view.tag =20001;
-    [scrollView addSubview:view];
-    
-    
-    // 忘记密码
-    UIImageView* imgView =[[UIImageView alloc]initWithFrame:CGRectMake(30, 30, 15, 15)];
-    imgView.image = IMAGENAMED(@"shoujihao");
-    imgView.contentMode = UIViewContentModeScaleAspectFill;
-    [view addSubview:imgView];
-    
-    
-    UILabel* label =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, Y(imgView)-5, 40, 25)];
-    label.text =@"手机";
-    label.textAlignment = NSTextAlignmentRight;
-    [view addSubview:label];
-    
-    self.phoneTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), WIDTH(self.view)-POS_X(label)-100, 30)];
+    self.phoneTextField = [[UITextField alloc]initWithFrame:CGRectMake(15, 30, WIDTH(self.view)-30, 45)];
     self.phoneTextField.tag=1004;
     self.phoneTextField.delegate=self;
-    self.phoneTextField.layer.borderWidth = 1;
     self.phoneTextField.font = SYSTEMFONT(16);
-    self.phoneTextField.placeholder = @"请输入您的手机号";
+    self.phoneTextField.placeholder = @"请输入手机号";
     self.phoneTextField.returnKeyType = UIReturnKeyDone;
     self.phoneTextField.borderStyle =UITextBorderStyleNone;
     self.phoneTextField.textColor =BACKGROUND_LIGHT_GRAY_COLOR;
-    self.phoneTextField.layer.borderColor = WriteColor.CGColor;
     self.phoneTextField.keyboardType = UIKeyboardTypeDecimalPad;
+    self.phoneTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.2);
     self.phoneTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.phoneTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    self.phoneTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
     self.phoneTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     
-    [view addSubview:self.phoneTextField];
-    
-    UIImageView* lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label), POS_Y(self.phoneTextField)+10, WIDTH(self.view)-X(label)-20, 1)];
-    
-    lineImgView.backgroundColor = BackColor;
-    [view addSubview:lineImgView];
+    [scrollView addSubview:self.phoneTextField];
+    //设置输入框左侧图标
+    [TDUtil setTextFieldLeftPadding:self.phoneTextField forImage:@"shoujihao"];
     
     
-    imgView =[[UIImageView alloc]initWithFrame:CGRectMake(X(imgView), POS_Y(self.phoneTextField)+30, 15, 15)];
-    imgView.image = IMAGENAMED(@"yanzhengma");
-    imgView.contentMode = UIViewContentModeScaleAspectFill;
-    [view addSubview:imgView];
-    
-    
-    label =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, Y(imgView)-5, 40, 25)];
-    label.text =@"";
-    label.textAlignment = NSTextAlignmentRight;
-    [view addSubview:label];
-    
-    self.codeTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), 110, 30)];
+    self.codeTextField = [[UITextField alloc]initWithFrame:CGRectMake(X( self.phoneTextField), POS_Y(self.phoneTextField)+10, WIDTH(self.phoneTextField), HEIGHT(self.phoneTextField))];
     self.codeTextField.tag=1005;
     self.codeTextField.delegate=self;
-    self.codeTextField.layer.borderWidth = 1;
     self.codeTextField.font = SYSTEMFONT(16);
     self.codeTextField.placeholder = @"请输入验证码";
     self.codeTextField.returnKeyType = UIReturnKeyDone;
     self.codeTextField.borderStyle =UITextBorderStyleNone;
-    self.codeTextField.layer.shadowColor=WriteColor.CGColor;
-    self.codeTextField.layer.borderColor = WriteColor.CGColor;
+    self.codeTextField.keyboardType = UIKeyboardTypeDecimalPad;
+    self.codeTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.2);
     self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.codeTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    self.codeTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
     self.codeTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [view addSubview:self.codeTextField];
+    [scrollView addSubview:self.codeTextField];
+    //设置输入框左侧图标
+    [TDUtil setTextFieldLeftPadding:self.codeTextField forImage:@"yanzhengma"];
     
-    self.codeButton = [[JKCountDownButton alloc]initWithFrame:CGRectMake(POS_X(self.codeTextField), Y(self.codeTextField)-5, 90, 35)];
+    self.codeButton = [[JKCountDownButton alloc]initWithFrame:CGRectMake(POS_X(self.codeTextField)-110, Y(self.codeTextField)+5, 90, 35)];
     self.codeButton.layer.borderWidth = 1;
     self.codeButton.layer.cornerRadius = 5;
     [self.codeButton.titleLabel setFont:SYSTEMFONT(13)];
-    self.codeButton.layer.borderColor = ColorTheme.CGColor;
+    [self.codeButton setBackgroundColor:RGBACOLOR(214, 48, 48, 1)];
+    self.codeButton.layer.borderColor = RGBACOLOR(214, 48, 48, 1).CGColor;
     [self.codeButton setTitle:@"获取验证码" forState:UIControlStateNormal];
-    [self.codeButton setTitleColor:ColorTheme forState:UIControlStateNormal];
+    [self.codeButton setTitleColor:WriteColor forState:UIControlStateNormal];
     [self.codeButton addTarget:self action:@selector(sendCode:) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:self.codeButton];
+    [scrollView addSubview:self.codeButton];
     
     __block ForgetPassViewController * cSelf = self;
     [self.codeButton addToucheHandler:^(JKCountDownButton*sender, NSInteger tag) {
@@ -161,72 +128,51 @@
     }];
     
     
-    lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label), POS_Y(self.codeTextField)+10, WIDTH(self.view)-X(label)-20, 1)];
-    lineImgView.backgroundColor = BackColor;
-    [view addSubview:lineImgView];
-    
-    
-    
-    imgView =[[UIImageView alloc]initWithFrame:CGRectMake(X(imgView), POS_Y(self.codeButton)+30, 15, 15)];
-    imgView.contentMode = UIViewContentModeScaleAspectFill;
-    imgView.image = IMAGENAMED(@"shurumima");
-    [view addSubview:imgView];
-    
-    
-    label =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, Y(imgView)-5, 40, 25)];
-    label.textAlignment = NSTextAlignmentRight;
-    label.text =@"密码";
-    [view addSubview:label];
-    
-    self.passTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), WIDTH(self.phoneTextField), 30)];
+    self.passTextField = [[UITextField alloc]initWithFrame:CGRectMake(X(self.codeTextField), POS_Y(self.codeTextField)+10, WIDTH(self.phoneTextField), HEIGHT(self.phoneTextField))];
     self.passTextField.tag=1004;
     self.passTextField.delegate=self;
-    self.passTextField.layer.borderWidth = 1;
     self.passTextField.secureTextEntry = YES;
     self.passTextField.font = SYSTEMFONT(16);
     self.passTextField.placeholder = @"请输入密码";
     self.passTextField.returnKeyType = UIReturnKeyDone;
     self.passTextField.borderStyle =UITextBorderStyleNone;
-    self.passTextField.layer.shadowColor=WriteColor.CGColor;
-    self.passTextField.layer.borderColor = WriteColor.CGColor;
+    self.passTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.2);
     self.passTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.passTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    self.passTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
     self.passTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [view addSubview:self.passTextField];
+    [scrollView addSubview:self.passTextField];
     
-    lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label), POS_Y(self.passTextField)+10, WIDTH(self.view)-X(label)-20, 1)];
-    lineImgView.backgroundColor = BackColor;
-    [view addSubview:lineImgView];
+    //设置输入框左侧图标
+    [TDUtil setTextFieldLeftPadding:self.passTextField forImage:@"shurumima"];
     
-    self.passRepeatTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, POS_Y(self.passTextField)+20, WIDTH(self.phoneTextField), HEIGHT(self.phoneTextField))];
+    
+    self.passRepeatTextField = [[UITextField alloc]initWithFrame:CGRectMake(X(self.passTextField), POS_Y(self.passTextField)+10, WIDTH(self.phoneTextField), HEIGHT(self.phoneTextField))];
     self.passRepeatTextField.tag=1004;
     self.passRepeatTextField.delegate=self;
-    self.passRepeatTextField.layer.borderWidth = 1;
     self.passRepeatTextField.secureTextEntry = YES;
     self.passRepeatTextField.font = SYSTEMFONT(16);
     self.passRepeatTextField.placeholder = @"请重复密码";
     self.passRepeatTextField.returnKeyType = UIReturnKeyDone;
     self.passRepeatTextField.borderStyle =UITextBorderStyleNone;
-    self.passRepeatTextField.layer.shadowColor=WriteColor.CGColor;
-    self.passRepeatTextField.layer.borderColor = WriteColor.CGColor;
+    self.passRepeatTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.2);
     self.passRepeatTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.passRepeatTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
     self.passRepeatTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.passRepeatTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [view addSubview:self.passRepeatTextField];
+    [scrollView addSubview:self.passRepeatTextField];
+    
+    //设置输入框左侧图标
+    [TDUtil setTextFieldLeftPadding:self.passRepeatTextField forImage:@"mima"];
     
     
-    self.configBtn = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(view)+30, WIDTH(self.view)-60, 40)];
-    self.configBtn.layer.cornerRadius = 5;
-    [self.configBtn setTitle:@"确定" forState:UIControlStateNormal];
-    [self.configBtn addTarget:self action:@selector(doAction:) forControlEvents:UIControlEventTouchUpInside];
-    [self.configBtn.layer setBorderWidth:1];
-    [self.configBtn.layer setBorderColor:ColorTheme.CGColor];
-    [self.configBtn setTitleColor:ColorTheme forState:UIControlStateNormal];
-    [scrollView addSubview:self.configBtn];
-    
-    
-    //初始化网络请求对象
-    httpUtils = [[HttpUtils alloc]init];
+    self.regietButton = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(self.passRepeatTextField)+30, WIDTH(self.view)-60, 40)];
+    self.regietButton.layer.cornerRadius = 5;
+    [self.regietButton setTitle:@"提交" forState:UIControlStateNormal];
+    [self.regietButton addTarget:self action:@selector(doAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.regietButton setTitleColor:WriteColor forState:UIControlStateNormal];
+    [self.regietButton setBackgroundColor:RGBACOLOR(214, 48, 48, 1)];
+    [scrollView addSubview:self.regietButton];
 }
 
 -(void)back:(id)sender
@@ -303,9 +249,9 @@
     //加载动画控件
     if (!activity) {
         //进度
-        activity = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(WIDTH(self.configBtn)/3-18, HEIGHT(self.configBtn)/2-15, 30, 30)];//指定进度轮的大小
+        activity = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(WIDTH(self.regietButton)/3-18, HEIGHT(self.regietButton)/2-15, 30, 30)];//指定进度轮的大小
         [activity setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];//设置进度轮显示类型
-        [self.configBtn addSubview:activity];
+        [self.regietButton addSubview:activity];
     }else{
         if (!activity.isAnimating) {
             [activity startAnimating];
@@ -446,8 +392,11 @@
         
     }
 }
--(void)dealloc
+
+-(void)viewWillAppear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
+    [super viewWillAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
+
 @end

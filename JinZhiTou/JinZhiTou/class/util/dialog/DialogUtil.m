@@ -210,7 +210,7 @@
         hud.labelText = label;
         hud.margin = 10.f;
         hud.yOffset = 150.f;
-        hud.color  =ColorTheme;
+        hud.color  =ColorTheme2;
         hud.removeFromSuperViewOnHide = YES;
         
         [hud hide:YES afterDelay:1];

@@ -135,7 +135,7 @@
                 RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
                 NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:projectId forKey:@"id"];
                 controller.dic = dic;
-                controller.title =@"微路演";
+                controller.title =@"项目";
                 if ([roadShow.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
                     [roadShow.delegate roadShowHome:roadShow controller:controller type:0];
                 }

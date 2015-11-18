@@ -114,17 +114,10 @@
         traceView = [[ProgressTraceView alloc]initWithFrame:CGRectMake(20, POS_Y(showTimeLabel), WIDTH(self)-40, 30)];
         [self addSubview:traceView];
         
-        //剩余人数
-        leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(traceView)+10, 100, 21)];
-        leftLabel.textAlignment=NSTextAlignmentLeft;
-        leftLabel.text=@"剩余人数";
-        leftLabel.font=SYSTEMFONT(14);
-        leftLabel.textColor = FONT_COLOR_GRAY;
-        [self addSubview:leftLabel];
         
         //点赞收藏
         UITapGestureRecognizer* recognizer =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(collect:)];
-        currentPriseLabel=[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-60, POS_Y(leftLabel)+5, 40, 21)];
+        currentPriseLabel=[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-60, POS_Y(traceView)+5, 40, 21)];
         currentPriseLabel.font=SYSTEMFONT(16);
         currentPriseLabel.userInteractionEnabled  = YES;
         [currentPriseLabel addGestureRecognizer:recognizer];
@@ -264,19 +257,6 @@
         leftLabel.text=@"已获融资";
         [self addSubview:leftLabel];
         
-        //融资状态
-        leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)/3, POS_Y(traceView)+20, WIDTH(self)/3, 21)];
-        leftLabel.textAlignment=NSTextAlignmentCenter;
-        leftLabel.font=SYSTEMFONT(13);
-        leftLabel.text=@"融资中";
-        leftLabel.tag = 5002;
-        [self addSubview:leftLabel];
-        
-        leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(leftLabel), POS_Y(leftLabel), WIDTH(leftLabel), 21)];
-        leftLabel.textAlignment=NSTextAlignmentCenter;
-        leftLabel.font=SYSTEMFONT(14);
-        leftLabel.text=@"融资状态";
-        [self addSubview:leftLabel];
         
         //预融资总额
         leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)*2/3, POS_Y(traceView)+20, WIDTH(self)/3, 21)];
@@ -289,7 +269,7 @@
         leftLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(leftLabel), POS_Y(leftLabel), WIDTH(leftLabel), 21)];
         leftLabel.textAlignment=NSTextAlignmentCenter;
         leftLabel.font=SYSTEMFONT(14);
-        leftLabel.text=@"预融资总额";
+        leftLabel.text=@"计划融资";
         [self addSubview:leftLabel];
         
         //点赞收藏
@@ -434,7 +414,7 @@
         
         [introduceImgview sd_setImageWithURL:url placeholderImage:introduceImgview.image completed:
          ^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL *imageUrl){
-             [introduceImgview setContentMode:UIViewContentModeScaleAspectFill];
+             [introduceImgview setContentMode:UIViewContentModeScaleAspectFit];
          }];
     }
 }
@@ -585,16 +565,6 @@
     
     imgView.image = IMAGENAMED(fileName);
     
-}
-
--(void)setLeftNum:(NSString *)leftNum
-{
-    if (self.type==0) {
-        if (leftNum) {
-            self->_leftName  = leftNum;
-            leftLabel.text = [NSString stringWithFormat:@"剩余人数:%@人",leftNum];
-        }
-    }
 }
 
 -(void)viewAnimation:(UIView*)view salce:(float)scale

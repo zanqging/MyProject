@@ -7,27 +7,18 @@
 //
 
 #import "FinialAuthViewController.h"
-#import "TDUtil.h"
-#import "NavView.h"
 #import "PhotoAdd.h"
-#import "HttpUtils.h"
-#import "DialogUtil.h"
-#import "UConstants.h"
-#import "LoadingUtil.h"
-#import "LoadingView.h"
 #import "AutoShowView.h"
 #import "SwitchSelect.h"
-#import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
-#import "ASIFormDataRequest.h"
 #import "PECropViewController.h"
 #import "PrivacyViewController.h"
 #import "CompanyViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "UserTraceViewController.h"
+#import "UserInfoAuthController.h"
+#import "UserInfoAuthController.h"
 #import "FinialProctoTableViewCell.h"
 
-@interface FinialAuthViewController ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,CustomImagePickerControllerDelegate,ASIHTTPRequestDelegate,UITextFieldDelegate>
+@interface FinialAuthViewController ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,CustomImagePickerControllerDelegate,UITextFieldDelegate>
 {
     
     BOOL isUploadID;
@@ -82,11 +73,7 @@
     self.startLoading  = YES;
     [self.httpUtil getDataFromAPIWithOps:@"auth/" type:0 delegate:self sel:@selector(requestInvestPro:) method:@"GET"];
 }
-//上传身份证
--(void)uploadID:(NSInteger)id
-{
-    [self.httpUtil getDataFromAPIWithOps:ID_FORE postParam:nil file:STATIC_USER_DEFAULT_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUploadIDFore:)];
-}
+
 -(void)back:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -306,7 +293,11 @@
     
 //    [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
     
-    [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic file:STATIC_USER_DEFAULT_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUserInfo:)];
+//    [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic file:STATIC_USER_DEFAULT_ID_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUserInfo:)];
+    
+    [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic file:STATIC_USER_DEFAULT_ID_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUserInfo:)];
+//    NSMutableArray* arr = [NSMutableArray arrayWithObjects:STATIC_USER_DEFAULT_ID_PIC, nil];
+//     [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic files:arr postName:@"file" type:0 delegate:self sel:@selector(requestUserInfo:)];
     self.startLoading = YES;
     self.isTransparent  =YES;
     return YES;
@@ -416,7 +407,7 @@
                     NSString* content =@"我已经认真阅读并同意 《投资风险提示书》";
                     
                     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-                    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(10, [content length]-10)];
+                    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(10, [content length]-10)];
                     
                     label.attributedText = attributedString;//ios 6
                     [scrollViewPerson addSubview:label];
@@ -542,13 +533,9 @@
     PhotoAdd* photoView ;
     if (selectedIndex==0) {
         //保存头像
-       [TDUtil saveCameraPicture:croppedImage fileName:STATIC_USER_DEFAULT_PIC];
+       [TDUtil saveCameraPicture:croppedImage fileName:STATIC_USER_DEFAULT_ID_PIC];
         
        photoView =(PhotoAdd*)[scrollViewPerson viewWithTag:currentPhotoTag];
-        //开始上传身份证
-        if (currentPhotoTag==20003) {
-            [self uploadID:1];
-        }
     }
     
     photoView.image = croppedImage;
@@ -591,22 +578,6 @@
     }
 }
 
-//上传身份证 requestUploadIDFore
--(void)requestUploadIDFore:(ASIHTTPRequest*)request
-{
-    NSString* jsonString =[TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-    
-    NSMutableDictionary* dic = [jsonString JSONValue];
-    
-    if (dic!=nil) {
-        NSString* status =[dic valueForKey:@"status"];
-        if ([status integerValue]==0) {
-//            NSMutableArray* data = [dic valueForKey:@"data"];
-            isUploadID = YES;
-        }
-    }
-}
 
 -(void)requestUserInfo:(ASIHTTPRequest*)request
 {
@@ -622,15 +593,9 @@
             //__block RoadShowDetailViewController* bself = self;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                UserTraceViewController* controller = [[UserTraceViewController alloc]init];
-                //来现场
-                controller.titleStr = self.navView.title;
-                controller.currentSelected = 1002;
+                UserInfoAuthController* controller = [[UserInfoAuthController alloc]init];
                 [self.navigationController pushViewController:controller animated:YES];
-                
-                
             });
-            
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
@@ -638,6 +603,7 @@
         self.startLoading  = NO;
     }
 }
+
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     

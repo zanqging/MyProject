@@ -20,4 +20,6 @@
 @property(retain,nonatomic)NSString* title;
 @property(retain,nonatomic)UIButton* cancelButton;
 @property(retain,nonatomic)UIButton* shureButton;
+
+-(void)hideCancelButton;
 @end

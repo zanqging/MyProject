@@ -113,7 +113,7 @@
 
 -(void)loadMyRoadShowData
 {
-    [self.httpUtil getDataFromAPIWithOps:MY_ROADSHOW_APPLY postParam:nil type:0 delegate:self sel:@selector(requestRoadShowData:)];
+//    [self.httpUtil getDataFromAPIWithOps:MY_ROADSHOW_APPLY postParam:nil type:0 delegate:self sel:@selector(requestRoadShowData:)];
 }
 -(void)loadMyParticateData
 {

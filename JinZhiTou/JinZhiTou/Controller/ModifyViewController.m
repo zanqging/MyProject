@@ -53,11 +53,11 @@
     label.text = @"姓名";
     label.font = SYSTEMFONT(16);
     [scrollView addSubview:label];
-    
+    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
     //输入姓名
     textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), WIDTH(self.view)-POS_X(label)-60, 40)];
-    textField.placeholder = @"请输入您的昵称 ";
     textField.font = SYSTEMFONT(16);
+    textField.text = [data valueForKey:USER_STATIC_NICKNAME];
     textField.returnKeyType = UIReturnKeyDone;
     textField.borderStyle =UITextBorderStyleNone;
     textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -85,6 +85,8 @@
         [self.httpUtil getDataFromAPIWithOps:NICKNAME postParam:[NSDictionary dictionaryWithObject:name forKey:@"nickname"] type:0 delegate:self sel:@selector(requestSave:)];
         
         //[self.httpUtil getDataFromAPIWithOps:HOME_CREDIT postParam:[NSDictionary dictionaryWithObject:name forKey:@"wd"] type:0 delegate:self sel:@selector(requestSave:)];
+        self.startLoading = YES;
+        self.isTransparent  =YES;
     }
     
 }
@@ -132,10 +134,13 @@
         NSString* code =[dic valueForKey:@"code"];
         if ([code integerValue]==0) {
             NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
-            [data setValue:textField.text forKey:STATIC_USER_NAME];
+            [data setValue:textField.text forKey:USER_STATIC_NICKNAME];
+            [self back:nil];
         }
+        self.startLoading =NO;
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
     }
+    
 }
 
 -(void)requestFailed:(ASIHTTPRequest *)request

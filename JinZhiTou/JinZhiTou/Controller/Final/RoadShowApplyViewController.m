@@ -7,30 +7,17 @@
 //
 
 #import "RoadShowApplyViewController.h"
-#import "TDUtil.h"
-#import "NavView.h"
 #import "QiniuSDK.h"
-#import "HttpUtils.h"
 #import "LoadVideo.h"
-#import "DialogUtil.h"
-#import "UConstants.h"
 #import "FinialKind.h"
-//#import "AutoShowView.h"
-#import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
-#import "ASIFormDataRequest.h"
 #import "PrivacyViewController.h"
 #import "CompanyViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UserTraceViewController.h"
 #import <MobileCoreServices/MobileCoreServices.h>
-@interface RoadShowApplyViewController ()<UIScrollViewDelegate,ASIHTTPRequestDelegate,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+@interface RoadShowApplyViewController ()<UIScrollViewDelegate,ASIHTTPRequestDelegate,UITextFieldDelegate,UIImagePickerControllerDelegate,UITextViewDelegate, UINavigationControllerDelegate>
 {
-    NavView* navView;
     NSString* videoName;
-    HttpUtils* httpUtil;
-//    AutoShowView* autoShowView;
-    LoadVideo* loadingVideView;
     
     UIImage* cutImage;
     NSInteger currentIndex;
@@ -40,10 +27,10 @@
     NSString* token;
     NSDictionary* dicData;
     UIScrollView* scrollView;
-    UITextField* userNameTextField;
-    UITextField* userPhoneTextField;
+    LoadVideo* loadingVideView;
     NSMutableArray* companyDataArray;
     UITextField* userCompanyTextField;
+    UITextView* textView;
 }
 
 @end
@@ -54,19 +41,13 @@
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
     //设置标题
-    navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
-    navView.imageView.alpha=1;
-    [navView setTitle:@"上传项目"];
-    navView.titleLable.textColor=WriteColor;
+    self.navView.imageView.alpha=1;
+    [self.navView setTitle:@"上传项目"];
+    self.navView.titleLable.textColor=WriteColor;
     
-    [navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [navView.leftButton setTitle:@"项目详情" forState:UIControlStateNormal];
-    [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
-    [self.view addSubview:navView];
-    
-    //网络初始化
-    httpUtil = [[HttpUtils alloc]init];
-    
+    [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
+    [self.navView.leftButton setTitle:@"项目详情" forState:UIControlStateNormal];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [self addView];
     
     //获取公司列表
@@ -93,44 +74,32 @@
 -(BOOL)commitRoadShow
 {
     
-    NSString* userName;
-    NSString* userPhone;
+    NSString* desc;
     NSString* company;
-    userName = userNameTextField.text;
-    userPhone =userPhoneTextField.text;
+    
     company = userCompanyTextField.text;
-    if (![TDUtil isValidString:userName]) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入联系人姓名" ];
-        return NO;
-    }
-    
-    if ([TDUtil isValidString:userPhone]) {
-        if (![TDUtil validateMobile:userPhone]) {
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入正确手机号码" ];
-            return NO;
-        }
-       
-    }else{
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入联系人手机号码" ];
-        return NO;
-    }
-    
-    
     if (![TDUtil isValidString:company]) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入公司名称" ];
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:userCompanyTextField.placeholder];
         return NO;
     }
     
+    desc = textView.text;
+    if (![TDUtil isValidString:desc]) {
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入公司简介"];
+        return NO;
+    }
     
     NSDictionary* dic = [[NSMutableDictionary alloc]init];
-    [dic setValue:userName forKey:@"name"];
-    [dic setValue:userPhone forKey:@"tel"];
+    [dic setValue:desc forKey:@"desc"];
     [dic setValue:company forKey:@"company"];
     [dic setValue:videoName forKey:@"vcr"];
     
-    [httpUtil getDataFromAPIWithOps:ROAD_SHOW postParam:dic type:0 delegate:self  sel:@selector(requestRoadShow:)];
+    [self.httpUtil getDataFromAPIWithOps:ROAD_SHOW postParam:dic type:0 delegate:self  sel:@selector(requestRoadShow:)];
+    self.startLoading  =YES;
+    self.isTransparent = YES;
     return YES;
 }
+
 -(void)back:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -149,7 +118,7 @@
 
 -(void)addView
 {
-    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(navView))];
+    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView))];
     scrollView.tag =40001;
     scrollView.delegate=self;
     scrollView.bounces = NO;
@@ -162,12 +131,17 @@
     [scrollView addSubview:imageView];
     
     UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, POS_Y(imageView)+70, WIDTH(scrollView)-40, 40)];
-    label.text = @"备注：我们的邮箱是kf@ jinzht.com,您准备好资料，发送至我们邮箱，将有工作人员联系您!";
     label.alpha = 0.5;
     label.numberOfLines =0;
     label.font = SYSTEMFONT(14);
     label.lineBreakMode = NSLineBreakByWordWrapping;
     [scrollView addSubview:label];
+    
+    NSString* content =@"备注：请您准备好资料，发送至邮箱 kf@jinzht.com 工作人员第一时间联系您!";
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(16, 13)];
+    
+    label.attributedText = attributedString;//ios 6
     
     loadingVideView = [[LoadVideo alloc]initWithFrame:CGRectMake(20, POS_Y(label)+10, WIDTH(scrollView)-40, 170)];
     loadingVideView.isLoaded = NO;
@@ -177,72 +151,20 @@
     [scrollView addSubview:loadingVideView];
     
     //填写信息
-    UIView* view = [[UIView alloc]initWithFrame:CGRectMake(20, POS_Y(loadingVideView)+10, WIDTH(self.view)-40, 160)];
+    UIView* view = [[UIView alloc]initWithFrame:CGRectMake(20, POS_Y(loadingVideView)+10, WIDTH(self.view)-40, 150)];
     view.tag = 30001;
     view.backgroundColor  =WriteColor;
     [scrollView addSubview:view];
     
-    //姓名
-    label = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, 80, 30)];
-    label.textAlignment = NSTextAlignmentLeft;
-    label.text = @"联系人姓名";
-    label.font = SYSTEMFONT(14);
-    [view addSubview:label];
-    
-    //输入姓名
-    userNameTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(scrollView)*2/3-40, 30)];
-    userNameTextField.tag = 1001;
-    userNameTextField.delegate = self;
-    userNameTextField.placeholder = @"请输入联系人姓名";
-    userNameTextField.font  =SYSTEMFONT(16);
-    userNameTextField.returnKeyType = UIReturnKeyDone;
-    userNameTextField.layer.borderColor =ColorTheme.CGColor;
-    userNameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-    userNameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    userNameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [view addSubview:userNameTextField];
-    
-    UIImageView* lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(userNameTextField)+10, WIDTH(view), 1)];
-    lineImgView.backgroundColor = BackColor;
-    [view addSubview:lineImgView];
-    
-    //职位
-    label = [[UILabel alloc]initWithFrame:CGRectMake(X(label), POS_Y(lineImgView)+10, WIDTH(label), 30)];
-    label.textAlignment = NSTextAlignmentLeft;
-    label.text = @"联系人手机";
-    label.font = SYSTEMFONT(14);
-    [view addSubview:label];
-    
-    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
-    //输入职位
-    userPhoneTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(userNameTextField), 30)];
-    userPhoneTextField.tag = 1002;
-    userPhoneTextField.text = [dataStore valueForKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
-    userPhoneTextField.font  =SYSTEMFONT(16);
-    userPhoneTextField.placeholder = @"请输入联系人手机";
-    userPhoneTextField.delegate = self;
-    userPhoneTextField.returnKeyType = UIReturnKeyDone;
-    userPhoneTextField.layer.borderColor =ColorTheme.CGColor;
-    userPhoneTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-    userPhoneTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    userPhoneTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    [view addSubview:userPhoneTextField];
-    
-    lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(userPhoneTextField)+10, WIDTH(view), 1)];
-    lineImgView.backgroundColor = BackColor;
-    [view addSubview:lineImgView];
-    
     //公司
-    label = [[UILabel alloc]initWithFrame:CGRectMake(X(label), POS_Y(lineImgView)+10, WIDTH(label), 30)];
+    label = [[UILabel alloc]initWithFrame:CGRectMake(X(label),10, 60, 30)];
     label.textAlignment = NSTextAlignmentLeft;
     label.text = @"公司名称";
     label.font = SYSTEMFONT(14);
     [view addSubview:label];
     
-    
-    
     //输入公司信息
-    userCompanyTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(userPhoneTextField)-25, 30)];
+    userCompanyTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(view)-25, 30)];
     userCompanyTextField.placeholder = @"请输入公司名称";
     userCompanyTextField.font  =SYSTEMFONT(16);
     userCompanyTextField.tag = 10001;
@@ -253,87 +175,29 @@
     userCompanyTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     userCompanyTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [view addSubview:userCompanyTextField];
-    
-//    
-//    UITapGestureRecognizer* recognizer =[[ UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doAction:)];
-//    
-//    imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)-30, Y(userCompanyTextField)+5, 25, 25)];
-//    imageView.image = IMAGENAMED(@"tianjia");
-//    imageView.userInteractionEnabled = YES;
-//    [imageView addGestureRecognizer:recognizer];
-//    [view addSubview:imageView];
     view.layer.cornerRadius = 5;
     
-    //投资信息
-    view = [[UIView alloc]initWithFrame:CGRectMake(20, POS_Y(view)+10, WIDTH(self.view)-40, 150)];
-    view.tag = 30002;
-    view.alpha = 0;
-    view.backgroundColor  =WriteColor;
-    [scrollView addSubview:view];
+    UIImageView* lineImageView =[[UIImageView alloc]initWithFrame:CGRectMake(5, POS_Y(userCompanyTextField), WIDTH(view)-10, 1)];
+    lineImageView.backgroundColor = BackColor;
+    [view addSubview:lineImageView];
     
-
-    label = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, WIDTH(scrollView)*1/3-20, 30)];
-    label.textAlignment = NSTextAlignmentLeft;
-    label.text = @"所属行业";
-    label.font = SYSTEMFONT(14);
-    [view addSubview:label];
+    textView =[[UITextView alloc]initWithFrame:CGRectMake(5,POS_Y(userCompanyTextField)+5, WIDTH(view)-10, 100)];
+    textView.delegate  =self;
+    textView.layer.borderWidth=1;
+    textView.text=@"请输入项目简介描述";
+    textView.returnKeyType = UIReturnKeyDone;
+    textView.layer.borderColor=BackColor.CGColor;
+    textView.textColor = FONT_COLOR_GRAY;
+    [view addSubview:textView];
     
-    //姓名
-    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(scrollView)*2/3-20, 30)];
-    label.tag =20001;
-    label.textColor = FONT_COLOR_GRAY;
-    label.font = SYSTEMFONT(14);
-    label.textAlignment = NSTextAlignmentLeft;
-    [view addSubview:label];
-    
-    lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label)+10, WIDTH(view), 1)];
-    lineImgView.backgroundColor = BackColor;
-    [view addSubview:lineImgView];
-    
-    
-    label = [[UILabel alloc]initWithFrame:CGRectMake(20, POS_Y(lineImgView)+10, WIDTH(scrollView)*1/3-20, 30)];
-    label.textAlignment = NSTextAlignmentLeft;
-    label.text = @"注册地址";
-    label.font = SYSTEMFONT(14);
-    [view addSubview:label];
-    
-
-    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(scrollView)*2/3-20, 30)];
-    label.textAlignment = NSTextAlignmentLeft;
-    label.tag =20002;
-    label.textColor = FONT_COLOR_GRAY;
-    label.font = SYSTEMFONT(14);
-    [view addSubview:label];
-    
-    lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label)+10, WIDTH(view), 1)];
-    lineImgView.backgroundColor = BackColor;
-    [view addSubview:lineImgView];
-    
-    label = [[UILabel alloc]initWithFrame:CGRectMake(20, POS_Y(lineImgView)+10, WIDTH(scrollView)*1/3-20, 21)];
-    label.textAlignment = NSTextAlignmentLeft;
-    label.text = @"公司状态";
-    label.font = SYSTEMFONT(14);
-    [view addSubview:label];
-    
-
-    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(scrollView)*2/3-20, 30)];
-    label.tag =20003;
-    label.font = SYSTEMFONT(14);
-    label.textColor = FONT_COLOR_GRAY;
-    label.textAlignment = NSTextAlignmentLeft;
-    [view addSubview:label];
-    view.layer.cornerRadius = 5;
-    
-    UIView* v = [scrollView viewWithTag:30001];
-    
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(v), WIDTH(view), 150)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(view)+10, WIDTH(self.view), 130)];
     view.tag = 30003;
-    view.backgroundColor  =BackColor;
+    view.backgroundColor  =WriteColor;
     [scrollView addSubview:view];
 
     UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(20, 25, 20, 20)];
-    imgView.image = IMAGENAMED(@"queren-1");
     imgView.userInteractionEnabled = YES;
+    imgView.image = IMAGENAMED(@"queren-1");
     [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(check:)]];
     [view addSubview:imgView];
     
@@ -341,10 +205,10 @@
     label.font = SYSTEMFONT(14);
     label.userInteractionEnabled = YES;
     label.textAlignment = NSTextAlignmentLeft;
-    NSString* content =@"我已经认真阅读并同意 《项目发起协议》";
+    content =@"我已经认真阅读并同意 《项目发起协议》";
     
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:NSMakeRange(10, [content length]-10)];
+    attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(10, [content length]-10)];
     
     label.attributedText = attributedString;//ios 6
     [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];
@@ -359,7 +223,7 @@
     [btnAction addTarget:self action:@selector(commitRoadShow) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btnAction];
     
-    scrollView.contentSize = CGSizeMake(WIDTH(scrollView), POS_Y(view)+50);
+    scrollView.contentSize = CGSizeMake(WIDTH(scrollView), POS_Y(view)+150);
 }
 
 -(void)check:(id)sender
@@ -392,7 +256,7 @@
     videoName = [videoName stringByReplacingOccurrencesOfString:@"-" withString:@""];
     videoName = [videoName stringByReplacingOccurrencesOfString:@" " withString:@""];
     videoName = [videoName stringByReplacingOccurrencesOfString:@":" withString:@""];
-    [httpUtil getDataFromAPIWithOps:TOKEAN postParam:[NSDictionary dictionaryWithObjectsAndKeys:videoName,@"key", nil] type:0 delegate:self sel:@selector(requestToken:)];
+    [self.httpUtil getDataFromAPIWithOps:TOKEAN postParam:[NSDictionary dictionaryWithObjectsAndKeys:videoName,@"key", nil] type:0 delegate:self sel:@selector(requestToken:)];
 }
 
 -(void)doAction:(UITapGestureRecognizer*)recognizer
@@ -444,6 +308,7 @@
             isVideo = YES;
             [self presentViewController:self.imagePicker animated:YES completion:nil];
         }
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
     }
 }
 
@@ -472,32 +337,7 @@
                 
             }
         }
-    }
-}
-
--(void)requestStatusData:(ASIHTTPRequest*)request
-{
-    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-     NSLog(@"返回:%@",jsonString);
-    NSMutableDictionary * dic =[jsonString JSONValue];
-    if (dic!=nil) {
-        NSString* status = [dic valueForKey:@"status"];
-        if ([status integerValue]==0) {
-            
-        }
-    }
-}
-
--(void)requestAddCompany:(ASIHTTPRequest*)request
-{
-    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-     NSLog(@"返回:%@",jsonString);
-    NSMutableDictionary * dic =[jsonString JSONValue];
-    if (dic!=nil) {
-        NSString* status = [dic valueForKey:@"status"];
-        if ([status integerValue]==0) {
-            
-        }
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
     }
 }
 
@@ -537,6 +377,7 @@
             
             [scrollView setContentSize:CGSizeMake(WIDTH(scrollView), scrollView.contentSize.height+150)];
         }
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
     }
 }
 -(void)requestRoadShow:(ASIHTTPRequest*)request
@@ -555,36 +396,48 @@
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
                 UserTraceViewController* controller = [[UserTraceViewController alloc]init];
                 //来现场
-                controller.titleStr = navView.title;
+                controller.titleStr = self.navView.title;
                 controller.currentSelected = 1000;
                 [self.navigationController pushViewController:controller animated:YES];
                 
                 
             });
-            
         }
+         self.startLoading = NO;
          [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
     }
 }
 
--(void)requestProtocol:(ASIHTTPRequest*)request
-{
-    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    
-    NSLog(@"返回:%@",jsonString);
-    NSMutableDictionary * dic =[jsonString JSONValue];
-    if (dic!=nil) {
-        NSString* status = [dic valueForKey:@"status"];
-        if ([status integerValue]==0) {
-        
-        }else{
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
-        }
-    }
-}
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSLog(@"%@",request.responseString);
+}
+#pragma UITextViewDelegate
+-(void)textViewDidBeginEditing:(UITextView *)tv
+{
+    NSString* str = @"请输入项目简介描述";
+    NSString* text = tv.text;
+    if ([text isEqualToString:str]) {
+        textView.text=@"";
+    }
+}
+
+-(void)textViewDidEndEditing:(UITextView *)tv
+{
+    NSString* str = @"请输入项目简介描述";
+    NSString* text = tv.text;
+    if ([text isEqualToString:@""]) {
+        textView.text=str;
+    }
+}
+
+- (BOOL)textView:(UITextView *)tv shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    if ([text isEqualToString:@"\n"]){ //判断输入的字是否是回车，即按下return
+        [tv resignFirstResponder];
+        //在这里做你响应return键的代码
+        return NO; //这里返回NO，就代表return键值失效，即页面上按下return，不会出现换行，如果为yes，则输入页面会换行
+    }
+    return YES;
 }
 
 #pragma UITextFieldDelegate

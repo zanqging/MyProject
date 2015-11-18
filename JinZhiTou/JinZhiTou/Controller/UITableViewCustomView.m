@@ -55,7 +55,7 @@
 {
     self->_emptyImgFileName = emptyImgFileName;
     if ([TDUtil isValidString:self.emptyImgFileName]) {
-        emptyImgView.image  = IMAGENAMED(self.emptyImgFileName);
+        emptyImgView.image  = IMAGE(self.emptyImgFileName, @"png");
     }
 }
 

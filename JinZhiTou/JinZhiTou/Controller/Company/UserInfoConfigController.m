@@ -251,6 +251,12 @@
     [dataDic setValue:IDNumber forKey:@"idno"];
     [dataDic setValue:company forKey:@"company"];
     [dataDic setValue:userType forKey:@"position"];
+    
+    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
+    [data setValue:userName forKey:USER_STATIC_NAME];
+    [data setValue:address forKey:USER_STATIC_ADDRESS];
+    [data setValue:IDNumber forKey:USER_STATIC_IDNUMBER];
+    [data setValue:company forKey:USER_STATIC_COMPANY_NAME];
     [self.httpUtil getDataFromAPIWithOps:@"userinfo/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
     return YES;
 }

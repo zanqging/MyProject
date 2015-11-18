@@ -100,80 +100,53 @@
     
     [scrollView setContentSize:CGSizeMake(WIDTH(self.view), HEIGHT(self.view)+70)];
     
-    [self loadTeamPersonDetail];
     
 }
 
--(void)loadTeamPersonDetail
+-(void)setDataDic:(NSDictionary *)dataDic
 {
-    httpUtils = [[HttpUtils alloc]init];
-    NSString* url = [TEAM_DETAIL stringByAppendingFormat:@"%ld/",[[self.dataDic valueForKey:@"id"] longValue]];
-    
-    //加载视图
-    loadingView = [LoadingUtil shareinstance:self.view];
-    [LoadingUtil showLoadingView:self.view withLoadingView:loadingView];
-    [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestPersonDetail:)];
+    self->_dataDic = dataDic;
+    if (self.dataDic) {
+        //头像背景
+        UIImageView* imgView = (UIImageView*)[self.view viewWithTag:1001];
+        [imgView sd_setImageWithURL:[self.dataDic valueForKey:@"img"] placeholderImage:IMAGENAMED(@"coremember")];
+        
+        imgView = (UIImageView*)[scrollView viewWithTag:1002];
+        [imgView sd_setImageWithURL:[self.dataDic valueForKey:@"img"]];
+        
+        //姓名
+        UIView* view = [scrollView viewWithTag:2001];
+        UILabel* label = (UILabel*)[view viewWithTag:6001];
+        label.text = [self.dataDic valueForKey:@"name"];
+        
+        //职位
+        label = (UILabel*)[view viewWithTag:6002];
+        label.text = [self.dataDic valueForKey:@"title"];
+        
+        //内容
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        paragraphStyle.lineSpacing = 10;// 字体的行间距
+        
+        NSDictionary *attributes = @{
+                                     NSFontAttributeName:[UIFont systemFontOfSize:15],
+                                     NSParagraphStyleAttributeName:paragraphStyle
+                                     };
+        textView.attributedText = [[NSAttributedString alloc] initWithString:[self.dataDic valueForKey:@"profile"] attributes:attributes];
+
+    }
 }
+
 
 -(void)doAction:(id)sender
 {
     
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 -(void)back:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-#pragma ASIHttpRequester
-//===========================================================网络请求=====================================
--(void)requestPersonDetail:(ASIHTTPRequest *)request{
-    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-    NSMutableDictionary* jsonDic = [jsonString JSONValue];
-    
-    if(jsonDic!=nil)
-    {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
-            NSDictionary* dic = [jsonDic valueForKey:@"data"];
-            [self.dataDic setValue:[dic valueForKey:@"profile"] forKey:@"profile"];
-            
-            //头像背景
-            UIImageView* imgView = (UIImageView*)[self.view viewWithTag:1001];
-            [imgView sd_setImageWithURL:[self.dataDic valueForKey:@"img"] placeholderImage:IMAGENAMED(@"coremember")];
-            
-            imgView = (UIImageView*)[scrollView viewWithTag:1002];
-            [imgView sd_setImageWithURL:[self.dataDic valueForKey:@"img"]];
-            
-            //姓名
-            UIView* view = [scrollView viewWithTag:2001];
-            UILabel* label = (UILabel*)[view viewWithTag:6001];
-            label.text = [self.dataDic valueForKey:@"name"];
-            
-            //职位
-            label = (UILabel*)[view viewWithTag:6002];
-            label.text = [self.dataDic valueForKey:@"title"];
-            
-            //内容
-            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-            paragraphStyle.lineSpacing = 10;// 字体的行间距
-            
-            NSDictionary *attributes = @{
-                                         NSFontAttributeName:[UIFont systemFontOfSize:15],
-                                         NSParagraphStyleAttributeName:paragraphStyle
-                                         };
-            textView.attributedText = [[NSAttributedString alloc] initWithString:[dic valueForKey:@"profile"] attributes:attributes];
-            
-            [LoadingUtil closeLoadingView:loadingView];
-        }
-        
-    }
-}
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {

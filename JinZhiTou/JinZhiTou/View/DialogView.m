@@ -8,6 +8,7 @@
 
 #import "DialogView.h"
 #import "UConstants.h"
+#import "TDUtil.h"
 #import "GlobalDefine.h"
 #import <QuartzCore/QuartzCore.h>
 @implementation DialogView
@@ -33,10 +34,11 @@
         [self addSubview:imageView];
         
         
-        messageLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(imgView), POS_Y(imgView)-90, WIDTH(imgView), 25)];
-        messageLabel.font = SYSTEMFONT(16);
-        messageLabel.text = @"您没有查看权限，请先认证投资人";
+        messageLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(imgView)+10, POS_Y(imgView)-90, WIDTH(imgView)-20, 30)];
+        messageLabel.numberOfLines =2;
+        messageLabel.font = SYSTEMFONT(14);
         messageLabel.textAlignment = NSTextAlignmentCenter;
+        messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [self addSubview:messageLabel];
         
         imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(imgView), POS_Y(messageLabel)+15, WIDTH(imgView), 1)];
@@ -49,6 +51,7 @@
         [self addSubview:self.cancelButton];
         
         imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.cancelButton), POS_Y(messageLabel)+15, 1, HEIGHT(self.cancelButton)+10)];
+        imgView.tag=50001;
         imgView.backgroundColor = BackColor;
         [self addSubview:imgView];
         
@@ -65,7 +68,16 @@
 {
     self->_title = title;
     if (self.title) {
-        messageLabel.text = self.title;
+//        [TDUtil setLabelMutableText:messageLabel content:self.title lineSpacing:5 headIndent:0];
+        messageLabel.text = title;
     }
+}
+
+-(void)hideCancelButton
+{
+    [self.cancelButton removeFromSuperview];
+    UIImageView* imgView =[self viewWithTag:50001];
+    imgView.backgroundColor= ClearColor;
+    [self.shureButton setFrame:CGRectMake(10, Y(self.shureButton), WIDTH(self)-20, HEIGHT(self.shureButton))];
 }
 @end

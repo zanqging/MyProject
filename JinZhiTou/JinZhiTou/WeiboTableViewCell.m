@@ -396,7 +396,14 @@
         //内容
          NSString* arr = [dic valueForKey:@"position"];
         if (arr) {
-            attributedString = [[NSMutableAttributedString alloc] initWithString:arr];
+            NSString* content;
+            if ([arr isKindOfClass:NSArray.class]) {
+                content = ((NSArray*)arr)[0];
+            }else{
+                content =arr;
+            }
+            
+            attributedString = [[NSMutableAttributedString alloc] initWithString:content];
             [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [arr length])];
             self.jobLabel.attributedText = attributedString;//ios 6
             [self.jobLabel sizeToFit];

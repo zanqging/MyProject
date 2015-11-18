@@ -139,7 +139,7 @@
 {
     if (isSearch) {
         if (self.type==0) {
-            return 190;
+            return 110;
         }else if(self.type==3){
             UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, WIDTH(self.view)-20, 20)];
             label.numberOfLines = 2;
@@ -267,7 +267,7 @@
     }else{
         header.title =[NSString stringWithFormat:@"没有包含\"%@\"的搜索结果",self.searchBarWithoutDelegate.searchField.text];
         [self.tableView setIsNone:YES];
-        [self.tableView setEmptyImgFileName:@"Villain"];
+        [self.tableView setEmptyImgFileName:@"empty"];
     }
     [self.tableView reloadData];
 }
@@ -328,6 +328,11 @@
 	// Access the text from the search bar like searchBar.searchField.text
 }
 
+-(void)refresh
+{
+    [self searchBarDone:self.searchBarWithoutDelegate];
+}
+
 
 
 #pragma searchResult
@@ -344,9 +349,15 @@
     }else{
         key = @"value";
     }
+    NSString* str=@"";
     for (int  i =0; i<array.count; i++) {
-        if ([label.text isEqualToString:array[i]]) {
-            par = array[i];
+        if ([array[i] isKindOfClass:NSDictionary.class]) {
+            str = [array[i] valueForKey:key];
+        }else{
+            str = array[i];
+        }
+        if ([label.text isEqualToString:str]) {
+            par = str;
         }
     }
     header.title =[NSString stringWithFormat:@"包含\"%@\"的搜索结果",label.text];
@@ -362,8 +373,10 @@
         url= [NEWS_SEARCH stringByAppendingFormat:@"%ld/",currentPage];
     }
     
-    
-    [self.httpUtil getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:par forKey:@"wd"] type:0 delegate:self sel:@selector(requestSearch:)];
+    if(par)
+    {
+        [self.httpUtil getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:par forKey:@"wd"] type:0 delegate:self sel:@selector(requestSearch:)];
+    }
     
 }
 
