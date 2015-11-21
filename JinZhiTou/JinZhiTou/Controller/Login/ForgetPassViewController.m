@@ -17,10 +17,8 @@
 #import "MMDrawerController.h"
 #import "UserInfoViewController.h"
 #import "MMExampleDrawerVisualStateManager.h"
-@interface ForgetPassViewController ()<UITextFieldDelegate,ASIHTTPRequestDelegate>
+@interface ForgetPassViewController ()<UITextFieldDelegate>
 {
-    HttpUtils* httpUtils;
-    
     UIScrollView* scrollView;
     UIActivityIndicatorView* activity;
 }
@@ -187,7 +185,7 @@
         if ([TDUtil validateMobile:phoneNumber]) {
 
              NSString* serverUrl = [SEND_MESSAGE_CODE stringByAppendingFormat:@"1/0/"];
-            [httpUtils getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:phoneNumber,@"tel", nil] type:0 delegate:self sel:@selector(requestSendeCode:)];
+            [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:phoneNumber,@"tel", nil] type:0 delegate:self sel:@selector(requestSendeCode:)];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"手机号码格式不正确"];
         }
@@ -262,7 +260,7 @@
     //开始加载动画
     [activity startAnimating];
     NSString* server_url = RESET_PASSWORD;
-    [httpUtils getDataFromAPIWithOps:server_url postParam:dic type:0 delegate:self sel:@selector(requestRestPass:)];
+    [self.httpUtil getDataFromAPIWithOps:server_url postParam:dic type:0 delegate:self sel:@selector(requestRestPass:)];
     return YES;
     
 }

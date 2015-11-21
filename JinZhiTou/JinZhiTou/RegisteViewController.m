@@ -269,12 +269,11 @@
     //加密
     password = [TDUtil encryptPhoneNumWithMD5:phoneNumber passString:password];
     
-//    NSString* regId = [APService registrationID];
+    NSString* regId = [APService registrationID];
     
     NSDictionary* dic =[[NSMutableDictionary alloc]init];
     [dic setValue:code forKey:@"code"];
-//    [dic setValue:regId forKey:@"regid"];
-    [dic setValue:@"1234" forKey:@"regid"];
+    [dic setValue:regId forKey:@"regid"];
     [dic setValue:phoneNumber forKey:@"tel"];
     [dic setValue:password forKey:@"passwd"];
     [dic setValue:@"2.1.0" forKey:@"version"];
@@ -370,6 +369,9 @@
             NSLog(@"注册成功!");
             NSUserDefaults* data =[NSUserDefaults standardUserDefaults];
             [data setValue:@"YES" forKey:@"isLogin"];
+            [data setValue:@"" forKey:@"auth"];
+            [data setValue:@"false" forKey:@"info"];
+            
             [data setValue:self.phoneTextField.text forKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
             UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];

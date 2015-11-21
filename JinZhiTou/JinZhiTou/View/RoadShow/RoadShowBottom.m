@@ -60,8 +60,10 @@
 
 -(void)contact:(id)sender
 {
-    httpUtils = [[HttpUtils alloc]init];
-    [httpUtils getDataFromAPIWithOps:CONTACT_US postParam:nil type:0 delegate:self sel:@selector(requestContact:)];
+//    NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"tel:%@",[dic valueForKey:@"tel"]];
+//    UIWebView * callWebview = [[UIWebView alloc] init];
+//    [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+//    [self addSubview:callWebview];
 }
 -(void)setType:(int)type
 {
@@ -80,25 +82,6 @@
 
 
 #pragma ASIHttpRequeste
--(void)requestContact:(ASIHTTPRequest *)request
-{
-    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
-    NSMutableDictionary* jsonDic = [jsonString JSONValue];
-    
-    if(jsonDic!=nil)
-    {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] == -1) {
-            NSDictionary* dic =[jsonDic valueForKey:@"data"];
-            NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"tel:%@",[dic valueForKey:@"tel"]];
-            UIWebView * callWebview = [[UIWebView alloc] init];
-            [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
-            [self addSubview:callWebview];
-        }
-        
-    }
-}
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {

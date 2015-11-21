@@ -167,9 +167,16 @@
         }else if(resp.errCode==0){
             strMsg=@"分享成功";
         }
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:strTitle message:strMsg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alert show];
+    }else{
+        SendAuthResp *aresp = (SendAuthResp *)resp;
+        if (aresp.errCode== 0) {
+            NSString *code = aresp.code;
+            NSDictionary *dic = @{@"code":code};
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"WeChatBind" object:nil userInfo:dic];
+        }
     }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:strTitle message:strMsg delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-    [alert show];
 }
 
 
@@ -203,14 +210,15 @@
 {
     NSLog(@"%@",url.host);
     //return [WXApi handleOpenURL:url delegate:self];
-    return [TencentOAuth HandleOpenURL:url];
+    return [TencentOAuth HandleOpenURL:url] ||
+    [WXApi handleOpenURL:url delegate:self] ;
 }
 
 -(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     NSLog(@"%@",url.host);
     //return [WXApi handleOpenURL:url delegate:self];
-    return [TencentOAuth HandleOpenURL:url];
+    return [TencentOAuth HandleOpenURL:url] || [WXApi handleOpenURL:url delegate:self];
 }
 
 

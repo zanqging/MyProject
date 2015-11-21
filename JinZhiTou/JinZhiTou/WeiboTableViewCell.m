@@ -46,16 +46,9 @@
         self.jobLabel.font = FONT(@"Arial", 14);
         self.jobLabel.textColor  = FONT_COLOR_GRAY;
         [self addSubview:self.jobLabel];
+    
         
-        //行业
-        position1 =WIDTH(self);
-        position2 =X(self.nameLabel);
-        self.industryLabel  =[[ UILabel alloc]initWithFrame:CGRectMake(X(self.nameLabel), POS_Y(self.nameLabel)+10, position1-position2-10, HEIGHT(self.nameLabel))];
-        self.industryLabel.font = FONT(@"Arial", 14);
-        self.industryLabel.textColor = FONT_COLOR_GRAY;
-        [self addSubview:self.industryLabel];
-        
-        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.industryLabel), POS_Y(self.industryLabel)+5, WIDTH(self.industryLabel), 80)];
+        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.nameLabel), POS_Y(self.companyLabel)+5, WIDTH(self)-90, 80)];
         self.contentLabel.font  =FONT(@"Arial", 14);
         self.contentLabel.textColor  =FONT_COLOR_BLACK;
         self.contentLabel.numberOfLines  =5;
@@ -74,10 +67,10 @@
             if (v.frame.size.height>0) {
                 self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0 , POS_Y(v), WIDTH(self.priseView),height)];
             }else{
-                self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0 ,10, WIDTH(self.priseView), height)];
+                self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0 ,5, WIDTH(self.priseView), height)];
             }
         }else{
-            self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0 , POS_Y(v)+5, WIDTH(self.priseView), 0)];
+            self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0 , POS_Y(v), WIDTH(self.priseView), 0)];
         }
         self.tableView.bounces=NO;
         self.tableView.delegate=self;
@@ -92,7 +85,7 @@
         [self.priseView addSubview:self.tableView];
     }else{
         if (self.dataArray.count>0) {
-            [self.tableView setFrame:CGRectMake(0 , POS_Y(v)+15, WIDTH(self.priseView), HEIGHT(self.priseView)-10)];
+            [self.tableView setFrame:CGRectMake(0 , POS_Y(v)+5, WIDTH(self.priseView), HEIGHT(self.priseView)-10)];
         }else{
             [self.tableView setFrame:CGRectMake(0 , POS_Y(v)+5, WIDTH(self.priseView), 0)];
         }
@@ -215,7 +208,7 @@
     if (line>0) {
         return (line+1)*13+10;
     }else{
-        return 23;
+        return 21;
     }
     
 }
@@ -404,7 +397,7 @@
             }
             
             attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-            [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [arr length])];
+            [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
             self.jobLabel.attributedText = attributedString;//ios 6
             [self.jobLabel sizeToFit];
         }
@@ -412,7 +405,6 @@
         
         [self.jobLabel setFrame:CGRectMake(POS_X(self.nameLabel)+5, Y(self.nameLabel),WIDTH(self.jobLabel), HEIGHT(self.jobLabel))];
         
-        self.industryLabel.text = [dic valueForKey:@"city"];
         
         //内容
         content = [dic valueForKey:@"content"];
@@ -488,7 +480,7 @@
                 }else{
                     posY=POS_Y(self.contentLabel)-15;
                 }
-                self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)-15, posY, 50, 50)];
+                self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)-14, posY, 50, 50)];
             }
             self.deleteButton.titleLabel.font  =FONT(@"Arial", 12);
             [self.deleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
@@ -525,7 +517,7 @@
         }else if (value<3 && value >0){
             number++;
         }
-        self.imgContentView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.dateTimeLabel)+10,240, number*80)];
+        self.imgContentView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.dateTimeLabel),240, number*80)];
         [self addSubview:self.imgContentView];
         
         UIImageView* imgView;
@@ -602,7 +594,7 @@
     //点赞评论区域
     NSArray* dataPriseArray = [self.dic valueForKey:@"like"];
     if (!self.priseView) {
-        self.priseView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView)+5, WIDTH(self.funView), 13)];
+        self.priseView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView)+5, WIDTH(self.funView), 0)];
         [self addSubview:self.priseView];
     }else{
         [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView), 10)];
@@ -615,30 +607,34 @@
     [self.priseView addSubview:self.priseListView];
     
     UILabel* label;
-    float pos_x =30,pos_y =5;
+    float pos_x =30,pos_y =10;
     NSDictionary* dic;
     int num=0;
     for (int i = 0; i<dataPriseArray.count; i++) {
         dic =dataPriseArray[i];
         label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x,pos_y, 50, 15)];
         label.index =[NSString stringWithFormat:@"%@",[dic valueForKey:@"uid"]];
-        NSString* str;
-        if (dataPriseArray.count>1) {
-            str = [NSString stringWithFormat:@"%@,",[dic valueForKey:@"name"]];
-        }else{
-            str = [NSString stringWithFormat:@"%@",[dic valueForKey:@"name"]];
-        }
-        label.text  =str;
-        label.font  = FONT(@"Arial", 13);
-        label.textColor = [UIColor colorWithRed:211.0f/255.0 green:161.0f/255.0 blue:36.0f/255.0 alpha:1];
-        label.userInteractionEnabled = YES;
-        [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
-        [self.priseListView addSubview:label];
-        pos_x+=WIDTH(label);
-        if (pos_x > WIDTH(self.priseListView)-40) {
-            pos_y+=HEIGHT(label)+5;
-            pos_x = 10;
-            num++;
+        NSString* name = [dic valueForKey:@"name"];
+        if ([TDUtil isValidString:name]) {
+            NSString* str;
+            if (dataPriseArray.count>1) {
+                str = [NSString stringWithFormat:@"%@,",[dic valueForKey:@"name"]];
+            }else{
+                str = [NSString stringWithFormat:@"%@",[dic valueForKey:@"name"]];
+            }
+            [TDUtil setLabelMutableText:label content:str lineSpacing:3 headIndent:0];
+            
+            label.font  = FONT(@"Arial", 13);
+            label.textColor = [UIColor colorWithRed:211.0f/255.0 green:161.0f/255.0 blue:36.0f/255.0 alpha:1];
+            label.userInteractionEnabled = YES;
+            [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+            [self.priseListView addSubview:label];
+            pos_x = POS_X(label)-10;
+            if (pos_x > WIDTH(self.priseListView)-40) {
+                pos_y+=HEIGHT(label)+5;
+                pos_x = 10;
+                num++;
+            }
         }
     }
     if (dataPriseArray.count>0) {
@@ -699,7 +695,11 @@
         UIImage* image = IMAGENAMED(@"message_reply");
         image  =[image stretchableImageWithLeftCapWidth:image.size.width/2+10 topCapHeight:20];
         UIImageView *imgView=[[UIImageView alloc]initWithImage:image];
-        [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView)-10, WIDTH(self.priseView), HEIGHT(self.priseView)+10)];
+        if (dataPriseArray.count>0 && self.dataArray.count>0) {
+            [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), HEIGHT(self.priseView)-10)];
+        }else {
+            [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), HEIGHT(self.priseView)+10)];
+        }
         [self addSubview:imgView];
         [self sendSubviewToBack:imgView];
     }
@@ -707,7 +707,7 @@
   
     
     if (dataPriseArray.count>0) {
-        UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(10, 0, 20, 20)];
+        UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(10, 5, 20, 20)];
         imgview.image = IMAGENAMED(@"like_white");
         [self.priseView addSubview:imgview];
     }

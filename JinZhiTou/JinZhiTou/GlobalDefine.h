@@ -299,8 +299,6 @@
 #define THINK_DETAIL @"thinktankdetail/"
 //微信分享
 #define WEBCAT_SHARE @"shareInfoMation?userId=%@&menuId=%@"
-//联系我们
-#define CONTACT_US @"contactus/"
 //更新版本
 #define UPDATE @"checkupdate/"
 //关键词
@@ -358,8 +356,6 @@
 #define NEWS_TAG_SEARCH  @"newstagsearch/"
 //咨询标题搜索
 #define NEWS_SEARCH @"newssearch/"
-//咨询点赞
-#define NEWS_LIKE @"newslike/"
 //咨询阅读量
 #define NEWS_READ_COUNT @"newsread/"
 //咨询分享

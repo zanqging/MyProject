@@ -67,8 +67,6 @@
 {
     self->_dic  = dic;
     isGetStatus = YES;
-    NSString* serverUrl = [NEWS_LIKE stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
-    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
 }
 
 
@@ -108,8 +106,7 @@
 
 -(void)likeAction:(id)sender
 {
-    NSString* url = [NEWS_LIKE stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
-    [self.httpUtil getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:[self.dic valueForKey:@"status"] forKey:@"flag"] type:0 delegate:self sel:@selector(requestFinished:)];
+    
 }
 
 -(void)publishContent:(NSNotification*)dic

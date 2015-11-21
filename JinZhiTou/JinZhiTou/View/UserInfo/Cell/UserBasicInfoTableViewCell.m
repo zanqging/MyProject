@@ -16,7 +16,8 @@
     if (self = [super initWithFrame:frame]) {
         
         self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, frame.size.height/2-15, 100, 30)];
-        self.titleLabel.font = SYSTEMFONT(16);
+        self.titleLabel.textColor =BlackColor;
+        self.titleLabel.font = SYSTEMBOLDFONT(17);
         self.titleLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:self.titleLabel];
         

@@ -9,12 +9,14 @@
 #import "WeChatBindController.h"
 #import "APService.h"
 #import "ZHPickView.h"
+#import "UIImageView+WebCache.h"
 #import "UserInfoViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "MMExampleDrawerVisualStateManager.h"
 
 @interface WeChatBindController ()<UIScrollViewDelegate,UITextFieldDelegate,ZHPickViewDelegate>
 {
+    BOOL isHidePassword;
     UIButton* btnAction;
     UITextField* IDTextField;
     UIScrollView* scrollView;
@@ -46,7 +48,7 @@
 
 -(void)back:(id)sender
 {
-//    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -62,13 +64,18 @@
     UIView* view;
     UILabel* label;
     //填写信息
-    view = [[UIView alloc]initWithFrame:CGRectMake(10, 10, WIDTH(self.view)-20, 260)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(10, 10, WIDTH(self.view)-20, 240)];
     view.tag = 30001;
     view.layer.cornerRadius=5;
     view.backgroundColor  =WriteColor;
     [scrollView addSubview:view];
     UIImageView* headerView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2-50, 20, 100, 100)];
-    headerView.image = IMAGE(@"brave", @"jpg");
+    NSUserDefaults* data =[NSUserDefaults standardUserDefaults];
+    
+    NSString* str = [data valueForKey:USER_STATIC_HEADER_PIC];
+    [headerView sd_setImageWithURL:[NSURL URLWithString:str] placeholderImage:IMAGENAMED(@"coremember") completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        [TDUtil saveCameraPicture:image fileName:STATIC_USER_DEFAULT_PIC];
+    }];
     headerView.contentMode = UIViewContentModeScaleAspectFill;
     headerView.layer.cornerRadius = 50;
     headerView.layer.masksToBounds  =YES;
@@ -88,8 +95,10 @@
     nameTextField.tag = 500001;
     nameTextField.delegate = self;
     nameTextField.placeholder  =@"请输入手机号";
+//    nameTextField.text = [data valueForKey:USER_STATIC_NICKNAME];
     nameTextField.returnKeyType = UIReturnKeyDone;
     nameTextField.layer.borderColor =ColorTheme.CGColor;
+    nameTextField.keyboardType = UIKeyboardTypeDecimalPad;
     nameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     nameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     nameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -114,6 +123,7 @@
     IDTextField.placeholder = @"请输入验证码";
     IDTextField.returnKeyType = UIReturnKeyDone;
     IDTextField.layer.borderColor =ColorTheme.CGColor;
+    IDTextField.keyboardType = UIKeyboardTypeDecimalPad;
     IDTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     IDTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     IDTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -148,8 +158,7 @@
             }];
             [sender didFinished:^NSString *(JKCountDownButton *countDownButton, int second) {
                 countDownButton.enabled = YES;
-                return @"点击重新获取";
-                
+                return @"点击重新获取"; 
             }];
         }
     }];
@@ -164,13 +173,17 @@
     label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(label)+10, WIDTH(label), 30)];
     label.textAlignment = NSTextAlignmentRight;
     label.text = @"密  码";
+    label.tag=20001;
     label.font = SYSTEMFONT(16);
+    label.alpha=0;
     [view addSubview:label];
     
     //输入职位
     addressTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(nameTextField), 30)];
+    addressTextField.alpha=0;
     addressTextField.tag = 500002;
     addressTextField.delegate = self;
+    addressTextField.secureTextEntry  =YES;
     addressTextField.font  =SYSTEMFONT(16);
     addressTextField.placeholder = @"请输入密码";
     addressTextField.returnKeyType = UIReturnKeyDone;
@@ -199,7 +212,7 @@
     if (phoneNumber) {
         if ([TDUtil validateMobile:phoneNumber]) {
             NSString* serverUrl = [SEND_MESSAGE_CODE stringByAppendingFormat:@"0/1/"];
-            [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:phoneNumber,@"tel",@"123",@"openid",nil] type:0 delegate:self sel:@selector(requestSendeCode:)];
+            [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:phoneNumber,@"tel",self.openId,@"openid",nil] type:0 delegate:self sel:@selector(requestSendeCode:)];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"手机号码格式不正确"];
         }
@@ -238,25 +251,29 @@
         return NO;
     }
     
-    if (!password || [password isEqualToString:@""]) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入密码"];
-        return NO;
+    if (!isHidePassword) {
+        if (!password || [password isEqualToString:@""]) {
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入密码"];
+            return NO;
+        }
     }
     
     //加密
     password = [TDUtil encryptPhoneNumWithMD5:phoneNumber passString:password];
     
-//    NSString* regId = [APService registrationID];
+    NSString* regId = [APService registrationID];
+    NSUserDefaults* data =[NSUserDefaults standardUserDefaults];
     
     NSDictionary* dic =[[NSMutableDictionary alloc]init];
     [dic setValue:code forKey:@"code"];
-    [dic setValue:@"2143245" forKey:@"regid"];
-//    [dic setValue:regId forKey:@"regid"];
+    [dic setValue:[data valueForKey:USER_STATIC_NICKNAME] forKey:@"nickname"];
+    [dic setValue:regId forKey:@"regid"];
     [dic setValue:phoneNumber forKey:@"tel"];
-    [dic setValue:@"dshfbdsjfb" forKey:@"openid"];
-    [dic setValue:password forKey:@"passwd"];
+    [dic setValue:self.openId forKey:@"openid"];
+    if (!isHidePassword) {
+        [dic setValue:password forKey:@"passwd"];
+    }
     [dic setValue:@"2.1.0" forKey:@"version"];
-    
     //ios 使用：1，Android 使用:2；
     NSString* serverUrl = [USER_REGIST stringByAppendingString:@"1/"];
     
@@ -278,7 +295,8 @@
     [activity startAnimating];
     
     
-    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:dic type:0 delegate:self sel:@selector(requestRegiste:)];
+//    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:dic type:0 delegate:self sel:@selector(requestRegiste:)];
+    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:dic file:STATIC_USER_DEFAULT_PIC postName:@"file" type:0 delegate:self sel:@selector(requestRegiste:)];
     return YES;
 }
 -(void)setDataArray:(NSMutableArray *)dataArray
@@ -315,6 +333,19 @@
         NSString* code = [jsonDic valueForKey:@"code"];
         if ([code intValue] == 0) {
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"验证码发送成功!" ];
+            NSString* flag = [[jsonDic valueForKey:@"data"] valueForKey:@"flag"];
+            if ([flag boolValue]) {
+                UIView* view = [scrollView viewWithTag:30001];
+                UILabel* label = [view viewWithTag:20001];
+                [UIView animateWithDuration:1 animations:^(void){
+                    label.alpha=1;
+                    addressTextField.alpha=1;
+                    [view setFrame:CGRectMake(X(view), Y(view), WIDTH(view), HEIGHT(view)+40)];
+                    [btnAction setFrame:CGRectMake(30, POS_Y(view)+20, WIDTH(scrollView)-60, 35)];
+                }];
+            }else{
+                isHidePassword =YES;
+            }
         }else{
             if ([code intValue] == 1) {
                 [self.codeButton stop];
@@ -384,6 +415,9 @@
 #pragma UITextFieldDelegate
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
+    if (textField  == IDTextField) {
+        [scrollView setContentOffset:CGPointMake(0, 30)];
+    }
 //    if (textField == addressTextField) {
 //        [textField resignFirstResponder];
 //        ZHPickView* pickview=[[ZHPickView alloc] initPickviewWithPlistName:@"city" isHaveNavControler:NO];
@@ -410,11 +444,13 @@
 {
     
     [textField resignFirstResponder];
+    [scrollView setContentOffset:CGPointMake(0, 0)];
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+     [scrollView setContentOffset:CGPointMake(0, 0)];
     return YES;
 }
 

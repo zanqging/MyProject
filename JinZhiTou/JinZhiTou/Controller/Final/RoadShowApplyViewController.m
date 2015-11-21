@@ -139,7 +139,7 @@
     
     NSString* content =@"备注：请您准备好资料，发送至邮箱 kf@jinzht.com 工作人员第一时间联系您!";
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(16, 13)];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(16, 14)];
     
     label.attributedText = attributedString;//ios 6
     
@@ -205,10 +205,10 @@
     label.font = SYSTEMFONT(14);
     label.userInteractionEnabled = YES;
     label.textAlignment = NSTextAlignmentLeft;
-    content =@"我已经认真阅读并同意 《项目发起协议》";
+    content =@"我已经认真阅读并同意《项目发起协议》";
     
     attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(10, [content length]-10)];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(9, [content length]-9)];
     
     label.attributedText = attributedString;//ios 6
     [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];

@@ -13,6 +13,7 @@
 #import "CustomImagePickerController.h"
 @interface WeChatBindController : RootViewController
 @property(assign,nonatomic)int type;
+@property(retain,nonatomic)NSString* openId;
 @property(assign,nonatomic) BOOL isCountDown;
 @property(retain,nonatomic)NSString* titleStr;
 @property(retain,nonatomic)NSMutableArray* dataArray;

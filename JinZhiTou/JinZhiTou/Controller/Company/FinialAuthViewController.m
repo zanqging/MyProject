@@ -63,6 +63,8 @@
     //初始化协议书组
     array = [[NSMutableArray alloc]init];
     heightsArray  =[[NSMutableArray alloc]init];
+    
+    isCheck = YES;
 
 }
 
@@ -399,11 +401,11 @@
                     [scrollViewPerson addSubview:view];
                     
                     
-                    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(view)+7, WIDTH(scrollViewPerson), 20)];
+                    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(40, POS_Y(view)+7, WIDTH(scrollViewPerson)-40, 20)];
                     label.font = SYSTEMFONT(12);
                     label.userInteractionEnabled = YES;
                     [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];
-                    label.textAlignment = NSTextAlignmentCenter;
+                    label.textAlignment = NSTextAlignmentLeft;
                     NSString* content =@"我已经认真阅读并同意 《投资风险提示书》";
                     
                     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
@@ -413,7 +415,7 @@
                     [scrollViewPerson addSubview:label];
                     
                     UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(20, POS_Y(view)+10, 15, 15)];
-                    imgView.image = IMAGENAMED(@"queren-1");
+                    imgView.image = IMAGENAMED(@"queren");
                     imgView.tag  =700001;
                     imgView.userInteractionEnabled = YES;
                     [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(check:)]];

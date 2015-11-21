@@ -531,7 +531,7 @@
         height+=74;
     }
     
-    height+=140;
+    height+=80;
     return height;
 }
 

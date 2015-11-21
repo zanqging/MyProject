@@ -12,6 +12,7 @@
 
 @interface UserInfoConfigController ()<UIScrollViewDelegate,UITextFieldDelegate,ZHPickViewDelegate>
 {
+    ZHPickView* pickview;
     UITextField* IDTextField;
     UIScrollView* scrollView;
     UITextField* nameTextField;
@@ -297,10 +298,15 @@
 {
     if (textField == addressTextField) {
         [textField resignFirstResponder];
-        ZHPickView* pickview=[[ZHPickView alloc] initPickviewWithPlistName:@"city" isHaveNavControler:NO];
-        pickview.backgroundColor = ClearColor;
-        pickview.delegate=self;
-        [pickview show];
+        if (!pickview) {
+            [self resignKeyboard];
+            pickview=[[ZHPickView alloc] initPickviewWithPlistName:@"city" isHaveNavControler:NO];
+            pickview.backgroundColor = ClearColor;
+            pickview.delegate=self;
+        }
+        if (!pickview.isShow) {
+            [pickview show];
+        }
     }
     
 }

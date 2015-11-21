@@ -105,8 +105,10 @@
                 NSURL* url = [NSURL URLWithString:str];
                 //头像图片
                 UIImageView* imgView = (UIImageView*)[self viewWithTag:20001];
-                UIImage* img = [TDUtil loadContent:STATIC_USER_HEADER_PIC];
-                [imgView sd_setImageWithURL:url placeholderImage:img];
+                UIImage* img = [TDUtil loadContent:USER_STATIC_HEADER_PIC];
+                [imgView sd_setImageWithURL:url placeholderImage:img completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                    [TDUtil saveContent:image fileName:USER_STATIC_HEADER_PIC];
+                }];
             }
             
         }

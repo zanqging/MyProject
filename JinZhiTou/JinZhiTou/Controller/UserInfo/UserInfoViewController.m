@@ -206,58 +206,6 @@
     [self.tableView reloadData];
 }
 
--(void)setIsAmious:(BOOL)isAmious
-{
-    self->_isAmious = isAmious;
-    if (self->_isAmious) {
-        UIView* view =[[UIView alloc]initWithFrame:CGRectMake(0, kStatusBarHeight+kTopBarHeight, WIDTH(self.view), HEIGHT(self.view)-kTopBarHeight-kStatusBarHeight)];
-        view.tag =10001;
-        //背景
-        UIImageView* imgView = [[UIImageView alloc]initWithFrame:view.bounds];
-        imgView.image = IMAGENAMED(@"kuang");
-        imgView.backgroundColor =WriteColor;
-        [view addSubview:imgView];
-        
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2-80, HEIGHT(view)/2-100, 160, 160)];
-        imgView.image = IMAGENAMED(@"yun");
-        [view addSubview:imgView];
-        
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2-60, HEIGHT(view)/2-120, 140, 140)];
-        imgView.contentMode = UIViewContentModeScaleAspectFill;
-        imgView.image = IMAGENAMED(@"diqiu-1");
-        [view addSubview:imgView];
-        
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2-60, HEIGHT(view)/2-60, 80, 80)];
-        imgView.image = IMAGENAMED(@"mail-1");
-        [view addSubview:imgView];
-        
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2-30, HEIGHT(view)/2+10, 100, 50)];
-        imgView.image = IMAGENAMED(@"anniu");
-        [view addSubview:imgView];
-        
-        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(imgView)+10, WIDTH(view), 21)];
-        label.textAlignment = NSTextAlignmentCenter;
-        label.textColor = ColorTheme;
-        label.text =@"去注册，开启互联金融新纪元";
-        [view addSubview:label];
-        
-        UIButton* btnAction = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2-60, POS_Y(label)+20, 120, 40)];
-        btnAction.layer.cornerRadius =20;
-        btnAction.layer.borderColor =ColorTheme.CGColor;
-        btnAction.layer.borderWidth =1;
-        btnAction.backgroundColor = WriteColor;
-        [btnAction addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
-        [btnAction setTitle:@"去注册" forState:UIControlStateNormal];
-        [btnAction setTitleColor:ColorTheme forState:UIControlStateNormal];
-        
-        [view addSubview:btnAction];
-        [self.view addSubview:view];
-    }else{
-        UIView* view =[self.view viewWithTag:10001];
-        [view removeFromSuperview];
-    }
-}
-
 -(void)btnAction:(id)sender
 {
     UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];

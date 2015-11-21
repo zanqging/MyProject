@@ -281,11 +281,11 @@
 }
 
 -(void)remove{
-    
+    self.isShow = NO;
     [self removeFromSuperview];
 }
 -(void)show{
-    
+    self.isShow = YES;
     [[UIApplication sharedApplication].keyWindow addSubview:self];
     
 }

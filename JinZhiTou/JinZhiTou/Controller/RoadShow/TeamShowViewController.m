@@ -164,7 +164,7 @@
     
     if (jsonDic) {
         int code = [[jsonDic valueForKey:@"code"] intValue];
-        if (code==0) {
+        if (code==0 || code==2) {
             self.dataArray = [jsonDic valueForKey:@"data"];
         }
         

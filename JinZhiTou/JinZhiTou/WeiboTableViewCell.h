@@ -25,8 +25,8 @@
 
 @interface WeiboTableViewCell : UITableViewCell<UITableViewDelegate,UITableViewDataSource,MWPhotoBrowserDelegate,UIAlertViewDelegate>
 {
-    NSMutableArray *_selections;
     HttpUtils* httpUtils;
+    NSMutableArray *_selections;
     int currentTag; //当前删除模式
     NSIndexPath* currentSelectedCellIndex;
 }
@@ -43,7 +43,6 @@
 @property (nonatomic, retain)  NSMutableArray *thumbs;
 @property (retain, nonatomic)  UILabel *companyLabel;
 @property (retain, nonatomic)  UILabel *dateTimeLabel;
-@property (retain, nonatomic)  UILabel *industryLabel;
 @property (nonatomic, retain)  NSMutableArray *assets;
 @property (retain, nonatomic)  UIView *priseListView;
 @property (retain, nonatomic)  UILabel *contentLabel;

@@ -18,6 +18,7 @@
 
 @interface ZHPickView : UIView
 @property(retain,nonatomic)id sender;
+@property(nonatomic,assign)BOOL isShow;
 @property(nonatomic,copy)NSMutableArray *state;
 @property(nonatomic,copy)NSMutableArray *city;
 @property(nonatomic,weak) id<ZHPickViewDelegate> delegate;

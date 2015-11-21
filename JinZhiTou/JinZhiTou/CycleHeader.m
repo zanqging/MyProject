@@ -20,7 +20,7 @@
         
         self.headerBackView  = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height-20)];
         self.headerBackView.backgroundColor = BackColor;
-        self.headerBackView.image =[TDUtil loadContent:STATIC_USER_BACKGROUND_PIC];
+//        self.headerBackView.image =[TDUtil loadContent:STATIC_USER_BACKGROUND_PIC];
         self.headerBackView.layer.masksToBounds  =YES;
         self.headerBackView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:self.headerBackView];
@@ -40,35 +40,35 @@
         self.nameLabel.textColor  = WriteColor;
         self.nameLabel.textAlignment = NSTextAlignmentRight;
         [self addSubview:self.nameLabel];
-//        [self loadData];
+        [self loadData];
     }
     return self;
 }
 
-//-(void)loadData
-//{
-//    httpUtils =[[HttpUtils alloc]init];
-//    [httpUtils getDataFromAPIWithOps:CYCLE_CONTENT_BACKGROUND_UPLOAD type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
-//}
-//
-//-(void)requestFinished:(ASIHTTPRequest*)request
-//{
-//    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
-//    
-//    NSLog(@"返回:%@",jsonString);
-//    NSMutableDictionary * dic =[jsonString JSONValue];
-//    if (dic!=nil) {
-//        NSString* status = [dic valueForKey:@"status"];
-//        if ([status integerValue] ==0) {
-//            NSDictionary* data = [dic valueForKey:@"data"];
-//            [self.headerBackView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:@"background"]]];
-//            [self.headerView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:@"photo"]]];
-//        }
-//    }
-//}
-//
-//-(void)requestFailed:(ASIHTTPRequest *)request
-//{
-//    NSLog(@"%@",request.responseString);
-//}
+-(void)loadData
+{
+    httpUtils =[[HttpUtils alloc]init];
+    [httpUtils getDataFromAPIWithOps:CYCLE_CONTENT_BACKGROUND_UPLOAD type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+}
+
+-(void)requestFinished:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"status"];
+        if ([status integerValue] ==0) {
+            NSDictionary* data = [dic valueForKey:@"data"];
+            [self.headerBackView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:@"bg"]]];
+            [self.headerView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:@"photo"]]];
+        }
+    }
+}
+
+-(void)requestFailed:(ASIHTTPRequest *)request
+{
+    NSLog(@"%@",request.responseString);
+}
 @end

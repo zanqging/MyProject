@@ -8,19 +8,22 @@
 
 #import "loginViewController.h"
 #import "APService.h"
+#import "WXApi.h"
+#import "WXApiObject.h"
 #import "MMDrawerController.h"
+#import "WeChatBindController.h"
 #import "RegisteViewController.h"
 #import "UserInfoViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ForgetPassViewController.h"
 #import "MMExampleDrawerVisualStateManager.h"
-@interface loginViewController ()<UITextFieldDelegate>
+@interface loginViewController ()<UITextFieldDelegate,WXApiDelegate>
 {
     UIActivityIndicatorView* activity;
     UIScrollView* scrollView;
     
     UILabel* label;
-    
+    NSString* openId;
     NSString* password;
 }
 @property(retain,nonatomic)MMDrawerController* drawerController;
@@ -181,7 +184,10 @@
     [scrollView addSubview:label];
     //==============================微信登录结束==============================//
 
-    
+    //监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getAccess_token:) name:@"WeChatBind" object:nil];
+    //监听
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(doAction:) name:@"doLogin" object:nil];
 }
 
 /**
@@ -191,8 +197,117 @@
  */
 -(void)WeChatAction:(id)sender
 {
-    
+    [self sendAuthRequest];
 }
+
+-(void)sendAuthRequest
+{
+    SendAuthReq* req =[[SendAuthReq alloc ] init];
+    req.scope = @"snsapi_userinfo,snsapi_base";
+    req.state = @"0744" ;
+//    [WXApi sendReq:req];
+    [WXApi sendAuthReq:req viewController:self delegate:self];
+}
+
+-(void)getAccess_token:(NSDictionary*)dic
+{
+    self.startLoading = YES;
+    self.isTransparent = YES;
+
+    NSString* code =[[dic valueForKey:@"userInfo"] valueForKey:@"code"];
+    NSString* url =[NSString stringWithFormat:@"https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx33aa0167f6a81dac&secret=bc5e2b89553589bf7d9e568545793842&code=%@&grant_type=authorization_code",code];
+    
+//    NSString *url =[NSString stringWithFormat:@"https://api.weixin.qq.com/sns/oauth2/access_token?appid=%@&secret=%@&code=%@&grant_type=authorization_code",kWXAPP_ID,kWXAPP_SECRET,self.wxCode.text];
+//    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURL *zoneUrl = [NSURL URLWithString:url];
+        NSString *zoneStr = [NSString stringWithContentsOfURL:zoneUrl encoding:NSUTF8StringEncoding error:nil];
+        NSData *data = [zoneStr dataUsingEncoding:NSUTF8StringEncoding];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (data) {
+                NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+                /*
+                 {
+                 "access_token" = "OezXcEiiBSKSxW0eoylIeJDUKD6z6dmr42JANLPjNN7Kaf3e4GZ2OncrCfiKnGWiusJMZwzQU8kXcnT1hNs_ykAFDfDEuNp6waj-bDdepEzooL_k1vb7EQzhP8plTbD0AgR8zCRi1It3eNS7yRyd5A";
+                 "expires_in" = 7200;
+                 openid = oyAaTjsDx7pl4Q42O3sDzDtA7gZs;
+                 "refresh_token" = "OezXcEiiBSKSxW0eoylIeJDUKD6z6dmr42JANLPjNN7Kaf3e4GZ2OncrCfiKnGWi2ZzH_XfVVxZbmha9oSFnKAhFsS0iyARkXCa7zPu4MqVRdwyb8J16V8cWw7oNIff0l-5F-4-GJwD8MopmjHXKiA";
+                 scope = "snsapi_userinfo,snsapi_base";
+                 }
+                 */
+                
+//                self.access_token.text = [dic objectForKey:@"access_token"];
+//                self.openid.text = [dic objectForKey:@"openid"];
+                openId =[dic objectForKey:@"openid"];
+                [self getUserInfo:[dic objectForKey:@"access_token"] openId:[dic objectForKey:@"openid"]];
+                
+            }
+        });
+    });
+}
+
+
+-(void)getUserInfo:(NSString*)tokean openId:(NSString*)openID
+{
+    // https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID
+    
+    NSString *url =[NSString stringWithFormat:@"https://api.weixin.qq.com/sns/userinfo?access_token=%@&openid=%@",tokean,openId];
+//
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURL *zoneUrl = [NSURL URLWithString:url];
+        NSString *zoneStr = [NSString stringWithContentsOfURL:zoneUrl encoding:NSUTF8StringEncoding error:nil];
+        NSData *data = [zoneStr dataUsingEncoding:NSUTF8StringEncoding];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (data) {
+                NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+                /*
+                 {
+                 city = Haidian;
+                 country = CN;
+                 headimgurl = "http://wx.qlogo.cn/mmopen/FrdAUicrPIibcpGzxuD0kjfnvc2klwzQ62a1brlWq1sjNfWREia6W8Cf8kNCbErowsSUcGSIltXTqrhQgPEibYakpl5EokGMibMPU/0";
+                 language = "zh_CN";
+                 nickname = "xxx";
+                 openid = oyAaTjsDx7pl4xxxxxxx;
+                 privilege =     (
+                 );
+                 province = Beijing;
+                 sex = 1;
+                 unionid = oyAaTjsxxxxxxQ42O3xxxxxxs;
+                 }
+                 */
+//                self.nickname.text = [dic objectForKey:@"nickname"];
+//                self.wxHeadImg.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[dic objectForKey:@"headimgurl"]]]];
+                NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
+                [data setValue:[dic objectForKey:@"nickname"] forKey:USER_STATIC_NICKNAME];
+                [data setValue:[dic objectForKey:@"headimgurl"] forKey:USER_STATIC_HEADER_PIC];
+                if (openID) {
+                    [self.httpUtil getDataFromAPIWithOps:@"openid/" postParam:[NSDictionary dictionaryWithObject:openID forKey:@"openid"] type:0 delegate:self sel:@selector(requestFinished:)];
+                }
+            }
+        });
+        
+    });
+}
+
+
+////授权后回调 WXApiDelegate
+//-(void)onResp:(BaseReq *)resp
+//{
+//    /*
+//     ErrCode ERR_OK = 0(用户同意)
+//     ERR_AUTH_DENIED = -4（用户拒绝授权）
+//     ERR_USER_CANCEL = -2（用户取消）
+//     code    用户换取access_token的code，仅在ErrCode为0时有效
+//     state   第三方程序发送时用来标识其请求的唯一性的标志，由第三方程序调用sendReq时传入，由微信终端回传，state字符串长度不能超过1K
+//     lang    微信客户端当前语言
+//     country 微信用户当前国家信息
+//     */
+//    SendAuthResp *aresp = (SendAuthResp *)resp;
+//    if (aresp.errCode== 0) {
+//        NSString *code = aresp.code;
+//        NSDictionary *dic = @{@"code":code};
+//    }
+//}
 
 
 /**
@@ -258,38 +373,48 @@
     
     //收起键盘
     [self resignKeyboard];
-    
-    //初始化网络请求对象
-    //获取数据
-    NSString* phoneNumber =self.phoneTextField.text;
-    password = self.passwordTextField.text;
-    
-    //校验数据
-    if (phoneNumber && ![phoneNumber isEqualToString:@""]) {
-        if (![TDUtil validateMobile:phoneNumber]) {
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入正确手机号码"];
-            self.phoneTextField.text=@"";
-            return NO;
-        }
-    }else{
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入手机号码"];
-        return NO;
-    }
-    if (!password || [password isEqualToString:@""]) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入密码"];
-        return NO;
-    }
-    
-    //加密
-    password = [TDUtil encryptPhoneNumWithMD5:phoneNumber passString:password];
-    //极光推送id
-    NSString* regId = [APService registrationID];
     //装载数据
     NSDictionary* dic =[[NSMutableDictionary alloc]init];
-//    [dic setValue:regId forKey:@"regid"];
-    [dic setValue:@"123" forKey:@"regid"];
-    [dic setValue:phoneNumber forKey:@"tel"];
-    [dic setValue:password forKey:@"passwd"];
+    if ([sender isKindOfClass:UIButton.class]) {
+        //初始化网络请求对象
+        //获取数据
+        NSString* phoneNumber =self.phoneTextField.text;
+        password = self.passwordTextField.text;
+        
+        //校验数据
+        if (phoneNumber && ![phoneNumber isEqualToString:@""]) {
+            if (![TDUtil validateMobile:phoneNumber]) {
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入正确手机号码"];
+                self.phoneTextField.text=@"";
+                return NO;
+            }
+        }else{
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入手机号码"];
+            return NO;
+        }
+        if (!password || [password isEqualToString:@""]) {
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入密码"];
+            return NO;
+        }
+        
+        //加密
+        password = [TDUtil encryptPhoneNumWithMD5:phoneNumber passString:password];
+        //极光推送id
+        NSString* regId = [APService registrationID];
+        [dic setValue:regId forKey:@"regid"];
+        [dic setValue:@"123" forKey:@"regid"];
+        [dic setValue:phoneNumber forKey:@"tel"];
+        [dic setValue:password forKey:@"passwd"];
+        
+        //开始加载动画
+        [activity startAnimating];
+    }else if([sender isKindOfClass:ASIHTTPRequest.class]){
+        NSString* regId = [APService registrationID];
+        [dic setValue:regId forKey:@"regid"];
+        [dic setValue:openId forKey:@"openid"];
+    }
+    
+    
     
     //加载动画
     //加载动画控件
@@ -304,11 +429,6 @@
         }
     }
     [activity setColor:WriteColor];
-    
-    //开始加载动画
-    [activity startAnimating];
-    
-    
     //开始请求
     [self.httpUtil getDataFromAPIWithOps:USER_LOGIN postParam:dic type:0 delegate:self sel:@selector(requestLogin:)];
     
@@ -417,6 +537,29 @@
     }
 }
 
+-(void)requestFinished:(ASIHTTPRequest*)request
+{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
+            NSString* flag = [[jsonDic valueForKey:@"data"] valueForKey:@"flag"];
+            if (![flag boolValue]) {
+                WeChatBindController* controller =[[WeChatBindController alloc]init];
+                controller.openId = openId;
+                [self.navigationController pushViewController:controller animated:YES];
+            }else{
+                [self doAction:request];
+            }
+        }
+        
+        self.startLoading = NO;
+    }
+}
 /**
  *  网络请求失败
  *
