@@ -69,7 +69,7 @@
     btnAction.layer.borderWidth = 1;
     btnAction.layer.cornerRadius = 20;
     btnAction.titleLabel.font  =SYSTEMFONT(16);
-    btnAction.layer.borderColor = ColorTheme.CGColor;
+    btnAction.layer.borderColor = AppColorTheme.CGColor;
     [btnAction addTarget:self action:@selector(TraceAction:) forControlEvents:UIControlEventTouchUpInside];
     [btnAction setTitle:@"进度查看" forState:UIControlStateNormal];
     [btnAction setTitleColor:ColorTheme forState:UIControlStateNormal];
@@ -79,10 +79,10 @@
     btnAction.layer.cornerRadius = 20;
     btnAction.layer.borderWidth = 1;
     btnAction.titleLabel.font  =SYSTEMFONT(16);
-    btnAction.layer.borderColor = ColorTheme.CGColor;
+    btnAction.layer.borderColor = AppColorTheme.CGColor;
     [btnAction addTarget:self action:@selector(HomeAction:) forControlEvents:UIControlEventTouchUpInside];
     [btnAction setTitle:@"返回首页" forState:UIControlStateNormal];
-    [btnAction setTitleColor:ColorTheme forState:UIControlStateNormal];
+    [btnAction setTitleColor:AppColorTheme forState:UIControlStateNormal];
     [view addSubview:btnAction];
     
     [self.view addSubview:view];

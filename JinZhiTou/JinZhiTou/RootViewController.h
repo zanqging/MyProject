@@ -22,12 +22,12 @@
 @property(assign,nonatomic)int code;
 @property(assign,nonatomic)CGRect loadingViewFrame;
 @property(assign,nonatomic)BOOL startLoading;
-@property(assign,nonatomic)BOOL isTransparent;
 @property(retain,nonatomic)NavView* navView;
+@property(assign,nonatomic)BOOL isTransparent;
+@property(retain,nonatomic)NSString* content;
 @property(retain,nonatomic)HttpUtils* httpUtil;
 @property(assign,nonatomic)BOOL isNetRequestError;
 @property(retain,nonatomic)NSMutableDictionary* dataDic;
-@property(retain,nonatomic)NSString* content;
 
 -(void)refresh;
 -(void)resetLoadingView;

@@ -26,7 +26,7 @@
         [self addSubview:self.headerBackView];
         
         self.headerView  =[[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)-90, HEIGHT(self)-70, 70, 70)];
-        UIImage* image =[TDUtil loadContent:STATIC_USER_HEADER_PIC];
+        UIImage* image =[TDUtil loadContent:USER_STATIC_HEADER_PIC];
         if (!image) {
             image = IMAGENAMED(@"coremember");
         }
@@ -40,7 +40,11 @@
         self.nameLabel.textColor  = WriteColor;
         self.nameLabel.textAlignment = NSTextAlignmentRight;
         [self addSubview:self.nameLabel];
+        
         [self loadData];
+        
+        //添加更改偷袭那个的监听
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"changePic" object:nil];
     }
     return self;
 }
@@ -58,11 +62,24 @@
     NSLog(@"返回:%@",jsonString);
     NSMutableDictionary * dic =[jsonString JSONValue];
     if (dic!=nil) {
-        NSString* status = [dic valueForKey:@"status"];
-        if ([status integerValue] ==0) {
+        NSString* code = [dic valueForKey:@"code"];
+        if ([code integerValue] ==0) {
             NSDictionary* data = [dic valueForKey:@"data"];
-            [self.headerBackView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:@"bg"]]];
-            [self.headerView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:@"photo"]]];
+            [self.headerBackView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:@"bg"]] placeholderImage:[TDUtil loadContent:USER_STATIC_CYCLE_BG] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                if (image) {
+                    [TDUtil saveCameraPicture:image fileName:USER_STATIC_CYCLE_BG];
+                }
+            }];
+            [self.headerView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:@"photo"]]placeholderImage:[TDUtil loadContent:USER_STATIC_HEADER_PIC] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                if (image) {
+                    [TDUtil saveCameraPicture:image fileName:USER_STATIC_HEADER_PIC];
+                }
+            }];
+            //移除重新加载数据
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
+        }else if ([code intValue]==-1){
+            //添加重新加载数据监听
+             [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"reloadData" object:nil];
         }
     }
 }

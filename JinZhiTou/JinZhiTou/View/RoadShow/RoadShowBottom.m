@@ -48,7 +48,7 @@
         self.btnFunction = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(lbl), 10, 190, 30)];
         self.btnFunction.layer.cornerRadius = 5;
         [self.btnFunction setTitle:@"来现场" forState:UIControlStateNormal];
-        self.btnFunction.backgroundColor = ColorTheme;
+        self.btnFunction.backgroundColor = AppColorTheme;
         [self addSubview:self.btnFunction];
         
         self.backgroundColor = WriteColor;
@@ -60,10 +60,10 @@
 
 -(void)contact:(id)sender
 {
-//    NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"tel:%@",[dic valueForKey:@"tel"]];
-//    UIWebView * callWebview = [[UIWebView alloc] init];
-//    [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
-//    [self addSubview:callWebview];
+    if (!httpUtils) {
+        httpUtils  =[[HttpUtils alloc]init];
+    }
+    [httpUtils getDataFromAPIWithOps:CUSTOMSERVICE postParam:nil type:0 delegate:self sel:@selector(requestCustomService:)];
 }
 -(void)setType:(int)type
 {
@@ -82,6 +82,27 @@
 
 
 #pragma ASIHttpRequeste
+-(void)requestCustomService:(ASIHTTPRequest*)request
+{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
+            NSMutableArray* array =[jsonDic valueForKey:@"data"];
+            NSDictionary* dic  = [array objectAtIndex:0];
+            
+            //获取第一个电话号码
+            NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"tel:%@",[dic valueForKey:@"value"]];
+            UIWebView * callWebview = [[UIWebView alloc] init];
+            [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+            [self addSubview:callWebview];
+        }
+    }
+}
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {

@@ -58,6 +58,11 @@
     [self loadData];
 }
 
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    [self resetLoadingView];
+}
 -(void)refreshProject
 {
     isRefresh =YES;
@@ -122,7 +127,7 @@
         cellInstance = [[ThinkTankTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), height)];
     }
     NSDictionary* dic = self.dataArray[row];
-    NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
+    NSURL* url = [NSURL URLWithString:[dic valueForKey:@"photo"]];
     __block ThinkTankTableViewCell* cell = cellInstance;
     [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
         if (image) {
@@ -130,7 +135,7 @@
         }
     }];
     cellInstance.title = [dic valueForKey:@"name"];
-    cellInstance.content =  [dic valueForKey:@"title"];;
+    cellInstance.content =  [dic valueForKey:@"position"];;
     cellInstance.typeDescription = [dic valueForKey:@"profile"];
     cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -166,9 +171,18 @@
         int code = [[jsonDic valueForKey:@"code"] intValue];
         if (code==0 || code==2) {
             self.dataArray = [jsonDic valueForKey:@"data"];
+            //移除重新加载数据
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
+        }else if (code ==-1){
+            //添加监听
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshProject) name:@"reloadData" object:nil];
+            //通知系统重新登录
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"login" object:nil];
+        }else{
+            self.isNetRequestError = YES;
         }
         
-        self.tableView.content = [jsonDic valueForKey:@"msg"];
+        self.tableView.content = @"暂无核心团队成员数据";
         if (self.tableView.header.isRefreshing) {
             [self.tableView.header endRefreshing];
         }
@@ -178,6 +192,8 @@
         self.startLoading = NO;
     }
 }
+
+
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {

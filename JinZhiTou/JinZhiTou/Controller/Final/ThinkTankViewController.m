@@ -59,8 +59,8 @@
     [scrollView addSubview:view];
     
     UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, WIDTH(scrollView)-20, 150)];
-    //[imgView setContentMode:UIViewContentModeScaleAspectFit];
-    [imgView sd_setImageWithURL:[self.dic valueForKey:@"img"] placeholderImage:IMAGENAMED(@"coremember") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+    [imgView setContentMode:UIViewContentModeScaleAspectFit];
+    [imgView sd_setImageWithURL:[self.dic valueForKey:@"photo"] placeholderImage:IMAGENAMED(@"coremember") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
         //[imgView setContentMode:UIViewContentModeScaleAspectFill];
     }];
     
@@ -186,7 +186,7 @@
         if ([status intValue] == 0 || [status intValue] == -1) {
             dataDic = [jsonDic valueForKey:@"data"];
             
-            NSString* url = [dataDic valueForKey:@"url"];
+            NSString* url = [dataDic valueForKey:@"video"];
             if ([TDUtil isValidString:url]) {
                 //播放按钮
                 CGRect frame =CGRectMake(10, 10, WIDTH(scrollView)-20, 150);
@@ -218,12 +218,16 @@
             label.lineBreakMode = NSLineBreakByWordWrapping;
             [view addSubview:label];
             NSString* contentStr= [dataDic valueForKey:@"experience"];
-            NSMutableAttributedString * attributedString1 = [[NSMutableAttributedString alloc] initWithString:contentStr];
-            NSMutableParagraphStyle * paragraphStyle1 = [[NSMutableParagraphStyle alloc] init];
-            [paragraphStyle1 setLineSpacing:8];
-            [attributedString1 addAttribute:NSParagraphStyleAttributeName value:paragraphStyle1 range:NSMakeRange(0, [contentStr length])];
-            [label setAttributedText:attributedString1];
-            [label sizeToFit];
+            NSMutableAttributedString * attributedString1;
+            NSMutableParagraphStyle * paragraphStyle1;
+            if ([TDUtil isValidString:contentStr]) {
+                attributedString1= [[NSMutableAttributedString alloc] initWithString:contentStr];
+                paragraphStyle1= [[NSMutableParagraphStyle alloc] init];
+                [paragraphStyle1 setLineSpacing:8];
+                [attributedString1 addAttribute:NSParagraphStyleAttributeName value:paragraphStyle1 range:NSMakeRange(0, [contentStr length])];
+                [label setAttributedText:attributedString1];
+                [label sizeToFit];
+            }
             
             
             imgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label)+20, WIDTH(view)/2-70, 1)];
@@ -248,7 +252,7 @@
             label.lineBreakMode = NSLineBreakByWordWrapping;
             [view addSubview:label];
             
-            NSString* content= [dataDic valueForKey:@"good_at_field"];
+            NSString* content= [dataDic valueForKey:@"domain"];
             NSMutableAttributedString* attributedString2 = [[NSMutableAttributedString alloc] initWithString:content];
             NSMutableParagraphStyle* paragraphStyle2 = [[NSMutableParagraphStyle alloc] init];
             [paragraphStyle2 setLineSpacing:8];
@@ -282,7 +286,7 @@
             label.lineBreakMode = NSLineBreakByWordWrapping;
             
             label = (UILabel*)[view viewWithTag:10004];
-            contentStr= [dataDic valueForKey:@"success_cases"];
+            contentStr= [dataDic valueForKey:@"cases"];
             [paragraphStyle1 setLineSpacing:8];
             paragraphStyle1 = [[NSMutableParagraphStyle alloc] init];
             attributedString1 = [[NSMutableAttributedString alloc] initWithString:contentStr];

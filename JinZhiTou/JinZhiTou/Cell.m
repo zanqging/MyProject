@@ -128,11 +128,11 @@
         btnAction.layer.borderWidth = 1;
         btnAction.layer.cornerRadius=5;
         btnAction.alpha = 0;
-        btnAction.layer.borderColor = ColorTheme.CGColor;
+        btnAction.layer.borderColor = AppColorTheme.CGColor;
         btnAction.titleLabel.font = SYSTEMFONT(8);
         [btnAction addTarget:self action:@selector(doAction:) forControlEvents:UIControlEventTouchUpInside];
         [btnAction setTitle:@"+ 加好友" forState:UIControlStateNormal];
-        [btnAction setTitleColor:ColorTheme forState:UIControlStateNormal];
+        [btnAction setTitleColor:AppColorTheme forState:UIControlStateNormal];
         [self addSubview:btnAction];
         
     }

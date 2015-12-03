@@ -69,12 +69,14 @@
     [dic setValue:@"头像" forKey:@"title"];
     [dic setValue:@"0" forKey:@"section"];
     [dic setValue:@"0" forKey:@"subTitle"];
+    [dic setValue:@"true" forKey:@"showSub"];
     
     [settingDataArray addObject:dic];
     
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"昵称" forKey:@"title"];
     [dic setValue:@"1" forKey:@"section"];
+    [dic setValue:@"true" forKey:@"showSub"];
     [dic setValue:[data valueForKey:USER_STATIC_NICKNAME] forKey:@"subTitle"];
     
     [settingDataArray addObject:dic];
@@ -82,6 +84,7 @@
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"真实姓名" forKey:@"title"];
     [dic setValue:@"1" forKey:@"section"];
+    [dic setValue:@"false" forKey:@"showSub"];
     [dic setValue:[data valueForKey:USER_STATIC_NAME] forKey:@"subTitle"];
     
     [settingDataArray addObject:dic];
@@ -89,12 +92,14 @@
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"性别" forKey:@"title"];
     [dic setValue:@"2" forKey:@"section"];
+    [dic setValue:@"flase" forKey:@"showSub"];
     [dic setValue:[TDUtil Gender:[[data valueForKey:USER_STATIC_GENDER]intValue]] forKey:@"subTitle"];
     [settingDataArray addObject:dic];
     
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"手机号码" forKey:@"title"];
     [dic setValue:@"0" forKey:@"section"];
+    [dic setValue:@"flase" forKey:@"showSub"];
     [dic setValue:[data valueForKey:USER_STATIC_TEL] forKey:@"subTitle"];
     
     [settingDataArray addObject:dic];
@@ -102,6 +107,7 @@
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"公司名称" forKey:@"title"];
     [dic setValue:@"1" forKey:@"section"];
+    [dic setValue:@"true" forKey:@"showSub"];
     [dic setValue:[data valueForKey:USER_STATIC_COMPANY_NAME] forKey:@"subTitle"];
     
     [settingDataArray addObject:dic];
@@ -109,6 +115,7 @@
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"职位" forKey:@"title"];
     [dic setValue:@"1" forKey:@"section"];
+    [dic setValue:@"true" forKey:@"showSub"];
     [dic setValue:[data valueForKey:USER_STATIC_POSITION] forKey:@"subTitle"];
     
     [settingDataArray addObject:dic];
@@ -116,7 +123,7 @@
     dic = [[NSMutableDictionary alloc]init];
     [dic setValue:@"地区" forKey:@"title"];
     [dic setValue:@"1" forKey:@"section"];
-    
+    [dic setValue:@"true" forKey:@"showSub"];
     if ([data valueForKey:@"province"]) {
         NSString* str = [NSString stringWithFormat:@"%@%@",[data valueForKey:@"province"],[data valueForKey:@"city"]];
         [dic setValue:str forKey:@"subTitle"];
@@ -128,6 +135,7 @@
     [dic setValue:@"修改密码" forKey:@"title"];
     [dic setValue:@"1" forKey:@"section"];
     [dic setValue:@"" forKey:@"subTitle"];
+    [dic setValue:@"true" forKey:@"showSub"];
     
     [settingDataArray addObject:dic];
 }
@@ -211,7 +219,7 @@
         index =row+5;
     }else{
         Cell.isShowImg = YES;
-        UIImage* image = [TDUtil loadContent:STATIC_USER_HEADER_PIC];
+        UIImage* image = [TDUtil loadContent:USER_STATIC_HEADER_PIC];
         Cell.rightImgView.image = image;
     }
     
@@ -219,7 +227,12 @@
     Cell.titleLabel.text = [dic valueForKey:@"title"];
     Cell.rightLabel.text = [dic valueForKey:@"subTitle"];
     Cell.selectionStyle  = UITableViewCellSelectionStyleNone;
-    Cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    if ([[dic valueForKey:@"showSub"] boolValue]) {
+        Cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }else{
+        Cell.backgroundColor  =LightGrayColor;
+        Cell.accessoryType = UITableViewCellAccessoryNone;
+    }
     return Cell;
 }
 
@@ -320,7 +333,7 @@
 {
     [controller dismissViewControllerAnimated:YES completion:NULL];
     //保存图片
-    [TDUtil saveCameraPicture:croppedImage fileName:STATIC_USER_HEADER_PIC];
+    [TDUtil saveCameraPicture:croppedImage fileName:USER_STATIC_HEADER_PIC];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:@"changeUserPic" object:nil userInfo:[NSDictionary dictionaryWithObject:croppedImage forKey:@"img"]];
     
@@ -352,7 +365,7 @@
 //上传身份证
 -(void)uploadUserPic:(NSInteger)id
 {
-    [httpUtils getDataFromAPIWithOps:UPLOAD_USER_PIC postParam:nil file:STATIC_USER_HEADER_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUploadHeaderImg:)];
+    [httpUtils getDataFromAPIWithOps:UPLOAD_USER_PIC postParam:nil file:USER_STATIC_HEADER_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUploadHeaderImg:)];
 }
 
 /**
@@ -367,9 +380,9 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
-            
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"changePic" object:nil];
         }
         
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
@@ -474,6 +487,7 @@
         
     }
     
+    [[UIApplication sharedApplication]setStatusBarHidden:NO];
     [self loadData];
     [self.tableView reloadData];
 }

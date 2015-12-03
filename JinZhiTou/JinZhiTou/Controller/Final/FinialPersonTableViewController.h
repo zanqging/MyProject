@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
+#import "RootViewController.h"
 #import "UITableViewCustomView.h"
-@interface FinialPersonTableViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
-@property (strong, nonatomic)NavView *navView;
+@interface FinialPersonTableViewController : RootViewController<UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UIView *contentView;
 
 @property(assign,nonatomic)NSInteger projectId;

@@ -109,10 +109,10 @@
     if (self.dataDic) {
         //头像背景
         UIImageView* imgView = (UIImageView*)[self.view viewWithTag:1001];
-        [imgView sd_setImageWithURL:[self.dataDic valueForKey:@"img"] placeholderImage:IMAGENAMED(@"coremember")];
+        [imgView sd_setImageWithURL:[self.dataDic valueForKey:@"photo"] placeholderImage:IMAGENAMED(@"coremember")];
         
         imgView = (UIImageView*)[scrollView viewWithTag:1002];
-        [imgView sd_setImageWithURL:[self.dataDic valueForKey:@"img"]];
+        [imgView sd_setImageWithURL:[self.dataDic valueForKey:@"photo"]];
         
         //姓名
         UIView* view = [scrollView viewWithTag:2001];
@@ -121,7 +121,7 @@
         
         //职位
         label = (UILabel*)[view viewWithTag:6002];
-        label.text = [self.dataDic valueForKey:@"title"];
+        label.text = [self.dataDic valueForKey:@"position"];
         
         //内容
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];

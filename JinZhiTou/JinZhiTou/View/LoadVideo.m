@@ -129,6 +129,7 @@
     if (self.doneImage) {
         imgView.image  =doneImage;
         imgView.backgroundColor =  ColorBeef;
+        self.descLabel.text = @"";
     }else{
        
         [imgView removeFromSuperview];

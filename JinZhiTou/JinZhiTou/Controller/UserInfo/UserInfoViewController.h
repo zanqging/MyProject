@@ -7,11 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
-@interface UserInfoViewController : UIViewController
-@property(assign,nonatomic)BOOL isAmious;
+#import "RootViewController.h"
+@interface UserInfoViewController : RootViewController
 @property(retain,nonatomic)NSArray* dataArray;
-@property (strong, nonatomic)NavView *navView;
 @property (strong, nonatomic)UITableView *tableView;
 
 

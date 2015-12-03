@@ -37,7 +37,7 @@
     self.scrollView.backgroundColor = BackColor;
 
     self.btnSubmmit.layer.cornerRadius = 5;
-    self.btnSubmmit.backgroundColor = ColorTheme;
+    self.btnSubmmit.backgroundColor = AppColorTheme;
     
 }
 

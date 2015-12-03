@@ -59,6 +59,12 @@
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     int index = (int)self.progress;
     CGFloat rate = self.progress - index;
+    NSInteger count = self.itemFrames.count;
+    if (index==count && index>0) {
+        index--;
+    }else if (index<0){
+        index  =0;
+    }
     CGRect currentFrame = [self.itemFrames[index] CGRectValue];
     CGFloat currentWidth = currentFrame.size.width;
     int nextIndex = index + 1 < self.itemFrames.count ? index + 1 : index;

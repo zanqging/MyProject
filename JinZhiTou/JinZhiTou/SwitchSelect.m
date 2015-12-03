@@ -14,13 +14,13 @@
 -(id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        UILabel* label= [[UILabel alloc]initWithFrame:CGRectMake(0, 10, WIDTH(self), HEIGHT(self)-10)];
+        UILabel* label= [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self), HEIGHT(self)-3)];
         label.tag =100001;
         label.font = SYSTEMFONT(14);
         label.textAlignment = NSTextAlignmentCenter;
         [self addSubview:label];
         
-        UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-5, POS_Y(label)-10, 10, 10)];
+        UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label)-5, WIDTH(self), 3)];
         imgView.tag  =100002;
         imgView.contentMode =UIViewContentModeScaleAspectFill;
         [self addSubview:imgView];
@@ -53,14 +53,14 @@
     if (self.type==0) {
         if (isSelected) {
             UILabel* label = (UILabel*)[self viewWithTag:100001];
-            label.textColor = ColorTheme;
+            label.textColor = AppColorTheme;
             UIImageView* imgView = (UIImageView*)[self viewWithTag:100002];
-            imgView.image = IMAGENAMED(@"shangsanjiao");
+            imgView.backgroundColor = AppColorTheme;
         }else{
             UILabel* label = (UILabel*)[self viewWithTag:100001];
             label.textColor = BlackColor;
             UIImageView* imgView = (UIImageView*)[self viewWithTag:100002];
-            imgView.image = nil;
+            imgView.backgroundColor = ClearColor;
         }
     }else{
         if (isSelected) {

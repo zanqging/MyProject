@@ -24,13 +24,11 @@
         v.backgroundColor = WriteColor;
         
         self.logo = [[UIImageView alloc]initWithFrame:CGRectMake(20, 10, 40, 40)];
-        self.logo.image = IMAGENAMED(@"coremember");
         self.logo.backgroundColor = BlackColor;
         self.logo.layer.cornerRadius = 20;
         self.logo.layer.masksToBounds = YES;
         [v addSubview:self.logo];
         self.title = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.logo)+5, Y(self.logo), 100, 20)];
-        self.title.text = @"刘路";
         self.title.font  = SYSTEMFONT(14);
         [v addSubview:self.title];
         
@@ -202,7 +200,9 @@
     }else{
         imgName = nil;
     }
-     self.authenImgView.image = IMAGENAMED(imgName);
+    if (imgName) {
+        self.authenImgView.image = IMAGENAMED(imgName);
+    }
     
 }
 @end

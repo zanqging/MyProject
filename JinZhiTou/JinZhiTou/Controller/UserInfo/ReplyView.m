@@ -59,7 +59,7 @@
         [self.contentView addSubview:labelTextCount];
         
         UIButton* btnAction = [[UIButton alloc]initWithFrame:CGRectMake(X(label), POS_Y(labelTextCount)+10, WIDTH(label), 35)];
-        [btnAction setBackgroundColor:ColorTheme];
+        [btnAction setBackgroundColor:AppColorTheme];
         btnAction.layer.cornerRadius = 5;
         [btnAction addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
         [btnAction setTitle:@"回复" forState:UIControlStateNormal];

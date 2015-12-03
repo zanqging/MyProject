@@ -20,7 +20,7 @@
         [self addSubview:progressBackView];
         
         progressView = [[UIImageView alloc]initWithFrame:CGRectMake(5, Y(progressBackView), 0, 4)];
-        progressView.backgroundColor = ColorTheme;
+        progressView.backgroundColor = AppColorTheme;
         [self addSubview:progressView];
         
             }
@@ -33,14 +33,22 @@
     
     float w =WIDTH(progressBackView);
     CGRect frame = progressView.frame;
-    frame.size.width = progress*w;
+    
+    float pro = progress > 1.0 ? 1.0 : progress;
+    frame.size.width = pro*w;
     
     [progressView setFrame:frame];
     
     UILabel* label;
     
-    label = [[UILabel alloc]initWithFrame:CGRectMake(w*progress+5, Y(progressView)-2.5, w, 10)];
-    label.textColor = ColorTheme;
+    CGRect rect;
+    if (pro!=1.0) {
+        rect = CGRectMake(w*pro+5, Y(progressView)-10, w, 10);
+    }else{
+        rect = CGRectMake(w*pro-40, Y(progressView)-10, w, 10);
+    }
+    label = [[UILabel alloc]initWithFrame:rect];
+    label.textColor = FONT_COLOR_BLACK;
     NSString* str = [NSString stringWithFormat:@"%.1f",progress*100];
     str = [str stringByAppendingString:@"%"];
     label.text = str;
@@ -48,7 +56,7 @@
     [self addSubview:label];
     
     frame = progressBackView.frame;
-    frame.origin.x = POS_X(progressView)+30;
+    frame.origin.x = POS_X(progressView);
     frame.size.width = frame.size.width-frame.origin.x;
     [progressBackView setFrame:frame];
 }

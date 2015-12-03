@@ -22,7 +22,6 @@
         self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 100, 100)];
         self.imgView.image = IMAGENAMED(@"loading");
         self.imgView.contentMode = UIViewContentModeScaleAspectFit;
-        self.imgView.layer.masksToBounds = YES;
         [view addSubview:self.imgView];
         [self addSubview:view];
         //名称

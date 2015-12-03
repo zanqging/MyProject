@@ -208,7 +208,7 @@
     content =@"我已经认真阅读并同意《项目发起协议》";
     
     attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(9, [content length]-9)];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(10, 8)];
     
     label.attributedText = attributedString;//ios 6
     [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];
@@ -218,7 +218,7 @@
     
     UIButton* btnAction =[[UIButton alloc]initWithFrame:CGRectMake(60, POS_Y(label)+20, WIDTH(scrollView)-120, 35)];
     btnAction.layer.cornerRadius =5;
-    btnAction.backgroundColor = ColorTheme;
+    btnAction.backgroundColor = AppColorTheme;
     [btnAction setTitle:@"提交资料" forState:UIControlStateNormal];
     [btnAction addTarget:self action:@selector(commitRoadShow) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btnAction];
@@ -389,19 +389,7 @@
     if (dic!=nil) {
         NSString* code = [dic valueForKey:@"code"];
         if ([code integerValue]==0) {
-            //进度查看
-            double delayInSeconds = 1.0;
-            //__block RoadShowDetailViewController* bself = self;
-            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                UserTraceViewController* controller = [[UserTraceViewController alloc]init];
-                //来现场
-                controller.titleStr = self.navView.title;
-                controller.currentSelected = 1000;
-                [self.navigationController pushViewController:controller animated:YES];
-                
-                
-            });
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[dic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
         }
          self.startLoading = NO;
          [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];

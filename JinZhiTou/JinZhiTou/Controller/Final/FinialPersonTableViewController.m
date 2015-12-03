@@ -7,17 +7,8 @@
 //
 
 #import "FinialPersonTableViewController.h"
-#import "TDUtil.h"
-#import "HttpUtils.h"
-#import "UConstants.h"
-#import "GlobalDefine.h"
-#import "NSString+SBJSON.h"
-#import "ASIFormDataRequest.h"
 #import "FinialPersonTableViewCell.h"
 @interface FinialPersonTableViewController ()<ASIHTTPRequestDelegate>
-{
-    HttpUtils* httpUtils;
-}
 
 @end
 
@@ -25,8 +16,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //初始化网络对象
-    httpUtils = [[HttpUtils alloc] init];
     
     self.view.backgroundColor = ColorTheme;
     //隐藏导航栏
@@ -42,7 +31,7 @@
     [self.navView.leftButton setTitle:@"项目详情" forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [self.view addSubview:self.navView];
-    
+    [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
@@ -51,11 +40,16 @@
     [self loadData];
     
 }
-
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    [self resetLoadingView];
+}
 -(void)loadData
 {
+    self.startLoading = YES;
     NSString* url = [INVEST_LIST stringByAppendingFormat:@"%ld/",(long)self.projectId];
-    [httpUtils getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestInvestList:)];
+    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestInvestList:)];
 }
 -(void)back:(id)sender
 {
@@ -79,11 +73,15 @@
     
     NSInteger row = indexPath.row;
     NSDictionary* dic  = self.dataArray[row];
-    cell.titleLabel.text = [dic valueForKey:@"real_name"];
-    cell.finialLabel.text =[NSString stringWithFormat:@"投资金额:%@万",[[dic valueForKey:@"invest_amount"] stringValue]];
-    cell.timeLabel.text = [NSString stringWithFormat:@"认证时间:%@",[dic valueForKey:@"certificate_datetime"]];
-    NSURL* url = [NSURL URLWithString:[dic valueForKey:@"user_img"]];
+    cell.titleLabel.text = [dic valueForKey:@"name"];
+    cell.finialLabel.text =[NSString stringWithFormat:@"投资金额:%@万",[[dic valueForKey:@"amount"] stringValue]];
+    cell.timeLabel.text = [NSString stringWithFormat:@"认证时间:%@",[dic valueForKey:@"date"]];
+    
+    [cell.finialLabel setFrame:CGRectMake(X(cell.titleLabel), Y(cell.finialLabel), WIDTH(cell.titleLabel), HEIGHT(cell.finialLabel))];
+    [cell.timeLabel setFrame:CGRectMake(X(cell.finialLabel), Y(cell.timeLabel), WIDTH(cell.finialLabel), HEIGHT(cell.timeLabel))];
+    NSURL* url = [NSURL URLWithString:[dic valueForKey:@"photo"]];
     [cell.personImgview sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"coremember")];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     //绘制虚线
     [cell layoutPre];
     return cell;
@@ -102,7 +100,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 110;
+    return 90;
 }
 
 #pragma ASIHttpRequeste 
@@ -115,8 +113,11 @@
     if(jsonDic!=nil)
     {
         NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] == -1) {
+        if ([status intValue] == 0 || [status intValue] == 2) {
             self.dataArray  =[jsonDic valueForKey:@"data"];
+            self.startLoading = NO;
+        }else{
+            self.isNetRequestError  =YES;
         }
         self.tableView.content = [jsonDic valueForKey:@"msg"];
         

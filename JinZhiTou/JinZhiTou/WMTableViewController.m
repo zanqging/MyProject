@@ -15,7 +15,7 @@
 #import "FinalCompanyTableViewCell.h"
 #import "FinalPersonTableViewCell.h"
 #import "FinalContentTableViewCell.h"
-@interface WMTableViewController ()
+@interface WMTableViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 @end
 
@@ -23,15 +23,29 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.tableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.view)-kBottomBarHeight-100)];
     self.tableView.backgroundColor = BackColor;
+    self.tableView.delegate = self;
+    self.tableView.dataSource  =self;
     self.tableView.showsVerticalScrollIndicator = NO;
+    [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     self.tableView.separatorStyle =  UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:self.tableView];
+    
     [TDUtil tableView:self.tableView target:self refreshAction:@selector(refresh) loadAction:@selector(loadProject)];
 }
 
+
+-(void)refresh{
+    if ([_delegate respondsToSelector:@selector(wmTableViewController:refresh:)]) {
+        [_delegate wmTableViewController:self refresh:nil];
+    }
+}
 -(void)loadProject
 {
-    
+    if ([_delegate respondsToSelector:@selector(wmTableViewController:loadMore:)]) {
+        [_delegate wmTableViewController:self loadMore:nil];
+    }
 }
 
 //- (void)viewWillAppear:(BOOL)animated{
@@ -57,11 +71,13 @@
 #pragma mark - Table view data source
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.menuType==2) {
+    if (self.menuType==1) {
+        return 100;
+    }else if (self.menuType==2) {
         if (self.type==0) {
             return 80;
         }else{
-            return 150;
+            return 100;
         }
     }
     return 130;
@@ -78,7 +94,9 @@
 {
     if (self.menuType!=2 && self.type!=3) {
         if (self.menuType==1) {
-            
+            if ([_delegate respondsToSelector:@selector(wmTableViewController:thinkTankDetailData:)]) {
+                [_delegate wmTableViewController:self thinkTankDetailData:self.dataArray[indexPath.row]];
+            }
         }else{
             if ([_delegate respondsToSelector:@selector(wmTableViewController:tapIndexPath:data:)]) {
                 [_delegate wmTableViewController:self tapIndexPath:indexPath data:self.dataArray[indexPath.row]];
@@ -132,7 +150,7 @@
             __block FinalingTableViewCell* cell = cellInstance;
             [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                 if (image) {
-                    cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+                    cell.imgView.contentMode = UIViewContentModeScaleAspectFit;
                 }
             }];
             float progress =([[dic valueForKey:@"invest"] floatValue]*100)/[[dic valueForKey:@"planfinance"] floatValue];
@@ -182,7 +200,7 @@
         __block ThinkTankTableViewCell* cell = cellInstance;
         [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
             if (image) {
-                cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+                cell.imgView.contentMode = UIViewContentModeScaleAspectFit;
             }
         }];
         
@@ -204,7 +222,7 @@
             NSDictionary* dic = self.dataArray[row];
             NSURL* url = [NSURL URLWithString:[dic valueForKey:@"photo"]];
             __block FinalPersonTableViewCell* cell = cellInstance;
-            [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+            [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"coremember") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                 if (image) {
                     cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
                 }
@@ -231,11 +249,12 @@
             __block FinalCompanyTableViewCell* cell = cellInstance;
             [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                 if (image) {
-                    cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+                    cell.imgView.contentMode = UIViewContentModeScaleAspectFit;
                 }
             }];
             
             cellInstance.title = [dic valueForKey:@"name"];
+            cellInstance.contentLabel.text = [dic valueForKey:@"profile"];
             cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
@@ -249,8 +268,13 @@
 -(void)setDataArray:(NSMutableArray *)dataArray
 {
     self->_dataArray = dataArray;
-    if (self.dataArray) {
+    if (self.dataArray && self.dataArray.count>0) {
+        
+        [self.tableView setIsNone:NO];
         [self.tableView reloadData];
+    }else{
+        [self.tableView setIsNone:YES];
+        self.tableView.content = @"暂无相关数据";
     }
 }
 - (void)dealloc {

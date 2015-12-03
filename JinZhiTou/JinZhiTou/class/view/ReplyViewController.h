@@ -7,8 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "NavView.h"
-@interface ReplyViewController : UIViewController
-@property(retain,nonatomic)NavView* navView;
+#import "RootViewController.h"
+@interface ReplyViewController : RootViewController
 @property(assign,nonatomic)NSInteger project_id;
 @end

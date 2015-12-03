@@ -230,12 +230,12 @@
         
         UIButton* btnAction = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self)/2-60, POS_Y(label)+20, 120, 40)];
         btnAction.layer.cornerRadius =20;
-        btnAction.layer.borderColor =ColorTheme.CGColor;
+        btnAction.layer.borderColor =AppColorTheme.CGColor;
         btnAction.layer.borderWidth =1;
         btnAction.backgroundColor = WriteColor;
         [btnAction addTarget:self action:@selector(btnAction:) forControlEvents:UIControlEventTouchUpInside];
         [btnAction setTitle:@"去注册" forState:UIControlStateNormal];
-        [btnAction setTitleColor:ColorTheme forState:UIControlStateNormal];
+        [btnAction setTitleColor:AppColorTheme forState:UIControlStateNormal];
         
         [view addSubview:btnAction];
         

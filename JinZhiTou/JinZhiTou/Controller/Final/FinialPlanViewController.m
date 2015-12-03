@@ -43,7 +43,11 @@
     [self loadData];
     
 }
-
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    [self resetLoadingView];
+}
 -(void)loadData
 {
     dataArray = [[NSMutableArray alloc]init];
@@ -55,6 +59,7 @@
     //加载视图
     NSString* url = [FINANCE_PLAN stringByAppendingFormat:@"%ld/",(long)self.projectId];
     [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestFinacePlan:)];
+    self.startLoading  =YES;
 }
 
 -(void)back:(id)sender

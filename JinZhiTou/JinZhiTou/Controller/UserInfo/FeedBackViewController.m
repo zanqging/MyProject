@@ -52,7 +52,7 @@
     [view addSubview:self.textView];
     self.sendButton = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(self.textView)+20, WIDTH(self.view)-60, 35)];
     self.sendButton.layer.cornerRadius =5;
-    self.sendButton.backgroundColor = ColorTheme;
+    self.sendButton.backgroundColor = AppColorTheme;
     [self.sendButton setTitle:@"发送" forState:UIControlStateNormal];
     [self.sendButton addTarget:self action:@selector(sendFeedBack:) forControlEvents:UIControlEventTouchUpInside];
     [self.sendButton setTitleColor:WriteColor forState:UIControlStateNormal];

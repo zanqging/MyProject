@@ -122,7 +122,7 @@
     
     //输入职位
     addressTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(nameTextField), 30)];
-    addressTextField.tag = 500002;
+    addressTextField.tag = 500003;
     addressTextField.delegate = self;
     addressTextField.font  =SYSTEMFONT(16);
     addressTextField.placeholder = @"请输入现住地址";
@@ -146,7 +146,7 @@
     
     //输入职位
     companyTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(nameTextField), 30)];
-    companyTextField.tag = 500002;
+    companyTextField.tag = 500004;
     companyTextField.delegate = self;
     companyTextField.font  =SYSTEMFONT(16);
     companyTextField.placeholder = @"请输入公司名称";
@@ -170,7 +170,7 @@
     
     //输入职位
     positionTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(nameTextField), 30)];
-    positionTextField.tag = 500002;
+    positionTextField.tag = 500005;
     positionTextField.delegate = self;
     positionTextField.font  =SYSTEMFONT(16);
     positionTextField.placeholder = @"请输入现任职位";
@@ -245,7 +245,6 @@
     
     
     
-    
     NSMutableDictionary* dataDic = [[NSMutableDictionary alloc]init];
     [dataDic setValue:address forKey:@"addr"];
     [dataDic setValue:userName forKey:@"name"];
@@ -259,6 +258,9 @@
     [data setValue:IDNumber forKey:USER_STATIC_IDNUMBER];
     [data setValue:company forKey:USER_STATIC_COMPANY_NAME];
     [self.httpUtil getDataFromAPIWithOps:@"userinfo/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
+    
+    self.startLoading = YES;
+    self.isTransparent = YES;
     return YES;
 }
 
@@ -278,11 +280,17 @@
     if (dic!=nil) {
         NSString* code =[dic valueForKey:@"code"];
         if ([code integerValue]==0) {
+            //本地缓存数据修改
+            NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+            [dataStore setValue:@"true" forKey:@"info"];
+            
             [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil];
             [self dismissViewControllerAnimated:YES completion:nil];
         }
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
+        self.startLoading = NO;
     }
+    self.isNetRequestError  =YES;
 }
 //*********************************************************网络请求结束*****************************************************//
 
@@ -290,16 +298,22 @@
 -(void)toobarDonBtnHaveClick:(ZHPickView *)pickView resultString:(NSString *)resultString
 {
     addressTextField.text  =[NSString stringWithFormat:@"%@ %@",pickView.state,pickView.city];
+    
+    //检测选择器是否已经打开
+    if (pickView) {
+        pickView.isShow  = NO;
+    }
 }
 
 //*********************************************************UiTextField *****************************************************//
 #pragma UITextFieldDelegate
--(void)textFieldDidBeginEditing:(UITextField *)textField
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
     if (textField == addressTextField) {
+        [self resignKeyboard];
         [textField resignFirstResponder];
+        
         if (!pickview) {
-            [self resignKeyboard];
             pickview=[[ZHPickView alloc] initPickviewWithPlistName:@"city" isHaveNavControler:NO];
             pickview.backgroundColor = ClearColor;
             pickview.delegate=self;
@@ -307,7 +321,9 @@
         if (!pickview.isShow) {
             [pickview show];
         }
+        return NO;
     }
+    return YES;
     
 }
 
@@ -318,22 +334,29 @@
     UIView* view = [scrollView viewWithTag:30001];
     for (UIView * v in view.subviews){
         if (v.class ==  UITextField.class) {
-            [(UITextField*)v resignFirstResponder];
+            if ([(UITextField*)v isFirstResponder]) {
+                [(UITextField*)v resignFirstResponder];
+            }
         }
     }
+//    [nameTextField resignFirstResponder];
+//    [IDTextField resignFirstResponder];
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField
 {
     
-    [textField resignFirstResponder];
+//    [textField resignFirstResponder];
+     [self resignKeyboard];
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [textField resignFirstResponder];
+//    [textField resignFirstResponder];
+     [self resignKeyboard];
     return YES;
 }
+
 
 -(void)textFieldDidChange:(id)sender
 {

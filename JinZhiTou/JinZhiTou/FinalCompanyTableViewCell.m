@@ -17,19 +17,27 @@
         UIView* view = [[UIView alloc]initWithFrame:CGRectMake(10, 0, frame.size.width-20,frame.size.height-5)];
         view.backgroundColor= WriteColor;
         //项目图片
-        self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, WIDTH(view)-10 ,HEIGHT(view)*2/3)];
-        self.imgView.image = IMAGENAMED(@"loading");
-        self.imgView.contentMode = UIViewContentModeScaleAspectFill;
+        self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 120 ,HEIGHT(view)-10)];
         self.imgView.layer.cornerRadius = 3;
         self.imgView.layer.masksToBounds = YES;
+        self.imgView.image = IMAGENAMED(@"loading");
+        self.imgView.contentMode = UIViewContentModeScaleAspectFit;
         [view addSubview:self.imgView];
         [self addSubview:view];
         //名称
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.imgView), POS_Y(self.imgView)+5, WIDTH(self.imgView),30)];
+        CGFloat len =WIDTH(self)-150;
+        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, Y(self.imgView),len,20)];
         self.titleLabel.font = SYSTEMFONT(18);
-        self.titleLabel.textColor = FONT_COLOR_RED;
-        self.titleLabel.textAlignment  =NSTextAlignmentCenter;
+        self.titleLabel.textColor = FONT_COLOR_BLACK;
         [view addSubview:self.titleLabel];
+        
+        //内容
+        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel), WIDTH(self.titleLabel),60)];
+        self.contentLabel.numberOfLines=3;
+        self.contentLabel.font = SYSTEMFONT(16);
+        self.contentLabel.textColor = FONT_COLOR_GRAY;
+        self.contentLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        [view addSubview:self.contentLabel];
         
         self.backgroundColor = BackColor;
         self.layer.cornerRadius = 5;

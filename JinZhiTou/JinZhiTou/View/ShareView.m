@@ -52,7 +52,7 @@
         NSDictionary* dic;
         if (isShareNews) {
             dic = [[NSMutableDictionary alloc]init];
-            [dic setValue:@"weixin" forKey:@"imagename"];
+            [dic setValue:@"jinzht" forKey:@"imagename"];
             [dic setValue:@"圈子" forKey:@"title"];
         }
         [self addShareItem:dic];
@@ -71,12 +71,12 @@
         [array addObject:dic];
     }
     dic = [[NSMutableDictionary alloc]init];
-    [dic setValue:@"weixin" forKey:@"imagename"];
+    [dic setValue:@"wechat" forKey:@"imagename"];
     [dic setValue:@"微信" forKey:@"title"];
     [array addObject:dic];
     
     dic = [[NSMutableDictionary alloc]init];
-    [dic setValue:@"pengyouquan" forKey:@"imagename"];
+    [dic setValue:@"cycle" forKey:@"imagename"];
     [dic setValue:@"朋友圈" forKey:@"title"];
     [array addObject:dic];
     
@@ -86,31 +86,37 @@
     [array addObject:dic];
     
     dic = [[NSMutableDictionary alloc]init];
-    [dic setValue:@"mail" forKey:@"imagename"];
+    [dic setValue:@"message" forKey:@"imagename"];
     [dic setValue:@"短信" forKey:@"title"];
     [array addObject:dic];
     
-    float h =HEIGHT(self)-140;
-    float w =WIDTH(self)/array.count;
-    float pos_x=(WIDTH(self)-(w-10)*array.count)/(array.count+1);
+    
+    float h =HEIGHT(self)-100;
+    float w =WIDTH(self)/(array.count*2+1);
+    float pos_x=WIDTH(self)/(array.count*2+1);
+    UIView* v  =[[UIView alloc]initWithFrame:CGRectMake(0, h, WIDTH(self), 100)];
+    v.backgroundColor  =BackColor;
+    [self addSubview:v];
+    
     UIImageView* imageView;
+    UILabel* label;
     for (int i=0; i<array.count; i++) {
         dic = array[i];
-        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(pos_x, h, w-10, w-10)];
+        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(pos_x-10, h+20, w+10, w+10)];
         imageView.tag = 1000+i;
         imageView.userInteractionEnabled = YES;
-        imageView.userInteractionEnabled = YES;
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
         [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(share:)]];
-        imageView.image =IMAGENAMED([dic valueForKey:@"imagename"]);
+        imageView.image =IMAGE([dic valueForKey:@"imagename"], @"png");
         [self addSubview:imageView];
-        pos_x+=w;
+        pos_x+=w*2;
+        label = [[UILabel alloc]initWithFrame:CGRectMake(X(imageView)-w,POS_Y(imageView), WIDTH(imageView)*2+20, 20)];
+        label.textColor = AppGrayColorTheme;
+        label.textAlignment  =NSTextAlignmentCenter;
+        label.text = [dic valueForKey:@"title"];
+        label.font = SYSTEMBOLDFONT(15);
+        [self addSubview:label];
     }
-    
-    imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-7.5, POS_Y(imageView)+45, 15, 15)];
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
-    imageView.image = IMAGENAMED(@"quxiao");
-    [self addSubview:imageView];
 }
 
 
@@ -152,11 +158,7 @@
         message.title =[NSString stringWithFormat: @"【%@】",[dataDic valueForKey:@"title"]];
         message.description = content;
         NSURL* url;
-        if (self.type==3) {
-            url =[NSURL URLWithString:[dataDic valueForKey:@"src"]];
-        }else{
-            url =[NSURL URLWithString:[dataDic valueForKey:@"img"]];
-        }
+        url =[NSURL URLWithString:[dataDic valueForKey:@"img"]];
         
         NSLog(@"url:%@",url);
         NSData* imgData = [NSData dataWithContentsOfURL:url];
@@ -170,12 +172,7 @@
         
         WXWebpageObject *ext = [WXWebpageObject object];
         
-        if (self.type==3) {
-            ext.webpageUrl =[dataDic valueForKey:@"href"];
-        }else{
-            ext.webpageUrl =[dataDic valueForKey:@"url"];
-        }
-        
+        ext.webpageUrl =[dataDic valueForKey:@"url"];
         
         message.mediaObject = ext;
         message.mediaTagName = @"WECHAT_TAG_JUMP_SHOWRANK";
@@ -190,11 +187,7 @@
         message.title = [message.title stringByAppendingString:content];
         message.description = @"";
         NSURL* url;
-        if (self.type==3) {
-            url =[NSURL URLWithString:[dataDic valueForKey:@"src"]];
-        }else{
-            url =[NSURL URLWithString:[dataDic valueForKey:@"img"]];
-        }
+        url =[NSURL URLWithString:[dataDic valueForKey:@"img"]];
 
         NSData* imgData = [NSData dataWithContentsOfURL:url];
         UIImage* image = [UIImage imageWithData:imgData scale:0.5];
@@ -206,12 +199,8 @@
         [message setThumbImage:image];
         
         WXWebpageObject *ext = [WXWebpageObject object];
-        
-        if (self.type==3) {
-            ext.webpageUrl =[dataDic valueForKey:@"href"];
-        }else{
-            ext.webpageUrl =[dataDic valueForKey:@"url"];
-        }
+    
+        ext.webpageUrl =[dataDic valueForKey:@"url"];
         
         message.mediaObject = ext;
         message.mediaTagName = @"WECHAT_TAG_JUMP_SHOWRANK";
@@ -235,11 +224,7 @@
     
     //分享跳转URL
     NSString *urlStr;
-    if (self.type==3) {
-        urlStr =[dataDic valueForKey:@"href"];
-    }else{
-        urlStr =[dataDic valueForKey:@"url"];
-    }
+    urlStr =[dataDic valueForKey:@"url"];
 
     //分享图预览图URL地址
     NSString* content =[NSString stringWithFormat: @"%@",[dataDic valueForKey:@"content"]];
@@ -247,11 +232,7 @@
     NSData* data = [NSData dataWithContentsOfFile:path];
     NSURL* url;
     
-    if (self.type==3) {
-        url =[NSURL URLWithString:[dataDic valueForKey:@"src"]];
-    }else{
-        url =[NSURL URLWithString:[dataDic valueForKey:@"img"]];
-    }
+    url =[NSURL URLWithString:[dataDic valueForKey:@"img"]];
     data = [NSData dataWithContentsOfURL:url];
     
     QQApiNewsObject *newsObj =[QQApiNewsObject objectWithURL:[NSURL URLWithString:urlStr] title:[dataDic valueForKey:@"title"] description:content previewImageData:data];
@@ -373,7 +354,14 @@
                         [self shareQQ];
                         break;
                     case 1003:
-                        [[NSNotificationCenter defaultCenter]postNotificationName:@"showMessageView" object:nil   userInfo:nil];
+                        if (self.type==0) {
+                            [self.dic setValue:@"1" forKey:@"type"];
+                            [[NSNotificationCenter defaultCenter]postNotificationName:@"showMessageView" object:nil   userInfo:self.dic];
+                        }else{
+                            [dataDic setValue:@"2" forKey:@"type"];
+                            [[NSNotificationCenter defaultCenter]postNotificationName:@"showMessageView" object:nil   userInfo:dataDic];
+                        }
+                        [self closeView:nil];
                         break;
                     default:
                         break;
@@ -398,7 +386,16 @@
                         [self shareQQ];
                         break;
                     case 1004:
-                        [[NSNotificationCenter defaultCenter]postNotificationName:@"showMessageView" object:nil   userInfo:nil];
+                        if (self.type==0) {
+                            //分享项目
+                            [self.dic setValue:@"1" forKey:@"type"];
+                            [[NSNotificationCenter defaultCenter]postNotificationName:@"showMessageView" object:nil   userInfo:self.dic];
+                        }else{
+                            //分享咨询
+                            [dataDic setValue:@"2" forKey:@"type"];
+                            [[NSNotificationCenter defaultCenter]postNotificationName:@"showMessageView" object:nil   userInfo:dataDic];
+                        }
+                        [self closeView:nil];
                         break;
                     default:
                         break;

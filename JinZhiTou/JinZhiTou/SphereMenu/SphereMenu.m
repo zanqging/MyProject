@@ -223,7 +223,7 @@ static const float kSphereDamping = 0.3;
 
 - (void)expandSubmenu
 {
-    angleNum = 120;
+    angleNum = 135;
     [self startAnimation];
     
     for (int i = 0; i < self.count; i++) {

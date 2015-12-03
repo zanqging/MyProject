@@ -16,4 +16,6 @@
 @property(retain,nonatomic)UIImageView* headerView;
 @property(retain,nonatomic)UIImageView* headerBackView;
 @property(retain,nonatomic)UILabel* nameLabel;
+
+-(void)loadData;
 @end

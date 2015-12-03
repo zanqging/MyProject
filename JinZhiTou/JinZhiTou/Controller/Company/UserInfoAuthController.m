@@ -68,7 +68,7 @@
     [scrollView addSubview:view];
     
     UIImageView* imgView =[[UIImageView alloc]initWithFrame:CGRectMake(20, 10, WIDTH(view)-40, HEIGHT(view)-20)];
-    [imgView sd_setImageWithURL:[NSURL URLWithString:[data valueForKey:USER_STATIC_IDPIC]] placeholderImage:[TDUtil loadContent:STATIC_USER_DEFAULT_ID_PIC]];
+    [imgView setImage:[TDUtil loadContent:STATIC_USER_DEFAULT_ID_PIC]];
     imgView.contentMode = UIViewContentModeScaleToFill;
     imgView.layer.cornerRadius = 5;
     imgView.layer.masksToBounds = YES;
@@ -236,7 +236,7 @@
 //    [scrollView addSubview:btnAction];
     
     imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)-170, POS_Y(view)-90, 140, 140)];
-    imgView.image = IMAGE(@"passed", @"png");
+    imgView.tag=1001;
     imgView.contentMode = UIViewContentModeScaleAspectFill;
     [self.view addSubview:imgView];
     
@@ -329,6 +329,28 @@
 -(void)setDataArray:(NSMutableArray *)dataArray
 {
     self->_dataArray=dataArray;
+}
+
+-(void)setType:(int)type
+{
+    self->_type = type;
+    UIImageView* imgView = [self.view viewWithTag:1001];
+    if (imgView) {
+        switch (self.type) {
+            case 0:
+                imgView.image = IMAGE(@"passed", @"png");
+                break;
+            case 1:
+                imgView.image = IMAGE(@"authing", @"png");
+                break;
+            case 2:
+                imgView.image = IMAGE(@"failed", @"png");
+                break;
+            default:
+                imgView.image = IMAGE(@"authing", @"png");
+                break;
+        }
+    }
 }
 
 //*********************************************************网络请求开始*****************************************************//

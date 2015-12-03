@@ -42,7 +42,7 @@
     
     UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.navView), HEIGHT(self.view)-POS_Y(self.navView))];
     imgView.contentMode  =UIViewContentModeScaleAspectFill;
-    imgView.image= IMAGENAMED(@"denglu");
+    imgView.image= IMAGE(@"login", @"png");
     [self.view addSubview:imgView];
     
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.navView), HEIGHT(self.view)-POS_Y(self.navView))];
@@ -56,12 +56,12 @@
     self.phoneTextField.tag=1004;
     self.phoneTextField.delegate=self;
     self.phoneTextField.font = SYSTEMFONT(16);
+    self.phoneTextField.textColor =WriteColor;
     self.phoneTextField.placeholder = @"请输入手机号";
     self.phoneTextField.returnKeyType = UIReturnKeyDone;
     self.phoneTextField.borderStyle =UITextBorderStyleNone;
-    self.phoneTextField.textColor =BACKGROUND_LIGHT_GRAY_COLOR;
     self.phoneTextField.keyboardType = UIKeyboardTypeDecimalPad;
-    self.phoneTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.2);
+    self.phoneTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.4);
     self.phoneTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.phoneTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.phoneTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
@@ -76,6 +76,7 @@
     self.codeTextField.tag=1005;
     self.codeTextField.delegate=self;
     self.codeTextField.font = SYSTEMFONT(16);
+    self.codeTextField.textColor = WriteColor;
     self.codeTextField.placeholder = @"请输入验证码";
     self.codeTextField.returnKeyType = UIReturnKeyDone;
     self.codeTextField.borderStyle =UITextBorderStyleNone;
@@ -131,6 +132,7 @@
     self.passTextField.delegate=self;
     self.passTextField.secureTextEntry = YES;
     self.passTextField.font = SYSTEMFONT(16);
+    self.passTextField.textColor = WriteColor;
     self.passTextField.placeholder = @"请输入密码";
     self.passTextField.returnKeyType = UIReturnKeyDone;
     self.passTextField.borderStyle =UITextBorderStyleNone;
@@ -150,6 +152,7 @@
     self.passRepeatTextField.delegate=self;
     self.passRepeatTextField.secureTextEntry = YES;
     self.passRepeatTextField.font = SYSTEMFONT(16);
+    self.passRepeatTextField.textColor = WriteColor;
     self.passRepeatTextField.placeholder = @"请重复密码";
     self.passRepeatTextField.returnKeyType = UIReturnKeyDone;
     self.passRepeatTextField.borderStyle =UITextBorderStyleNone;
@@ -169,7 +172,7 @@
     [self.regietButton setTitle:@"提交" forState:UIControlStateNormal];
     [self.regietButton addTarget:self action:@selector(doAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.regietButton setTitleColor:WriteColor forState:UIControlStateNormal];
-    [self.regietButton setBackgroundColor:RGBACOLOR(214, 48, 48, 1)];
+    [self.regietButton setBackgroundColor:AppColorTheme];
     [scrollView addSubview:self.regietButton];
 }
 
@@ -255,7 +258,7 @@
             [activity startAnimating];
         }
     }
-    [activity setColor:ColorTheme];
+    [activity setColor:WriteColor];
     
     //开始加载动画
     [activity startAnimating];

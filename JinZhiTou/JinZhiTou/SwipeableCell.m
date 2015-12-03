@@ -37,11 +37,11 @@ static CGFloat const kBounceValue = 20.0f;
     self.button2.backgroundColor = BackColor;
     
     [self.button1 setTitle:@"删除" forState:UIControlStateNormal];
-    [self.button1 setTitleColor:ColorTheme forState:UIControlStateNormal];
+    [self.button1 setTitleColor:AppColorTheme forState:UIControlStateNormal];
     [self.button1 setImage:[UIImage imageNamed:@"shanchu"] forState:UIControlStateNormal];
     
     [self.button2 setTitle:@"回复" forState:UIControlStateNormal];
-    [self.button2 setTitleColor:ColorTheme forState:UIControlStateNormal];
+    [self.button2 setTitleColor:AppColorTheme forState:UIControlStateNormal];
     [self.button2 setImage:[UIImage imageNamed:@"huifu"] forState:UIControlStateNormal];
     
     self.titleLabel.textColor = FONT_COLOR_GRAY;

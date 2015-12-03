@@ -35,7 +35,7 @@
         
         UIButton* btnAction =[[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self)-50, 5, 20, 20)];
         [btnAction setTitleColor:ColorTheme2 forState:UIControlStateNormal];
-        [btnAction setTitle:@"X" forState:UIControlStateNormal];
+        [btnAction setImage:IMAGENAMED(@"close_credit") forState:UIControlStateNormal];
         [btnAction addTarget:self action:@selector(removewFromSuperView:) forControlEvents:UIControlEventTouchUpInside];
         [view addSubview:btnAction];
         
@@ -53,7 +53,9 @@
         
         //图片
         UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 70, HEIGHT(self.personalView)-20)];
+        imgView.image = IMAGENAMED(@"person");
         imgView.backgroundColor  =BackColor;
+        imgView.contentMode = UIViewContentModeScaleAspectFill;
         [self.personalView addSubview:imgView];
         
         //标题
@@ -79,7 +81,9 @@
         self.instituteView.tag = 1001;
         
         imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 70, HEIGHT(self.personalView)-20)];
+        imgView.image = IMAGENAMED(@"commiunte");
         imgView.backgroundColor  =BackColor;
+        imgView.contentMode = UIViewContentModeScaleAspectFill;
         [self.instituteView addSubview:imgView];
         
         //标题

@@ -33,11 +33,6 @@
         contentLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [v addSubview:contentLabel];
         
-        urlLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(contentLabel), POS_Y(contentLabel)+5, WIDTH(self)/2, 21)];
-        urlLabel.font = SYSTEMFONT(16);
-        urlLabel.textColor =FONT_LINK_COLOR_GRAY;
-        [v addSubview:urlLabel];
-        
         [self performSelector:@selector(layout:) withObject:self afterDelay:1];
     }
     return self;
@@ -73,7 +68,7 @@
         [paragraphStyle setLineSpacing:0];//调整行间距
         //    [paragraphStyle setAlignment:NSTextAlignmentLeft];
         [paragraphStyle setFirstLineHeadIndent:0];
-        [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
+        [paragraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:title];
         [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [title length])];
         
@@ -85,7 +80,7 @@
             for(NSTextCheckingResult* r in result)
             {
             
-                 [attributedString addAttribute:NSForegroundColorAttributeName value:ColorTheme range:r.range];
+                 [attributedString addAttribute:NSForegroundColorAttributeName value:AppColorTheme range:r.range];
             }
         }
         
@@ -103,28 +98,23 @@
         [paragraphStyle setLineSpacing:0];//调整行间距
         //    [paragraphStyle setAlignment:NSTextAlignmentLeft];
         [paragraphStyle setFirstLineHeadIndent:0];
-        [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
+        [paragraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
         attributedString = [[NSMutableAttributedString alloc] initWithString:dateTime];
         [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [dateTime length])];
         
-        regex = [NSRegularExpression regularExpressionWithPattern:[self.dataDic valueForKey:@"searchText"] options:NSRegularExpressionCaseInsensitive error:&error];
-        
-        result = [regex matchesInString:dateTime options:0 range:NSMakeRange(0, dateTime.length)];
-        if (result) {
-            for(NSTextCheckingResult* r in result)
-            {
-                [attributedString addAttribute:NSForegroundColorAttributeName value:ColorTheme range:r.range];
-            }
-        }
+//        regex = [NSRegularExpression regularExpressionWithPattern:[self.dataDic valueForKey:@"searchText"] options:NSRegularExpressionCaseInsensitive error:&error];
+//        
+//        result = [regex matchesInString:dateTime options:0 range:NSMakeRange(0, dateTime.length)];
+//        if (result) {
+//            for(NSTextCheckingResult* r in result)
+//            {
+//                [attributedString addAttribute:NSForegroundColorAttributeName value:AppColorTheme range:r.range];
+//            }
+//        }
         contentLabel.attributedText = attributedString;
         [contentLabel sizeToFit];
         
-        
-        [urlLabel setFrame:CGRectMake(X(contentLabel), POS_Y(contentLabel)+5, WIDTH(self)/2, 21)];
-        NSString* url = [self.dataDic valueForKey:@"origin_url"];
-        urlLabel.text = url;
-        
-        [v setFrame:CGRectMake(0, 0, WIDTH(self), POS_Y(urlLabel)+5)];
+        [v setFrame:CGRectMake(0, 0, WIDTH(self), POS_Y(contentLabel)+5)];
     }
 }
 @end

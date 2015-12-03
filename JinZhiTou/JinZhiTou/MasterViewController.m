@@ -64,13 +64,12 @@
     self.cellsCurrentlyEditing = [NSMutableArray array];
     
     rowCount = 0;
-    self.startLoading =YES;
     [self refreshProject];
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSLog(@"zhixing");
+
 }
 
 -(void)refreshProject
@@ -82,6 +81,7 @@
     if (self.type==0) {
         NSString * url = [MY_TOPIC_LIST stringByAppendingString:[NSString stringWithFormat:@"%ld/",(long)currentPage]];
         [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestTopicList:)];
+        self.startLoading = YES;
     }else{
         NSString * url = [MY_SYSTEM_LIST stringByAppendingString:[NSString stringWithFormat:@"%ld/",(long)currentPage]];
         [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestTopicList:)];
@@ -116,11 +116,11 @@
     [self.tableView.footer endRefreshing];
 }
 
--(void)setRead
+-(void)setRead:(NSInteger)index
 {
     NSString* serverUrl;
     if (self.type==0) {
-        serverUrl= [settopicread stringByAppendingFormat:@"%d/",0];
+        serverUrl= [settopicread stringByAppendingFormat:@"%ld/",index];
         [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestReadFinished:)];
     }
 }
@@ -266,10 +266,11 @@
     }else{
         WeiboViewControlle* controller = [[WeiboViewControlle alloc]init];
         NSDictionary* dic = cell.dic;
-        NSLog(@"%@",dic);
         controller.titleStr = @"消息回复";
         controller.project_id = [[dic valueForKey:@"pid"] integerValue];
         [self.navigationController pushViewController:controller animated:YES];
+        
+        [self setRead:[[dic valueForKey:@"id"] integerValue]];
     }
 }
 -(void)replyView:(id)replyView text:(NSString *)text
@@ -282,6 +283,8 @@
         [dic setValue:atTopId forKey:@"at"];
         
         [self.httpUtil getDataFromAPIWithOps:url postParam:dic type:0 delegate:self sel:@selector(requestSubmmit:)];
+        self.startLoading = YES;
+        self.isTransparent=YES;
     }else{
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请先输入内容"];
     }
@@ -356,6 +359,11 @@
 
 
 
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    [self resetLoadingView];
+}
 -(void)loadProjectDetail:(NSInteger)index
 {
     RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
@@ -443,8 +451,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] == -1) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0 || [code intValue] == 2) {
             if (isRefresh) {
                 self.dataArray =nil;
                 self.dataArray = [jsonDic valueForKey:@"data"];
@@ -457,12 +465,22 @@
                 }
             }
             
-            if ([status integerValue]==-1) {
-                [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
-            }
-            
-            [self setRead];
+            //移除重新加载数据监听
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
+        }else if ([code intValue] == -1){
+            //添加监听
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshProject) name:@"reloadData" object:nil];
+            //通知重新加载数据
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"login" object:nil];
+        }else{
+            self.isNetRequestError =YES;
         }
+        
+        //设置全部为阅读状态
+        if (currentPage!=0) {
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+        }
+        self.startLoading = NO;
     }
 }
 
@@ -473,8 +491,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
             self.isNetRequestError =NO;
             self.tableView.content = [jsonDic valueForKey:@"msg"];
             currentPage = 0;
@@ -489,8 +507,23 @@
         }
         
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+        
+        self.startLoading=NO;
     }else{
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"系统错误!"];
+    }
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // 禁用 iOS7 返回手势
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        if (!self.navigationController.interactivePopGestureRecognizer.enabled) {
+            self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+        }
     }
 }
 @end

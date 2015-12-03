@@ -26,9 +26,9 @@
         //即刻开启
         btnStart=[[UIButton alloc]initWithFrame:CGRectMake(frame.size.width/4, frame.size.height-150, frame.size.width/2, 40)];
         btnStart.layer.borderWidth =1;
-        btnStart.layer.cornerRadius = 20;
-        btnStart.backgroundColor =ColorTheme;
-        btnStart.layer.borderColor =ColorTheme.CGColor;
+        btnStart.layer.cornerRadius = 5;
+        btnStart.backgroundColor=AppColorTheme;
+        btnStart.layer.borderColor =AppColorTheme.CGColor;
         [btnStart setTitle:@"即刻开启" forState:UIControlStateNormal];
         [btnStart.titleLabel setFont:SYSTEMFONT(22)];
         [btnStart setImageEdgeInsets:UIEdgeInsetsMake(0,frame.size.width/3+30, 0, 0)];

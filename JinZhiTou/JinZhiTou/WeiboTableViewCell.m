@@ -28,27 +28,18 @@
         
         //名称
         self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.headerImgView)+10, Y(self.headerImgView), 50, 14)];
-        self.nameLabel.font = FONT(@"Arial", 14);
+        self.nameLabel.font = SYSTEMBOLDFONT(16);
         self.nameLabel.textColor = [UIColor colorWithRed:211.0f/255.0 green:161.0f/255.0 blue:36.0f/255.0 alpha:1];
         self.nameLabel.userInteractionEnabled = YES;
         [self addSubview:self.nameLabel];
         
         //公司
-        self.companyLabel  = [[ UILabel alloc]initWithFrame:CGRectMake(POS_X(self.nameLabel), Y(self.nameLabel), 5, HEIGHT(self.nameLabel))];
+        self.companyLabel  = [[ UILabel alloc]initWithFrame:CGRectMake(X(self.nameLabel), POS_Y(self.nameLabel)+10, 5, HEIGHT(self.nameLabel))];
         self.companyLabel.font  =FONT(@"Arial", 14);
         self.companyLabel.textColor  =FONT_COLOR_GRAY;
         [self addSubview:self.companyLabel];
         
-        float position1 =WIDTH(self);
-        float position2 =POS_X(self.companyLabel);
-        //职务
-        self.jobLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.companyLabel), Y(self.companyLabel), position1-position2-30, HEIGHT(self.companyLabel))];
-        self.jobLabel.font = FONT(@"Arial", 14);
-        self.jobLabel.textColor  = FONT_COLOR_GRAY;
-        [self addSubview:self.jobLabel];
-    
-        
-        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.nameLabel), POS_Y(self.companyLabel)+5, WIDTH(self)-90, 80)];
+        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.nameLabel), POS_Y(self.companyLabel)+10, WIDTH(self)-90, 80)];
         self.contentLabel.font  =FONT(@"Arial", 14);
         self.contentLabel.textColor  =FONT_COLOR_BLACK;
         self.contentLabel.numberOfLines  =5;
@@ -243,8 +234,8 @@
     NSString* str = name;
     if (name) {
         //监听事件
-        label.nameLabel.userInteractionEnabled  =YES;
-        [label.nameLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+//        label.nameLabel.userInteractionEnabled  =YES;
+//        [label.nameLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
         [label setName:name];
     }
     
@@ -317,10 +308,11 @@
     enableGrid = YES;
     
     MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+    browser.type=3;
     browser.enableGrid = NO;
     browser.startOnGrid = NO;
     browser.zoomPhotosToFill = YES;
-    browser.enableSwipeToDismiss = NO;
+    browser.enableSwipeToDismiss = YES;
     browser.displayNavArrows = displayNavArrows;
     browser.autoPlayOnAppear = autoPlayOnAppear;
     browser.displayActionButton = displayActionButton;
@@ -361,8 +353,8 @@
         self->_dic =dic;
         //事件
         if ([dic valueForKey:@"id"]) {
-            [self.headerImgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
-            [self.nameLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+//            [self.headerImgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+//            [self.nameLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
         }
         
         //头像
@@ -396,14 +388,12 @@
                 content =arr;
             }
             
+            content = [[self.dic valueForKey:@"addr"] stringByAppendingFormat:@"|%@",content];
             attributedString = [[NSMutableAttributedString alloc] initWithString:content];
             [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
-            self.jobLabel.attributedText = attributedString;//ios 6
-            [self.jobLabel sizeToFit];
+            self.companyLabel.attributedText = attributedString;//ios 6
+            [self.companyLabel sizeToFit];
         }
-
-        
-        [self.jobLabel setFrame:CGRectMake(POS_X(self.nameLabel)+5, Y(self.nameLabel),WIDTH(self.jobLabel), HEIGHT(self.jobLabel))];
         
         
         //内容
@@ -415,12 +405,12 @@
         
         //分享内容
         if ([self.dic valueForKey:@"share"]) {
-            self.shareView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.contentLabel), WIDTH(self)-80,74)];
+            self.shareView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.contentLabel), WIDTH(self)-80,60)];
             self.shareView.backgroundColor=[UIColor colorWithRed:238.0f/255.0 green:238.0f/255.0 blue:238.0f/255.0 alpha:1];
             self.shareView.userInteractionEnabled  =YES;
             [self.shareView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(shareContentTaped:)]];
             //分享图片
-            self.shareImgView = [[UIImageView alloc]initWithFrame:CGRectMake(12, 12, 50, 50)];
+            self.shareImgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 50, 50)];
             [self.shareImgView sd_setImageWithURL:[NSURL URLWithString:[[self.dic valueForKey:@"share"] valueForKey:@"img"]] placeholderImage:IMAGENAMED(@"loading")];
             [self.shareView addSubview:self.shareImgView];
             
@@ -445,67 +435,8 @@
             
             self.shareLabel.attributedText = attributedString;//ios 6
             [self.shareLabel sizeToFit];
-            
             [self addSubview:self.shareView];
         }
-        
-        int numlines = [TDUtil  convertToInt:content]/17;
-        
-        if (numlines>5) {
-            float posY;
-            if (self.shareView) {
-                posY=POS_Y(self.shareView);
-            }else{
-                posY=POS_Y(self.contentLabel)-15;
-            }
-            self.expandButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)-15, posY, 50, 50)];
-            self.expandButton.titleLabel.font  =FONT(@"Arial", 12);
-            [self.expandButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-            [self.expandButton setTitle:@"全文" forState:UIControlStateNormal];
-            [self.expandButton addTarget:self action:@selector(expandAction:) forControlEvents:UIControlEventTouchUpInside];
-            [self addSubview:self.expandButton];
-            
-            [self.contentLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showContent:)]];
-        }
-        
-
-        
-        if ([[dic valueForKey:@"flag"] boolValue] && [dic valueForKey:@"id"]) {
-            if (self.expandButton) {
-                self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(self.expandButton), Y(self.expandButton), 50, 50)];
-            }else{
-                float posY;
-                if (self.shareView) {
-                    posY=POS_Y(self.shareView);
-                }else{
-                    posY=POS_Y(self.contentLabel)-15;
-                }
-                self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)-14, posY, 50, 50)];
-            }
-            self.deleteButton.titleLabel.font  =FONT(@"Arial", 12);
-            [self.deleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-            [self.deleteButton setTitle:@"删除" forState:UIControlStateNormal];
-            [self.deleteButton addTarget:self action:@selector(deleteAction:) forControlEvents:UIControlEventTouchUpInside];
-            [self addSubview:self.deleteButton];
-        }
-        //时间
-        if (self.expandButton || self.deleteButton) {
-            float posY;
-            posY=POS_Y(self.deleteButton)-20;
-            self.dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.contentLabel), posY, 100, 20)];
-        }else{
-            float posY;
-            if (self.shareView) {
-                posY=POS_Y(self.shareView)+5;
-            }else{
-                posY=POS_Y(self.contentLabel)+5;
-            }
-            self.dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.contentLabel), posY, 100, 20)];
-        }
-        self.dateTimeLabel.font  =FONT(@"Arial", 10);
-        self.dateTimeLabel.text = [dic valueForKey:@"datetime"];
-        self.dateTimeLabel.textColor  =FONT_COLOR_GRAY;
-        [self addSubview:self.dateTimeLabel];
         
         
         NSArray* pics =[self.dic valueForKey:@"pic"];
@@ -517,7 +448,7 @@
         }else if (value<3 && value >0){
             number++;
         }
-        self.imgContentView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.dateTimeLabel),240, number*80)];
+        self.imgContentView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.contentLabel),240, number*80)];
         [self addSubview:self.imgContentView];
         
         UIImageView* imgView;
@@ -550,23 +481,30 @@
             }
         }
         
-//        NSMutableDictionary* dictemp = [[NSMutableDictionary alloc]init];
-//        
-//        [dictemp setValue:array forKey:@"imageName"];
+        //时间，删除，全文，点赞
+        float posY;
+        if (self.shareView) {
+            posY=POS_Y(self.shareView)+5;
+        }else{
+            posY=POS_Y(self.imgContentView)+5;
+        }
+        self.dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.contentLabel), posY, 100, 30)];
+        self.dateTimeLabel.font  =SYSTEMFONT(14);
+        self.dateTimeLabel.text = [dic valueForKey:@"datetime"];
+        self.dateTimeLabel.textColor  =FONT_COLOR_GRAY;
+        [self addSubview:self.dateTimeLabel];
         
         //分享点赞
-        self.funView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.imgContentView), WIDTH(self)-80, 30)];
+        self.funView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), Y(self.dateTimeLabel), WIDTH(self)-80, 30)];
         [self addSubview:self.funView];
-        
         
         //点赞，分享,评论
         NSMutableArray* dataCriticalArray = [self.dic valueForKey:@"comment"];
         self.dataArray = dataCriticalArray;
         
         //评论
-        self.criticalButton = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self.funView)-70, 0, 50, 30)];
+        self.criticalButton = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self.funView)-40, 0, 50, 30)];
         [self.criticalButton setTitleColor:FONT_COLOR_GRAY forState:UIControlStateNormal];
-        [self.criticalButton setTitle:[NSString stringWithFormat:@"%ld",dataCriticalArray.count] forState:UIControlStateNormal];
         [self.criticalButton.titleLabel setFont:FONT(@"Arial", 13)];
         [self.criticalButton addTarget:self action:@selector(commentAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.criticalButton setImage:IMAGENAMED(@"gossip_comment") forState:UIControlStateNormal];
@@ -574,10 +512,8 @@
         
         
         //点赞
-        NSMutableArray* dataPriseArray = [self.dic valueForKey:@"like"];
         self.priseButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.criticalButton)-50, Y(self.criticalButton), WIDTH(self.criticalButton), HEIGHT(self.criticalButton))];
         [self.priseButton setTitleColor:FONT_COLOR_GRAY forState:UIControlStateNormal];
-        [self.priseButton setTitle:[NSString stringWithFormat:@"%ld",dataPriseArray.count] forState:UIControlStateNormal];
         [self.priseButton.titleLabel setFont:FONT(@"Arial", 13)];
         [self.priseButton addTarget:self action:@selector(priseAction:) forControlEvents:UIControlEventTouchUpInside];
         [self.priseButton setImage:IMAGENAMED(@"gossip_like_normal") forState:UIControlStateNormal];
@@ -585,7 +521,48 @@
         
         [self setPriseListData];
         
-    
+        
+        
+        //全文
+        int numlines = [TDUtil  convertToInt:content]/17;
+        
+        if (numlines>5) {
+            float posY;
+            if (self.shareView) {
+                posY=POS_Y(self.shareView);
+            }else{
+                posY=Y(self.dateTimeLabel)-10;
+            }
+            self.expandButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)+50, posY, 50, 50)];
+            self.expandButton.titleLabel.font  =FONT(@"Arial", 12);
+            [self.expandButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            [self.expandButton setTitle:@"全文" forState:UIControlStateNormal];
+            [self.expandButton addTarget:self action:@selector(expandAction:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:self.expandButton];
+            [self.contentLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showContent:)]];
+        }
+        
+        //删除按钮
+        if ([[dic valueForKey:@"flag"] boolValue] && [dic valueForKey:@"id"]) {
+            if (self.expandButton) {
+                self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(self.expandButton), Y(self.expandButton), 50, 50)];
+            }else{
+                float posY;
+                if (self.shareView) {
+                    posY=POS_Y(self.shareView);
+                }else{
+                    posY=Y(self.dateTimeLabel)-5;
+                }
+                self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)+50, posY-5, 50, 50)];
+            }
+            
+            //删除按钮
+            self.deleteButton.titleLabel.font  =FONT(@"Arial", 12);
+            [self.deleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+            [self.deleteButton setTitle:@"删除" forState:UIControlStateNormal];
+            [self.deleteButton addTarget:self action:@selector(deleteAction:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:self.deleteButton];
+        }
     }
 }
 
@@ -691,14 +668,20 @@
         }
         [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView),comment_height+HEIGHT(self.priseListView)+height)];
     }
+    
+    //回复背景
+    UIImage* image = IMAGENAMED(@"message_reply");
+    image  =[image stretchableImageWithLeftCapWidth:image.size.width/2+10 topCapHeight:20];
+    UIImageView *imgView=[[UIImageView alloc]initWithImage:image];
     if (dataPriseArray.count>0 || self.dataArray.count>0) {
-        UIImage* image = IMAGENAMED(@"message_reply");
-        image  =[image stretchableImageWithLeftCapWidth:image.size.width/2+10 topCapHeight:20];
-        UIImageView *imgView=[[UIImageView alloc]initWithImage:image];
         if (dataPriseArray.count>0 && self.dataArray.count>0) {
-            [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), HEIGHT(self.priseView)-10)];
+            [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), HEIGHT(self.priseView)-5)];
         }else {
-            [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), HEIGHT(self.priseView)+10)];
+            float height =33;
+            if (self.dataArray.count>1) {
+                height = HEIGHT(self.priseView)-10;
+            }
+            [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), height)];
         }
         [self addSubview:imgView];
         [self sendSubviewToBack:imgView];
@@ -707,8 +690,8 @@
   
     
     if (dataPriseArray.count>0) {
-        UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(10, 5, 20, 20)];
-        imgview.image = IMAGENAMED(@"like_white");
+        UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(10, 12, 15, 15)];
+        imgview.image = IMAGENAMED(@"gossip_like_normal");
         [self.priseView addSubview:imgview];
     }
     

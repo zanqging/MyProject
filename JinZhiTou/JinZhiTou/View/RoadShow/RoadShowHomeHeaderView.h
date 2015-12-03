@@ -7,6 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HttpUtils.h"
+#import "LoadingUtil.h"
+#import "LoadingView.h"
 #import "CycleScrollView.h"
 @protocol RoadShowHomeDelegate <NSObject>
 
@@ -14,6 +17,10 @@
 @end
 
 @interface RoadShowHomeHeaderView : UIView
+{
+    HttpUtils* httpUtil;
+    LoadingView* loadingView;
+}
 @property(retain,nonatomic)id <RoadShowHomeDelegate> delegate;
 @property(retain,nonatomic)NSMutableDictionary* dataDic;
 @property(retain,nonatomic)NSMutableArray* viewsArray;

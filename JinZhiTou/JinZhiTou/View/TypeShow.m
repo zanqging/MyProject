@@ -54,21 +54,21 @@
             label.text = [dic valueForKey:@"value"];
             label.tag =[[dic valueForKey:@"key"] integerValue];
             if( i == 0){
-                label.backgroundColor  =ColorTheme;
-                label.textColor = WriteColor;
+                label.textColor = AppColorTheme;
             }else{
-                 label.textColor = ColorCompanyTheme;
+                 label.textColor = BlackColor;
             }
             
-            UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, HEIGHT(scrollView)-1, WIDTH(scrollView), 1)];
-            imgView.backgroundColor=BACKGROUND_COLOR;
-            [scrollView addSubview:imgView];
             
             [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(selectIndex:)]];
             [scrollView addSubview:label];
             [scrollView setContentSize:CGSizeMake(POS_X(label), HEIGHT(self))];
-            
         }
+        
+        UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, HEIGHT(scrollView)-3, WIDTH(label), 3)];
+        imgView.tag=10001;
+        imgView.backgroundColor=AppColorTheme;
+        [scrollView addSubview:imgView];
     }
     return self;
 }
@@ -78,13 +78,18 @@
         if ([v isKindOfClass:UILabel.class]) {
             UILabel* label  = (UILabel*)v;
             label.backgroundColor = ClearColor;
-            label.textColor = ColorCompanyTheme;
+            label.textColor = FONT_COLOR_BLACK;
         }
     }
-    UILabel* label = (UILabel*)[sender view];
-    label.textColor = WriteColor;
-    label.backgroundColor  =ColorTheme;
     
+    UILabel* label = (UILabel*)[sender view];
+    label.textColor = AppColorTheme;
+    
+    //滑块  动画
+    UIImageView* imgView = [scrollView viewWithTag:10001];
+    [UIView animateKeyframesWithDuration:0.5 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
+        [imgView setFrame:CGRectMake(X(label), Y(imgView), WIDTH(imgView), HEIGHT(imgView))];
+    } completion:nil];
     if ([_delegate respondsToSelector:@selector(typeShow:selectedIndex:didSelectedString:)]) {
         [_delegate typeShow:self selectedIndex:label.tag didSelectedString:label.text];
     }

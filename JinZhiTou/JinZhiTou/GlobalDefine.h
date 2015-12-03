@@ -103,6 +103,8 @@
 
 
 //主题色
+#define AppColorTheme  [UIColor colorWithRed:0xe9/256. green:0x48/256. blue:0x19/256. alpha:1]
+#define AppGrayColorTheme  [UIColor colorWithRed:0x72/256. green:0x72/256. blue:0x72/256. alpha:1]
 //#define ColorTheme  [UIColor colorWithRed:0xcb/256. green:0x02/256. blue:0x02/256. alpha:1]
 //#define ColorTheme  [UIColor colorWithRed:46.0/255. green:45.0/256. blue:51.0/255. alpha:1]
 #define ColorTheme  [UIColor colorWithRed:81.0/255. green:81.0/256. blue:81.0/255. alpha:1]
@@ -142,10 +144,10 @@
 #define FONT_COLOR_RED [UIColor colorWithRed:233.0/255 green:72.0/255 blue:25.0/255 alpha:1]
 
 //红色字体
-#define FONT_COLOR_BLACK [UIColor colorWithRed:64.0/255 green:64.0/255 blue:64.0/255 alpha:1]
+#define FONT_COLOR_BLACK [UIColor colorWithRed:0x40/256. green:0x40/256. blue:0x40/256. alpha:1]
 
 //红色字体
-#define FONT_COLOR_GRAY [UIColor colorWithRed:114.0/255 green:114.0/255 blue:114.0/255 alpha:1]
+#define FONT_COLOR_GRAY [UIColor colorWithRed:0x72/256. green:0x72/256. blue:0x72/256. alpha:1]
 //连接颜色
 #define FONT_LINK_COLOR_GRAY [UIColor colorWithRed:0/255 green:128.0/255 blue:0/255 alpha:1]
 
@@ -162,7 +164,7 @@
 
 //服务器域名地址
 //#define SERVICE_URL @"http://weini.im/"
-//#define SERVICE_URL @"http://www.jinzht.com/phone3gs/"//服务器域名地址
+//#define SERVICE_URL @"http://www.jinzht.com/phone4/"//服务器域名地址
 #define SERVICE_URL @"http://www.jinzht.com:8000/phone/"//服务器域名地址
 //服务器域名地址
 //#define SERVICE_URL @"http://www.jinzht.com/phone/"//服务器域名地址
@@ -442,6 +444,8 @@
 #define WECHAT_OPENID  @"openid/"
 //投资人
 #define FINIAL_COMM @"investor/"
+//客服电话
+#define  CUSTOMSERVICE @"customservice/"
 
 //身份证号
 #define USER_STATIC_IDNUMBER @"user_static_ido"
@@ -465,6 +469,8 @@
 #define USER_STATIC_NICKNAME @"user_static_nickname"
 //头像
 #define USER_STATIC_HEADER_PIC @"user_static_header_pic"
+//背景
+#define USER_STATIC_CYCLE_BG @"user_static_cycle_bg"
 //用户id
 #define USER_STATIC_USER_ID @"user_static_user_id"
 //==============================第三期App研发接口==============================//
@@ -494,8 +500,6 @@
 #define STATIC_USER_DEFAULT_PIC @"userDefaultPic"
 //身份证号
 #define STATIC_USER_DEFAULT_ID_PIC @"userDefaultIDPic"
-//用户头像
-#define STATIC_USER_HEADER_PIC @"userDefaultHeaderPic"
 //用户头像
 #define STATIC_USER_BACKGROUND_PIC @"userDefaultBackgroundPic"
 //用户性别

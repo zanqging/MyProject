@@ -43,7 +43,7 @@
     
     //图片
     imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 90, HEIGHT(contentView)-10)];
-    imgView.contentMode = UIViewContentModeScaleAspectFill;
+    imgView.contentMode = UIViewContentModeScaleAspectFit;
     imgView.layer.masksToBounds = YES;
     [contentView addSubview:imgView];
     if (self.imageName) {

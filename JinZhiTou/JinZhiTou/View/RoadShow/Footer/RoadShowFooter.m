@@ -114,7 +114,7 @@
     
         textView.attributedText = attributedString;//ios 6
         [textView sizeToFit];
-        [textView setFrame:CGRectMake(0, Y(textView), WIDTH(self), HEIGHT(textView))];
+        [textView setFrame:CGRectMake(10, Y(textView), WIDTH(self)-20, HEIGHT(textView))];
         
         [self setFrame:CGRectMake(X(self), Y(self), WIDTH(self), POS_Y(textView)+70)];
         

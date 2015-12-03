@@ -16,6 +16,8 @@
 #import "SphereMenu.h"
 #import "UConstants.h"
 #import "DialogUtil.h"
+#import "LoadingView.h"
+#import "LoadingUtil.h"
 #import "GlobalDefine.h"
 #import "NSString+SBJSON.h"
 #import <MessageUI/MessageUI.h>
@@ -33,6 +35,7 @@
     SphereMenu *sphereMenu;
     DialogView* dialogView;
     UIImageView* menuBackView;
+    LoadingView* loadingView;
 }
 @end
 @implementation HomeTabBarViewController
@@ -50,7 +53,7 @@
     //添加TabBar中间＋号视图
     NSMutableArray* dataArray=[[NSMutableArray alloc]init];
     DataModel* model=[[DataModel alloc]init];
-    if ([auth boolValue]) {
+    if ([auth boolValue] || [auth isEqualToString:@"None"]) {
         [model setDesc1:@"认证信息"];
     }else{
         [model setDesc1:@"我要认证"];
@@ -94,22 +97,24 @@
     
     httpUtils = [[HttpUtils alloc]init];
     //检测用户是否已经登录
-    [self isUserHasLogin];
+//    [self isUserHasLogin];
 
     //发送短信
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(alert:) name:@"alert" object:nil];
-    
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateStatus) name:@"updateStatus" object:nil];
     
-    
+    //初始化数据
+    [self loadData];
+}
+
+-(void)loadData
+{
     //检测更新
     [self checkUpdate];
-    //更新信息
-    [self updateStatus];
     //用户信息
     [self userInfo];
-    
-    
+    //更新信息
+    [self updateStatus];
 }
 
 -(void)userInfo
@@ -292,18 +297,14 @@
 }
 -(void)AuthApplyAction
 {
-//    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-//    FinialAuthViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"AuthConfig"];
-//    controller.titleStr = @"首页";
-//    [self.navigationController pushViewController:controller animated:YES];
-    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
-    NSString* auth = [data valueForKey:@"auth"];
-    if ([auth boolValue]) {
-        UserInfoAuthController* controller = [[UserInfoAuthController alloc]init];
-        [self.navigationController pushViewController:controller animated:YES];
-    }else{
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil];
+    if (!loadingView) {
+        loadingView  =[LoadingUtil shareinstance:self.view];
+        loadingView.isTransparent = YES;
     }
+    [LoadingUtil show:loadingView];
+    //开始获取认证信息
+    [httpUtils getDataFromAPIWithOps:@"myauth/" postParam:nil type:0 delegate:self sel:@selector(requestIsAuth:)];
+    
     
 }
 -(void)ActionArriveAction
@@ -414,27 +415,46 @@
  */
 -(void)isUserHasLogin
 {
-    [httpUtils getDataFromAPIWithOps:ISLOGIN postParam:nil type:0 delegate:self sel:@selector(requestIsLogin:)];
+    [httpUtils getDataFromAPIWithOps:ISLOGIN postParam:nil type:1 delegate:self sel:@selector(requestIsLogin:)];
 }
 /**
  *  发送短信消息
  */
 - (void)showMessageView:(NSDictionary*)dic
 {
+    NSDictionary* data = [dic valueForKey:@"userInfo"];
     
     if( [MFMessageComposeViewController canSendText] ){
         
         MFMessageComposeViewController * controller = [[MFMessageComposeViewController alloc]init]; //autorelease];
-        
         controller.recipients = [NSArray arrayWithObject:@""];
-        controller.body = [NSString stringWithFormat: @"【%@下载链接:%@】",@"推荐金指投App，分享有好礼，快速投融资！",@"http://a.app.qq.com/o/simple.jsp?pkgname=com.jinzht.pro"];
+        
+        int type = [[data valueForKey:@"type"] intValue];
+        NSString* body,* title;
+        if (type!=0) {
+            if (type==1) {
+                body = [NSString stringWithFormat: @"【%@】,项目类型:%@",[data valueForKey:@"company"],[data valueForKey:@"tag"]];
+                title = [data valueForKey:@"title"];
+            }else{
+                body = [NSString stringWithFormat: @"【%@】,链接地址:%@",[data valueForKey:@"title"],[data valueForKey:@"url"]];
+                title = [data valueForKey:@"title"];
+                
+            }
+        }else{
+            body = [NSString stringWithFormat: @"【%@下载链接:%@】",@"推荐金指投App，分享有好礼，快速投融资！",@"http://a.app.qq.com/o/simple.jsp?pkgname=com.jinzht.pro"];
+            title  =@"金指投App分享";
+        }
+        
+        //组装数据
+        controller.body = body;
+        [[[[controller viewControllers] lastObject] navigationItem] setTitle:[data valueForKey:title]];//修改短信界面标题
+        
         controller.messageComposeDelegate = self;
         
         [self.navigationController presentViewController:controller animated:YES completion:^(void){
             
         }];
         
-        [[[[controller viewControllers] lastObject] navigationItem] setTitle:@"金指投App分享"];//修改短信界面标题
     }else{
         
         [DialogUtil showDlgAlert:@"设备不支持发送短信"];
@@ -447,13 +467,13 @@
             
         case MessageComposeResultCancelled:
             
-            [DialogUtil showDlgAlert:@"发送取消"];
+            [DialogUtil showDlgAlert:@"短信发送取消!"];
             break;
         case MessageComposeResultFailed:
-            [DialogUtil showDlgAlert:@"发送失败"];
+            [DialogUtil showDlgAlert:@"短信发送失败!"];
             break;
         case MessageComposeResultSent:
-            [DialogUtil showDlgAlert:@"发送失败"];
+            [DialogUtil showDlgAlert:@"短信发送成功!"];
             break;
         default:
             break;
@@ -586,8 +606,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
             
         }
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
@@ -606,8 +626,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] != 0) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == -1) {
             //重新登录
             NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
             NSString* phone = [data valueForKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
@@ -616,8 +636,14 @@
             
             //加密
             NSLog(@"password:%@",password);
+            //极光推送id
+            NSString* regId = [APService registrationID];
+            if (![TDUtil isValidString:regId]) {
+                regId = @"123";
+            }
+            [dic setValue:regId forKey:@"regid"];
             [dic setValue:phone forKey:@"tel"];
-            [dic setValue:password forKey:@"password"];
+            [dic setValue:password forKey:@"passwd"];
             
             if ([TDUtil isValidString:phone] && [TDUtil isValidString:password]) {
                 [httpUtils getDataFromAPIWithOps:USER_LOGIN postParam:dic type:1 delegate:self sel:@selector(requestLogin:)];
@@ -662,8 +688,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
             NSString* version =[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
             
             NSDictionary* data =[jsonDic valueForKey:@"data"];
@@ -678,10 +704,6 @@
                     }
                 }
             }
-            NSLog(@"%@",version);
-        }else{
-            
-        
         }
     }
 }
@@ -707,6 +729,61 @@
             [data setValue:[self formatDic:dic key:@"position"] forKey:USER_STATIC_POSITION];
             [data setValue:[self formatDic:dic key:@"company"] forKey:USER_STATIC_COMPANY_NAME];
             [data setValue:[self formatDic:dic key:@"nickname"] forKey:USER_STATIC_NICKNAME];
+            //移除重新加载数据监听
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
+        }else if ([code intValue]==-1){
+            //添加刷新监听
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"reloadData" object:nil];
+            //通知观察中心重新登录
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"login" object:nil];
+        }
+    }
+}
+
+-(void)requestIsAuth:(ASIHTTPRequest*)request
+{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    if(jsonDic!=nil)
+    {
+        int code = [[jsonDic valueForKey:@"code"] intValue];
+        if (code==0) {
+            UserInfoAuthController* controller = [[UserInfoAuthController alloc]init];
+            
+            NSDictionary* data = [jsonDic valueForKey:@"data"];
+            NSString* auth = (NSString*)[data valueForKey:@"auth"];
+            
+            if ([auth isKindOfClass:NSNull.class]) {
+                 controller.type=1;
+                [self.navigationController pushViewController:controller animated:YES];
+            }else{
+                if ([auth isKindOfClass:NSString.class]) {
+                    if ([auth isEqualToString:@""]) {
+                        [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil];
+                    }
+                }else{
+                    if ([auth boolValue]) {
+                        controller.type=0;
+                    }else if(![auth boolValue]){
+                        controller.type=2;
+                    }else{
+                        [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil];
+                    }
+                    [self.navigationController pushViewController:controller animated:YES];
+                }
+            }
+            //关闭加载视图
+            [LoadingUtil close:loadingView];
+            //移除监听
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
+        }else if (code==-1){
+            //添加重新登录
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"login" object:nil];
+            //移除监听
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
+            //添加监听
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(AuthApplyAction) name:@"reloadData" object:nil];
         }
     }
 }

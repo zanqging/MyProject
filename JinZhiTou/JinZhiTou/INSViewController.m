@@ -7,6 +7,7 @@
 //
 
 #import "INSViewController.h"
+#import "MJRefresh.h"
 #import "INSSearchBar.h"
 #import "CreditTableViewCell.h"
 #import "BannerViewController.h"
@@ -21,6 +22,7 @@
     SearchTableViewHeader* header;
     
     BOOL isSearch;
+    BOOL isRefresh;
 }
 
 @property (nonatomic, strong) INSSearchBar *searchBarWithoutDelegate;
@@ -46,7 +48,7 @@
     [self.navView.leftButton setTitle:self.title forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
 	self.searchBarWithoutDelegate = [[INSSearchBar alloc] initWithFrame:CGRectMake(100.0, 27.0, CGRectGetWidth(self.view.bounds) - 110.0, 34.0)];
-    self.searchBarWithoutDelegate.searchField.textColor =ColorTheme;
+    self.searchBarWithoutDelegate.searchField.textColor =AppColorTheme;
     self.searchBarWithoutDelegate.delegate = self;
 	[self.view addSubview:self.searchBarWithoutDelegate];
     
@@ -62,6 +64,8 @@
     self.tableView.showsHorizontalScrollIndicator=NO;
     self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
     [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
+    
+    [TDUtil tableView:self.tableView target:self refreshAction:@selector(refresh:) loadAction:@selector(loadMore:)];
     
     [self.view addSubview:self.tableView];
     
@@ -81,6 +85,29 @@
     [self.searchBarWithoutDelegate showSearchBar:nil];
     
     
+}
+
+/**
+ *  刷新
+ *
+ *  @param sender sender
+ */
+-(void)refresh:(id)sender
+{
+    currentPage = 0;
+    isRefresh  =YES;
+    [self searchBarDidTapReturn:self.searchBarWithoutDelegate];
+}
+
+/**
+ *  加载更多
+ *
+ *  @param sender
+ */
+-(void)loadMore:(id)sender
+{
+    currentPage ++;
+    [self searchBarDidTapReturn:self.searchBarWithoutDelegate];
 }
 
 
@@ -117,7 +144,7 @@
         controller.title = self.navView.title;
         controller.titleStr  =@"搜索结果";
         NSURL* url = [NSURL URLWithString:[dic valueForKey:@"url"]];
-        controller.type = 3;
+        controller.type = 1;
         controller.url = url;
         [self.navigationController pushViewController:controller animated:YES];
     }else{
@@ -156,9 +183,9 @@
             label.font = SYSTEMFONT(16);
             [TDUtil setLabelMutableText:label content:[dic valueForKey:@"content"] lineSpacing:3 headIndent:0];
             height += HEIGHT(label);
-            return height+45;
+            return height+25;
         }else{
-            return 150;
+            return 120;
         }
     }
     return 60;
@@ -184,7 +211,7 @@
             [TDUtil setLabelMutableText:cell.desclabel content:[dic valueForKey:@"profile"] lineSpacing:3 headIndent:0];
             cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             cell.accessoryType = UITableViewCellAccessoryNone;
-            tableView.contentSize = CGSizeMake(WIDTH(tableView), 190*self.dataArray.count+100);
+            tableView.contentSize = CGSizeMake(WIDTH(tableView), 150*self.dataArray.count+100);
             return cell;
         }else if(self.type==3){
             //声明静态字符串对象，用来标记重用单元格
@@ -214,17 +241,18 @@
             }
             
             NSDictionary* dic = self.dataArray[indexPath.row];
-            NSURL* url = [dic valueForKey:@"src"];
-            [cell.imgview sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading")];
+            NSURL* url = [dic valueForKey:@"img"];
+            
+            cell.desclabel.text = [dic valueForKey:@"src"];
             cell.titleLabel.text = [dic valueForKey:@"title"];
-            cell.desclabel.text = [dic valueForKey:@"source"];
             cell.typeLabel.text = [dic valueForKey:@"content"];
-            cell.colletcteLabel.text = [[dic valueForKey:@"like"] stringValue];
-            cell.priseLabel.text = [[dic valueForKey:@"readcount"] stringValue];
-            cell.backgroundColor = WriteColor;
+            cell.timeLabel.text = [dic valueForKey:@"create_datetime"];
+            cell.priseLabel.text = [[dic valueForKey:@"share"] stringValue];
+            cell.colletcteLabel.text = [[dic valueForKey:@"read"] stringValue];
+            [cell.imgview sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading")];
             cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             
-            tableView.contentSize = CGSizeMake(WIDTH(tableView), 150*self.dataArray.count+80);
+            tableView.contentSize = CGSizeMake(WIDTH(tableView), 120*self.dataArray.count+60);
             return cell;
         }
     }else{
@@ -311,12 +339,14 @@
     }else if(self.type==3){
         url= HOME_CREDIT;
     }else{
-        url= [NEWS_SEARCH stringByAppendingFormat:@"%d/%ld/",0,currentPage];
+        url= [NEWS_SEARCH stringByAppendingFormat:@"%ld/",currentPage];
     }
     NSString* value =searchBar.searchField.text;
     if ([TDUtil isValidString:value]) {
-        self.isTransparent = YES;
-        self.startLoading  = YES;
+        if (!isRefresh) {
+            self.startLoading  = YES;
+            self.isTransparent = NO;
+        }
         NSString* key = @"wd";
         [self.httpUtil getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:value forKey:key] type:0 delegate:self sel:@selector(requestSearch:)];
     }
@@ -330,7 +360,7 @@
 
 -(void)refresh
 {
-    [self searchBarDone:self.searchBarWithoutDelegate];
+    [self searchBarDidTapReturn:self.searchBarWithoutDelegate];
 }
 
 
@@ -448,12 +478,25 @@
     if(jsonDic!=nil)
     {
         NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] ==-1) {
-            self.dataArray =[jsonDic valueForKey:@"data"];
+        if ([status intValue] == 0 || [status intValue] ==2) {
+            if (currentPage==0) {
+                self.dataArray =[jsonDic valueForKey:@"data"];
+            }else{
+                NSMutableArray* array = [[NSMutableArray alloc] init];
+                if (self.dataArray) {
+                    array  =self.dataArray;
+                }
+                //重新组装
+                [array addObjectsFromArray:[jsonDic valueForKey:@"data"]];
+                self.dataArray = array;
+            }
             isSearch = YES;
             self.startLoading = NO;
+            [self.tableView.header endRefreshing];
+            [self.tableView.footer endRefreshing];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+            self.isNetRequestError  =YES;
         }
         self.tableView.content = [jsonDic valueForKey:@"msg"];
     }

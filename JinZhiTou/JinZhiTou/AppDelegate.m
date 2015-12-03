@@ -35,11 +35,13 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-   NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
-   //NSString* isfirstLunch= [data valueForKey:@"isFirstLunch"];
+    //获取缓存数据
+    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
     NSString* isStart= [data valueForKey:@"isStart"];
-   NSString* isLogin= [data valueForKey:@"isLogin"];
+    NSString* isLogin= [data valueForKey:@"isLogin"];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
     if (isStart && [isStart isEqualToString:@"true"]) {
         if (isLogin && [isLogin isEqualToString:@"YES"]) {
             UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
@@ -74,6 +76,7 @@
             UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
             UIViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"loginViewController"];
             self.iNav = [[UINavigationController alloc]initWithRootViewController:controller];
+            
         }
     }else{
         StartPageViewController* controller=[[StartPageViewController alloc]init];
@@ -94,22 +97,27 @@
         [[UINavigationBar appearance] setBackgroundImage:[TDUtil createImageWithColor:[UIColor clearColor] rect:CGRectMake(0, 0, 320, 64)] forBarMetrics:UIBarMetricsDefault];
         [[UINavigationBar appearance] setShadowImage:[TDUtil createImageWithColor:[UIColor clearColor] rect:CGRectMake(0, 0, 320, 64)]];
     }
+    
     //设置标题属性，字体为白色
     [navBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                     [UIColor whiteColor],NSForegroundColorAttributeName,
                                     nil]];
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     //启动页隐藏状态栏
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:NO];
+    
     //将导航条添加到视图
     [self.window addSubview:self.iNav.view];
+    
     //设置整个视图背景颜色
-    self.window.backgroundColor = ColorTheme;
+    [self.window setBackgroundColor:ColorTheme];
     [self.window makeKeyAndVisible];
     
     //向微信注册
     [WXApi registerApp:@"wx33aa0167f6a81dac" withDescription:@"jinzht"];
+    
     //友盟统计
     [MobClick startWithAppkey:@"55c7684de0f55a0d0d0042a8" reportPolicy:BATCH   channelId:nil];
     
@@ -120,6 +128,7 @@
                                                object: nil];
     //测试连接服务器
     hostReach = [Reachability reachabilityWithHostName:@"www.jinzht.com"];
+    
     //开始监听
     [hostReach startNotifier];
     
@@ -151,6 +160,9 @@
          categories:nil];
     }
     [APService setupWithOption:launchOptions];
+    
+    //添加监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(login) name:@"login" object:nil];
     return YES;
 }
 
@@ -299,8 +311,6 @@ fetchCompletionHandler:(void
     
     //更新状态
     [[NSNotificationCenter defaultCenter]postNotificationName:@"updateStatus" object:nil];
-    //更新状态
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(login) name:@"login" object:nil];
 }
 
 -(void)notification:(NSDictionary*)dic
@@ -437,12 +447,17 @@ fetchCompletionHandler:(void
     NSString* password = [data valueForKey:STATIC_USER_PASSWORD];
     NSDictionary* dic =[[NSMutableDictionary alloc]init];
     
+    NSString* regId = [APService registrationID];
     //加密
     [dic setValue:phone forKey:@"tel"];
+    [dic setValue:regId forKey:@"regid"];
     [dic setValue:password forKey:@"passwd"];
     
     if ([TDUtil isValidString:phone] && [TDUtil isValidString:password]) {
-        [httpUtils getDataFromAPIWithOps:USER_LOGIN postParam:dic type:1 delegate:self sel:@selector(requestLogin:)];
+        if (!httpUtils) {
+            httpUtils  = [[HttpUtils alloc]init];
+        }
+        [httpUtils getDataFromAPIWithOps:USER_LOGIN postParam:dic type:0 delegate:self sel:@selector(requestLogin:)];
     }
 }
 
@@ -456,6 +471,8 @@ fetchCompletionHandler:(void
         NSString* status = [jsonDic valueForKey:@"status"];
         if ([status intValue] == 0) {
             NSLog(@"登录成功!");
+            //通知各个板块重新加载数据
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadData" object:nil];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.iNav.view textOnly:[jsonDic valueForKey:@"msg"]];
             UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];

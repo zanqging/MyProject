@@ -35,7 +35,6 @@
 @property(retain,nonatomic)NSString* topId;
 @property (retain, nonatomic)  UIView *funView;
 @property (retain, nonatomic)  UIView *priseView; //点赞区域
-@property (retain, nonatomic)  UILabel *jobLabel;
 @property (retain, nonatomic)  UILabel *nameLabel;
 @property(retain,nonatomic)    UIButton* priseButton;
 @property(retain,nonatomic)    MWPhotoBrowser *browser;

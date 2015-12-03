@@ -41,13 +41,15 @@
         
       
         
-        UILabel* lable = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, Y(imgView), 70, 40)];
+        UILabel* lable = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, Y(imgView)+10, 70, 20)];
         lable.tag = 10002;
-        lable.font = SYSTEMFONT(20);
+        lable.font = SYSTEMFONT(16);
         lable.textColor = WriteColor;
         [self addSubview:lable];
+        
         UITapGestureRecognizer* recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(modifyInfo:)];
-        lable = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(lable)+5, Y(lable), 70, 40)];
+        lable = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(lable)+5, Y(lable), 70, 20)];
+        lable.tag=10003;
         lable.text = @"[修改资料]";
         lable.font = SYSTEMFONT(14);
         lable.textColor = WriteColor;
@@ -61,6 +63,7 @@
         [self requestData:nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeUserPic:) name:@"changeUserPic" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(requestData:) name:@"reloadData" object:nil];
     }
     return self;
 }
@@ -93,6 +96,8 @@
             NSString* name = [dic valueForKey:@"nickname"];
             
             label.text = name;
+            [TDUtil setLabelMutableText:label content:name lineSpacing:0 headIndent:0];
+            
             
             NSString* str = [dic valueForKey:@"photo"];
             

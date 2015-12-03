@@ -11,6 +11,7 @@
 #import "INSViewController.h"
 #import "movieViewController.h"
 #import "WMTableViewController.h"
+#import "ThinkTankViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "RoadShowDetailViewController.h"
 @interface WMPageController () <WMMenuViewDelegate,UIScrollViewDelegate,navViewDelegate,WMtableViewCellDelegate> {
@@ -20,6 +21,7 @@
     CGFloat _viewY;
     CGFloat _targetX;
     BOOL    _animate;
+    BOOL isRefresh;
 }
 // 用于记录子控制器view的frame，用于 scrollView 上的展示的位置
 @property (nonatomic, strong) NSMutableArray *childViewFrames;
@@ -87,7 +89,20 @@
 
 - (void)setSelectIndex:(int)selectIndex {
     _selectIndex = selectIndex;
-    [self refresh];
+    switch (self.menuSelectIndex) {
+        case 0:
+            [self refresh];
+            break;
+        case 1:
+            [self thinkTank];
+            break;
+        case 2:
+            [self finialCommicuteList];
+            break;
+        default:
+            [self refresh];
+            break;
+    }
     self.isTransparent = YES;
     if (self.menuView) {
         [self.menuView selectItemAtIndex:selectIndex];
@@ -211,9 +226,16 @@
 - (void)layoutChildViewControllers {
     int currentPage = fabs(self.scrollView.contentOffset.x / _viewWidth);
     int start = currentPage == 0 ? currentPage : (currentPage - 1);
-    int end = (currentPage == self.titles.count - 1) ? currentPage : (currentPage + 1);
+    int end;
+    if ( self.titles.count!=0) {
+        end = (currentPage == self.titles.count - 1) ? currentPage : (currentPage + 1);
+    }else{
+        end=0;
+    }
     for (int i = start; i <= end; i++) {
-        CGRect frame = [self.childViewFrames[i] CGRectValue];
+
+        CGRect frame;
+        frame = [self.childViewFrames[i] CGRectValue];
         UIViewController *vc = [self.displayVC objectForKey:@(i)];
         if ([self isInScreen:frame]) {
             if (vc == nil) {
@@ -357,7 +379,7 @@
     UIImage* image=IMAGENAMED(@"btn_tourongzi_selected");
     image=[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [self.tabBarItem setSelectedImage:image];
-    [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:ColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
+    [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:AppColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
     
     //设置标题
     [self.navView setTitle:@"金指投"];
@@ -381,10 +403,10 @@
     
     self.titleSizeSelected = 15;
     self.pageAnimatable = YES;
-    self.menuViewStyle = WMMenuViewStyleFoold;
-    self.titleColorSelected = [UIColor whiteColor];
-    self.titleColorNormal = [UIColor colorWithRed:168.0/255.0 green:20.0/255.0 blue:4/255.0 alpha:1];
-    self.progressColor = [UIColor colorWithRed:168.0/255.0 green:20.0/255.0 blue:4/255.0 alpha:1];
+    self.menuViewStyle = WMMenuViewStyleLine;
+    self.progressColor  = AppColorTheme;
+    self.titleColorSelected = AppColorTheme;
+    self.titleColorNormal =[UIColor blackColor];
     self.itemsWidths = @[@(70),@(70),@(70),@(70)]; // 这里可以设置不同的宽度
     
     
@@ -398,19 +420,25 @@
     
     [self setViewFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-110)];
     self.loadingViewFrame = CGRectMake(0, POS_Y(self.navView)+self.menuHeight, WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-self.menuHeight-kBottomBarHeight);
-    [self refresh];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
     
-    [self updateNewMessage:nil];
+   
     
     [[NSNotificationCenter defaultCenter]removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(myMovieFinishedCallback:)
-//                                                 name:MPMoviePlayerPlaybackDidFinishNotification
-//                                               object:nil];
+    //加载数据
+    [self loadData];
+    
+    isRefresh =YES;
+    self.currentPage=0;
+}
+
+-(void)loadData
+{
+     [self updateNewMessage:nil];
+    [self refresh];
 }
 
 /**
@@ -520,27 +548,33 @@
 
 -(void)refresh
 {
-    //网络请求
-    self.startLoading  =YES;
-    NSString* srverUrl = [NSString stringWithFormat:@"project/%d/%d/",self.selectIndex+1,0];
-    [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+    if (self.menuSelectIndex==0) {
+        //网络请求
+        self.startLoading  =YES;
+        NSString* srverUrl = [NSString stringWithFormat:@"project/%d/%ld/",self.selectIndex+1,self.currentPage];
+        [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];        
+    }
 }
 
 -(void)thinkTank
 {
-    //网络请求
-    self.startLoading  =YES;
-    NSString* srverUrl = [THINKTANK stringByAppendingFormat:@"%d/",0];
-    [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+    if (self.menuSelectIndex==1) {
+        //网络请求
+        self.startLoading  =YES;
+        NSString* srverUrl = [THINKTANK stringByAppendingFormat:@"%ld/",self.currentPage];
+        [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+    }
 }
 
 
 -(void)finialCommicuteList
 {
-    //网络请求
-    self.startLoading  =YES;
-    NSString* srverUrl = [FINIAL_COMM stringByAppendingFormat:@"%d/%d/",self.selectIndex+1,0];
-    [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+    if (self.menuSelectIndex==2) {
+        //网络请求
+        self.startLoading  =YES;
+        NSString* srverUrl = [FINIAL_COMM stringByAppendingFormat:@"%d/%ld/",self.selectIndex+1,self.currentPage];
+        [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+    }
 }
 
 - (void)viewDidLayoutSubviews {
@@ -604,21 +638,21 @@
             self.itemsWidths =  @[@(70),@(70),@(70),@(70)];
             self.menuView.items = _titles;
             [self resetMenuView];
-            [self refresh];
+//            [self refresh];
             break;
         case 1:
             _titles  =@[];
             self.itemsWidths =  @[];
             self.menuView.items = _titles;
             [self resetMenuView];
-            [self thinkTank];
+//            [self thinkTank];
             break;
         case 2:
             _titles  =@[@"个人投资人",@"机构投资人"];
             self.itemsWidths = @[@(100),@(100)]; // 这里可以设置不同的宽度
             self.menuView.items = _titles;
             [self resetMenuView];
-            [self finialCommicuteList];
+//            [self finialCommicuteList];
             break;
         default:
             break;
@@ -651,6 +685,7 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     _selectIndex = (int)scrollView.contentOffset.x / _viewWidth;
+    self.currentPage=0;
     switch (self.menuSelectIndex) {
         case 0:
             [self refresh];
@@ -664,6 +699,8 @@
         default:
             break;
     }
+    isRefresh = YES;
+    self.currentPage=0;
     self.isTransparent = YES;
     self.currentViewController = self.displayVC[@(self.selectIndex)];
     [self postFullyDisplayedNotificationWithCurrentIndex:self.selectIndex];
@@ -699,6 +736,52 @@
     [self.navigationController pushViewController:controller animated:YES];
 }
 
+-(void)wmTableViewController:(id)wmTableViewController thinkTankDetailData:(NSDictionary *)dic
+{
+    ThinkTankViewController* controller = [[ThinkTankViewController alloc]init];
+    controller.dic = dic;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+-(void)wmTableViewController:(id)wmTableViewController refresh:(id)sender
+{
+    isRefresh = YES;
+    self.currentPage=0;
+    switch (self.menuSelectIndex) {
+        case 0:
+            [self refresh];
+            break;
+        case 1:
+            [self thinkTank];
+            break;
+        case 2:
+            [self finialCommicuteList];
+            break;
+        default:
+            break;
+    }
+    self.startLoading = NO;
+}
+
+-(void)wmTableViewController:(id)wmTableViewController loadMore:(id)sender
+{
+    isRefresh = NO;
+    self.currentPage++;
+    switch (self.menuSelectIndex) {
+        case 0:
+            [self refresh];
+            break;
+        case 1:
+            [self thinkTank];
+            break;
+        case 2:
+            [self finialCommicuteList];
+            break;
+        default:
+            break;
+    }
+    self.startLoading = NO;
+}
 -(void)wmTableViewController:(id)wmTableViewController playMedia:(BOOL)playMedia data:(NSDictionary *)dic
 {
     [self playMedia:[dic valueForKey:@"vcr"]];
@@ -709,6 +792,8 @@
     if (_selectIndex != (int)index) {
 //        _selectIndex = (int)index;
         self.selectIndex = (int)index;
+        isRefresh = YES;
+        self.currentPage=0;
     }
     _animate = NO;
     CGPoint targetP = CGPointMake(_viewWidth*index, 0);
@@ -740,12 +825,12 @@
 -(void)setDataDic:(NSMutableDictionary *)dataDic
 {
     [super setDataDic:dataDic];
-    if (self.menuSelectIndex==0) {
-        self.currentViewController.dataArray = (NSMutableArray*)self.dataDic;
-    }else if (self.menuSelectIndex==1){
-        self.currentViewController.dataArray = (NSMutableArray*)self.dataDic;
+    if (isRefresh) {
+        self.currentViewController.dataArray = [self.dataDic valueForKey:@"data"];
     }else{
-        self.currentViewController.dataArray = (NSMutableArray*)self.dataDic;
+        NSMutableArray* array = self.currentViewController.dataArray;
+        [array addObjectsFromArray:[self.dataDic valueForKey:@"data"]];
+        self.currentViewController.dataArray  =array;
     }
     self.currentViewController.type = self.selectIndex;
     self.currentViewController.menuType = self.menuSelectIndex;
@@ -762,11 +847,19 @@
         
     if(jsonDic!=nil)
     {
-        self.dataDic = [jsonDic valueForKey:@"data"];
-        self.startLoading  =NO;
+        self.dataDic = jsonDic;
+        if (self.currentPage>0) {
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+        }
         
+        self.startLoading  =NO;
     }else{
         self.isNetRequestError = YES;
+    }
+    if (isRefresh) {
+        [self.currentViewController.tableView.header endRefreshing];
+    }else{
+        [self.currentViewController.tableView.footer endRefreshing];
     }
 }
 

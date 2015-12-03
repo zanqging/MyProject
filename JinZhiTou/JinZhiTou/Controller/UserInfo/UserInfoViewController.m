@@ -7,26 +7,14 @@
 //
 
 #import "UserInfoViewController.h"
-#import "TDUtil.h"
-#import "HttpUtils.h"
 #import "ShareView.h"
-#import "DialogUtil.h"
-#import "UConstants.h"
-#import "LoadingView.h"
-#import "LoadingUtil.h"
-#import "GlobalDefine.h"
 #import "UserInfoHeader.h"
-#import "NSString+SBJSON.h"
-#import "ASIFormDataRequest.h"
 #import "PECropViewController.h"
 #import "UserInfoTableViewCell.h"
 #import "UserTraceViewController.h"
 #import "UserInfoSettingViewController.h"
 #import "CustomImagePickerController.h"
 @interface UserInfoViewController ()<UITableViewDataSource,UITableViewDelegate,CustomImagePickerControllerDelegate>
-{
-    HttpUtils* httpUtils;
-}
 @property(retain,nonatomic)CustomImagePickerController* customPicker;
 @end
 
@@ -36,45 +24,38 @@
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
     //设置标题
-    self.navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     self.navView.imageView.alpha=0;
     [self.navView setTitle:@"个人中心"];
     self.navView.titleLable.textColor=WriteColor;
     [self.navView.leftButton setImage:IMAGENAMED(@"gerenzhongxin-8") forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setting:)]];
-    [self.view addSubview:self.navView];
-    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
-    BOOL isAmious = [[data valueForKey:@"isAnimous"]boolValue];
-    if (!isAmious) {
-        self.tableView=[[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view)-40, HEIGHT(self.view)-kTopBarHeight-kStatusBarHeight)];
-        self.tableView.bounces=YES;
-        self.tableView.delegate=self;
-        self.tableView.dataSource=self;
-        self.tableView.allowsSelection=YES;
-        self.tableView.delaysContentTouches=NO;
-        self.tableView.backgroundColor=WriteColor;
-        self.tableView.showsVerticalScrollIndicator=NO;
-        self.tableView.showsHorizontalScrollIndicator=NO;
-        self.tableView.contentSize = CGSizeMake(WIDTH(self.view), HEIGHT(self.view)+220);
-        self.tableView.separatorStyle=UITableViewCellSeparatorStyleSingleLine;
-        
-        [self.view addSubview:self.tableView];
-        
-        UserInfoHeader* headerView =[[UserInfoHeader alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 200)];
-        [self.tableView setTableHeaderView:headerView];
-        
-        UIView* footView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 50)];
-        [self.tableView setTableFooterView:footView];
-        
-        [self loadData];
-        //修改个人资料
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(modifyUserInfo:) name:@"modifyUserInfo" object:nil];
-        //发送短信
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(upLoad:) name:@"upLoad" object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateStatus) name:@"updateMessageStatus" object:nil];
-    }else{
-        self.isAmious = YES;
-    }
+    self.tableView=[[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view)-40, HEIGHT(self.view)-kTopBarHeight-kStatusBarHeight)];
+    self.tableView.bounces=YES;
+    self.tableView.delegate=self;
+    self.tableView.dataSource=self;
+    self.tableView.allowsSelection=YES;
+    self.tableView.delaysContentTouches=NO;
+    self.tableView.backgroundColor=WriteColor;
+    self.tableView.showsVerticalScrollIndicator=NO;
+    self.tableView.showsHorizontalScrollIndicator=NO;
+    self.tableView.contentSize = CGSizeMake(WIDTH(self.view), HEIGHT(self.view)+220);
+    self.tableView.separatorStyle=UITableViewCellSeparatorStyleSingleLine;
+    
+    [self.view addSubview:self.tableView];
+    
+    UserInfoHeader* headerView =[[UserInfoHeader alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 200)];
+    [self.tableView setTableHeaderView:headerView];
+    
+    UIView* footView =[[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 50)];
+    [self.tableView setTableFooterView:footView];
+    //加载数据
+    [self loadData];
+    //修改个人资料
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(modifyUserInfo:) name:@"modifyUserInfo" object:nil];
+    //发送短信
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(upLoad:) name:@"upLoad" object:nil];
+    //更新消息系统
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateStatus) name:@"updateMessageStatus" object:nil];
 }
 
 -(void)updateStatus
@@ -89,10 +70,7 @@
 
 -(void)uploadUserPic:(NSInteger)id
 {
-    if(!httpUtils){
-        httpUtils = [[HttpUtils alloc]init];
-    }
-    [httpUtils getDataFromAPIWithOps:UPLOAD_USER_PIC postParam:nil file:STATIC_USER_HEADER_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUploadHeaderImg:)];
+    [self.httpUtil getDataFromAPIWithOps:UPLOAD_USER_PIC postParam:nil file:USER_STATIC_HEADER_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUploadHeaderImg:)];
 }
 
 
@@ -286,7 +264,7 @@
 {
     [controller dismissViewControllerAnimated:YES completion:NULL];
     //保存图片
-    [TDUtil saveCameraPicture:croppedImage fileName:STATIC_USER_HEADER_PIC];
+    [TDUtil saveCameraPicture:croppedImage fileName:USER_STATIC_HEADER_PIC];
     
     [[NSNotificationCenter defaultCenter]postNotificationName:@"changeUserPic" object:nil userInfo:[NSDictionary dictionaryWithObject:croppedImage forKey:@"img"]];
     
@@ -331,11 +309,6 @@
         
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
     }
-}
-
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    
 }
 
 - (void) viewWillAppear: (BOOL)inAnimated {

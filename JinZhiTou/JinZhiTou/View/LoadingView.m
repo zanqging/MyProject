@@ -7,6 +7,7 @@
 //
 
 #import "LoadingView.h"
+#import "TDUtil.h"
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #import <QuartzCore/QuartzCore.h>
@@ -70,25 +71,26 @@
     if(self.isError){
         [self stopAnitmation];
         [imageView removeFromSuperview];
-        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-60, 100, 120, 120)];
+        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-75, 100, 150, 150)];
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:imageView];
         imageView.image = IMAGE(@"error", @"png");
         
         if (!labelMessage) {
-            labelMessage = [[UILabel alloc]initWithFrame:CGRectMake(30, POS_Y(imageView)+10, WIDTH(self)-60, 70)];
+            labelMessage = [[UILabel alloc]initWithFrame:CGRectMake(30, POS_Y(imageView)+20, WIDTH(self)-60,20)];
             labelMessage.font = SYSTEMFONT(16);
             labelMessage.textAlignment = NSTextAlignmentCenter;
 
-            refreshButton = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self)/2-50, POS_Y(labelMessage), 100, 30)];
+            refreshButton = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self)/2-75, POS_Y(labelMessage), 150, 40)];
             refreshButton.layer.borderWidth =1;
-            refreshButton.layer.cornerRadius =15;
-            refreshButton.layer.borderColor = ColorTheme.CGColor;
+            refreshButton.layer.cornerRadius =5;
+            refreshButton.layer.borderColor = AppColorTheme.CGColor;
             [refreshButton setTitle:@"立即重载" forState:UIControlStateNormal];
-            [refreshButton setTitleColor:ColorTheme forState:UIControlStateNormal];
+            [refreshButton setTitleColor:AppColorTheme forState:UIControlStateNormal];
             [refreshButton setImage:IMAGENAMED(@"shuaxin") forState:UIControlStateNormal];
             [refreshButton addTarget:self action:@selector(refresh) forControlEvents:UIControlEventTouchUpInside];
         }
+        
         [self addSubview:labelMessage];
         [self addSubview:refreshButton];
         
@@ -115,7 +117,9 @@
 {
     self->_content = content;
     if (self.content) {
-        labelMessage.text = content;
+        [TDUtil setLabelMutableText:labelMessage content:content lineSpacing:3 headIndent:0];
+        //重新设置按钮位置
+        [refreshButton setFrame:CGRectMake(WIDTH(self)/2-75, POS_Y(labelMessage), 150, 40)];
     }
 }
 

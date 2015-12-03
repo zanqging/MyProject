@@ -88,7 +88,13 @@
     scrollViewPerson.delegate=self;
     scrollViewPerson.bounces = NO;
     scrollViewPerson.backgroundColor=BackColor;
-    scrollViewPerson.contentSize = CGSizeMake(WIDTH(scrollViewPerson), HEIGHT(scrollViewPerson)+370);
+    float height =0;
+    if (self.type==0) {
+        height = HEIGHT(scrollViewPerson)+370;
+    }else{
+        height=HEIGHT(scrollViewPerson)+420;
+    }
+    scrollViewPerson.contentSize = CGSizeMake(WIDTH(scrollViewPerson),height);
     [self.view addSubview:scrollViewPerson];
     
     
@@ -425,7 +431,7 @@
                     
                     UIButton* btnAction =[[UIButton alloc]initWithFrame:CGRectMake(60, POS_Y(label)+20, WIDTH(scrollViewPerson)-120, 35)];
                     btnAction.layer.cornerRadius =5;
-                    btnAction.backgroundColor = ColorTheme;
+                    btnAction.backgroundColor = AppColorTheme;
                     [btnAction setTitle:@"提交资料" forState:UIControlStateNormal];
                     [btnAction addTarget:self action:@selector(commitData) forControlEvents:UIControlEventTouchUpInside];
                     [scrollViewPerson addSubview:btnAction];
@@ -596,8 +602,14 @@
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
             dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
                 UserInfoAuthController* controller = [[UserInfoAuthController alloc]init];
+                controller.type=1;
                 [self.navigationController pushViewController:controller animated:YES];
+                [self removeFromParentViewController];
             });
+            
+            NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+            [dataStore setValue:@"None" forKey:@"auth"];
+            
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
@@ -667,6 +679,7 @@
         }
         
     }
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 -(void)dealloc
 {

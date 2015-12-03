@@ -110,14 +110,9 @@
         showTimeLabel.font = SYSTEMFONT(14);
         showTimeLabel.textAlignment=NSTextAlignmentLeft;
         [self addSubview:showTimeLabel];
-        
-        traceView = [[ProgressTraceView alloc]initWithFrame:CGRectMake(20, POS_Y(showTimeLabel), WIDTH(self)-40, 30)];
-        [self addSubview:traceView];
-        
-        
         //点赞收藏
         UITapGestureRecognizer* recognizer =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(collect:)];
-        currentPriseLabel=[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-60, POS_Y(traceView)+5, 40, 21)];
+        currentPriseLabel=[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-60, POS_Y(showTimeLabel)+5, 40, 21)];
         currentPriseLabel.font=SYSTEMFONT(16);
         currentPriseLabel.userInteractionEnabled  = YES;
         [currentPriseLabel addGestureRecognizer:recognizer];

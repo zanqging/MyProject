@@ -39,8 +39,8 @@
         UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(self.mainScorllView)+5, WIDTH(self.mainScorllView)/2-10, 30)];
         label.tag=1001;
         label.font=SYSTEMFONT(14);
-        label.layer.cornerRadius = 5;
-        label.layer.masksToBounds= YES;
+//        label.layer.cornerRadius = 5;
+//        label.layer.masksToBounds= YES;
         label.userInteractionEnabled = YES;
         label.textColor  =ColorCompanyTheme;
         label.backgroundColor  =WriteColor;
@@ -48,19 +48,26 @@
         label.textAlignment =NSTextAlignmentCenter;
         [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(notificationAction:)]];
         [self addSubview:label];
+        UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label)+5, Y(label)+2, 25, 25)];
+        imgView.image = IMAGENAMED(@"notice");
+        [self addSubview:imgView];
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), WIDTH(label), HEIGHT(label))];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+1, Y(label), WIDTH(label), HEIGHT(label))];
         label.tag=1002;
         label.text = @"征信查询";
         label.font=SYSTEMFONT(16);
-        label.layer.cornerRadius = 5;
-        label.layer.masksToBounds= YES;
+//        label.layer.cornerRadius = 5;
+//        label.layer.masksToBounds= YES;
         label.textColor  =FONT_COLOR_GRAY;
         label.backgroundColor  =WriteColor;
         label.userInteractionEnabled  =YES;
         [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(creditSearchAction:)]];
         label.textAlignment = NSTextAlignmentCenter;
         [self addSubview:label];
+        
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label)+10, Y(imgView)+5, 20, 20)];
+        imgView.image = IMAGENAMED(@"credit");
+        [self addSubview:imgView];
         
         //精选项目
         view = [[UIView alloc]initWithFrame:CGRectMake(10, HEIGHT(self)-31, WIDTH(self)-20, 30)];
@@ -72,13 +79,40 @@
         label.font=SYSTEMFONT(16);
         label.textColor  =FONT_COLOR_GRAY;
         [view addSubview:label];
+        //图标
 
+        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), 0, WIDTH(label)-15, HEIGHT(view))];
+        label.text = @"客服热线电话";
+        label.font=SYSTEMBOLDFONT(16);
+        label.userInteractionEnabled  =YES;
+        label.textAlignment = NSTextAlignmentRight;
+        [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(callService:)]];
+        label.textColor  =AppColorTheme;
+        [view addSubview:label];
+        
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label)+10, Y(label)+5, 20, 20)];
+        imgView.image = IMAGENAMED(@"tel");
+        [view addSubview:imgView];
+        
         self.backgroundColor = BackColor;
         
         }
     return self;
 }
 
+
+-(void)callService:(id)sender
+{
+    if (!httpUtil) {
+        httpUtil = [[HttpUtils alloc]init];
+    }
+    if (!loadingView) {
+        loadingView = [LoadingUtil shareinstance:self.superview];
+    }
+    [LoadingUtil show:loadingView];
+    loadingView.isTransparent =YES;
+    [httpUtil getDataFromAPIWithOps:CUSTOMSERVICE postParam:nil type:0 delegate:self sel:@selector(requestCallService:)];
+}
 
 
 -(void)setDataDic:(NSMutableDictionary *)dataDic
@@ -214,4 +248,33 @@
     }
 }
 
+
+-(void)requestCallService:(ASIHTTPRequest*)request
+{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
+            NSMutableArray* array =[jsonDic valueForKey:@"data"];
+            NSDictionary* dic  = [array objectAtIndex:0];
+            
+            //获取第一个电话号码
+            NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"tel:%@",[dic valueForKey:@"value"]];
+            UIWebView * callWebview = [[UIWebView alloc] init];
+            [callWebview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:str]]];
+            [self addSubview:callWebview];
+        }
+    }
+    [LoadingUtil close:loadingView];
+}
+
+-(void)requestFailed:(ASIHTTPRequest *)request
+{
+    [[DialogUtil sharedInstance]showDlg:self.superview textOnly:@"客服忙，请稍后再联系!"];
+    [LoadingUtil close:loadingView];
+}
 @end

@@ -24,7 +24,6 @@
     
     NSInteger selectedIndex;
 }
-
 @end
 
 @implementation NewFinialViewController
@@ -37,7 +36,7 @@
     UIImage* image=IMAGENAMED(@"xinsanban-cheng");
     image=[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [self.tabBarItem setSelectedImage:image];
-    [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:ColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
+    [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:AppColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
     
     //设置标题
     [self.navView setTitle:@"金指投"];
@@ -48,34 +47,18 @@
     [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
     [self.view addSubview:self.navView];
-    //头部
-    [self loadNewsTag];
-    
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
-    
     //开始加载
     self.startLoading  =YES;
-    
-//    NSMutableDictionary* dataDic = [[NSMutableDictionary alloc]init];
-//    [dataDic setValue:@"陈生珠" forKey:@"name"];
-//    [dataDic setValue:@"632223199011260314" forKey:@"idno"];
-//    [dataDic setValue:@"他家的" forKey:@"company"];
-//    [dataDic setValue:@"会计" forKey:@"position"];
-//    [dataDic setValue:@"陕西 西安" forKey:@"addr"];
-//    [self.httpUtil getDataFromAPIWithOps:@"userinfo/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
-    
-//        NSMutableDictionary* dataDic = [[NSMutableDictionary alloc]init];
-//        [dataDic setValue:@"1,2,13" forKey:@"qualification"];
-//        [dataDic setValue:@"北京金指投信息科技有限公司" forKey:@"institute"];
-//        [dataDic setValue:@"他家的" forKey:@"legalperson"];
-//        [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
-    
-   
-    
+    [self loadData];
 }
 
-
+-(void)loadData
+{
+    //头部
+    [self loadNewsTag];
+}
 
 -(void)userInteractionEnabled:(NSDictionary*)dic
 
@@ -91,39 +74,7 @@
 {
     INSViewController* controller =[[INSViewController alloc]init];
     controller.title = self.navView.title;
-    
-    NSMutableArray* array = [[NSMutableArray alloc]init];
-    NSMutableArray* tempArray = [[NSMutableArray alloc]init];
-    NSMutableDictionary* dic = [[NSMutableDictionary alloc]init];
-    int num=0;
-    for (int i=0; i<typeShow.dataArray.count; i++) {
-        
-        if (num>=3) {
-            num = 0;
-            dic = [[NSMutableDictionary alloc]init];
-            [dic setValue:array forKey:@"data"];
-            [tempArray addObject:dic];
-            array = [[NSMutableArray alloc]init];
-            
-        }
-        
-        
-        [array addObject:typeShow.dataArray[i]];
-        
-        if (i==typeShow.dataArray.count -1) {
-            if (array.count>0) {
-                dic = [[NSMutableDictionary alloc]init];
-                [dic setValue:array forKey:@"data"];
-                [tempArray addObject:dic];
-                array = [[NSMutableArray alloc]init];
-            }
-        }
-        
-        num++;
-        
-    }
-    
-    controller.dataArray = tempArray;
+    controller.titleContent = @"搜索新三板资讯";
     controller.type=1;
     [self.navigationController pushViewController:controller animated:YES];
 }
@@ -166,15 +117,15 @@
 {
     //添加加载页面
     NSString* str = [NEWS stringByAppendingFormat:@"%ld/%d/",(long)index,currentpage];
-    //[httpUtils getDataFromAPIWithOps:str postParam:nil type:0 delegate:self sel:@selector(requestNewsData:)];
     [self.httpUtil getDataFromAPIWithOps:str type:0 delegate:self sel:@selector(requestNewsData:) method:@"GET"];
+    self.startLoading = YES;
+    self.isTransparent = YES;
 }
 
 -(void)loadNewsTag
 {
     isRefresh = YES;
     //添加加载页面
-//    [self.httpUtil getDataFromAPIWithOps:NEWS_TYPE postParam:nil type:0 delegate:self sel:@selector(requestNewsTagData:)];
     [self.httpUtil getDataFromAPIWithOps:NEWS_TYPE type:0 delegate:self sel:@selector(requestNewsTagData:) method:@"GET"];
 }
 
@@ -196,7 +147,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 160;
+    return 120;
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -222,7 +173,7 @@
     cell.priseLabel.text = [[dic valueForKey:@"read"] stringValue];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tableView.contentSize = CGSizeMake(WIDTH(tableView), 150*self.dataCreateArray.count+80);
+    tableView.contentSize = CGSizeMake(WIDTH(tableView), 120*self.dataCreateArray.count+55);
     return cell;
 }
 
@@ -232,6 +183,10 @@
     return self.dataCreateArray.count;
 }
 
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 5;
+}
 -(void)typeShow:(TypeShow *)typeShow selectedIndex:(NSInteger)index didSelectedString:(NSString *)resultString
 {
     isRefresh = YES;
@@ -259,6 +214,7 @@
     [super refresh];
     currentpage = 0;
     isRefresh  = YES;
+    self.isEndOfPageSize  =NO;
     [self loadNewsData:selectedIndex];
 }
 //==============================刷新功能区域结束==============================//
@@ -329,51 +285,57 @@
     if(jsonDic!=nil)
     {
         NSString* code = [jsonDic valueForKey:@"code"];
-        if ([code intValue] == 0 || [code intValue] ==-1) {
+        if ([code intValue] == 0 || [code intValue] ==2) {
             NSMutableArray* array = [jsonDic valueForKey:@"data"];
             
             if (array && array.count>0) {
                 
                 
-                typeShow = [[TypeShow alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 50) data:array];
+                typeShow = [[TypeShow alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 40) data:array];
                 typeShow.delegate = self;
                 [self.view addSubview:typeShow];
             }
+            CGRect rect;
+            if (typeShow) {
+                rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight);
+            }else{
+                rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
+            }
+            self.tableView=[[UITableViewCustomView alloc]initWithFrame:rect style:UITableViewStylePlain];
+            self.tableView.bounces=YES;
+            self.tableView.delegate=self;
+            self.tableView.dataSource=self;
+            self.tableView.allowsSelection=YES;
+            self.tableView.delaysContentTouches=NO;
+            self.tableView.backgroundColor=BackColor;
+            self.tableView.showsVerticalScrollIndicator=NO;
+            self.tableView.showsHorizontalScrollIndicator=NO;
+            self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+            [self.view addSubview:self.tableView];
+            
+            [TDUtil tableView:self.tableView target:self refreshAction:@selector(refresh) loadAction:@selector(loadProject)];
+            
+            
+            //添加监听
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
+            
+            [self updateNewMessage:nil];
+
+            NSInteger  index =[[typeShow.dataArray[0] valueForKey:@"key"] integerValue];
+            selectedIndex = index;
+            [self loadNewsData:index];
+            
+            //重新设置加载动画
+            [self resetLoadingView];
+            
+            //移除重新加载数据监听
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
+        }else if ([code intValue] ==-1){
+            //添加重新加载数据监听
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"reloadData" object:nil];
+            //通知系统重新登录
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"login" object:nil];
         }
-        
-        CGRect rect;
-        if (typeShow) {
-            rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
-        }else{
-            rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
-        }
-        self.tableView=[[UITableViewCustomView alloc]initWithFrame:rect style:UITableViewStyleGrouped];
-        self.tableView.bounces=YES;
-        self.tableView.delegate=self;
-        self.tableView.dataSource=self;
-        self.tableView.allowsSelection=YES;
-        self.tableView.delaysContentTouches=NO;
-        self.tableView.showsVerticalScrollIndicator=NO;
-        self.tableView.showsHorizontalScrollIndicator=NO;
-        self.tableView.backgroundColor=BackColor;
-        self.tableView.contentInset = UIEdgeInsetsMake(-25, 0, 0, 0);
-        self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
-        [self.tableView removeFromSuperview];
-        [self.view addSubview:self.tableView];
-        [self.view sendSubviewToBack:self.tableView];
-        
-        [TDUtil tableView:self.tableView target:self refreshAction:@selector(refresh) loadAction:@selector(loadProject)];
-        
-        NSInteger  index =[[typeShow.dataArray[0] valueForKey:@"key"] integerValue];
-        
-        selectedIndex = index;
-        [self loadNewsData:index];
-        
-        //添加监听
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
-        
-        
-        [self updateNewMessage:nil];
         
     }else{
         self.isNetRequestError  =YES;

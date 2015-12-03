@@ -10,6 +10,8 @@
 #import "MJRefresh.h"
 #import "SwitchSelect.h"
 #import "MMDrawerController.h"
+#import "movieViewController.h"
+#import <MediaPlayer/MediaPlayer.h>
 #import "UserCollecteTableViewCell.h"
 #import "RoadShowDetailViewController.h"
 @interface UserFinialViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,ASIHTTPRequestDelegate>
@@ -18,6 +20,7 @@
     int currentpage;
     UIScrollView* scrollView;
 }
+@property (nonatomic,strong) movieViewController * moviePlayer;//视频播放控制器
 @end
 
 @implementation UserFinialViewController
@@ -53,6 +56,8 @@
     
     [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
     [self refreshProject];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 -(void)refreshProject
@@ -166,6 +171,88 @@
     }
     
 }
+
+/**
+ *  屏幕旋转
+ */
+-(void)onDeviceOrientationChange
+{
+    UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
+    
+    CGRect frame1;
+    CGRect frame2;
+    if (isiPhone4) {
+        frame1 = CGRectMake(-kTopBarHeight-kStatusBarHeight-16, kTopBarHeight+kStatusBarHeight+16, HEIGHT(self.view), WIDTH(self.view));
+        frame2 = CGRectMake(0,0,WIDTH(self.view),HEIGHT(self.view));
+    }else if (isiPhone5){
+        frame1 = CGRectMake(-kTopBarHeight-kStatusBarHeight-60, kTopBarHeight+kStatusBarHeight+60, HEIGHT(self.view), WIDTH(self.view));
+        frame2 = CGRectMake(0,0,WIDTH(self.view),HEIGHT(self.view));
+    }else if (isiPhone6){
+        frame1 = CGRectMake(-kTopBarHeight-kStatusBarHeight-60, kTopBarHeight+kStatusBarHeight+60, HEIGHT(self.view), WIDTH(self.view));
+        frame2 = CGRectMake(0,0,WIDTH(self.view),HEIGHT(self.view));
+    }else if (isiPhone6P){
+        frame1 = CGRectMake(-kTopBarHeight-kStatusBarHeight-60, kTopBarHeight+kStatusBarHeight+60, HEIGHT(self.view), WIDTH(self.view));
+        frame2 = CGRectMake(0,0,WIDTH(self.view),HEIGHT(self.view));    }
+    
+    if (orientation == UIInterfaceOrientationLandscapeLeft) {
+        [_moviePlayer.view setFrame:frame1];
+        _moviePlayer.view.transform = CGAffineTransformMakeRotation(- M_PI_2);
+        _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
+    }
+    if (orientation == UIInterfaceOrientationLandscapeRight) {
+        [_moviePlayer.view setFrame:frame1];
+        _moviePlayer.view.transform = CGAffineTransformMakeRotation(M_PI_2);
+        _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
+    }
+    
+    if (UIInterfaceOrientationIsPortrait(orientation)) {
+        [_moviePlayer.view setFrame:frame1];
+        _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
+        _moviePlayer.view.transform = CGAffineTransformMakeRotation(0);
+    }
+    
+    if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
+        [_moviePlayer.view setFrame:frame2];
+        _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
+        _moviePlayer.view.transform = CGAffineTransformMakeRotation(M_PI_2*2);
+    }
+    
+    
+    if (orientation == UIInterfaceOrientationUnknown) {
+        [_moviePlayer.view setFrame:frame2];
+        _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
+        _moviePlayer.view.transform = CGAffineTransformMakeRotation(M_PI_2*2);
+    }
+    
+    if (orientation == UIInterfaceOrientationPortrait) {
+        [_moviePlayer.view setFrame:frame2];
+        _moviePlayer.moviePlayer.controlStyle  =MPMovieControlStyleFullscreen;
+        _moviePlayer.view.transform = CGAffineTransformMakeRotation(0);
+    }
+    
+    
+}
+-(void)playMedia:(NSDictionary*)dic
+{
+    
+    NSString* str = [dic valueForKey:@"vcr"];
+    if (str && ![str isEqualToString:@""]) {
+        NSURL* url = [NSURL URLWithString:str];
+        _moviePlayer = [[movieViewController alloc]init];
+        [_moviePlayer.moviePlayer setContentURL:url];
+        [_moviePlayer.moviePlayer prepareToPlay];
+        [self presentMoviePlayerViewControllerAnimated:_moviePlayer];
+        
+        //        [self.moviePlayer.moviePlayer setContentURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"test" ofType:@"mp4"]]];
+        self.moviePlayer.moviePlayer.fullscreen = YES;
+        self.moviePlayer.moviePlayer.controlStyle =MPMovieControlStyleFullscreen;
+        [self.moviePlayer.moviePlayer play];
+    }
+}
+
+/**
+ *  网络请求
+ */
 -(void)loadCreateData
 {
     //添加加载页面
@@ -194,11 +281,12 @@
     RoadShowDetailViewController* controller =[[RoadShowDetailViewController alloc]init];
     controller.title = self.navView.title;
     if (self.selectedIndex==0) {
-        controller.dic = self.dataCreateArray[indexPath.row];
+        NSLog(@"播放视频");
+        [self playMedia:self.dataCreateArray[indexPath.row]];
     }else{
         controller.dic = self.dataFinialArray[indexPath.row];
+        [self.navigationController pushViewController:controller animated:YES];
     }
-    [self.navigationController pushViewController:controller animated:YES];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -219,11 +307,12 @@
     
     if (self.selectedIndex==0) {
         NSDictionary* dic  =self.dataCreateArray[indexPath.row];
-        [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"thumbnail"]] placeholderImage:IMAGENAMED(@"loading")];
+        [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"img"]] placeholderImage:IMAGENAMED(@"loading")];
         cell.titleLabel.text = [dic valueForKey:@"company"];
+        cell.desclabel.text  =[dic valueForKey:@"desc"];
         cell.backgroundColor = WriteColor;
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.accessoryType = UITableViewCellAccessoryNone;
 
     }else{
         NSDictionary* dic  =self.dataFinialArray[indexPath.row];
@@ -308,7 +397,10 @@
         }else{
             [self.tableView.footer endRefreshing];
         }
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+        
+        if (currentpage!=0) {
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+        }
         
         //关闭加载视图
         self.startLoading  =NO;
@@ -353,7 +445,9 @@
        
         //关闭加载视图
         self.startLoading = NO;
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+        if (currentpage!=0) {
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+        }
     }
 }
 

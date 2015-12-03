@@ -73,7 +73,7 @@
 
 -(void)setContent:(NSString *)content{
     self->_content = content;
-    [self.contentLabel setFrame:CGRectMake(X(self.nameLabel), Y(self.atSuffixLabel), WIDTH(self)-20, HEIGHT(self)-10)];
+    [self.contentLabel setFrame:CGRectMake(X(self.nameLabel), Y(self.atSuffixLabel)+2, WIDTH(self)-20, HEIGHT(self)-10)];
     self.contentLabel.numberOfLines = 0;
     self.contentLabel.lineBreakMode = NSLineBreakByWordWrapping;
 //    if (content && [content length]>0 && [content length]<17) {
@@ -84,7 +84,7 @@
     
     float indent = WIDTH(self.nameLabel)+WIDTH(self.atNameLabel)+WIDTH(self.atLabel)+WIDTH(self.atSuffixLabel);
     if (self.atString) {
-        indent /=7;
+        indent /=4;
     }else{
         indent /=8;
     }

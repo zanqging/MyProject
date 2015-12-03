@@ -184,11 +184,15 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
     
     // Swipe to dismiss
     if (_enableSwipeToDismiss) {
-        UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(doneButtonPressed:)];
-        swipeGesture.direction = UISwipeGestureRecognizerDirectionDown | UISwipeGestureRecognizerDirectionUp;
-        [self.view addGestureRecognizer:swipeGesture];
+//        UISwipeGestureRecognizer *swipeGesture = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(doneButtonPressed:)];
+//        swipeGesture.direction = UISwipeGestureRecognizerDirectionDown | UISwipeGestureRecognizerDirectionUp;
+        UITapGestureRecognizer* gesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doneButtonPressed:)];
+        [self.view addGestureRecognizer:gesture];
     }
     
+    if (self.type==3) {
+        [self.navigationController setNavigationBarHidden:YES animated:NO];
+    }
 	// Super
     [super viewDidLoad];
 	
@@ -434,7 +438,9 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
 #pragma mark - Nav Bar Appearance
 
 - (void)setNavBarAppearance:(BOOL)animated {
-    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    if (self.type!=3) {
+        [self.navigationController setNavigationBarHidden:NO animated:animated];
+    }
     UINavigationBar *navBar = self.navigationController.navigationBar;
     navBar.tintColor = [UIColor whiteColor];
     navBar.barTintColor = nil;

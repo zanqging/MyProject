@@ -43,7 +43,7 @@
     UIImage* image=IMAGENAMED(@"btn-weiluyan 1");
     image=[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [self.tabBarItem setSelectedImage:image];
-    [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:ColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
+    [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:AppColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
     //设置背景颜色
     self.view.backgroundColor=ColorTheme;
     //隐藏导航栏
@@ -72,8 +72,6 @@
     headerView = [[RoadShowHomeHeaderView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), HEIGHT(self.view)*0.5-15)];
    [self.tableView setTableHeaderView:headerView];
    [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
-    //加载Banner数据
-    [self loadHomeData];
     
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(RoadShowProject:) name:@"RoadShowProject" object:nil];
@@ -84,8 +82,6 @@
     dialogView = [[DialogView alloc]initWithFrame:self.view.frame];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
     
-    [self updateNewMessage:nil];
-    
     NSUserDefaults* dataDefaults = [NSUserDefaults standardUserDefaults];
     if (![[dataDefaults valueForKey:@"auth"] boolValue]) {
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showAuthView:) name:@"showAuth" object:nil];
@@ -95,28 +91,18 @@
     if (![[dataDefaults valueForKey:@"info"] boolValue]) {
         [self announViewShow:nil];
     }
-    
-//    [self.httpUtil getDataFromAPIWithOps:WECHAT_OPENID postParam:[NSDictionary dictionaryWithObject:@"weixichenshengzhu" forKey:@"openid"] type:0 delegate:self sel:@selector(requestFinished:)];
-    //NSString* serverUrl = [WECHAT_OPENID stringByAppendingString:@"weixichenshengzhu/"];
-//    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
-//    [self.httpUtil getDataFromAPIWithOps:USER_LOGIN postParam:[NSDictionary dictionaryWithObject:@"weixichenshengzhu" forKey:@"openid"] type:0 delegate:self sel:@selector(requestFinished:)];
-    
-//    NSString* serverUrl = [SEND_MESSAGE_CODE stringByAppendingFormat:@"0/1/"];
-//    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:@"18729342354",@"tel",@"weixichenshengzhu",@"openid", nil] type:0 delegate:self sel:@selector(requestFinished:)];
-    
-
-//    [self.httpUtil getDataFromAPIWithOps:USER_REGIST postParam:[NSDictionary dictionaryWithObjectsAndKeys:@"18729342354",@"tel",@"4070",@"code",@"陈生珠",@"nikename",@"weixichenshengzhu",@"openid", nil] type:0 delegate:self sel:@selector(requestFinished:)];
- 
-//    NSString* serverUrl = [USER_REGIST stringByAppendingFormat:@"1/"];
-//    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:@"18729342354",@"tel",@"4070",@"code",@"陈生珠",@"nikename",@"weixichenshengzhu",@"openid",@"214325",@"regid",nil] file:STATIC_USER_HEADER_PIC postName:@"file" type:0  delegate:self sel:@selector(requestFinished:)];
-    
-//    [self.httpUtil getDataFromAPIWithOps:USER_LOGIN postParam:[NSDictionary dictionaryWithObjectsAndKeys:@"18729342354",@"tel",@"4070",@"code",@"陈生珠",@"nikename",@"weixichenshengzhu",@"openid",@"214325",@"regid",nil] type:0 delegate:self sel:@selector(requestFinished:)];
-    
-    //播放音效
+        //播放音效
     [self playSoundEffect:@"message.caf"];
-   // WeChatBindController* controller  = [[WeChatBindController alloc]init];
-    //[self.navigationController presentViewController:controller animated:YES completion:nil];
     
+    [self loadData];
+}
+
+
+-(void)loadData
+{
+    //加载Banner数据
+    [self loadHomeData];
+    [self updateNewMessage:nil];
 }
 
 -(void)announViewShow:(id)sender
@@ -245,15 +231,25 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     {
         NSString* code = [jsonDic valueForKey:@"code"];
         if ([code intValue] == 0) {
-            self.dataDic = [jsonDic valueForKey:@"data"];
-            dataArray  = [self.dataDic valueForKey:@"project"];
+            self.dataDic = jsonDic;
             headerView.delegate = self;
-            headerView.dataDic = self.dataDic;
+            headerView.dataDic = [self.dataDic valueForKey:@"data"];
+            dataArray  = [[self.dataDic valueForKey:@"data"] valueForKey:@"project"];
             
             //刷新tableView
             [self.tableView reloadData];
+            self.startLoading = NO;
+            
+            //移除重新加载数据监听
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
+        }else if ([code intValue]==-1){
+            //添加监听
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"reloadData" object:nil];
+            //通知系统重新登录
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"login" object:nil];
+        }else{
+            self.isNetRequestError  =YES;
         }
-        self.startLoading = NO;
     }else{
         self.isNetRequestError  =YES;
     }

@@ -60,7 +60,7 @@
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(critical:)]];
     
     
-    self.tableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight)];
+    self.tableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-40)];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
@@ -85,6 +85,8 @@
         [dic setValue:atTopId forKey:@"at"];
         
         [self.httpUtil getDataFromAPIWithOps:url postParam:dic type:0 delegate:self sel:@selector(requestSubmmit:)];
+        self.startLoading = YES;
+        self.isTransparent = YES;
     }else{
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请先输入内容"];
     }
@@ -93,16 +95,13 @@
 
 -(void)loadData
 {
-    if (_first) {
-        _first = NO;
-    }else{
-        
-        self.isTransparent  =YES;
-    }
     if (!isRefresh) {
         currentPage++;
     }
-    self.startLoading = YES;
+    if (_first) {
+        _first = NO;
+        self.startLoading = YES;
+    }
     NSString* url = [REPLYLIST stringByAppendingFormat:@"%ld/%d/",(long)self.project_id,currentPage];
     [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestReplyData:)];
 }
@@ -204,7 +203,7 @@
         if (lines<0) {
             lines =1;
         }
-        CGFloat height = lines*20+80;
+        CGFloat height = lines*20+100;
         return height;
     }
         return 0;
@@ -241,6 +240,13 @@
     }
 }
 
+-(void)refresh
+{
+    currentPage = 0;
+    isRefresh = YES;
+    [self loadData];
+}
+
 #pragma WeiboDelegate
 -(void)weiboCell:(id)sender replyData:(id)data
 {
@@ -270,8 +276,8 @@
     
     NSDictionary* jsonDic = [jsonString JSONValue];
     if (jsonDic!=nil) {
-        NSString* status =[jsonDic valueForKey:@"status"];
-        if([status intValue] == 0 || [status intValue] ==-1){
+        NSString* code =[jsonDic valueForKey:@"code"];
+        if([code intValue] == 0 || [code intValue] ==2){
             NSMutableArray* dataArray = [jsonDic valueForKey:@"data"];
             _images=[NSMutableArray array];
             _contents=[[NSMutableArray alloc]init];
@@ -282,19 +288,20 @@
                  [_contents addObject:[dic valueForKey:@"content"]];
             }
             
-            if ([status integerValue] == -1) {
+            if ([code integerValue] == 2) {
                 self.isEndOfPageSize = YES;
-                [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"已加载全部"];
             }
             
             if(isRefresh){
                 self.dataArray = [jsonDic valueForKey:@"data"];
             }else{
-                if (!self.dataArray) {
-                    self.dataArray = [jsonDic valueForKey:@"data"];
+                if (!self.isEndOfPageSize) {
+                    if (!self.dataArray) {
+                        self.dataArray = [jsonDic valueForKey:@"data"];
+                    }
+                    [self.dataArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
+                    [self.tableView reloadData];                    
                 }
-                [self.dataArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
-                [self.tableView reloadData];
             }
             self.startLoading = NO;
         }else{
@@ -310,6 +317,8 @@
     }else{
         [self.tableView.footer endRefreshing];
     }
+    
+    [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
 }
 
 -(void)requestSubmmit:(ASIHTTPRequest *)request{
@@ -319,8 +328,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
             self.isNetRequestError = NO;
             self.tableView.content = [jsonDic valueForKey:@"msg"];
             
@@ -329,8 +338,9 @@
             [replyView removeFromSuperview];
             [replyView.textView setText:@""];
         }
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
     }
+    self.startLoading = NO;
+    [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
 }
 
 

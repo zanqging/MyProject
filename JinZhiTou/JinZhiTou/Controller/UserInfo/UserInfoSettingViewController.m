@@ -54,7 +54,7 @@
     UIButton* btnAction=[[UIButton alloc]initWithFrame:CGRectMake(30, 30, WIDTH(view)-60, 40)];
     [btnAction setTitle:@"注销登录" forState:UIControlStateNormal];
     btnAction.layer.cornerRadius = 5;
-    [btnAction setBackgroundColor:ColorTheme];
+    [btnAction setBackgroundColor:AppColorTheme];
     [btnAction addTarget:self action:@selector(loginOut:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btnAction];
     

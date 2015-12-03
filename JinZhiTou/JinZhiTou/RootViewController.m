@@ -77,6 +77,12 @@
                 loadingView = [LoadingUtil shareinstance:self.view];
             }
             loadingView.delegate  =self;
+        }else{
+            if (self.loadingViewFrame.size.height>0) {
+                [loadingView setFrame:self.loadingViewFrame];
+            }else{
+                [loadingView setFrame:FRAME(self.view)];
+            }
         }
         self.isNetRequestError  =NO;
         loadingView.isTransparent  = NO;
@@ -109,6 +115,7 @@
 - (void)viewWillAppear:(BOOL)animated { [super viewWillAppear:animated];
     
     [MobClick beginLogPageView:self.navView.title];
+    [[UIApplication sharedApplication]setStatusBarHidden:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated { [super viewWillDisappear:animated];
@@ -116,7 +123,32 @@
     [MobClick endLogPageView:self.navView.title];
 }
 
-
+-(void)setDataDic:(NSMutableDictionary *)dataDic
+{
+    self->_dataDic = dataDic;
+    if (self.dataDic) {
+        int code = [[dataDic valueForKey:@"code"] intValue];
+        //设置状态码
+        [self setCode:code];
+    }
+}
+-(void)setCode:(int)code
+{
+    self->_code = code;
+    switch (self.code) {
+        case 0:
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case -1:
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"login" object:nil];
+            break;
+        default:
+            break;
+    }
+}
 
 //==============================网络请求处理开始==============================//
 -(void)requestFinished:(ASIHTTPRequest *)request

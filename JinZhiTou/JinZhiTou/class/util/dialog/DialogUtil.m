@@ -33,7 +33,7 @@
 }
 
 + (void)showDlgAlert:(NSString *) label {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:label delegate:self  cancelButtonTitle:NSLocalizedStringFromTable(@"str_common_sure", @"local", nil) otherButtonTitles:nil, nil];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:label delegate:self  cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
     [alertView setBackgroundColor:[UIColor clearColor]];
     
     //必须在这里调用show方法，否则indicator不在UIAlerView里面
@@ -210,7 +210,7 @@
         hud.labelText = label;
         hud.margin = 10.f;
         hud.yOffset = 150.f;
-        hud.color  =ColorTheme2;
+        hud.color  =AppColorTheme;
         hud.removeFromSuperViewOnHide = YES;
         
         [hud hide:YES afterDelay:1];

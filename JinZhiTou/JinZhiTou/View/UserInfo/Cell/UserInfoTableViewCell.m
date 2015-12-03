@@ -19,7 +19,7 @@
         [self addSubview:self.imgview];
         
         self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgview)+15, Y(self.imgview), WIDTH(self)/2, 21)];
-        self.titleLabel.font = SYSTEMFONT(14);
+        self.titleLabel.font = SYSTEMFONT(16);
         self.titleLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:self.titleLabel];
         

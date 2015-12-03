@@ -40,7 +40,7 @@
     
     UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.navView), HEIGHT(self.view)-POS_Y(self.navView))];
     imgView.contentMode  =UIViewContentModeScaleAspectFill;
-    imgView.image= IMAGENAMED(@"denglu");
+    imgView.image= IMAGE(@"login", @"png");
     [self.view addSubview:imgView];
     
     
@@ -55,11 +55,12 @@
     self.codeTextField.tag=1005;
     self.codeTextField.delegate=self;
     self.codeTextField.font = SYSTEMFONT(16);
+    self.codeTextField.textColor = WriteColor;
     self.codeTextField.secureTextEntry  =YES;
     self.codeTextField.placeholder = @"请输入旧密码";
     self.codeTextField.returnKeyType = UIReturnKeyDone;
     self.codeTextField.borderStyle =UITextBorderStyleNone;
-    self.codeTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.2);
+    self.codeTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.4);
     self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.codeTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.codeTextField.layer.cornerRadius = HEIGHT(self.codeTextField)/2;
@@ -73,6 +74,7 @@
     self.passTextField.delegate=self;
     self.passTextField.secureTextEntry = YES;
     self.passTextField.font = SYSTEMFONT(16);
+    self.passTextField.textColor = WriteColor;
     self.passTextField.placeholder = @"请输入密码";
     self.passTextField.returnKeyType = UIReturnKeyDone;
     self.passTextField.borderStyle =UITextBorderStyleNone;
@@ -92,6 +94,7 @@
     self.passRepeatTextField.delegate=self;
     self.passRepeatTextField.secureTextEntry = YES;
     self.passRepeatTextField.font = SYSTEMFONT(16);
+    self.passRepeatTextField.textColor = WriteColor;
     self.passRepeatTextField.placeholder = @"请重复密码";
     self.passRepeatTextField.returnKeyType = UIReturnKeyDone;
     self.passRepeatTextField.borderStyle =UITextBorderStyleNone;
@@ -111,7 +114,7 @@
     [self.regietButton setTitle:@"立即修改" forState:UIControlStateNormal];
     [self.regietButton addTarget:self action:@selector(doRegistAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.regietButton setTitleColor:WriteColor forState:UIControlStateNormal];
-    [self.regietButton setBackgroundColor:RGBACOLOR(214, 48, 48, 1)];
+    [self.regietButton setBackgroundColor:AppColorTheme];
     [scrollView addSubview:self.regietButton];
     
 }
@@ -170,7 +173,7 @@
     //加密
     NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
     
-    NSString* phoneNumber=[data valueForKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
+    NSString* phoneNumber=[data valueForKey:USER_STATIC_TEL];
     oldPassword = [TDUtil encryptPhoneNumWithMD5:phoneNumber passString:oldPassword];
     password = [TDUtil encryptPhoneNumWithMD5:phoneNumber passString:password];
     
@@ -191,7 +194,7 @@
             [activity startAnimating];
         }
     }
-    [activity setColor:ColorTheme];
+    [activity setColor:WriteColor];
     
     //开始加载动画
     [activity startAnimating];
@@ -264,13 +267,21 @@
         NSString* code = [jsonDic valueForKey:@"code"];
         if ([code intValue] == 0) {
             NSUserDefaults* data =[NSUserDefaults standardUserDefaults];
-             NSString* password  =self.passTextField.text;
-            NSString* phoneNumber=[data valueForKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
+            NSString* password  =self.passTextField.text;
+            NSString* phoneNumber=[data valueForKey:USER_STATIC_TEL];
             password = [TDUtil encryptPhoneNumWithMD5:phoneNumber passString:password];
-            [data setValue:password forKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
+            [data setValue:password forKey:STATIC_USER_PASSWORD];
             
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
-//            [self back:nil];
+            
+            //进度查看
+            double delayInSeconds = 1.0;
+            //__block RoadShowDetailViewController* bself = self;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [self back:nil];
+            });
+            
         }else{
             NSString* msg =[jsonDic valueForKey:@"msg"];
              [[DialogUtil sharedInstance]showDlg:self.view textOnly:msg];

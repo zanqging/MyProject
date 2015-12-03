@@ -415,17 +415,7 @@
 #pragma UITextFieldDelegate
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    if (textField  == IDTextField) {
-        [scrollView setContentOffset:CGPointMake(0, 30)];
-    }
-//    if (textField == addressTextField) {
-//        [textField resignFirstResponder];
-//        ZHPickView* pickview=[[ZHPickView alloc] initPickviewWithPlistName:@"city" isHaveNavControler:NO];
-//        pickview.backgroundColor = ClearColor;
-//        pickview.delegate=self;
-//        [pickview show];
-//    }
-    
+   [scrollView setContentOffset:CGPointMake(0, 30)];
 }
 
 -(void)resignKeyboard
@@ -469,7 +459,6 @@
         if (!self.navigationController.interactivePopGestureRecognizer.enabled) {
             self.navigationController.interactivePopGestureRecognizer.enabled = YES;
         }
-        
     }
 }
 -(void)dealloc

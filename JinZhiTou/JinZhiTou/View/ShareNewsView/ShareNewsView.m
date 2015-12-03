@@ -47,7 +47,7 @@
         [contentView addSubview:lineImgView];
         
         self.btnCancel = [[UIButton alloc]initWithFrame:CGRectMake(0, POS_Y(lineImgView), WIDTH(contentView)/2-0.5, 50)];
-        [self.btnCancel setTitleColor:ColorTheme forState:UIControlStateNormal];
+        [self.btnCancel setTitleColor:AppColorTheme forState:UIControlStateNormal];
         [self.btnCancel setTitle:@"取消" forState:UIControlStateNormal];
         [self.btnCancel addTarget:self action:@selector(btnCancel:) forControlEvents:UIControlEventTouchUpInside];
         [contentView addSubview:self.btnCancel];
@@ -65,7 +65,7 @@
         [contentView addSubview:lineImgView];
         
         self.btnSure = [[UIButton alloc]initWithFrame:CGRectMake( WIDTH(contentView)/2, Y(self.btnCancel), WIDTH(self.btnCancel), HEIGHT(self.btnCancel))];
-        [self.btnSure setTitleColor:ColorTheme forState:UIControlStateNormal];
+        [self.btnSure setTitleColor:AppColorTheme forState:UIControlStateNormal];
         [self.btnSure addTarget:self action:@selector(btnSure:) forControlEvents:UIControlEventTouchUpInside];
         [self.btnSure setTitle:@"转发" forState:UIControlStateNormal];
         [contentView addSubview:self.btnSure];
@@ -90,7 +90,7 @@
 {
     self->_dic  = dic;
     if (self.dic) {
-        [imgView sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"src"]] placeholderImage:IMAGENAMED(@"loading")];
+        [imgView sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"img"]] placeholderImage:IMAGENAMED(@"loading")];
         
 
         NSString* content = [dic valueForKey:@"title"];

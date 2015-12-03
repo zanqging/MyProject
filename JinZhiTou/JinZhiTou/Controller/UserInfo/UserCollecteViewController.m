@@ -304,7 +304,7 @@
         if (!self.navigationController.interactivePopGestureRecognizer.enabled) {
             self.navigationController.interactivePopGestureRecognizer.enabled = YES;
         }
-        
     }
 }
+
 @end

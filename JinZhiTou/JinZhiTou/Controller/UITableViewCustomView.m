@@ -28,13 +28,14 @@
     if (isNone) {
         if (!view) {
             view= [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self), HEIGHT(self))];
-            emptyImgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2-50, HEIGHT(view)/2-100, 100, 100)];
-            emptyImgView.image = IMAGENAMED(@"tourongzi-konghezi");
+            emptyImgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2-50, HEIGHT(view)/2-120, 100, 100)];
+            emptyImgView.image = IMAGE(@"empty", @"png");
             emptyImgView.contentMode = UIViewContentModeScaleAspectFill;
             [view addSubview:emptyImgView];
             
-            label =[[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(emptyImgView)+10, WIDTH(view), 30)];
+            label =[[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(emptyImgView)+40, WIDTH(view), 30)];
             [view addSubview:label];
+            label.text = @"暂无数据";
             label.textAlignment =NSTextAlignmentCenter;
             label.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
             [self addSubview:view];
@@ -46,7 +47,7 @@
         if (view) {
             view.alpha = 0;
         }
-        self.separatorStyle =UITableViewCellSeparatorStyleSingleLine;
+        self.separatorStyle =UITableViewCellSelectionStyleNone;
         
     }
 }

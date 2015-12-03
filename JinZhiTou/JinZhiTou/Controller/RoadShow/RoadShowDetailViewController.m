@@ -463,15 +463,9 @@
     }else if(tag==10003 || tag==10004){
         [self FinanceListViewController:nil];
     }else if (tag==10004 || tag==10005){
-        NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
-        BOOL isAnimous = [[data valueForKey:@"isAnimous"] boolValue];
-        if (isAnimous) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未登录，请先登录",@"msg",@"取消",@"cancel",@"去登录",@"sure",@"3",@"type", nil]];
-        }else{
-            TeamShowViewController* controller = [[TeamShowViewController alloc]init];
-            controller.projectId =  [[self.dic valueForKey:@"id"] integerValue];
-            [self.navigationController pushViewController:controller animated:YES];
-        }
+        TeamShowViewController* controller = [[TeamShowViewController alloc]init];
+        controller.projectId =  [[self.dic valueForKey:@"id"] integerValue];
+        [self.navigationController pushViewController:controller animated:YES];
         
     }else{
         [self doAction:nil];
@@ -495,6 +489,8 @@
                     controller.projectId = [[self.dic valueForKey:@"id"] integerValue];
                     [self.navigationController pushViewController:controller animated:YES];
                 }
+            }else{
+                 [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您的投资人身份认证未审核通过，请先联系客服",@"msg",@"",@"cancel",@"确定",@"sure",@"4",@"type", nil]];
             }
         }
     }else{
@@ -517,22 +513,19 @@
 
 -(void)FinancePlanViewController:(id)sender
 {
-    NSUserDefaults* dataDefault = [NSUserDefaults standardUserDefaults];
-    BOOL isAuth = [[dataDefault valueForKey:@"auth"] boolValue];
-    if (isAuth) {
-        UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        FinialPlanViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinancePlanViewController"];
-        controller.projectId =[[self.dic valueForKey:@"id"] integerValue];
-        [self.navigationController pushViewController:controller animated:YES];
-    }else{
-        
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您当前还需要进行身份认证",@"msg",@"取消",@"cancel",@"去认证",@"sure",checkIndex,@"type", nil]];
-    }
-    
+    checkIndex=@"1";
+    //监测是否是投资人
+    [self.httpUtil getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestInvestCheck:)];
+    self.startLoading = YES;
+    self.isTransparent = YES;
 
 }
 
 
+-(void)loadInvestCheck
+{
+     [self.httpUtil getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestInvestCheck:)];
+}
 
 -(void)FinanceListViewController:(id)sender
 {
@@ -578,7 +571,7 @@
             if (index!=0) {
                 height = 430;
             }else{
-                height = 350;
+                height = 300;
             }
             header = [[RoadShowHeader alloc]initWithFrame:CGRectMake(0,0, WIDTH(self.view), height)];
             header.delegate = self;
@@ -603,8 +596,8 @@
             
             if ([[stageDic valueForKey:@"flag"] intValue]!=1) {
                 //融资中或者融资结束
-                header.investAmout = [[dataDic valueForKey:@"invest_amount_sum"] stringValue];
-                header.amout = [[dataDic valueForKey:@"plan_finance"] stringValue];
+                header.investAmout = [[dataDic valueForKey:@"invest"] stringValue];
+                header.amout = [[dataDic valueForKey:@"planfinance"] stringValue];
             }
             
             //状态
@@ -629,8 +622,8 @@
                 [bottomView.btnFunction setTitle:@"尚未开始" forState:UIControlStateNormal];
                 
             }
-            float currentAmount = [[dataDic valueForKey:@"invest_amount_sum"] floatValue];
-            float totalAmount = [[dataDic valueForKey:@"plan_finance"] floatValue];
+            float currentAmount = [[dataDic valueForKey:@"invest"] floatValue];
+            float totalAmount = [[dataDic valueForKey:@"planfinance"] floatValue];
             if (totalAmount>0) {
                 float process = currentAmount/totalAmount;
                 header.process = process;
@@ -706,7 +699,16 @@
             self.startLoading = NO;
             //更新布局
             [self updateLayout];
-            NSLog(@"%@",NSStringFromCGSize(scrollView.contentSize));
+            //移除重新加载数据
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
+        }else if ([code intValue]==-1){
+            //添加重新加载数据监听
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadProjectDetail) name:@"reloadData" object:nil];
+            //通知系统重新登录
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"login" object:nil];
+            
+        }else{
+            self.isNetRequestError = YES;
         }
         
     }
@@ -783,20 +785,39 @@
     {
         NSString* code = [jsonDic valueForKey:@"code"];
         if ([code intValue] == 0) {
+            NSString* auth = [[jsonDic valueForKey:@"data"] valueForKey:@"auth"];
+            
             if ([checkIndex isEqualToString:@"1"]) {
-                
-                
+                if (auth) {
+                    UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+                    FinialPlanViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinancePlanViewController"];
+                    controller.projectId =[[self.dic valueForKey:@"id"] integerValue];
+                    [self.navigationController pushViewController:controller animated:YES];
+                }else{
+                    
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您当前还需要进行身份认证",@"msg",@"取消",@"cancel",@"去认证",@"sure",checkIndex,@"type", nil]];
+                }
+            }else if ([checkIndex isEqualToString:@"2"]){
+                UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+                FinialPersonTableViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinanceListViewController"];
+                controller.projectId = [[self.dic valueForKey:@"id"] integerValue];
+                [self.navigationController pushViewController:controller animated:YES];
             }else{
                 UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
                 FinialPersonTableViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinanceListViewController"];
                 controller.projectId = [[self.dic valueForKey:@"id"] integerValue];
                 [self.navigationController pushViewController:controller animated:YES];
             }
+            
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
         }else{
             if ([code intValue]==1) {
                 [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
-            }else{
-                //重新登录
+            }else if([code intValue]==-1){
+                //添加监听
+                [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadInvestCheck) name:@"reloadData" object:nil];
+                //通知系统重新登录
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"login" object:nil];
             }
         }
     }else{
@@ -851,10 +872,6 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return 20;
-}
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated

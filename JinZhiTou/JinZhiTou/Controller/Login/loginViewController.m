@@ -43,7 +43,7 @@
     
 
     UIImageView* imgView = [[UIImageView alloc]initWithFrame:FRAME(self.view)];
-    imgView.image = IMAGENAMED(@"denglu");
+    imgView.image = IMAGE(@"login", @"png");
     imgView.contentMode = UIViewContentModeScaleAspectFill;
     
     //登录背景添加至滚动视图
@@ -69,7 +69,7 @@
     self.phoneTextField.textColor =WriteColor;
     self.phoneTextField.placeholder = @"请输入手机号码";
     self.phoneTextField.returnKeyType = UIReturnKeyDone;
-    self.phoneTextField.backgroundColor =RGBACOLOR(203, 203, 203, 0.2);
+    self.phoneTextField.backgroundColor =RGBACOLOR(203, 203, 203, 0.4);
 //    self.phoneTextField.layer.borderColor =RGBACOLOR(203, 203, 203, 0.3).CGColor;
     self.phoneTextField.keyboardType = UIKeyboardTypeDecimalPad;
     self.phoneTextField.layer.cornerRadius=HEIGHT(self.phoneTextField)/2;
@@ -115,11 +115,11 @@
     
     //设置登录按钮属性
     [self.loginButton.layer setBorderWidth:1];
-    [self.loginButton setBackgroundColor:RGBACOLOR(214, 48, 48, 1)];
+    [self.loginButton setBackgroundColor:AppColorTheme];
     [self.loginButton setTitle:@"登录" forState:UIControlStateNormal];
     [self.loginButton.layer setCornerRadius:HEIGHT(self.loginButton)/2];
     [self.loginButton setTitleColor:WriteColor forState:UIControlStateNormal];
-    [self.loginButton.layer setBorderColor:RGBACOLOR(214, 48, 48, 1).CGColor];
+    [self.loginButton.layer setBorderColor:AppColorTheme.CGColor];
     [self.loginButton addTarget:self action:@selector(doAction:) forControlEvents:UIControlEventTouchUpInside];
     
     //将登录按钮添加至滚动视图
@@ -402,7 +402,6 @@
         //极光推送id
         NSString* regId = [APService registrationID];
         [dic setValue:regId forKey:@"regid"];
-        [dic setValue:@"123" forKey:@"regid"];
         [dic setValue:phoneNumber forKey:@"tel"];
         [dic setValue:password forKey:@"passwd"];
         
@@ -416,17 +415,16 @@
     
     
     
-    //加载动画
     //加载动画控件
     if (!activity) {
         //进度
         activity = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(WIDTH(self.loginButton)/3-18, HEIGHT(self.loginButton)/2-15, 30, 30)];//指定进度轮的大小
         [activity setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];//设置进度轮显示类型
         [self.loginButton addSubview:activity];
-    }else{
-        if (!activity.isAnimating) {
-            [activity startAnimating];
-        }
+    }
+    
+    if (!activity.isAnimating) {
+        [activity startAnimating];
     }
     [activity setColor:WriteColor];
     //开始请求
@@ -494,15 +492,19 @@
             [data setValue:@"YES" forKey:@"isLogin"];
 
             NSString* auth =[[jsonDic valueForKey:@"data"] valueForKey:@"auth"];
+            /**
+             *  auth 判断用户是否已经认证: ""--> 从未提交认证信息，None-->后端正在审核中，true-->认证成功，false-->认证失败
+             */
             if ([auth isKindOfClass:NSNull.class]) {
                 auth = @"None";
             }else if (auth){
                 if ([auth boolValue]) {
                     auth = @"true";
                 }else{
-                    auth  =@"false";
+                    auth  = @"false";
                 }
             }
+            
             [data setValue:(NSString*)auth forKey:@"auth"];
             [data setValue:[[jsonDic valueForKey:@"data"] valueForKey:@"info"] forKey:@"info"];
             
@@ -529,6 +531,7 @@
              }];
             [self.navigationController pushViewController:self.drawerController animated:YES];
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+            [self removeFromParentViewController];
             
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];

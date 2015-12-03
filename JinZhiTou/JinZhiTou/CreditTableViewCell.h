@@ -11,7 +11,6 @@
 @interface CreditTableViewCell : UITableViewCell
 {
     UIView* v;
-    UILabel* urlLabel;
     UILabel* titleLabel;
     UILabel* contentLabel;
 }

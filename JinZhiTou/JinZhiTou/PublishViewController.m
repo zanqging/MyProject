@@ -405,8 +405,9 @@
                                      resultHandler:^(UIImage *result, NSDictionary *info) {
                                          
                                          // 得到一张 UIImage，展示到界面上
-                                         
-                                         [array addObject:result];
+                                         if (result) {
+                                             [array addObject:result];
+                                         }
                                          
                                          [self getSelectImage:array];
                                      }];

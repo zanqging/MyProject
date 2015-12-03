@@ -28,6 +28,7 @@
     UIButton *sendButton;
     UITextView *textView;
     NSInteger currentPage;
+    NSString* replyContent;
     NSString* conId,* atConId;
     
     CycleHeader* headerView;
@@ -47,7 +48,7 @@
     UIImage* image=IMAGENAMED(@"btn-quanzi-cheng");
     image=[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     [self.tabBarItem setSelectedImage:image];
-    [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:ColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
+    [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:AppColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
      //==============================TabBarItem 设置==============================//
     
      //==============================导航栏区域 设置==============================//
@@ -60,7 +61,7 @@
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(publishAction:)]];
      //==============================导航栏区域 设置==============================//
     
-    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-70)];
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-50)];
     self.tableView.bounces=YES;
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
@@ -116,33 +117,22 @@
     __block ViewController* blockSelf = self;
     self.view.keyboardTriggerOffset = self.toolBar.bounds.size.height;
     [self.view addKeyboardPanningWithFrameBasedActionHandler:^(CGRect keyboardFrameInView, BOOL opening, BOOL closing) {
-        /*
-         Try not to call "self" inside this block (retain cycle).
-         But if you do, make sure to remove DAKeyboardControl
-         when you are done with the view controller by calling:
-         [self.view removeKeyboardControl];
-         */
-        
         CGRect toolBarFrame = blockSelf.toolBar.frame;
         toolBarFrame.origin.y = keyboardFrameInView.origin.y - toolBarFrame.size.height;
         blockSelf.toolBar.frame = toolBarFrame;
-        
-//        CGRect tableViewFrame = viewSelf.tableView.frame;
-//        tableViewFrame.size.height = toolBarFrame.origin.y;
-//        viewSelf.tableView.frame = tableViewFrame;
     } constraintBasedActionHandler:nil];
     
-    [self loadData];
     
     //添加监听
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContentNotification:) name:@"publishContent" object:nil];
-     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContent:) name:@"publish" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"reloadData" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContent:) name:@"publish" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
-    
-    [self updateNewMessage:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContentNotification:) name:@"publishContent" object:nil];
     
     //加载动画
     self.startLoading  =YES;
+    //加载数据
+    [self loadData];
 }
 
 /**
@@ -166,20 +156,10 @@
  */
 -(void)loadData
 {
-//    NSMutableArray* array = [NSMutableArray new];
-//    NSMutableDictionary* dic;
-//    for (int i=1; i<=8; i++) {
-//        dic = [NSMutableDictionary new];
-//        NSMutableArray* imgArray = [NSMutableArray new];
-//        for (int j = i; j <=7; j++) {
-//            [imgArray addObject:[NSString stringWithFormat:@"%d",j]];
-//        }
-//        [dic setValue:imgArray forKey:@"imageName"];
-//        [array addObject:dic];
-//    }
-//    self.dataArray = array;
     NSString* serverUrl = [CYCLE_CONTENT_LIST stringByAppendingFormat:@"%ld/",currentPage];
     [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestData:)];
+    
+    [self updateNewMessage:nil];
 }
 
 
@@ -280,8 +260,9 @@
 -(BOOL)commentAction:(id)sender
 {
     NSString* content = textView.text;
-    if ([content isEqualToString:@""]) {
+    if ([content isEqualToString:@""] || [content isEqualToString:replyContent]) {
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入回复内容"];
+        [textView resignFirstResponder];
         return false;
     }
     
@@ -333,7 +314,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     if(self.dataArray.count>0){
         NSMutableDictionary* dic =self.dataArray[indexPath.row];
-        cell.dic =dic;
+        cell.dic =dic; 
     }
     return cell;
 }
@@ -357,6 +338,24 @@
     atConId  =atId;
     conId  =contentId;
     currentSelectedCell = weiboTableViewCell;
+    
+    if (atConId) {
+        //获取被@对象名称
+        NSString* name = @"";
+        for (int i = 0 ; i<currentSelectedCell.dataArray.count; i++) {
+            NSDictionary* dic  = currentSelectedCell.dataArray[i];
+            if ([[dic valueForKey:@"id"] integerValue]==[atId integerValue]) {
+                name = [dic valueForKey:@"name"];
+            }
+        }
+        
+        textView.text= [NSString stringWithFormat:@"回复%@:",name];
+        replyContent = textView.text;
+        textView.textColor = LightGrayColor;
+    }else{
+        replyContent = @"";
+        textView.text  = replyContent;
+    }
     [textView becomeFirstResponder];
 }
 
@@ -440,14 +439,13 @@
 
 -(void)weiboTableViewCell:(id)weiboTableViewCell didSelectedShareContentUrl:(NSURL *)urlStr
 {
-    NSLog(@"url:%@",urlStr);
     NSDictionary* dic =((WeiboTableViewCell*)weiboTableViewCell).dic;
     BannerViewController* controller =[[BannerViewController alloc]init];
     controller.titleStr=@"咨询详情";
     controller.dic = [dic valueForKey:@"share"];
     controller.title=@"圈子";
     controller.type=3;
-    controller.url =urlStr;
+    controller.url =[NSURL URLWithString:[[dic valueForKey:@"share"] valueForKey:@"url"]];
     [self.navigationController pushViewController:controller animated:YES];
 }
 -(CGFloat)getHeightItemWithIndexpath:(NSIndexPath*) indexpath
@@ -469,22 +467,25 @@
         }
     }
     
-    CGFloat height = number*25;
+    CGFloat height = number*20;
     if(picsCount>0 && picsCount<=3){
         height +=70;
     }else{
-        if (picsCount%3!=0) {
-            height += (picsCount/3+1)*80;
-        }else{
-            height += (picsCount/3)*80;
+        if (picsCount>0) {
+            if (picsCount%3!=0) {
+                height += (picsCount/3+1)*75;
+            }else{
+                height += (picsCount/3)*75;
+            }            
         }
     }
     
     if (likersCount>0 && likersCount<=4) {
-        height+=50;
+        height+=70;
     }else{
         height += (likersCount/4+1)*25;
     }
+    
     
     for (int i=0; i<commentCount; i++) {
         NSMutableArray* array  = [dic valueForKey:@"comment"];
@@ -521,14 +522,22 @@
             height+=(line+1)*13+10;
         }else{
             if (number>0) {
-                height += 23;
+                height += 25;
             }
         }
         
     }
     
+    
     if ([dic valueForKey:@"share"]) {
-        height+=74;
+        height+=60;
+        if (commentCount>0 && commentCount<=5 && likersCount==0) {
+            height+=20;
+        }
+    }else{
+        if (commentCount>0 && commentCount<=5) {
+            height+=20;
+        }
     }
     
     height+=80;
@@ -595,9 +604,11 @@
 {
     [controller dismissViewControllerAnimated:YES completion:NULL];
     //保存图片
-    [TDUtil saveCameraPicture:croppedImage fileName:STATIC_USER_BACKGROUND_PIC];
+    [TDUtil saveCameraPicture:croppedImage fileName:USER_STATIC_CYCLE_BG];
     
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"changeUserPic" object:nil userInfo:[NSDictionary dictionaryWithObject:croppedImage forKey:@"img"]];
+//    [[NSNotificationCenter defaultCenter]postNotificationName:@"changeUserPic" object:nil userInfo:[NSDictionary dictionaryWithObject:croppedImage forKey:@"img"]];
+    //修改头部背景
+    [headerView.headerBackView setImage:croppedImage];
     
     //开始上传
     [self uploadUserPic:0];
@@ -626,9 +637,38 @@
 
 
 //*********************************************************照相机功能结束*****************************************************//
+-(BOOL)textViewShouldBeginEditing:(UITextView *)tv
+{
+    return YES;
+}
+
+-(void)textViewDidBeginEditing:(UITextView *)tv
+{
+    
+}
+
+-(void)textViewDidEndEditing:(UITextView *)tv
+{
+    if ([tv.text isEqualToString:@""]) {
+        tv.text=replyContent;
+        tv.textColor  =LightGrayColor;
+    }
+}
+
 
 -(void)textViewDidChange:(UITextView *)tv
 {
+    if (!atConId) {
+       tv.textColor  =FONT_COLOR_BLACK;
+    }
+    if ([tv.text containsString:replyContent]) {
+        tv.text=@"";
+        tv.textColor  =FONT_COLOR_BLACK;
+    }else if ([tv.text isEqualToString:@""]){
+        tv.text=replyContent;
+        tv.textColor  =LightGrayColor;
+    }
+    
     CGFloat height = textView.contentSize.height;
     if (toolBarHeight != height) {
         if (toolBarHeight!=0) {
@@ -656,6 +696,7 @@
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
     if ([text isEqualToString:@"\n"]){ //判断输入的字是否是回车，即按下return
         //在这里做你响应return键的代码
+        [self commentAction:nil];
         return NO; //这里返回NO，就代表return键值失效，即页面上按下return，不会出现换行，如果为yes，则输入页面会换行
     }
     return YES;
@@ -696,11 +737,19 @@
             }
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
             self.startLoading = NO;
+            //移除重新加载数据监听
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
+        }else if([code intValue]==-1){
+            //添加重新加载数据监听
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"reloadData" object:nil];
+            //通知系统重新登录
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"login" object:nil];
         }else{
             self.isNetRequestError = YES;
         }
+    }else{
+        self.isNetRequestError = YES;
     }
-    self.isNetRequestError = YES;
 }
 
 -(void)refresh
@@ -781,4 +830,9 @@
     }
 }
 
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
 @end

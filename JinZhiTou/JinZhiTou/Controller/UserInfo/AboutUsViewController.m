@@ -52,7 +52,7 @@
     UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(imageView)-10, WIDTH(view), 30)];
     label.text =@"金指投";
     label.font  =SYSTEMBOLDFONT(18);
-    label.textColor  = ColorTheme;
+    label.textColor  = AppColorTheme;
     label.textAlignment = NSTextAlignmentCenter;
     [view addSubview:label];
     
@@ -123,8 +123,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] ==-1) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0 || [code intValue] ==2) {
             
         }
         
