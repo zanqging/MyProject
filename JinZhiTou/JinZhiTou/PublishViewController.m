@@ -374,11 +374,6 @@
         }else{
             photoBrowser.limit  =YES;
         }
-        NSLog(@"Photo at index %lu selected %@", (unsigned long)index, selected ? @"YES" : @"NO");
-    }else{
-        photoBrowser.limit  =YES;
-        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"只能添加9张图片" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-        [alertView show];
     }
 }
 

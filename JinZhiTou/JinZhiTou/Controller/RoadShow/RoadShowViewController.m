@@ -305,10 +305,6 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     //用TableDataIdentifier标记重用单元格
     RoadShowHomeTableViewCell* cellInstance=(RoadShowHomeTableViewCell*)[tableViewInstance dequeueReusableCellWithIdentifier:RoadShowTableIdentifier];
     if (!cellInstance) {
-//        float height = [self tableView:tableViewInstance heightForRowAtIndexPath:indexPath];
-//        cellInstance = [[RoadShowHomeTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
-//        cellInstance.restorationIdentifier = RoadShowTableIdentifier;
-        
         cellInstance  = [[RoadShowHomeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:RoadShowTableIdentifier];
     }
     NSInteger row = indexPath.row;

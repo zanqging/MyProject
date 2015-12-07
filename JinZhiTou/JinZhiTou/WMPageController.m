@@ -401,11 +401,13 @@
     
     [self setup];
     
-    self.titleSizeSelected = 15;
+    self.menuHeight = 40;
     self.pageAnimatable = YES;
-    self.menuViewStyle = WMMenuViewStyleLine;
+    self.titleSizeSelected = 16;
+    self.menuBGColor = WriteColor;
     self.progressColor  = AppColorTheme;
     self.titleColorSelected = AppColorTheme;
+    self.menuViewStyle = WMMenuViewStyleLine;
     self.titleColorNormal =[UIColor blackColor];
     self.itemsWidths = @[@(70),@(70),@(70),@(70)]; // 这里可以设置不同的宽度
     

@@ -201,4 +201,10 @@
     return UIEdgeInsetsMake(margin, margin, margin, margin);
 }
 
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.collectionView reloadData];
+}
 @end

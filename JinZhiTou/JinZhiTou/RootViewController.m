@@ -80,10 +80,9 @@
         }else{
             if (self.loadingViewFrame.size.height>0) {
                 [loadingView setFrame:self.loadingViewFrame];
-            }else{
-                [loadingView setFrame:FRAME(self.view)];
             }
         }
+        
         self.isNetRequestError  =NO;
         loadingView.isTransparent  = NO;
         [LoadingUtil show:loadingView];

@@ -80,6 +80,8 @@
     if (self.type==0) {
         //加载关键词
         [self loadKeyWord];
+    }else if (self.type ==3){
+        [self loadCreditKeyWord];
     }
     
     [self.searchBarWithoutDelegate showSearchBar:nil];
@@ -122,6 +124,13 @@
     
 }
 
+
+-(void)loadCreditKeyWord
+{
+    //加载页面
+    self.startLoading  =YES;
+    [self.httpUtil getDataFromAPIWithOps:@"credit/" postParam:nil type:0 delegate:self sel:@selector(requestKeyWord:)];
+}
 -(void)setTitleContent:(NSString *)titleContent
 {
     self->_titleContent  =titleContent;
@@ -140,13 +149,18 @@
         controller.title = self.navView.title;
         [self.navigationController pushViewController:controller animated:YES];
     }else if(self.type==3){
-        BannerViewController* controller =[[BannerViewController alloc]init];
-        controller.title = self.navView.title;
-        controller.titleStr  =@"搜索结果";
-        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"url"]];
-        controller.type = 1;
-        controller.url = url;
-        [self.navigationController pushViewController:controller animated:YES];
+        if (isSearch) {
+            BannerViewController* controller =[[BannerViewController alloc]init];
+            controller.title = self.navView.title;
+            controller.titleStr  =@"搜索结果";
+            NSURL* url = [NSURL URLWithString:[dic valueForKey:@"url"]];
+            controller.type = 1;
+            controller.url = url;
+            [self.navigationController pushViewController:controller animated:YES];
+        }else{
+            self.searchBarWithoutDelegate.searchField.text = self.dataArray[row];
+            [self searchBarDidTapReturn:self.searchBarWithoutDelegate];
+        }
     }else{
         BannerViewController* controller =[[BannerViewController alloc]init];
         controller.title = self.navView.title;
@@ -258,19 +272,31 @@
     }else{
         //声明静态字符串对象，用来标记重用单元格
         NSString* TableDataIdentifier=@"UserInfoViewCell";
-        //用TableDataIdentifier标记重用单元格
-        searchTableViewCell=(SearchTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
-        //如果单元格未创建，则需要新建
-        if (searchTableViewCell==nil) {
-            searchTableViewCell = [[SearchTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 100)];
-            searchTableViewCell.delegate  = self;
-            searchTableViewCell.type = self.type;
-            tableView.separatorStyle  =UITableViewCellSeparatorStyleNone;
+        if (self.type==0) {
+            //用TableDataIdentifier标记重用单元格
+            searchTableViewCell=(SearchTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
+            //如果单元格未创建，则需要新建
+            if (searchTableViewCell==nil) {
+                searchTableViewCell = [[SearchTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 100)];
+                searchTableViewCell.delegate  = self;
+                searchTableViewCell.type = self.type;
+                tableView.separatorStyle  =UITableViewCellSeparatorStyleNone;
+            }
+            NSMutableDictionary* dic = self.dataArray[indexPath.row];
+            searchTableViewCell.dataDic = dic;
+            searchTableViewCell.selectionStyle = UITableViewCellSelectionStyleNone;
+            return searchTableViewCell;
+        }else{
+            UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
+            if (!cell) {
+                cell  = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
+            }
+            
+            NSString* text = self.dataArray[indexPath.row];
+            cell.textLabel.text = text;
+            return cell;
         }
-        NSMutableDictionary* dic = self.dataArray[indexPath.row];
-        searchTableViewCell.dataDic = dic;
-        searchTableViewCell.selectionStyle = UITableViewCellSelectionStyleNone;
-        return searchTableViewCell;
+        
     }
    
 }
@@ -345,7 +371,7 @@
     if ([TDUtil isValidString:value]) {
         if (!isRefresh) {
             self.startLoading  = YES;
-            self.isTransparent = NO;
+            self.isTransparent = YES;
         }
         NSString* key = @"wd";
         [self.httpUtil getDataFromAPIWithOps:url postParam:[NSDictionary dictionaryWithObject:value forKey:key] type:0 delegate:self sel:@selector(requestSearch:)];
@@ -422,39 +448,44 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] ==-1) {
-            NSArray* arr=[[jsonDic valueForKey:@"data"] valueForKey:@"keyword"];
-            NSMutableArray* array = [[NSMutableArray alloc]init];
-            NSMutableArray* tempArray = [[NSMutableArray alloc]init];
-            NSMutableDictionary* dic = [[NSMutableDictionary alloc]init];
-            int num=0;
-            for (int i=0; i<arr.count; i++) {
-                
-                if (num>=3) {
-                    num = 0;
-                    dic = [[NSMutableDictionary alloc]init];
-                    [dic setValue:array forKey:@"data"];
-                    [tempArray addObject:dic];
-                    array = [[NSMutableArray alloc]init];
+        int code = [[jsonDic valueForKey:@"code"] intValue];
+        if (code == 0 || code ==-1) {
+            if (self.type==0) {
+                NSArray* arr=[[jsonDic valueForKey:@"data"] valueForKey:@"keyword"];
+                NSMutableArray* array = [[NSMutableArray alloc]init];
+                NSMutableArray* tempArray = [[NSMutableArray alloc]init];
+                NSMutableDictionary* dic = [[NSMutableDictionary alloc]init];
+                int num=0;
+                for (int i=0; i<arr.count; i++) {
                     
-                }
-                
-                [array addObject:arr[i]];
-                
-                if (i==arr.count -1) {
-                    if (array.count>0) {
+                    if (num>=3) {
+                        num = 0;
                         dic = [[NSMutableDictionary alloc]init];
                         [dic setValue:array forKey:@"data"];
                         [tempArray addObject:dic];
                         array = [[NSMutableArray alloc]init];
+                        
                     }
+                    
+                    [array addObject:arr[i]];
+                    
+                    if (i==arr.count -1) {
+                        if (array.count>0) {
+                            dic = [[NSMutableDictionary alloc]init];
+                            [dic setValue:array forKey:@"data"];
+                            [tempArray addObject:dic];
+                            array = [[NSMutableArray alloc]init];
+                        }
+                    }
+                    
+                    num++;
+                    
                 }
-                
-                num++;
-                
+                self.dataArray = tempArray;
+            }else{
+                self.dataArray = [[jsonDic valueForKey:@"data"] valueForKey:@"company"];
             }
-            self.dataArray = tempArray;
+            
             self.startLoading = NO;
         }else{
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];

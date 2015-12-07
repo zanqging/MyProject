@@ -124,6 +124,7 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
+//    self.loadingViewFrame = CGRectMake(0, POS_X(self.navView), WIDTH(self.view), HEIGHT(self.view)-POS_X(self.navView));
     self.startLoading = YES;
 }
 - (void)webViewDidFinishLoad:(UIWebView *)webView

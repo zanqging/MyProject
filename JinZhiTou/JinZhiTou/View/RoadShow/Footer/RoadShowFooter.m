@@ -13,6 +13,8 @@
 @implementation RoadShowFooter
 {
     UILabel* textView;
+    UILabel* timeLabel;
+    UILabel* titleLabel;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -50,7 +52,23 @@
         
         imageView1.image = UIGraphicsGetImageFromCurrentImageContext();
         
-        textView = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(imageView1)+10, WIDTH(self)-20, HEIGHT(self)-100)];
+        //标题
+        titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(imageView1)+10, WIDTH(self)-20, 20)];
+        titleLabel.numberOfLines=2;
+        titleLabel.font = SYSTEMBOLDFONT(17);
+        titleLabel.textColor = FONT_COLOR_BLACK;
+        titleLabel.textAlignment = NSTextAlignmentCenter;
+        titleLabel.lineBreakMode = NSLineBreakByCharWrapping;
+        [self addSubview:titleLabel];
+        //时间
+        timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(titleLabel), POS_Y(titleLabel), WIDTH(titleLabel), 20)];
+        timeLabel.numberOfLines=2;
+        timeLabel.font = SYSTEMBOLDFONT(15);
+        timeLabel.textColor = FONT_COLOR_GRAY;
+        timeLabel.textAlignment = NSTextAlignmentCenter;
+        timeLabel.lineBreakMode = NSLineBreakByCharWrapping;
+        [self addSubview:timeLabel];
+        textView = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(timeLabel)+5, WIDTH(self)-20, HEIGHT(self)-100)];
         textView.font = SYSTEMFONT(16);
         textView.textColor = FONT_COLOR_GRAY;
         textView.numberOfLines = 4;
@@ -103,24 +121,54 @@
     if (content.class !=NSNull.class) {
         
         self->_content =content;
-        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    
-        //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
-    
-        [paragraphStyle setLineSpacing:5.f];//调整行间距
-        [paragraphStyle setAlignment:NSTextAlignmentLeft];
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
-    
-        textView.attributedText = attributedString;//ios 6
-        [textView sizeToFit];
-        [textView setFrame:CGRectMake(10, Y(textView), WIDTH(self)-20, HEIGHT(textView))];
+        if (self.content) {
+            NSArray *array = [content componentsSeparatedByString:@"\n"]; //从字符A中分隔成2个元素的数组
+            NSLog(@"array:%@",array[0]); //结果是adfsfsfs和dfsdf
+            
+            
+            if (array && array.count>0) {
+                NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+                
+                //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
+                [paragraphStyle setLineSpacing:5.f];//调整行间距
+                [paragraphStyle setAlignment:NSTextAlignmentCenter];
+                NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:array[0]];
+                [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [array[0] length])];
+                
+                
+                titleLabel.attributedText = attributedString;//ios 6
+                [titleLabel sizeToFit];
+                
+                
+                [timeLabel setFrame:CGRectMake(X(titleLabel), POS_Y(titleLabel)+5, WIDTH(titleLabel), 20)];
+                if (array[1]) {
+                    timeLabel.text = array[1];
+                }
+                
+                
+                [textView setFrame:CGRectMake(10, POS_Y(timeLabel)+5, WIDTH(self)-20, HEIGHT(self)-100)];
+                content = [content stringByReplacingOccurrencesOfString:array[0] withString:@""];
+                content = [content stringByReplacingOccurrencesOfString:array[1] withString:@""];
+                
+                [paragraphStyle setAlignment:NSTextAlignmentLeft];
+                attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+                [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+                textView.attributedText = attributedString;//ios 6
+                [textView sizeToFit];
+
+                [textView setFrame:CGRectMake(10, Y(timeLabel), WIDTH(self)-20, HEIGHT(textView))];
+                
+                [self setFrame:CGRectMake(X(self), Y(self), WIDTH(self), POS_Y(textView)+70)];
+                
+                [self.expandImgView setFrame:CGRectMake(WIDTH(self)-50,POS_Y(textView)+10, 10, 10)];
+                
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"updateRoadShowLayout" object:nil];
+                
+            }
+        }
         
-        [self setFrame:CGRectMake(X(self), Y(self), WIDTH(self), POS_Y(textView)+70)];
         
-        [self.expandImgView setFrame:CGRectMake(WIDTH(self)-50,POS_Y(textView)+10, 10, 10)];
-        
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"updateRoadShowLayout" object:nil];
+       
     }
 }
 @end

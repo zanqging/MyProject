@@ -29,7 +29,7 @@
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
          self.backgroundColor = BackColor;
-        [self performSelector:@selector(layerOut:) withObject:nil afterDelay:0.01];
+        [self performSelector:@selector(layerOut:) withObject:nil afterDelay:0.001];
     }
     return self;
 }

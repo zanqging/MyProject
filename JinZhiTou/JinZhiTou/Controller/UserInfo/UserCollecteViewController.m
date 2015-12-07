@@ -138,14 +138,14 @@
 {
     NSMutableArray* array=[NSMutableArray arrayWithObjects: @"待融资",@"融资中",@"已融资", nil];
     
-    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 50)];
+    scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 40)];
      scrollView.backgroundColor =WriteColor;
     UITapGestureRecognizer* recognizer;
     float w =WIDTH(self.view)/array.count;
     for (int i =  0; i<array.count; i++) {
         recognizer =[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
         //自然投资人
-        SwitchSelect* switchView = [[SwitchSelect alloc]initWithFrame:CGRectMake(w*i, 0,w, 50)];
+        SwitchSelect* switchView = [[SwitchSelect alloc]initWithFrame:CGRectMake(w*i, 0,w, 40)];
         switchView.tag =1000+i;
         if (i==0) {
             switchView.isSelected = YES;

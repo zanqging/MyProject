@@ -9,6 +9,7 @@
 #import "DACircularProgressView.h"
 #import "MWGridCell.h"
 #import "MWCommon.h"
+#import "DialogUtil.h"
 #import "MWPhotoBrowserPrivate.h"
 #import "UIImage+MWPhotoBrowser.h"
 
@@ -57,7 +58,7 @@
         _selectedButton.adjustsImageWhenHighlighted = NO;
         [_selectedButton setImage:[UIImage imageForResourcePath:@"ImageSelectedSmallOff" ofType:@"png" inBundle:[NSBundle bundleForClass:[self class]]] forState:UIControlStateNormal];
         [_selectedButton setImage:[UIImage imageForResourcePath:@"ImageSelectedSmallOn" ofType:@"png" inBundle:[NSBundle bundleForClass:[self class]]] forState:UIControlStateSelected];
-        [_selectedButton addTarget:self action:@selector(selectionButtonPressed) forControlEvents:UIControlEventTouchDown];
+        [_selectedButton addTarget:self action:@selector(selectionButtonPressed:) forControlEvents:UIControlEventTouchDown];
         _selectedButton.hidden = YES;
         _selectedButton.frame = CGRectMake(0, 0, 44, 44);
         [self addSubview:_selectedButton];
@@ -157,9 +158,20 @@
     _selectedButton.selected = isSelected;
 }
 
-- (void)selectionButtonPressed {
-    _selectedButton.selected = !_selectedButton.selected;
-    [_gridController.browser setPhotoSelected:_selectedButton.selected atIndex:_index];
+- (void)selectionButtonPressed:(UIButton*)btn {
+    BOOL isSelected =btn.isSelected;
+    
+    if (!_gridController.browser.limit) {
+        _selectedButton.selected = !_selectedButton.selected;
+        [_gridController.browser setPhotoSelected:_selectedButton.selected atIndex:_index];
+    }else{
+        if (isSelected) {
+            _selectedButton.selected = !_selectedButton.selected;
+            [_gridController.browser setPhotoSelected:_selectedButton.selected atIndex:_index];
+        }else{
+            [[DialogUtil sharedInstance]showDlg:[UIApplication sharedApplication].windows[0] textOnly:@"最多只能选择9张图片"];
+        }
+    }
 }
 
 #pragma mark - Touches

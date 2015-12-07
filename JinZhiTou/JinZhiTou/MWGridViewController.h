@@ -15,6 +15,7 @@
 @property (nonatomic) BOOL selectionMode;
 @property (nonatomic) CGPoint initialContentOffset;
 
+
 - (void)adjustOffsetsAsRequired;
 
 @end

@@ -84,7 +84,7 @@
     
     float indent = WIDTH(self.nameLabel)+WIDTH(self.atNameLabel)+WIDTH(self.atLabel)+WIDTH(self.atSuffixLabel);
     if (self.atString) {
-        indent /=4;
+        indent /=3;
     }else{
         indent /=8;
     }

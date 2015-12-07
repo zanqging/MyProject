@@ -257,6 +257,8 @@
     videoName = [videoName stringByReplacingOccurrencesOfString:@" " withString:@""];
     videoName = [videoName stringByReplacingOccurrencesOfString:@":" withString:@""];
     [self.httpUtil getDataFromAPIWithOps:TOKEAN postParam:[NSDictionary dictionaryWithObjectsAndKeys:videoName,@"key", nil] type:0 delegate:self sel:@selector(requestToken:)];
+    self.startLoading  =YES;
+    self.isTransparent = YES;
 }
 
 -(void)doAction:(UITapGestureRecognizer*)recognizer
@@ -308,6 +310,7 @@
             isVideo = YES;
             [self presentViewController:self.imagePicker animated:YES completion:nil];
         }
+        self.startLoading = NO;
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
     }
 }
@@ -499,16 +502,27 @@
 -(UIImagePickerController *)imagePicker{
     if (!_imagePicker) {
         _imagePicker=[[UIImagePickerController alloc]init];
+         BOOL isCameraSupport = [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera];
+        
         _imagePicker.sourceType=UIImagePickerControllerSourceTypeCamera;//设置image picker的来源，这里设置为摄像头
         _imagePicker.cameraDevice=UIImagePickerControllerCameraDeviceRear;//设置使用哪个摄像头，这里设置为后置摄像头
         if (isVideo) {
-            _imagePicker.mediaTypes=@[(NSString *)kUTTypeMovie];
-            _imagePicker.videoQuality=UIImagePickerControllerQualityTypeMedium;  //设置视频质量大小
-            _imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModeVideo;//设置摄像头模式（拍照，录制视频）
-            _imagePicker.videoMaximumDuration = 60;
+            BOOL isRearSupport = [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear];
+            if (isRearSupport) {
+                _imagePicker.mediaTypes=@[(NSString *)kUTTypeMovie];
+                _imagePicker.videoQuality=UIImagePickerControllerQualityTypeMedium;  //设置视频质量大小
+                _imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModeVideo;//设置摄像头模式（拍照，录制视频）
+                _imagePicker.videoMaximumDuration = 60;
+            }else{
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"录制视频功能暂时不可用"];
+            }
             
         }else{
-            _imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModePhoto;
+            if (isCameraSupport) {
+                _imagePicker.cameraCaptureMode=UIImagePickerControllerCameraCaptureModePhoto;
+            }else{
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"相机功能暂时不可用"];
+            }
         }
         _imagePicker.allowsEditing=YES;//允许编辑
         _imagePicker.delegate=self;//设置代理，检测操作

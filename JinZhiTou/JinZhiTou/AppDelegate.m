@@ -468,8 +468,8 @@ fetchCompletionHandler:(void
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
             NSLog(@"登录成功!");
             //通知各个板块重新加载数据
             [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadData" object:nil];

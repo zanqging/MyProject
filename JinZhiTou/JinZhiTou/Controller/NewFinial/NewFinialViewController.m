@@ -17,8 +17,9 @@
 #import "UserInfoConfigController.h"
 @interface NewFinialViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,ASIHTTPRequestDelegate,TypeShowDelegate>
 {
-    BOOL isRefresh;
-    int currentpage;
+    BOOL isRefresh;  //刷新
+    int currentpage; //当前页码
+    BOOL isShowLoadingView; //是否显示加载
     
     TypeShow* typeShow;
     
@@ -50,12 +51,13 @@
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
     //开始加载
-    self.startLoading  =YES;
     [self loadData];
 }
 
 -(void)loadData
 {
+    self.startLoading  =YES;
+    isShowLoadingView  =YES;
     //头部
     [self loadNewsTag];
 }
@@ -83,6 +85,7 @@
 -(void)loadProject
 {
     isRefresh =NO;
+    isShowLoadingView = NO;
     if (!self.isEndOfPageSize) {
         currentpage++;
         [self loadNewsData:selectedIndex];
@@ -118,8 +121,11 @@
     //添加加载页面
     NSString* str = [NEWS stringByAppendingFormat:@"%ld/%d/",(long)index,currentpage];
     [self.httpUtil getDataFromAPIWithOps:str type:0 delegate:self sel:@selector(requestNewsData:) method:@"GET"];
-    self.startLoading = YES;
-    self.isTransparent = YES;
+    
+    if (isShowLoadingView) {
+        self.startLoading = YES;
+        self.isTransparent = YES;
+    }
 }
 
 -(void)loadNewsTag
@@ -192,6 +198,8 @@
     isRefresh = YES;
     currentpage = 0;
     selectedIndex = index;
+    isShowLoadingView = YES;
+    
     [self loadNewsData:selectedIndex];
 }
 
@@ -212,8 +220,10 @@
 -(void)refresh
 {
     [super refresh];
+    //刷新页码为
     currentpage = 0;
     isRefresh  = YES;
+    isShowLoadingView = NO;
     self.isEndOfPageSize  =NO;
     [self loadNewsData:selectedIndex];
 }
@@ -259,7 +269,10 @@
         
         self.tableView.content = [jsonDic valueForKey:@"msg"];
         
-        self.startLoading = NO;
+        if (isShowLoadingView) {
+            self.startLoading = NO;
+        }
+        
         if (self.isNetRequestError) {
             self.isNetRequestError = NO;
         }
@@ -297,7 +310,7 @@
             }
             CGRect rect;
             if (typeShow) {
-                rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight);
+                rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-30);
             }else{
                 rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
             }

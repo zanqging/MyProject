@@ -701,17 +701,10 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
 }
 
 - (void)setPhotoSelected:(BOOL)selected atIndex:(NSUInteger)index {
-    if (!self.limit) {
-        if (_displaySelectionButtons) {
-            if ([self.delegate respondsToSelector:@selector(photoBrowser:photoAtIndex:selectedChanged:)]) {
-                [self.delegate photoBrowser:self photoAtIndex:index selectedChanged:selected];
-            }
+    if (_displaySelectionButtons) {
+        if ([self.delegate respondsToSelector:@selector(photoBrowser:photoAtIndex:selectedChanged:)]) {
+            [self.delegate photoBrowser:self photoAtIndex:index selectedChanged:selected];
         }
-        self.limit  =NO;
-    }else{
-        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"只能添加9张图片" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-        [alertView show];
-        self.limit  =YES;
     }
 }
 
@@ -1158,22 +1151,17 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
 #pragma mark - Interactions
 
 - (void)selectedButtonTapped:(id)sender {
-    if (!self.limit) {
-        UIButton *selectedButton = (UIButton *)sender;
-        selectedButton.selected = !selectedButton.selected;
-        NSUInteger index = NSUIntegerMax;
-        for (MWZoomingScrollView *page in _visiblePages) {
-            if (page.selectedButton == selectedButton) {
-                index = page.index;
-                break;
-            }
+    UIButton *selectedButton = (UIButton *)sender;
+    selectedButton.selected = !selectedButton.selected;
+    NSUInteger index = NSUIntegerMax;
+    for (MWZoomingScrollView *page in _visiblePages) {
+        if (page.selectedButton == selectedButton) {
+            index = page.index;
+            break;
         }
-        if (index != NSUIntegerMax) {
-            [self setPhotoSelected:selectedButton.selected atIndex:index];
-        }
-    }else{
-        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"只能添加9张图片" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-        [alertView show];
+    }
+    if (index != NSUIntegerMax) {
+        [self setPhotoSelected:selectedButton.selected atIndex:index];
     }
 }
 
