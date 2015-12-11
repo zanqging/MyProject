@@ -125,7 +125,7 @@
             __block FinalContentTableViewCell* cell = cellInstance;
             [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                 if (image) {
-                    cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+                    cell.imgView.contentMode = UIViewContentModeScaleAspectFit;
                 }
             }];
             
