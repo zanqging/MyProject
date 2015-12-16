@@ -34,7 +34,7 @@
         [self addSubview:imageView];
         
         
-        messageLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(imgView)+10, POS_Y(imgView)-90, WIDTH(imgView)-20, 30)];
+        messageLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(imgView)+10, POS_Y(imgView)-90, WIDTH(imgView)-20, 40)];
         messageLabel.numberOfLines =2;
         messageLabel.font = SYSTEMFONT(14);
         messageLabel.textAlignment = NSTextAlignmentCenter;
@@ -45,7 +45,7 @@
         imgView.backgroundColor = BackColor;
         [self addSubview:imgView];
         
-        self.cancelButton = [[UIButton alloc]initWithFrame:CGRectMake(X(imgView), POS_Y(messageLabel)+20, WIDTH(imgView)/2, 40)];
+        self.cancelButton = [[UIButton alloc]initWithFrame:CGRectMake(X(imgView), POS_Y(messageLabel)+10, WIDTH(imgView)/2, 40)];
         [self.cancelButton setTitleColor:ColorTheme forState:UIControlStateNormal];
         [self.cancelButton setTitle:@"取消" forState:UIControlStateNormal];
         [self addSubview:self.cancelButton];

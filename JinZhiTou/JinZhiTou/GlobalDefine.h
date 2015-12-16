@@ -163,9 +163,8 @@
  ***===================================================================================**/
 
 //服务器域名地址
-//#define SERVICE_URL @"http://weini.im/"
-#define SERVICE_URL @"http://115.28.110.243/phone4/"//服务器域名地址
-//#define SERVICE_URL @"http://www.jinzht.com/phone4/"//服务器域名地址
+//#define SERVICE_URL @"http://115.28.110.243/phone4/"//服务器域名地址
+#define SERVICE_URL @"http://www.jinzht.com/phone4/"//服务器域名地址
 //#define SERVICE_URL @"http://www.jinzht.com:8000/phone/"//服务器域名地址
 //服务器域名地址
 //#define SERVICE_URL @"http://www.jinzht.com/phone/"//服务器域名地址
@@ -174,8 +173,6 @@
 
 //版本更新itunes 地址
 #define ITUNES_URL @"https://itunes.apple.com/us/app/jin-zhi-tou-zhong-guo-cheng/id1024857089?mt=8"
-//版本更新
-#define VERSION_CHECK @"LastedVersion.action"
 //Banner
 #define BANNER_LIST @"banner/"
 //微路演项目列表

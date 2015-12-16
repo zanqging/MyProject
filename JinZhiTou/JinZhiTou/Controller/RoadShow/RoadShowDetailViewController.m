@@ -53,6 +53,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+    
     //设置标题
     self.navView.imageView.alpha=1;
     [self.navView setTitle:@"项目详情"];
@@ -474,32 +477,11 @@
 
 -(void)goRoadShow:(id)sender
 {
-    NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
-    NSString*  auth = [data valueForKey:@"auth"];
-    if (![auth isKindOfClass:NSNull.class]) {
-        if (auth) {
-            if([auth isEqualToString:@"true"]){
-                if (self.type ==1) {
-                    NSString* url = [JOIN_ROADSHOW stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
-                    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestJoinroadShow:)];
-                }else{
-                    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-                    FinialApplyViewController* controller = (FinialApplyViewController*)[storyBoard instantiateViewControllerWithIdentifier:@"FinialApply"];
-                    controller.titleStr = self.navView.title;
-                    controller.projectId = [[self.dic valueForKey:@"id"] integerValue];
-                    [self.navigationController pushViewController:controller animated:YES];
-                }
-            }else{
-                 [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您的投资人身份认证未审核通过，请先联系客服",@"msg",@"",@"cancel",@"确定",@"sure",@"4",@"type", nil]];
-            }
-        }
-    }else{
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未进行投资人身份认证，请先认证",@"msg",@"取消",@"cancel",@"去认证",@"sure",@"0",@"type", nil]];
-    }
-
-    
-    
-    
+    checkIndex=@"5";
+    //监测是否是投资人
+    [self.httpUtil getDataFromAPIWithOps:ISINVESTOR postParam:nil type:0 delegate:self sel:@selector(requestInvestCheck:)];
+    self.startLoading = YES;
+    self.isTransparent = YES;
 }
 
 -(void)doAction:(id)sender
@@ -724,6 +706,16 @@
     }
 }
 
+/**
+ *  刷新
+ */
+-(void)refresh
+{
+    [super refresh];
+    [self loadProjectDetail];
+    self.startLoading = YES;
+}
+
 
 /**
  *  收藏
@@ -771,6 +763,8 @@
 }
 
 
+
+
 /**
  *  权限检测
  *
@@ -788,20 +782,70 @@
             NSString* auth = [[jsonDic valueForKey:@"data"] valueForKey:@"auth"];
             
             if ([checkIndex isEqualToString:@"1"]) {
-                if (auth) {
-                    UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-                    FinialPlanViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinancePlanViewController"];
-                    controller.projectId =[[self.dic valueForKey:@"id"] integerValue];
-                    [self.navigationController pushViewController:controller animated:YES];
+                
+                if (![auth isKindOfClass:NSNull.class]) {
+                    if (auth) {
+                        if ([auth respondsToSelector:@selector(isEqualToString:)]) {
+                            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未进行投资人身份认证，请先认证",@"msg",@"取消",@"cancel",@"去认证",@"sure",@"0",@"type",self,@"vController", nil]];
+                        }else{
+                            if([auth boolValue]){
+                                UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+                                FinialPlanViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinancePlanViewController"];
+                                controller.projectId =[[self.dic valueForKey:@"id"] integerValue];
+                                [self.navigationController pushViewController:controller animated:YES];
+                            }else if(![auth boolValue]){
+                                [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您的投资人身份认证未审核通过，请先联系客服",@"msg",@"",@"cancel",@"确定",@"sure",@"4",@"type",self,@"vController", nil]];
+                            }
+                        }
+                    }
                 }else{
-                    
-                    [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您当前还需要进行身份认证",@"msg",@"取消",@"cancel",@"去认证",@"sure",checkIndex,@"type", nil]];
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您的投资人身份认证正在审核中，请耐心等待",@"msg",@"",@"cancel",@"确定",@"sure",@"4",@"type",self,@"vController", nil]];
                 }
             }else if ([checkIndex isEqualToString:@"2"]){
-                UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-                FinialPersonTableViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinanceListViewController"];
-                controller.projectId = [[self.dic valueForKey:@"id"] integerValue];
-                [self.navigationController pushViewController:controller animated:YES];
+                if (![auth isKindOfClass:NSNull.class]) {
+                    if (auth) {
+                        if ([auth respondsToSelector:@selector(isEqualToString:)]) {
+                            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未进行投资人身份认证，请先认证",@"msg",@"取消",@"cancel",@"去认证",@"sure",@"0",@"type",self,@"vController", nil]];
+                        }else{
+                            if([auth boolValue]){
+                                UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+                                FinialPersonTableViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinanceListViewController"];
+                                controller.projectId = [[self.dic valueForKey:@"id"] integerValue];
+                                [self.navigationController pushViewController:controller animated:YES];
+                            }else if(![auth boolValue]){
+                                [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您的投资人身份认证未审核通过，请先联系客服",@"msg",@"",@"cancel",@"确定",@"sure",@"4",@"type",self,@"vController", nil]];
+                            }
+                        }
+                    }
+                }else{
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您的投资人身份认证正在审核中，请耐心等待",@"msg",@"",@"cancel",@"确定",@"sure",@"4",@"type",self,@"vController", nil]];
+                }
+                
+            }else if([checkIndex isEqualToString:@"5"]){
+                if (![auth isKindOfClass:NSNull.class]) {
+                    if (auth) {
+                        if ([auth respondsToSelector:@selector(isEqualToString:)]) {
+                            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您还未进行投资人身份认证，请先认证",@"msg",@"取消",@"cancel",@"去认证",@"sure",@"0",@"type",self,@"vController", nil]];
+                        }else{
+                            if([auth boolValue]){
+                                if (self.type ==1) {
+                                    NSString* url = [JOIN_ROADSHOW stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
+                                    [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestJoinroadShow:)];
+                                }else{
+                                    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+                                    FinialApplyViewController* controller = (FinialApplyViewController*)[storyBoard instantiateViewControllerWithIdentifier:@"FinialApply"];
+                                    controller.titleStr = self.navView.title;
+                                    controller.projectId = [[self.dic valueForKey:@"id"] integerValue];
+                                    [self.navigationController pushViewController:controller animated:YES];
+                                }
+                            }else if(![auth boolValue]){
+                                [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您的投资人身份认证未审核通过，请先联系客服",@"msg",@"",@"cancel",@"确定",@"sure",@"4",@"type",self,@"vController", nil]];
+                            }
+                        }
+                    }
+                }else{
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您的投资人身份认证正在审核中，请耐心等待",@"msg",@"",@"cancel",@"确定",@"sure",@"4",@"type",self,@"vController", nil]];
+                }
             }else{
                 UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
                 FinialPersonTableViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinanceListViewController"];
@@ -812,7 +856,7 @@
             [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
         }else{
             if ([code intValue]==1) {
-                [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type",self,@"vController", nil]];
             }else if([code intValue]==-1){
                 //添加监听
                 [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadInvestCheck) name:@"reloadData" object:nil];
@@ -841,7 +885,7 @@
 //            controller.titleStr =@"来现场报名";
 //            controller.content = @"    尊敬的用户，您的来现场申请已提交，48小时内会有工作人员与您联系，您也可以在“个人中心”－－“进度查看”中查看到审核进度。";
 //            [self.navigationController pushViewController:controller animated:YES];
-             [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
+             [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type",self,@"vController", nil]];
         }else if([code intValue] == 1){
 //            [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
 //            //[NSThread sleepForTimeInterval:2.0f];
@@ -858,7 +902,7 @@
 //
 //            
 //            });
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type",self,@"vController", nil]];
             
         }
         self.startLoading  =NO;
@@ -885,4 +929,10 @@
         }
     }
 }
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
 @end

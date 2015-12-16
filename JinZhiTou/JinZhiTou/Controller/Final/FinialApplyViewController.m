@@ -58,7 +58,7 @@
     FinialKind* finialKindView = [[FinialKind alloc]initWithFrame:CGRectMake(30, 10, WIDTH(self.view)/2-35, 40)];
     finialKindView.tag = 20001;
     finialKindView.isSelected = YES;
-    finialKindView.backgroundColor = ColorTheme;
+    finialKindView.backgroundColor = AppColorTheme;
     finialKindView.label.textColor = WriteColor;
     [finialKindView addGestureRecognizer:recognizer];
     [finialKindView setImageWithNmame:@"Lead investor-white" setText:@"我要领投"];
@@ -69,7 +69,7 @@
     finialKindView = [[FinialKind alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2+5, 10, WIDTH(self.view)/2-35, 40)];
     finialKindView.tag = 20002;
     finialKindView.isSelected = NO;
-    finialKindView.label.textColor = ColorTheme;
+    finialKindView.label.textColor = AppColorTheme;
     [finialKindView addGestureRecognizer:recognizer];
     [finialKindView setImageWithNmame:@"With investment" setText:@"我要跟投"];
     [scrollView addSubview:finialKindView];
@@ -114,7 +114,7 @@
     UIButton* btnAction =[UIButton buttonWithType:UIButtonTypeRoundedRect ];
     btnAction.tag =30004;
     btnAction.layer.cornerRadius = 5;
-    btnAction.backgroundColor = ColorTheme;
+    btnAction.backgroundColor = AppColorTheme;
     [btnAction setTitle:@"提交资料" forState:UIControlStateNormal];
     [btnAction setTitleColor:WriteColor forState:UIControlStateNormal];
     [btnAction addTarget:self action:@selector(finialSubmmit:) forControlEvents:UIControlEventTouchUpInside];
@@ -156,7 +156,7 @@
     if (currentSelect==0) {
         if (currentTag == 20001) {
             currentSelect=1;
-            finialKind.backgroundColor = ColorTheme;
+            finialKind.backgroundColor = AppColorTheme;
             finialKind.label.textColor =WriteColor;
             [finialKind setImageWithNmame:@"Lead investor-white" setText:@"我要领投"];
             FinialKind* view = (FinialKind*)[scrollView viewWithTag:20002];
@@ -168,13 +168,13 @@
     }else{
         if (currentTag == 20002) {
             currentSelect=0;
-            finialKind.backgroundColor = ColorTheme;
+            finialKind.backgroundColor = AppColorTheme;
             finialKind.label.textColor =WriteColor;
             [finialKind setImageWithNmame:@"With investment-white" setText:@"我要跟投"];
             FinialKind* view = (FinialKind*)[scrollView viewWithTag:20001];
             view.backgroundColor = WriteColor;
             
-            view.label.textColor = ColorCompanyTheme;
+            view.label.textColor = ColorTheme2;
             [view setImageWithNmame:@"Lead investor" setText:@"我要领投"];
         }
     }
@@ -240,7 +240,7 @@
 //            controller.content =@"    尊敬的用户，您的投资申请已提交，48小时内会有工作人员与您联系，您也可以在“个人中心”－－“进度查看”中查看到审核进度。";
 //            [self.navigationController pushViewController:controller animated:YES];
             
-             [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
+             [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type",self,@"vController", nil]];
             
         }else{
 //            if ([code intValue] == 1) {
@@ -256,7 +256,7 @@
 //                });
 //            }
 //            [[DialogUtil sharedInstance] showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[jsonDic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type",self,@"vController", nil]];
         }
         self.startLoading = NO;
     }

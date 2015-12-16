@@ -42,8 +42,8 @@
     [self addSubview:contentView];
     
     //图片
-    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 90, HEIGHT(contentView)-10)];
-    imgView.contentMode = UIViewContentModeScaleAspectFit;
+    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 130, HEIGHT(contentView)-10)];
+    imgView.contentMode = UIViewContentModeScaleToFill;
     imgView.layer.masksToBounds = YES;
     [contentView addSubview:imgView];
     if (self.imageName) {
@@ -54,7 +54,7 @@
     }
     
     //标题
-    labelContent = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+5, Y(imgView)+10, WIDTH(contentView)-POS_X(imgView)-5, 25)];
+    labelContent = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+5, Y(imgView)+15, WIDTH(contentView)-150, 25)];
     labelContent.font = SYSTEMFONT(16);
     [contentView addSubview:labelContent];
     

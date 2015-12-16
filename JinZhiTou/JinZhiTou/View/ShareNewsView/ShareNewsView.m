@@ -116,6 +116,11 @@
     if ([tv.text isEqualToString:@"说点什么吧！"]) {
         tv.text =@"";
     }
+    
+    //移动视图
+    [UIView animateWithDuration:0.5 animations:^{
+        [contentView setFrame:CGRectMake(X(contentView), Y(contentView)-100, WIDTH(contentView), HEIGHT(contentView))];
+    }];
 }
 
 -(void)textViewDidChange:(UITextView *)tv
@@ -128,6 +133,10 @@
     if ([tv.text isEqualToString:@""]) {
         tv.text =@"说点什么吧！";
     }
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        [contentView setFrame:CGRectMake(X(contentView), Y(contentView)+100, WIDTH(contentView), HEIGHT(contentView))];
+    }];
 }
 
 - (BOOL)textView:(UITextView *)tv shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{

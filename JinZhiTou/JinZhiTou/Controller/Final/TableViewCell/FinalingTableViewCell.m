@@ -19,18 +19,18 @@
         view = [[UIView alloc]initWithFrame:CGRectMake(10, 5, frame.size.width-20,frame.size.height-10)];
         view.backgroundColor= WriteColor;
         //项目图片
-        self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 100, 100)];
+        self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 130, HEIGHT(view)-10)];
         self.imgView.image = IMAGENAMED(@"loading");
         self.imgView.contentMode = UIViewContentModeScaleAspectFit;
         [view addSubview:self.imgView];
         [self addSubview:view];
         //名称
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, Y(self.imgView), 180, 21)];
+        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+10, Y(self.imgView)+10, 150, 21)];
         self.titleLabel.font = SYSTEMFONT(16);
-        self.titleLabel.textColor = FONT_COLOR_RED;
+        self.titleLabel.textColor = FONT_COLOR_BLACK;
         [view addSubview:self.titleLabel];
         
-        UILabel* label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel)+5, 50, 25)];
+        UILabel* label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel), 50, 25)];
         label.tag =1001;
         label.font = SYSTEMFONT(14);
         label.textColor  = FONT_COLOR_GRAY;
@@ -38,7 +38,7 @@
         [view addSubview:label];
         
         
-        label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(label)+10, 50, 25)];
+        label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(label)+5, 50, 25)];
         label.tag =1002;
         label.font = SYSTEMFONT(14);
         label.textColor  = FONT_COLOR_GRAY;
@@ -46,7 +46,7 @@
         [view addSubview:label];
         
         
-        label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(label)+10, 50, 25)];
+        label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(label)+5, 50, 25)];
         label.tag =1003;
         label.font = SYSTEMFONT(14);
         label.textColor  = FONT_COLOR_GRAY;
@@ -82,7 +82,7 @@
         UILabel* label = (UILabel*)[view viewWithTag:1001];
         UILabel* valueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 50, HEIGHT(label))];
         valueLabel.font  = SYSTEMFONT(14);
-        valueLabel.textColor = label.textColor;
+        valueLabel.textColor = AppColorTheme;
         [TDUtil setLabelMutableText:valueLabel content:self.progress lineSpacing:0 headIndent:0];
         [view addSubview:valueLabel];
     }
@@ -94,7 +94,7 @@
     if (self.assist) {
         UILabel* label = (UILabel*)[view viewWithTag:1002];
         UILabel* valueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 50, HEIGHT(label))];
-        valueLabel.textColor = ColorTheme;
+        valueLabel.textColor = AppColorTheme;
         valueLabel.font  = SYSTEMFONT(14);
         [TDUtil setLabelMutableText:valueLabel content:self.assist lineSpacing:0 headIndent:0];
         [view addSubview:valueLabel];
@@ -107,7 +107,7 @@
     if (self.hasFinanceAccount) {
         UILabel* label = (UILabel*)[view viewWithTag:1003];
         UILabel* valueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 50, HEIGHT(label))];
-        valueLabel.textColor = ColorTheme;
+        valueLabel.textColor = AppColorTheme;
         valueLabel.font  = SYSTEMFONT(14);
         [TDUtil setLabelMutableText:valueLabel content:self.hasFinanceAccount lineSpacing:0 headIndent:0];
         [view addSubview:valueLabel];

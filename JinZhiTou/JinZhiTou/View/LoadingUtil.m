@@ -82,9 +82,22 @@
 +(void)show:(LoadingView *)loadingView
 {
     UIView* view = loadingView.view;
-    [view addSubview:loadingView];
-    [view bringSubviewToFront:loadingView];
-    [loadingView startAnimation];
+    
+    BOOL flag = false;
+    for (UIView* v in view.subviews) {
+        if ([v isKindOfClass:loadingView.class]) {
+            flag = YES;
+        }
+    }
+    
+    if (!flag) {
+        if (![view.subviews containsObject:loadingView]) {
+            [view addSubview:loadingView];
+            [view bringSubviewToFront:loadingView];
+            [loadingView startAnimation];
+        }
+    }
+    
 }
 
 +(void)close:(LoadingView *)loadingView

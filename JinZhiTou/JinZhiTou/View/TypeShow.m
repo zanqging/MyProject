@@ -36,11 +36,11 @@
             dic = dataArray[i];
             CGRect rect;
             if (i==0) {
-                rect = CGRectMake(0, 10,w, HEIGHT(self)-20);
+                rect = CGRectMake(0, 0,w, HEIGHT(self));
             }else if(i==4){
-                rect = CGRectMake(POS_X(label), 10,w, HEIGHT(self)-20);
+                rect = CGRectMake(POS_X(label), 0,w, HEIGHT(self));
             }else{
-                rect = CGRectMake(POS_X(label), 10,w, HEIGHT(self)-20);
+                rect = CGRectMake(POS_X(label), 0,w, HEIGHT(self));
             }
             
             label= [[UILabel alloc]initWithFrame:rect];

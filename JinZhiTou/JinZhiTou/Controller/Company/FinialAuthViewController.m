@@ -620,7 +620,10 @@
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
-    
+    NSString* jsonString =[TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    self.startLoading = NO;
+    [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"网络请求错误，请重新提交!"];
 }
 //*********************************************************网络请求结束*****************************************************//
 

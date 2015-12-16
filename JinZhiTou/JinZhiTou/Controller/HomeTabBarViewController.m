@@ -36,6 +36,8 @@
     DialogView* dialogView;
     UIImageView* menuBackView;
     LoadingView* loadingView;
+    
+    UIViewController* vController;
 }
 @end
 @implementation HomeTabBarViewController
@@ -175,7 +177,7 @@
     
     
 }
--(void)alert:(NSDictionary*)dic
+-(void)alert:(NSNotification*)dic
 {
     
     if (!dialogView) {
@@ -183,6 +185,8 @@
     }
     
     NSDictionary* dictionary =[dic  valueForKey:@"userInfo"];
+    
+    vController = [dictionary valueForKey:@"vController"];
     NSString* title = [dictionary valueForKey:@"msg"];
     if(title && ![title isEqual:@""]){
         dialogView.title = title;
@@ -200,9 +204,15 @@
     [dialogView.shureButton setTitle:[dictionary valueForKey:@"sure"] forState:UIControlStateNormal];
     dialogView.tag =10001;
     
-    if (!dialogView.status) {
+    int num = 0 ;
+    for (UIView* v in ([UIApplication sharedApplication]).windows[0].subviews) {
+        if ([v isKindOfClass:dialogView.class]) {
+            num++;
+        }
+    }
+    
+    if (num==0) {
         [([UIApplication sharedApplication]).windows[0] addSubview:dialogView];
-        dialogView.status = YES;
     }
     
     
@@ -239,7 +249,7 @@
 //        controller.titleStr = @"项目详情";
 //        [self.navigationController pushViewController:controller animated:YES];
         
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil userInfo:[NSDictionary dictionaryWithObject:vController forKey:@"viewController"]];
     }
 }
 
@@ -297,15 +307,20 @@
 }
 -(void)AuthApplyAction
 {
-    if (!loadingView) {
-        loadingView  =[LoadingUtil shareinstance:self.view];
-        loadingView.isTransparent = YES;
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    if (![[dataStore valueForKey:@"info"]boolValue]) {
+        [[DialogUtil sharedInstance]showDlg:[UIApplication sharedApplication].windows[0] textOnly:@"您还未完善信息先完善信息!"];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"userinfoConfig" object:nil userInfo:[NSDictionary dictionaryWithObject:@"0" forKey:@"type"]];
+    }else{
+        if (!loadingView) {
+            loadingView  =[LoadingUtil shareinstance:self.view];
+            loadingView.isTransparent = YES;
+        }
+        [LoadingUtil show:loadingView];
+        
+        //开始获取认证信息
+        [httpUtils getDataFromAPIWithOps:@"myauth/" postParam:nil type:0 delegate:self sel:@selector(requestIsAuth:)];
     }
-    [LoadingUtil show:loadingView];
-    //开始获取认证信息
-    [httpUtils getDataFromAPIWithOps:@"myauth/" postParam:nil type:0 delegate:self sel:@selector(requestIsAuth:)];
-    
-    
 }
 -(void)ActionArriveAction
 {
@@ -760,7 +775,7 @@
             }else{
                 if ([auth isKindOfClass:NSString.class]) {
                     if ([auth isEqualToString:@""]) {
-                        [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil];
+                        [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil userInfo:[NSDictionary dictionaryWithObject:self forKey:@"viewController"]];
                     }
                 }else{
                     if ([auth boolValue]) {
@@ -768,7 +783,7 @@
                     }else if(![auth boolValue]){
                         controller.type=2;
                     }else{
-                        [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil];
+                        [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil userInfo:[NSDictionary dictionaryWithObject:self forKey:@"viewController"]];
                     }
                     [self.navigationController pushViewController:controller animated:YES];
                 }
@@ -798,12 +813,11 @@
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
-    
+    [LoadingUtil close:loadingView];
 }
 
 -(void)dealloc
 {
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"alert" object:nil];
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 

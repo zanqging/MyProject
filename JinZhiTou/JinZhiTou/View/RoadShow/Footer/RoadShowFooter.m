@@ -53,7 +53,7 @@
         imageView1.image = UIGraphicsGetImageFromCurrentImageContext();
         
         //标题
-        titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(imageView1)+10, WIDTH(self)-20, 20)];
+        titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(imageView1)+10, WIDTH(self)-20, 40)];
         titleLabel.numberOfLines=2;
         titleLabel.font = SYSTEMBOLDFONT(17);
         titleLabel.textColor = FONT_COLOR_BLACK;
@@ -135,20 +135,25 @@
                 NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:array[0]];
                 [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [array[0] length])];
                 
-                
-                titleLabel.attributedText = attributedString;//ios 6
-                [titleLabel sizeToFit];
+                if (array && array[0]) {
+                    titleLabel.text = array[0];
+                }
                 
                 
                 [timeLabel setFrame:CGRectMake(X(titleLabel), POS_Y(titleLabel)+5, WIDTH(titleLabel), 20)];
-                if (array[1]) {
+                if (array.count>1 && array[1]) {
                     timeLabel.text = array[1];
                 }
                 
                 
                 [textView setFrame:CGRectMake(10, POS_Y(timeLabel)+5, WIDTH(self)-20, HEIGHT(self)-100)];
+                
+                if (array && array[0]) {
                 content = [content stringByReplacingOccurrencesOfString:array[0] withString:@""];
+                }
+                if (array && array.count>1) {
                 content = [content stringByReplacingOccurrencesOfString:array[1] withString:@""];
+                }
                 
                 [paragraphStyle setAlignment:NSTextAlignmentLeft];
                 attributedString = [[NSMutableAttributedString alloc] initWithString:content];

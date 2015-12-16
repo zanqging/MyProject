@@ -26,8 +26,10 @@
 {
     self->_isNone = isNone;
     if (isNone) {
+        view = [self viewWithTag:100001];
         if (!view) {
             view= [[UIView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self), HEIGHT(self))];
+            view.tag=100001;
             emptyImgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2-50, HEIGHT(view)/2-120, 100, 100)];
             emptyImgView.image = IMAGE(@"empty", @"png");
             emptyImgView.contentMode = UIViewContentModeScaleAspectFill;
@@ -44,8 +46,9 @@
         self.separatorStyle = UITableViewCellSelectionStyleNone;
         view.alpha = 1;
     }else{
+        view = [self viewWithTag:100001];
         if (view) {
-            view.alpha = 0;
+            view.alpha=0;
         }
         self.separatorStyle =UITableViewCellSelectionStyleNone;
         

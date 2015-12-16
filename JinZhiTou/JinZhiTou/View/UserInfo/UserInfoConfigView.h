@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 @protocol UserInfoConigDelegate <NSObject>
 
--(void)userInfoConfigView:(id)userInfoConfigView selectedIndex:(int)index data:(NSDictionary*)data;
+-(void)userInfoConfigView:(id)userInfoConfigView target:(UIViewController*)controller selectedIndex:(int)index data:(NSDictionary*)data;
 
 @end
 
@@ -20,6 +20,7 @@
 @property(retain,nonatomic)id <UserInfoConigDelegate>delegate;
 @property(retain,nonatomic)UIView* personalView;
 @property(retain,nonatomic)UIView* instituteView;
+@property(retain,nonatomic)UIViewController* viewController;
 @end
 
 

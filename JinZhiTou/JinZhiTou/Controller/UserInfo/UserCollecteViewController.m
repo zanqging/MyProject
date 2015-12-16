@@ -258,9 +258,8 @@
 #pragma LoadingView
 -(void)refresh
 {
+    [super refresh];
     [self loadCollecteData];
-    self.isNetRequestError  =NO;
-    
 }
 
 #pragma ASIHttpquest

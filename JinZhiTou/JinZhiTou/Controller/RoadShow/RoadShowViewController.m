@@ -90,9 +90,11 @@
 
     if (![[dataDefaults valueForKey:@"info"] boolValue]) {
         [self announViewShow:nil];
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userinfoConfig:) name:@"userinfoConfig" object:nil];
     }
         //播放音效
-    [self playSoundEffect:@"message.caf"];
+//    [self playSoundEffect:@"message.caf"];
     
     [self loadData];
 }
@@ -116,24 +118,48 @@
 
 -(void)userinfoConfig:(id)sender
 {
+    int type=1;
+    if ([sender isKindOfClass:NSNotification.class]) {
+        type = [[[(NSNotification*)sender valueForKey:@"userInfo"] valueForKey:@"type"] intValue];
+    }
     UserInfoConfigController* controller =[[UserInfoConfigController alloc]init];
-    [self roadShowHome:nil controller:controller type:1];
+    [self roadShowHome:nil controller:controller type:type];
    
 }
 
 
--(void)showAuthView:(NSDictionary*)dic
+-(void)showAuthView:(NSNotification*)sender
 {
-    UserInfoConfigView* configView =[[UserInfoConfigView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.view))];
-    configView.delegate  =self;
-    [self.view addSubview:configView];
-    
-    [[UIApplication sharedApplication].windows[0].rootViewController.view addSubview:configView];
-    
-    UIView* view = [self.view viewWithTag:60001];
-    if (view) {
-        [view removeFromSuperview];
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    if(![[dataStore valueForKey:@"info"] boolValue]){
+        NSNotification* notification = [[NSNotification alloc]initWithName:@"auth" object:nil userInfo:[NSDictionary dictionaryWithObject:@"0" forKey:@"type"]];
+        [self userinfoConfig:notification];
+        [[DialogUtil sharedInstance]showDlg:[UIApplication sharedApplication].windows[0] textOnly:@"您还未完善信息先完善信息!"];
+    }else{
+        
+        UIViewController* vController = [[sender valueForKey:@"userInfo"]valueForKey:@"viewController"];
+        UserInfoConfigView* configView =[[UserInfoConfigView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), HEIGHT(vController.view))];
+        configView.viewController = vController;
+        configView.delegate  =self;
+//        [self.view addSubview:configView];
+        
+        
+        int num = 0 ;
+        for (UIView* instance in [UIApplication sharedApplication].windows[0].rootViewController.view.subviews) {
+            if ([instance isKindOfClass:configView.class]) {
+                num ++;
+            }
+        }
+        if (num==0) {
+            [[UIApplication sharedApplication].windows[0].rootViewController.view addSubview:configView];
+        }
+        
+        UIView* view = [self.view viewWithTag:60001];
+        if (view) {
+            [view removeFromSuperview];
+        }
     }
+    
 }
 
 /**
@@ -264,12 +290,12 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
 }
 
 
--(void)userInfoConfigView:(id)userInfoConfigView selectedIndex:(int)index data:(NSDictionary *)data
+-(void)userInfoConfigView:(id)userInfoConfigView target:(UIViewController *)c selectedIndex:(int)index data:(NSDictionary *)data
 {
     FinialAuthViewController* controller = [[FinialAuthViewController alloc]init];
     controller.type = index;
     controller.titleStr = @"首页";
-    [self.navigationController pushViewController:controller animated:YES];
+    [c.navigationController pushViewController:controller animated:YES];
 }
 
 //==============================RoadShowDelegate==============================//
@@ -296,7 +322,7 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
 
 -(CGFloat)tableView:(UITableView *)tableViewInstance heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 100;
+    return 120;
 }
 -(UITableViewCell*)tableView:(UITableView *)tableViewInstance cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -328,4 +354,9 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     return dataArray.count;
 }
 //==============================TableView区域结束==============================//
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
 @end

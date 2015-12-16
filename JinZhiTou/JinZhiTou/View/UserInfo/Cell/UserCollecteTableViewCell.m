@@ -98,7 +98,7 @@
             [view addSubview:labelValue];
         }
         
-        [TDUtil setLabelMutableText:labelValue content:self.start lineSpacing:0 headIndent:0];
+        [TDUtil setLabelMutableText:labelValue content:self.end lineSpacing:0 headIndent:0];
     }
 }
 @end

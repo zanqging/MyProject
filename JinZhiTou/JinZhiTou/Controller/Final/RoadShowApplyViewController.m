@@ -89,6 +89,10 @@
         return NO;
     }
     
+    if (!isCheck) {
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请选择已阅读金指投《项目发起协议》"];
+        return NO;
+    }
     NSDictionary* dic = [[NSMutableDictionary alloc]init];
     [dic setValue:desc forKey:@"desc"];
     [dic setValue:company forKey:@"company"];
@@ -157,14 +161,14 @@
     [scrollView addSubview:view];
     
     //公司
-    label = [[UILabel alloc]initWithFrame:CGRectMake(X(label),10, 60, 30)];
+    label = [[UILabel alloc]initWithFrame:CGRectMake(5,10, 60, 30)];
     label.textAlignment = NSTextAlignmentLeft;
     label.text = @"公司名称";
-    label.font = SYSTEMFONT(14);
+    label.font = SYSTEMFONT(15);
     [view addSubview:label];
     
     //输入公司信息
-    userCompanyTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(view)-25, 30)];
+    userCompanyTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), 195, 30)];
     userCompanyTextField.placeholder = @"请输入公司名称";
     userCompanyTextField.font  =SYSTEMFONT(16);
     userCompanyTextField.tag = 10001;
@@ -183,6 +187,7 @@
     
     textView =[[UITextView alloc]initWithFrame:CGRectMake(5,POS_Y(userCompanyTextField)+5, WIDTH(view)-10, 100)];
     textView.delegate  =self;
+    textView.font = SYSTEMFONT(15);
     textView.layer.borderWidth=1;
     textView.text=@"请输入项目简介描述";
     textView.returnKeyType = UIReturnKeyDone;
@@ -190,14 +195,14 @@
     textView.textColor = FONT_COLOR_GRAY;
     [view addSubview:textView];
     
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(view)+10, WIDTH(self.view), 130)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(view)+10, WIDTH(self.view), 400)];
     view.tag = 30003;
     view.backgroundColor  =WriteColor;
     [scrollView addSubview:view];
 
     UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(20, 25, 20, 20)];
     imgView.userInteractionEnabled = YES;
-    imgView.image = IMAGENAMED(@"queren-1");
+    imgView.image = IMAGENAMED(@"queren");
     [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(check:)]];
     [view addSubview:imgView];
     
@@ -223,7 +228,9 @@
     [btnAction addTarget:self action:@selector(commitRoadShow) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btnAction];
     
-    scrollView.contentSize = CGSizeMake(WIDTH(scrollView), POS_Y(view)+150);
+    scrollView.contentSize = CGSizeMake(WIDTH(scrollView), POS_Y(view));
+    
+    isCheck = YES;
 }
 
 -(void)check:(id)sender
@@ -308,7 +315,11 @@
         if ([code integerValue] ==0 ) {
             token = [[dic valueForKey:@"data"] valueForKey:@"token"];
             isVideo = YES;
-            [self presentViewController:self.imagePicker animated:YES completion:nil];
+            if (self.imagePicker) {
+                [self presentViewController:self.imagePicker animated:YES completion:nil];
+            }else{
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"该设备暂不支持摄像"];
+            }
         }
         self.startLoading = NO;
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
@@ -392,7 +403,7 @@
     if (dic!=nil) {
         NSString* code = [dic valueForKey:@"code"];
         if ([code integerValue]==0) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[dic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type", nil]];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[dic valueForKey:@"msg"],@"msg",@"",@"cancel",@"确认",@"sure",@"4",@"type",self,@"vController", nil]];
         }
          self.startLoading = NO;
          [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
@@ -411,6 +422,8 @@
     if ([text isEqualToString:str]) {
         textView.text=@"";
     }
+    
+    [self textFieldDidBeginEditing:userCompanyTextField];
 }
 
 -(void)textViewDidEndEditing:(UITextView *)tv
@@ -420,6 +433,7 @@
     if ([text isEqualToString:@""]) {
         textView.text=str;
     }
+     [self textFieldDidEndEditing:userCompanyTextField];
 }
 
 - (BOOL)textView:(UITextView *)tv shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
@@ -503,6 +517,9 @@
     if (!_imagePicker) {
         _imagePicker=[[UIImagePickerController alloc]init];
          BOOL isCameraSupport = [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera];
+        if (!isCameraSupport) {
+            return nil;
+        }
         
         _imagePicker.sourceType=UIImagePickerControllerSourceTypeCamera;//设置image picker的来源，这里设置为摄像头
         _imagePicker.cameraDevice=UIImagePickerControllerCameraDeviceRear;//设置使用哪个摄像头，这里设置为后置摄像头

@@ -274,6 +274,13 @@
     
     NSString* regId = [APService registrationID];
     
+    /**
+     测试
+     */
+    if (!regId || [regId isEqualToString:@""]) {
+        regId = @"1234";
+    }
+    
     NSDictionary* dic =[[NSMutableDictionary alloc]init];
     [dic setValue:code forKey:@"code"];
     [dic setValue:regId forKey:@"regid"];

@@ -144,6 +144,13 @@
 }
 
 
+-(void)refresh
+{
+    [super refresh];
+    //重新加载数据
+    [self refreshProject];
+}
+
 #pragma mark - Table View
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

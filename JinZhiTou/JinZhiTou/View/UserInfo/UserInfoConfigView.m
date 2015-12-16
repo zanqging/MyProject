@@ -117,8 +117,8 @@
 -(void)tapAction:(UITapGestureRecognizer*)recognizer
 {
     NSInteger tag = recognizer.view.tag;
-    if ([_delegate respondsToSelector:@selector(userInfoConfigView:selectedIndex:data:)]) {
-        [_delegate userInfoConfigView:self selectedIndex:(int)(tag-1000) data:nil];
+    if ([_delegate respondsToSelector:@selector(userInfoConfigView:target:selectedIndex:data:)]) {
+        [_delegate userInfoConfigView:self target:self.viewController  selectedIndex:(int)(tag-1000) data:nil];
         [self removeFromSuperview];
     }
 }

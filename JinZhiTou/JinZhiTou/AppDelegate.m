@@ -476,8 +476,19 @@ fetchCompletionHandler:(void
         }else{
             [[DialogUtil sharedInstance]showDlg:self.iNav.view textOnly:[jsonDic valueForKey:@"msg"]];
             UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-            UIViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"LoginController"];
-            [self.iNav pushViewController:controller animated:YES];
+            UIViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"loginViewController"];
+            
+            
+            int num = 0;
+            for(UIViewController* c in self.iNav.childViewControllers){
+                if ([c isKindOfClass:controller.class]) {
+                    num ++;
+                }
+            }
+            
+            if (num==0) {
+                [self.iNav pushViewController:controller animated:YES];
+            }
             
             for(UIViewController* c in self.iNav.childViewControllers){
                 if (![c isKindOfClass:controller.class]) {

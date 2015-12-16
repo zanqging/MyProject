@@ -18,7 +18,7 @@
         UIView* view = [[UIView alloc]initWithFrame:CGRectMake(10, 5, frame.size.width-20,frame.size.height-10)];
         view.backgroundColor= WriteColor;
         //项目图片
-        self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 100,HEIGHT(view)-20)];
+        self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 130,HEIGHT(view)-10)];
         self.imgView.image = IMAGENAMED(@"loading");
         self.imgView.contentMode = UIViewContentModeScaleAspectFill;
         self.imgView.layer.cornerRadius = 3;
@@ -32,7 +32,7 @@
         [view addSubview:self.titleLabel];
         
         //描述
-        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, POS_Y(self.titleLabel)+5, WIDTH(self)/2, 21)];
+        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, POS_Y(self.titleLabel)+5, WIDTH(self)/2-10, 21)];
         self.contentLabel.font = SYSTEMFONT(14);
         self.contentLabel.textColor = FONT_COLOR_BLACK;
         [view addSubview:self.contentLabel];
@@ -77,8 +77,8 @@
 {
     self->_typeDescription=typeDescription;
     if (self.typeDescription) {
-//        self.typeLabel.text=self.typeDescription;
-        [TDUtil setLabelMutableText:self.typeLabel content:self.typeDescription lineSpacing:2 headIndent:0];
+        self.typeLabel.text=self.typeDescription;
+//        [TDUtil setLabelMutableText:self.typeLabel content:self.typeDescription lineSpacing:2 headIndent:0];
     }
 }
 

@@ -72,15 +72,27 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.menuType==1) {
-        return 100;
+        return 120;
     }else if (self.menuType==2) {
         if (self.type==0) {
-            return 80;
-        }else{
             return 100;
+        }else{
+            return 120;
+        }
+    }else{
+        switch (self.type) {
+            case 0:
+                return 110;
+                break;
+            case 1:
+                return 120;
+                break;
+            default:
+                return 120;
+                break;
         }
     }
-    return 130;
+    return 120;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -118,14 +130,15 @@
         if (self.type==0) {
             FinalContentTableViewCell *cellInstance = (FinalContentTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
             if (!cellInstance) {
-                cellInstance = [[FinalContentTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 190)];
+                float height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
+                cellInstance = [[FinalContentTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
             }
             NSDictionary* dic = self.dataArray[row];
             NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
             __block FinalContentTableViewCell* cell = cellInstance;
             [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                 if (image) {
-                    cell.imgView.contentMode = UIViewContentModeScaleAspectFit;
+                    cell.imgView.contentMode = UIViewContentModeScaleToFill;
                 }
             }];
             
@@ -150,7 +163,7 @@
             __block FinalingTableViewCell* cell = cellInstance;
             [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                 if (image) {
-                    cell.imgView.contentMode = UIViewContentModeScaleAspectFit;
+                    cell.imgView.contentMode = UIViewContentModeScaleToFill;
                 }
             }];
             float progress =([[dic valueForKey:@"invest"] floatValue]*100)/[[dic valueForKey:@"planfinance"] floatValue];
@@ -176,7 +189,7 @@
             __block ThinkTankTableViewCell* cell = cellInstance;
             [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                 if (image) {
-                    cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+                    cell.imgView.contentMode = UIViewContentModeScaleToFill;
                 }
             }];
             
@@ -200,7 +213,7 @@
         __block ThinkTankTableViewCell* cell = cellInstance;
         [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
             if (image) {
-                cell.imgView.contentMode = UIViewContentModeScaleAspectFit;
+                cell.imgView.contentMode = UIViewContentModeScaleToFill;
             }
         }];
         

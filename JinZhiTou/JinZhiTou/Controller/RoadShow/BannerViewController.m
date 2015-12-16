@@ -118,6 +118,9 @@
     
     
     [self.httpUtil getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:tempDic type:0 delegate:self sel:@selector(requestPublishContent:)];
+    
+    self.startLoading = YES;
+    self.isTransparent = YES;
 }
 
 
@@ -135,6 +138,14 @@
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     NSLog(@"%@",error);
+    self.isNetRequestError = YES;
+}
+
+-(void)refresh
+{
+    [super refresh];
+
+    [self loadUrl];
 }
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -183,6 +194,8 @@
             [shareNewsView removeFromSuperview];
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
         }
+        self.startLoading = NO;
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
     }
 }
 @end

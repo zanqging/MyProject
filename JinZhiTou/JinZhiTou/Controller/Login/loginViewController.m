@@ -159,35 +159,32 @@
     
     //==============================滚动时图子视图添加开始==============================//
     
-    //如果用户未安装微信
-    if ([WXApi isWXAppInstalled] && [WXApi isWXAppSupportApi]) {
-        //==============================微信登录开始==============================//
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, POS_Y(btnActionLeft)+50, WIDTH(self.view)/2-50, 1)];
-        imgView.backgroundColor  =WriteColor;
-        [scrollView addSubview:imgView];
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)-WIDTH(imgView)-10, Y(imgView), WIDTH(imgView), HEIGHT(imgView))];
-        imgView.backgroundColor  =WriteColor;
-        [scrollView addSubview:imgView];
-        
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2-20, Y(imgView)-40, 40, 40)];
-        imgView.image =IMAGENAMED(@"WeChatLogo");
-        imgView.layer.cornerRadius = 5;
-        imgView.layer.masksToBounds=YES;
-        imgView.userInteractionEnabled  =YES;
-        [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(WeChatAction:)]];
-        [scrollView addSubview:imgView];
-        
-        label = [[UILabel alloc]initWithFrame:CGRectMake(X(imgView)-20, POS_Y(imgView), WIDTH(imgView)+40, 21)];
-        label.textColor = WriteColor;
-        label.text = @"微信登录";
-        label.font  =SYSTEMFONT(14);
-        label.textAlignment = NSTextAlignmentCenter;
-        [scrollView addSubview:label];
-        //==============================微信登录结束==============================//
-        
-        //监听
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getAccess_token:) name:@"WeChatBind" object:nil];
-    }
+    //==============================微信登录开始==============================//
+    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, POS_Y(btnActionLeft)+50, WIDTH(self.view)/2-50, 1)];
+    imgView.backgroundColor  =WriteColor;
+    [scrollView addSubview:imgView];
+    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)-WIDTH(imgView)-10, Y(imgView), WIDTH(imgView), HEIGHT(imgView))];
+    imgView.backgroundColor  =WriteColor;
+    [scrollView addSubview:imgView];
+    
+    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2-20, Y(imgView)-40, 40, 40)];
+    imgView.image =IMAGENAMED(@"WeChatLogo");
+    imgView.layer.cornerRadius = 5;
+    imgView.layer.masksToBounds=YES;
+    imgView.userInteractionEnabled  =YES;
+    [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(WeChatAction:)]];
+    [scrollView addSubview:imgView];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(X(imgView)-20, POS_Y(imgView), WIDTH(imgView)+40, 21)];
+    label.textColor = WriteColor;
+    label.text = @"微信登录";
+    label.font  =SYSTEMFONT(14);
+    label.textAlignment = NSTextAlignmentCenter;
+    [scrollView addSubview:label];
+    //==============================微信登录结束==============================//
+    
+    //监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getAccess_token:) name:@"WeChatBind" object:nil];
 }
 
 /**
@@ -242,6 +239,9 @@
                 openId =[dic objectForKey:@"openid"];
                 [self getUserInfo:[dic objectForKey:@"access_token"] openId:[dic objectForKey:@"openid"]];
                 
+            }else{
+                self.startLoading =NO;
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"信息获取失败!"];
             }
         });
     });
@@ -284,6 +284,9 @@
                 if (openID) {
                     [self.httpUtil getDataFromAPIWithOps:@"openid/" postParam:[NSDictionary dictionaryWithObject:openID forKey:@"openid"] type:0 delegate:self sel:@selector(requestFinished:)];
                 }
+            }else{
+                self.startLoading =NO;
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"信息获取失败!"];
             }
         });
         
@@ -402,9 +405,10 @@
         password = [TDUtil encryptPhoneNumWithMD5:phoneNumber passString:password];
         //极光推送id
         NSString* regId = [APService registrationID];
-//        if ([regId isEqualToString:@""]) {
-//            regId = @"123";
-//        }
+        if ([regId isEqualToString:@""]) {
+            regId = @"123";
+        }
+        
         [dic setValue:regId forKey:@"regid"];
         [dic setValue:phoneNumber forKey:@"tel"];
         [dic setValue:password forKey:@"passwd"];
@@ -576,6 +580,7 @@
 {
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);
+    self.startLoading =NO;
     [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"网络请求错误"];
     [activity stopAnimating];
     

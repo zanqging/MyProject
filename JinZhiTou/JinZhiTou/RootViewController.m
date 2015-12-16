@@ -172,7 +172,7 @@
 
 -(void)refresh
 {
-
+    self.startLoading = YES;
 }
 
 -(void)dealloc

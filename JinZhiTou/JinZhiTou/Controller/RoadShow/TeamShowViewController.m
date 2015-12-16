@@ -56,6 +56,8 @@
     
     //加载数据啊
     [self loadData];
+    //开始执行加载动画
+    self.startLoading = YES;
 }
 
 -(void)viewDidLayoutSubviews
@@ -88,6 +90,14 @@
 {
     NSString* url = [COREMEMBER stringByAppendingFormat:@"%ld/",(long)self.projectId];
     [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestCoreMember:)];
+}
+
+-(void)refresh
+{
+    [super refresh];
+    [self loadData];
+    self.startLoading = YES;
+    self.isTransparent = NO;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -193,12 +203,6 @@
     }
 }
 
-
-
--(void)requestFailed:(ASIHTTPRequest *)request
-{
-    
-}
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];

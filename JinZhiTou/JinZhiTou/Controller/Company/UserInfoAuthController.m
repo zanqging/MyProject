@@ -364,7 +364,7 @@
     if (dic!=nil) {
         NSString* code =[dic valueForKey:@"code"];
         if ([code integerValue]==0) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil userInfo:[NSDictionary dictionaryWithObject:self forKey:@"viewController"]];
             [self dismissViewControllerAnimated:YES completion:nil];
         }
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];

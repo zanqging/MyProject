@@ -409,7 +409,7 @@
         
         [introduceImgview sd_setImageWithURL:url placeholderImage:introduceImgview.image completed:
          ^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL *imageUrl){
-             [introduceImgview setContentMode:UIViewContentModeScaleAspectFit];
+             [introduceImgview setContentMode:UIViewContentModeScaleToFill];
          }];
     }
 }

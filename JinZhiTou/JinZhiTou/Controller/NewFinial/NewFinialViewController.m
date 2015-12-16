@@ -155,6 +155,8 @@
 {
     return 120;
 }
+
+
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -220,12 +222,24 @@
 -(void)refresh
 {
     [super refresh];
+    
+    if (self.tableView.header.isRefreshing) {
+        [self.tableView.header endRefreshing];
+    }
+    
+    if (self.tableView.footer.isRefreshing) {
+        [self.tableView.footer endRefreshing];
+    }
     //刷新页码为
     currentpage = 0;
     isRefresh  = YES;
-    isShowLoadingView = NO;
+    isShowLoadingView = YES;
     self.isEndOfPageSize  =NO;
+    if (selectedIndex==0) {
+        selectedIndex=1;
+    }
     [self loadNewsData:selectedIndex];
+    self.isTransparent  =NO;
 }
 //==============================刷新功能区域结束==============================//
 //==============================网络请求区域开始==============================//
@@ -240,16 +254,15 @@
         if ([code intValue] == 0 || [code intValue] ==2) {
             if ([code integerValue] == 2) {
                 self.isEndOfPageSize  =YES;
+            }
+            if (isRefresh) {
+                self.dataCreateArray = [jsonDic valueForKey:@"data"];
             }else{
-                if (isRefresh) {
+                if (!self.dataCreateArray) {
                     self.dataCreateArray = [jsonDic valueForKey:@"data"];
-                }else{
-                    if (!self.dataCreateArray) {
-                        self.dataCreateArray = [jsonDic valueForKey:@"data"];
-                    }
-                    [self.dataCreateArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
-                    [self.tableView reloadData];
                 }
+                [self.dataCreateArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
+                [self.tableView reloadData];
             }
             
             NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];

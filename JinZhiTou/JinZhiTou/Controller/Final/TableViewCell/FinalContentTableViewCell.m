@@ -19,16 +19,16 @@
         view = [[UIView alloc]initWithFrame:CGRectMake(10, 5, frame.size.width-20,frame.size.height-10)];
         view.backgroundColor= WriteColor;
         //项目图片
-        self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 100, 100)];
-        self.imgView.image = IMAGENAMED(@"loading");
-        self.imgView.contentMode = UIViewContentModeScaleAspectFit;
+        self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 130, HEIGHT(view)-10)];
         self.imgView.layer.masksToBounds = YES;
+        self.imgView.image = IMAGENAMED(@"loading");
+        self.imgView.contentMode = UIViewContentModeScaleAspectFill;
         [view addSubview:self.imgView];
         [self addSubview:view];
         //名称
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, Y(self.imgView)+20, 180, 21)];
+        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+10, Y(self.imgView)+10, 150, 21)];
         self.titleLabel.font = SYSTEMFONT(16);
-        self.titleLabel.textColor = FONT_COLOR_RED;
+        self.titleLabel.textColor = FONT_COLOR_BLACK;
         [view addSubview:self.titleLabel];
         
         UILabel* label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel)+5, 50, 25)];
@@ -85,7 +85,7 @@
         UILabel* label = (UILabel*)[view viewWithTag:1001];
         UILabel* valueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 50, HEIGHT(label))];
         valueLabel.font  = SYSTEMFONT(14);
-        valueLabel.textColor = label.textColor;
+        valueLabel.textColor = AppColorTheme;
         [TDUtil setLabelMutableText:valueLabel content:self.typeDescription lineSpacing:0 headIndent:0];
         [view addSubview:valueLabel];
     }
@@ -97,32 +97,10 @@
     if (self.roadShowTime) {
         UILabel* label = (UILabel*)[view viewWithTag:1002];
         UILabel* valueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 50, HEIGHT(label))];
-        valueLabel.textColor = ColorTheme;
+        valueLabel.textColor = AppColorTheme;
         valueLabel.font  = SYSTEMFONT(14);
         [TDUtil setLabelMutableText:valueLabel content:self.roadShowTime lineSpacing:0 headIndent:0];
         [view addSubview:valueLabel];
     }
 }
-
-
-//-(void)setStart:(NSDictionary *)start
-//{
-//    self->_start = start;
-//    if (self.start) {
-//        //描述
-//        itemLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.titleLabel)+5, WIDTH(self.titleLabel), 21)];
-//        itemLabel.font = SYSTEMFONT(14);
-//        itemLabel.textColor =FONT_COLOR_BLACK;
-//        [view addSubview:itemLabel];
-//        
-//        [TDUtil setLabelMutableText:itemLabel content:[self.start valueForKey:@"name"] lineSpacing:0 headIndent:0];
-//        
-//        itemValueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(itemLabel)+5, Y(itemLabel), WIDTH(self.titleLabel), 21)];
-//        itemValueLabel.font = SYSTEMFONT(14);
-//        itemValueLabel.textColor =ColorTheme;
-//        [view addSubview:itemValueLabel];
-//        
-//        [TDUtil setLabelMutableText:itemValueLabel content:[self.start valueForKey:@"datetime"] lineSpacing:0 headIndent:0];
-//    }
-//}
 @end

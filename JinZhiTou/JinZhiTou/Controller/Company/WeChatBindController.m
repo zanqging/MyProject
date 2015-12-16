@@ -199,7 +199,7 @@
     
     btnAction =[[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(view)+20, WIDTH(scrollView)-60, 35)];
     btnAction.layer.cornerRadius =5;
-    btnAction.backgroundColor =RGBCOLOR(56, 199, 56);
+    btnAction.backgroundColor =AppColorTheme;
     [btnAction setTitle:@"确定绑定" forState:UIControlStateNormal];
     [btnAction addTarget:self action:@selector(doRegistAction:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:btnAction];

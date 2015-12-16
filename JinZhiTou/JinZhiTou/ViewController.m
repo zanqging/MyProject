@@ -242,6 +242,9 @@
     NSMutableArray* uploadFiles =[[dic valueForKey:@"userInfo"] valueForKey:@"uploadFiles"];
     NSString* content = [[dic valueForKey:@"userInfo"] valueForKey:@"content"];
     [self.httpUtil getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:[NSDictionary dictionaryWithObject:content forKey:@"content"] files:uploadFiles postName:@"file" type:0 delegate:self sel:@selector(requestPublishContent:)];
+    
+    self.startLoading  =YES;
+    self.isTransparent = YES;
 }
 
 -(void)UserInfoSetting:(id)sender
@@ -754,8 +757,12 @@
 
 -(void)refresh
 {
+    [super refresh];
     [self refreshProject];
+    
+    self.startLoading = YES;
     self.isTransparent = NO;
+    
 }
 
 /**
@@ -827,6 +834,9 @@
 //            [self.tableView reloadData];
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
         }
+        
+        self.startLoading = NO;
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
     }
 }
 

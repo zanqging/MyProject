@@ -86,7 +86,7 @@
     if (dicData) {
         NSInteger row = indexPath.row;
         cell.titleLabel.text = dataArray[row];
-        double share2give = [[dicData valueForKey:@"share2give"] doubleValue]*100;
+        double share2give = [[dicData valueForKey:@"share2give"] doubleValue];
         switch (row) {
             case 0:
                 cell.rightLabel.text = [[[dicData valueForKey:@"planfinance"] stringValue] stringByAppendingString:@"万"];
