@@ -15,19 +15,17 @@
 -(id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        UIView* view = [[UIView alloc]initWithFrame:CGRectMake(10, 5, frame.size.width-20,frame.size.height-10)];
+        UIView* view = [[UIView alloc]initWithFrame:CGRectMake(10, 5, frame.size.width-20,frame.size.height-5)];
         view.backgroundColor= WriteColor;
         //项目图片
         self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 130,HEIGHT(view)-10)];
         self.imgView.image = IMAGENAMED(@"loading");
         self.imgView.contentMode = UIViewContentModeScaleAspectFill;
-        self.imgView.layer.cornerRadius = 3;
-        self.imgView.layer.masksToBounds = YES;
         [view addSubview:self.imgView];
         [self addSubview:view];
         //名称
         self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, 10, 130, 21)];
-        self.titleLabel.font = SYSTEMFONT(18);
+        self.titleLabel.font = SYSTEMFONT(16);
         self.titleLabel.textColor = FONT_COLOR_RED;
         [view addSubview:self.titleLabel];
         
@@ -46,8 +44,6 @@
         [view addSubview:self.typeLabel];
         //
         self.backgroundColor = BackColor;
-        self.layer.cornerRadius = 5;
-        self.layer.masksToBounds = YES;
     }
     return self;
 }

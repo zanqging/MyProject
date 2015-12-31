@@ -14,7 +14,7 @@
 -(id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        UIView* view = [[UIView alloc]initWithFrame:CGRectMake(10, 0, frame.size.width-20,frame.size.height-5)];
+        UIView* view = [[UIView alloc]initWithFrame:CGRectMake(10, 5, frame.size.width-20,frame.size.height-5)];
         view.backgroundColor= WriteColor;
         //项目图片
         self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 120 ,HEIGHT(view)-10)];
@@ -40,8 +40,6 @@
         [view addSubview:self.contentLabel];
         
         self.backgroundColor = BackColor;
-        self.layer.cornerRadius = 5;
-        self.layer.masksToBounds = YES;
     }
     return self;
 }

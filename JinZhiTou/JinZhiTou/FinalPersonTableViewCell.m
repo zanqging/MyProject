@@ -14,7 +14,7 @@
 -(id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        UIView* view = [[UIView alloc]initWithFrame:CGRectMake(10, 5, frame.size.width-20,frame.size.height-10)];
+        UIView* view = [[UIView alloc]initWithFrame:CGRectMake(10, 5, frame.size.width-20,frame.size.height-5)];
         view.backgroundColor= WriteColor;
         //项目图片
         self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 130,HEIGHT(view)-10)];
@@ -44,9 +44,11 @@
         self.typeLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [view addSubview:self.typeLabel];
         //
+        
+        [view setFrame:CGRectMake(10, 5, frame.size.width-20,frame.size.height-5)];
+        [self.imgView setFrame:CGRectMake(5, 5, 130,HEIGHT(view)-10)];
+        
         self.backgroundColor = BackColor;
-        self.layer.cornerRadius = 5;
-        self.layer.masksToBounds = YES;
     }
     return self;
 }

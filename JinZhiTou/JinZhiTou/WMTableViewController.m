@@ -105,13 +105,15 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.menuType!=2 && self.type!=3) {
-        if (self.menuType==1) {
+        if (self.type==2 &&self.menuType != 0) {
             if ([_delegate respondsToSelector:@selector(wmTableViewController:thinkTankDetailData:)]) {
                 [_delegate wmTableViewController:self thinkTankDetailData:self.dataArray[indexPath.row]];
             }
         }else{
-            if ([_delegate respondsToSelector:@selector(wmTableViewController:tapIndexPath:data:)]) {
-                [_delegate wmTableViewController:self tapIndexPath:indexPath data:self.dataArray[indexPath.row]];
+            if (self.menuType==0) {
+                if ([_delegate respondsToSelector:@selector(wmTableViewController:tapIndexPath:data:)]) {
+                    [_delegate wmTableViewController:self tapIndexPath:indexPath data:self.dataArray[indexPath.row]];
+                }
             }
         }
     }else{
@@ -126,6 +128,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger row = indexPath.row;
     static NSString *reuseIdetify = @"FinialListView";
+    [self.tableView setContentSize:CGSizeMake(WIDTH(self.tableView), 105*self.dataArray.count+10)];
     if (self.menuType==0) {
         if (self.type==0) {
             FinalContentTableViewCell *cellInstance = (FinalContentTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
@@ -147,7 +150,7 @@
             cellInstance.title = [dic valueForKey:@"company"];
             cellInstance.roadShowTime = [dic valueForKey:@"date" ];
             cellInstance.typeDescription = [dic valueForKey:@"tag"];
-            cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+            cellInstance.selectionStyle=UITableViewCellSelectionStyleDefault;
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
         }else if(self.type==1 || self.type==2){
@@ -173,7 +176,7 @@
             cellInstance.progress = progressStr;
             cellInstance.assist =  [NSString stringWithFormat:@"%@人",[dic valueForKey:@"investor"]];
             cellInstance.hasFinanceAccount =  [dic valueForKey:@"invest"];;
-            cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+            cellInstance.selectionStyle=UITableViewCellSelectionStyleDefault;
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
         }else{
@@ -196,7 +199,7 @@
             cellInstance.title = [dic valueForKey:@"name"];
             cellInstance.content = [dic valueForKey:@"company"];
             cellInstance.typeDescription =  [dic valueForKey:@"desc"];;
-            cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+            cellInstance.selectionStyle=UITableViewCellSelectionStyleDefault;
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
         }
@@ -221,7 +224,7 @@
             cellInstance.title = [dic valueForKey:@"name"];
             cellInstance.content = [dic valueForKey:@"company"];
             cellInstance.typeDescription =  [dic valueForKey:@"position"];;
-            cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+            cellInstance.selectionStyle=UITableViewCellSelectionStyleDefault;
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
             
@@ -245,7 +248,7 @@
             
             cellInstance.title = [dic valueForKey:@"name"];
             cellInstance.contentLabel.text = [dic valueForKey:@"profile"];
-            cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+            cellInstance.selectionStyle=UITableViewCellSelectionStyleDefault;
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
             
@@ -269,7 +272,7 @@
             cellInstance.title = [dic valueForKey:@"name"];
             cellInstance.content = [dic valueForKey:@"company"];
             cellInstance.typeDescription =  [dic valueForKey:@"position"];;
-            cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+            cellInstance.selectionStyle=UITableViewCellSelectionStyleDefault;
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
         }
@@ -294,4 +297,10 @@
     NSLog(@"%@ destroyed",[self class]);
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    //取消tableViewCell选中状态
+    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
+    if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
+}
 @end

@@ -41,7 +41,6 @@
     [navView setTitle:@"智囊团详情"];
     navView.titleLable.textColor=WriteColor;
     
-    
     [navView.leftButton setImage:nil forState:UIControlStateNormal];
     [navView.leftButton setTitle:@"智囊团" forState:UIControlStateNormal];
     [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
@@ -61,7 +60,7 @@
     UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, WIDTH(scrollView)-20, 150)];
     [imgView setContentMode:UIViewContentModeScaleAspectFit];
     [imgView sd_setImageWithURL:[self.dic valueForKey:@"photo"] placeholderImage:IMAGENAMED(@"coremember") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
-        //[imgView setContentMode:UIViewContentModeScaleAspectFill];
+        [imgView setContentMode:UIViewContentModeScaleToFill];
     }];
     
     [view addSubview:imgView];
@@ -183,8 +182,8 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
-        if ([status intValue] == 0 || [status intValue] == -1) {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0 || [code intValue] == -1) {
             dataDic = [jsonDic valueForKey:@"data"];
             
             NSString* url = [dataDic valueForKey:@"video"];
