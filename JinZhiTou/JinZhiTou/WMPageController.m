@@ -95,9 +95,6 @@
             [self refresh];
             break;
         case 1:
-            [self thinkTank];
-            break;
-        case 2:
             [self finialCommicuteList];
             break;
         default:
@@ -384,7 +381,7 @@
     
     //设置标题
     [self.navView setTitle:@"金指投"];
-    NSArray* menuArray = @[@"项目库",@"智囊团",@"投资人"];
+    NSArray* menuArray = @[@"项目库",@"投资人"];
     self.navView.delegate  = self;
     self.navView.menuArray  =[NSMutableArray arrayWithArray:menuArray];
     self.navView.titleLable.textColor=WriteColor;
@@ -572,11 +569,16 @@
 
 -(void)finialCommicuteList
 {
-    if (self.menuSelectIndex==2) {
+    if (self.menuSelectIndex==1) {
         //网络请求
         self.startLoading  =YES;
-        NSString* srverUrl = [FINIAL_COMM stringByAppendingFormat:@"%d/%ld/",self.selectIndex+1,self.currentPage];
-        [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+        
+        if (self.selectIndex<2) {
+            NSString* srverUrl = [FINIAL_COMM stringByAppendingFormat:@"%d/%ld/",self.selectIndex+1,self.currentPage];
+            [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+        }else{
+            [self thinkTank];
+        }
     }
 }
 
@@ -641,18 +643,10 @@
             self.itemsWidths =  @[@(70),@(70),@(70),@(70)];
             self.menuView.items = _titles;
             [self resetMenuView];
-//            [self refresh];
             break;
         case 1:
-            _titles  =@[];
-            self.itemsWidths =  @[];
-            self.menuView.items = _titles;
-            [self resetMenuView];
-//            [self thinkTank];
-            break;
-        case 2:
-            _titles  =@[@"个人投资人",@"机构投资人"];
-            self.itemsWidths = @[@(100),@(100)]; // 这里可以设置不同的宽度
+            _titles  =@[@"个人投资人",@"机构投资人",@"智囊团"];
+            self.itemsWidths = @[@(100),@(100),@(100)]; // 这里可以设置不同的宽度
             self.menuView.items = _titles;
             [self resetMenuView];
             break;
@@ -693,9 +687,6 @@
             [self refresh];
             break;
         case 1:
-            [self thinkTank];
-            break;
-        case 2:
             [self finialCommicuteList];
             break;
         default:
@@ -754,9 +745,6 @@
             [self refresh];
             break;
         case 1:
-            [self thinkTank];
-            break;
-        case 2:
             [self finialCommicuteList];
             break;
         default:
@@ -774,9 +762,6 @@
             [self refresh];
             break;
         case 1:
-            [self thinkTank];
-            break;
-        case 2:
             [self finialCommicuteList];
             break;
         default:

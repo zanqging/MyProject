@@ -153,7 +153,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 135;
+    return 140;
 }
 
 
@@ -173,15 +173,15 @@
     NSURL* url = [dic valueForKey:@"img"];
     cell.backgroundColor = BackColor;
     [cell.imgview sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading")];
+    cell.source = [dic valueForKey:@"src"];
     cell.titleLabel.text = [dic valueForKey:@"title"];
-    cell.desclabel.text = [dic valueForKey:@"src"];
     cell.typeLabel.text = [dic valueForKey:@"content"];
-    cell.timeLabel.text = [dic valueForKey:@"create_datetime"];
+    cell.dateTime = [dic valueForKey:@"create_datetime"];
     cell.colletcteLabel.text = [[dic valueForKey:@"share"] stringValue];
     cell.priseLabel.text = [[dic valueForKey:@"read"] stringValue];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tableView.contentSize = CGSizeMake(WIDTH(tableView), 135*self.dataCreateArray.count+HEIGHT(typeShow)+15);
+    tableView.contentSize = CGSizeMake(WIDTH(tableView), 140*self.dataCreateArray.count+HEIGHT(typeShow)+15);
     return cell;
 }
 

@@ -38,7 +38,7 @@
 -(void)layerOut:(id)sender
 {
     //内容视图
-    contentView  =[[UIView alloc]initWithFrame:CGRectMake(10, 0, WIDTH(self.contentView)-20, HEIGHT(self.contentView)-5)];
+    contentView  =[[UIView alloc]initWithFrame:CGRectMake(10, 5, WIDTH(self.contentView)-20, HEIGHT(self.contentView)-5)];
     contentView.backgroundColor  = WriteColor;
     [self.contentView addSubview:contentView];
     
@@ -55,14 +55,16 @@
     }
     
     //标题
-    labelTitle = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+5, Y(imgView)+15, WIDTH(contentView)-150, 25)];
-    labelTitle.font = SYSTEMFONT(16);
+    labelTitle = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+5, Y(imgView)+5, WIDTH(contentView)-150, 25)];
+    labelTitle.font = SYSTEMFONT(15);
+    labelTitle.textColor = FONT_COLOR_BLACK;
     [contentView addSubview:labelTitle];
     
     //融资进度
     UILabel* labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelTitle), POS_Y(labelTitle)+5, 50, 20)];
     labelProess.font =SYSTEMFONT(14);
     labelProess.text = @"已筹:";
+    labelProess.textColor = FONT_COLOR_GRAY;
     [contentView addSubview:labelProess];
     
     
@@ -76,6 +78,7 @@
     labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelProess), POS_Y(labelProess)+5, 70, 20)];
     labelProess.text = @"众筹时间:";
     labelProess.font =SYSTEMFONT(14);
+    labelProess.textColor = FONT_COLOR_GRAY;
     [contentView addSubview:labelProess];
 
    
@@ -85,7 +88,7 @@
     labelDateTime.textColor = ColorTheme2;
     [contentView addSubview:labelDateTime];
     
-    [contentView setFrame:CGRectMake(10, 0, WIDTH(self.contentView)-20, POS_Y(labelDateTime)+20)];
+    [contentView setFrame:CGRectMake(10, 5, WIDTH(self.contentView)-20, POS_Y(labelDateTime)+15)];
     [imgView setFrame:CGRectMake(5, 5, 130, HEIGHT(contentView)-10)];
     
 }

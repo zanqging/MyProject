@@ -7,6 +7,7 @@
 //
 
 #import "NewFinialTableViewCell.h"
+#import "TDUtil.h"
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #import <QuartzCore/QuartzCore.h>
@@ -24,12 +25,12 @@
         
         self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10,WIDTH(self)-120, 40)];
         self.titleLabel.numberOfLines  =2;
-        self.titleLabel.font  =SYSTEMBOLDFONT(16);
+        self.titleLabel.font  =SYSTEMBOLDFONT(15);
         self.titleLabel.textColor = FONT_COLOR_BLACK;
         self.titleLabel.lineBreakMode  =NSLineBreakByWordWrapping;
         [view addSubview:self.titleLabel];
         
-        self.desclabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel), WIDTH(self.titleLabel)/2, 21)];
+        self.desclabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel)+5, WIDTH(self.titleLabel)/2, 21)];
         self.desclabel.textColor = FONT_COLOR_RED;
         self.desclabel.font = SYSTEMFONT(12);
         [view addSubview:self.desclabel];
@@ -37,7 +38,7 @@
         self.timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.desclabel), Y(self.desclabel), WIDTH(self.titleLabel)/2-20, 21)];
         self.timeLabel.textColor = FONT_COLOR_GRAY;
         self.timeLabel.font = SYSTEMFONT(12);
-        self.timeLabel.textAlignment = NSTextAlignmentRight;
+        self.timeLabel.textAlignment = NSTextAlignmentLeft;
         [view addSubview:self.timeLabel];
 
         self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.desclabel), WIDTH(self.titleLabel), 20)];
@@ -98,4 +99,22 @@
     [view setFrame:CGRectMake(0, 0, WIDTH(self), POS_Y(self.priseLabel)+5)];
 }
 
+
+-(void)setSource:(NSString *)source
+{
+    if ([TDUtil isValidString:source]) {
+        self->_source = source;
+        [TDUtil setLabelMutableText:self.desclabel content:self.source lineSpacing:0 headIndent:0];
+        [self.timeLabel setFrame:CGRectMake(POS_X(self.desclabel)+5, Y(self.desclabel), WIDTH(self.titleLabel)/2-20, 21)];
+    }
+}
+
+-(void)setDateTime:(NSString *)dateTime
+{
+    if ([TDUtil isValidString:dateTime]) {
+        self->_dateTime = dateTime;
+        
+        [TDUtil setLabelMutableText:self.timeLabel content:self.dateTime lineSpacing:0 headIndent:0];
+    }
+}
 @end

@@ -69,7 +69,7 @@
    [self.view addSubview:self.tableView];
     
     //头部
-    headerView = [[RoadShowHomeHeaderView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), HEIGHT(self.view)*0.5-15)];
+    headerView = [[RoadShowHomeHeaderView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), HEIGHT(self.view)*0.5-18)];
    [self.tableView setTableHeaderView:headerView];
    [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     
@@ -322,7 +322,7 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
 
 -(CGFloat)tableView:(UITableView *)tableViewInstance heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 120;
+    return 105;
 }
 -(UITableViewCell*)tableView:(UITableView *)tableViewInstance cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -342,7 +342,7 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     [cellInstance setDateTime:[dic valueForKey:@"date"]];
     
     cellInstance.selectionStyle = UITableViewCellSelectionStyleDefault;
-    [self.tableView setContentSize:CGSizeMake(WIDTH(tableViewInstance), dataArray.count*120+HEIGHT(headerView))];
+    [self.tableView setContentSize:CGSizeMake(WIDTH(tableViewInstance), dataArray.count*105+HEIGHT(headerView)+5)];
     return cellInstance;
 }
 

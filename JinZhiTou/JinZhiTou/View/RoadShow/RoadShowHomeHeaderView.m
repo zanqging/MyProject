@@ -36,11 +36,9 @@
         [view addSubview:self.mainScorllView];
         
         //新手指南
-        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(self.mainScorllView)+5, WIDTH(self.mainScorllView)/2-10, 30)];
+        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(self.mainScorllView)+5, WIDTH(self.mainScorllView)/2, 30)];
         label.tag=1001;
         label.font=SYSTEMFONT(14);
-//        label.layer.cornerRadius = 5;
-//        label.layer.masksToBounds= YES;
         label.userInteractionEnabled = YES;
         label.textColor  =ColorCompanyTheme;
         label.backgroundColor  =WriteColor;
@@ -55,7 +53,7 @@
         label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+1, Y(label), WIDTH(label), HEIGHT(label))];
         label.tag=1002;
         label.text = @"征信查询";
-        label.font=SYSTEMFONT(16);
+        label.font=SYSTEMFONT(14);
 //        label.layer.cornerRadius = 5;
 //        label.layer.masksToBounds= YES;
         label.textColor  =FONT_COLOR_GRAY;
@@ -70,12 +68,12 @@
         [self addSubview:imgView];
         
         //精选项目
-        view = [[UIView alloc]initWithFrame:CGRectMake(10, HEIGHT(self)-31, WIDTH(self)-20, 30)];
+        view = [[UIView alloc]initWithFrame:CGRectMake(0, HEIGHT(self)-30, WIDTH(self), 30)];
         view.backgroundColor = WriteColor;
         [self addSubview:view];
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, WIDTH(label), HEIGHT(view))];
-        label.text = @"精选项目";
+        label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(label), HEIGHT(view))];
+        label.text = @"   精选项目";
         label.font=SYSTEMFONT(16);
         label.textColor  =FONT_COLOR_GRAY;
         [view addSubview:label];
@@ -189,21 +187,21 @@
         
         NSMutableArray* array =[self.dataDic valueForKey:@"platform"];
         NSDictionary* dic;
-        float pos_x = 10,pos_y=POS_Y(label)+5;
+        float pos_x = 0,pos_y=POS_Y(label)+3;
         for (int i=0;i<array.count;i++) {
             dic = [array objectAtIndex:i];
             NSString* key = [dic valueForKey:@"key"];
             NSString* value = [dic valueForKey:@"value"];
             
             //成果融资额度
-            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2-10, 25)];
+            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 25)];
             label.textAlignment = NSTextAlignmentCenter;
             label.textColor = ColorTheme2;
             label.backgroundColor  =WriteColor;
             label.text = [NSString stringWithFormat:@"%@",value];
             [self addSubview:label];
             
-            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2-10, 25)];
+            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2, 25)];
             label.font = SYSTEMFONT(14);
             label.textColor = FONT_COLOR_GRAY;
             label.backgroundColor  =WriteColor;

@@ -12,13 +12,15 @@
 {
     UIView * view ;
 }
-@property (strong, nonatomic) UIImageView *imgview;
-@property (strong, nonatomic) UILabel *titleLabel;
+@property (retain, nonatomic) NSString* source;
+@property (retain, nonatomic) NSString* dateTime;
 @property (strong, nonatomic) UILabel *desclabel;
 @property (strong, nonatomic) UILabel *timeLabel;
 @property (strong, nonatomic) UILabel *typeLabel;
-@property (strong, nonatomic) UIImageView *collecteImage;
+@property (strong, nonatomic) UILabel *priseLabel;
+@property (strong, nonatomic) UILabel *titleLabel;
+@property (strong, nonatomic) UIImageView *imgview;
 @property (strong, nonatomic) UILabel *colletcteLabel;
 @property (strong, nonatomic) UIImageView *priseImage;
-@property (strong, nonatomic) UILabel *priseLabel;
+@property (strong, nonatomic) UIImageView *collecteImage;
 @end

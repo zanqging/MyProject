@@ -71,28 +71,28 @@
 #pragma mark - Table view data source
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.menuType==1) {
-        return 120;
-    }else if (self.menuType==2) {
-        if (self.type==0) {
-            return 120;
-        }else{
-            return 120;
-        }
-    }else{
-        switch (self.type) {
-            case 0:
-                return 110;
-                break;
-            case 1:
-                return 120;
-                break;
-            default:
-                return 120;
-                break;
-        }
-    }
-    return 120;
+//    if (self.menuType==1) {
+//        return 105;
+//    }else if (self.menuType==2) {
+//        if (self.type==0) {
+//            return 105;
+//        }else{
+//            return 110;
+//        }
+//    }else{
+//        switch (self.type) {
+//            case 0:
+//                return 105;
+//                break;
+//            case 1:
+//                return 105;
+//                break;
+//            default:
+//                return 110;
+//                break;
+//        }
+//    }
+    return 105;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -200,29 +200,6 @@
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
         }
-    }else if (self.menuType==1){
-        static NSString *reuseIdetify = @"FinialThinkView";
-        ThinkTankTableViewCell *cellInstance = (ThinkTankTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
-        if (!cellInstance) {
-            float height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
-            cellInstance = [[ThinkTankTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
-        }
-        
-        NSDictionary* dic = self.dataArray[row];
-        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"photo"]];
-        __block ThinkTankTableViewCell* cell = cellInstance;
-        [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
-            if (image) {
-                cell.imgView.contentMode = UIViewContentModeScaleToFill;
-            }
-        }];
-        
-        cellInstance.title = [dic valueForKey:@"name"];
-        cellInstance.content = [dic valueForKey:@"company"];
-        cellInstance.typeDescription =  [dic valueForKey:@"position"];;
-        cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
-        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        return cellInstance;
     }else{
         if (self.type==0) {
             static NSString *reuseIdetify = @"FinialThinkView";
@@ -248,7 +225,7 @@
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
             
-        }else{
+        }else if(self.type==1){
             static NSString *reuseIdetify = @"FinialThinkView";
             FinalCompanyTableViewCell *cellInstance = (FinalCompanyTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
             if (!cellInstance) {
@@ -272,6 +249,29 @@
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
             
+        }else{
+            static NSString *reuseIdetify = @"FinialThinkView";
+            ThinkTankTableViewCell *cellInstance = (ThinkTankTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
+            if (!cellInstance) {
+                float height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
+                cellInstance = [[ThinkTankTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
+            }
+            
+            NSDictionary* dic = self.dataArray[row];
+            NSURL* url = [NSURL URLWithString:[dic valueForKey:@"photo"]];
+            __block ThinkTankTableViewCell* cell = cellInstance;
+            [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+                if (image) {
+                    cell.imgView.contentMode = UIViewContentModeScaleToFill;
+                }
+            }];
+            
+            cellInstance.title = [dic valueForKey:@"name"];
+            cellInstance.content = [dic valueForKey:@"company"];
+            cellInstance.typeDescription =  [dic valueForKey:@"position"];;
+            cellInstance.selectionStyle=UITableViewCellSelectionStyleNone;
+            tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+            return cellInstance;
         }
     }
     
