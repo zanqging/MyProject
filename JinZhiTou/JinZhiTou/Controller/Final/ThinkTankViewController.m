@@ -38,12 +38,12 @@
     //设置标题
     navView=[[NavView alloc]initWithFrame:CGRectMake(0,NAVVIEW_POSITION_Y,self.view.frame.size.width,NAVVIEW_HEIGHT)];
     navView.imageView.alpha=1;
-    [navView setTitle:@"投资人详情"];
+    [navView setTitle:@"智囊团详情"];
     navView.titleLable.textColor=WriteColor;
     
     
     [navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [navView.leftButton setTitle:@"投资人" forState:UIControlStateNormal];
+    [navView.leftButton setTitle:@"智囊团" forState:UIControlStateNormal];
     [navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [self.view addSubview:navView];
     
@@ -74,6 +74,7 @@
     label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), 150, 40)];
     label.text = [self.dic valueForKey:@"company"];
     label.textColor = ColorTheme;
+    label.font  = SYSTEMFONT(16);
     [view addSubview:label];
     
    
@@ -200,20 +201,21 @@
             UIView* view = [scrollView viewWithTag:10002];
             UIImageView* imgView=(UIImageView*)[scrollView viewWithTag:1001];
             
-            UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+20, Y(imgView)-20, 100, 40)];
+            UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+20, Y(imgView)-10, 100, 40)];
             label.textColor = ColorCompanyTheme;
-            label.text = @"个人履历";
+            [TDUtil setLabelMutableText:label content:@"个人履历" lineSpacing:0 headIndent:0];
             label.font  = SYSTEMFONT(16);
             [view addSubview:label];
             
-            imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(label), Y(label)+10, 20, 20)];
-            imgView.contentMode = UIViewContentModeScaleAspectFill;
+            imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 20, 20)];
+            imgView.contentMode = UIViewContentModeScaleAspectFit;
             imgView.image =IMAGENAMED(@"gerenlvli");
             [view addSubview:imgView];
             
             
-            label = [[UILabel alloc]initWithFrame:CGRectMake(30, POS_Y(imgView)+10, WIDTH(view)-60, 150)];
+            label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(imgView)+10, WIDTH(view)-20, 150)];
             label.tag =10002;
+            label.font  = SYSTEMFONT(16);
             label.numberOfLines = 0;
             label.lineBreakMode = NSLineBreakByWordWrapping;
             [view addSubview:label];
@@ -235,19 +237,20 @@
             [view addSubview:imgView];
             
             
-            label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+20, Y(imgView)-20, 100, 40)];
+            label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+20, Y(imgView)-10, 100, 40)];
             label.textColor = ColorCompanyTheme;
-            label.text = @"擅长领域";
+            [TDUtil setLabelMutableText:label content:@"擅长领域" lineSpacing:0 headIndent:0];
             label.font  = SYSTEMFONT(16);
             [view addSubview:label];
             
-            imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(label), Y(label)+10, 20, 20)];
-            imgView.contentMode = UIViewContentModeScaleAspectFill;
+            imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 20, 20)];
+            imgView.contentMode = UIViewContentModeScaleAspectFit;
             imgView.image =IMAGENAMED(@"anli");
             [view addSubview:imgView];
             
-            label = [[UILabel alloc]initWithFrame:CGRectMake(30, POS_Y(imgView)+10, WIDTH(view)-60, 150)];
+            label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(imgView)+10, WIDTH(view)-20, 150)];
             label.tag =10003;
+            label.font  = SYSTEMFONT(16);
             label.numberOfLines = 0;
             label.lineBreakMode = NSLineBreakByWordWrapping;
             [view addSubview:label];
@@ -263,24 +266,25 @@
             
             
             
-            imgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label)+20, WIDTH(view)/2-70, 1)];
+            imgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(label)+10, WIDTH(view)/2-70, 1)];
             imgView.backgroundColor = ColorCompanyTheme;
             [view addSubview:imgView];
             
             
-            label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+20, Y(imgView)-20, 100, 40)];
+            label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+20, Y(imgView)-10, 100, 40)];
             label.textColor = ColorCompanyTheme;
-            label.text = @"成功案例";
+            [TDUtil setLabelMutableText:label content:@"成功案例" lineSpacing:0 headIndent:0];
             label.font  = SYSTEMFONT(16);
             [view addSubview:label];
             
-            imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(label), Y(label)+10, 20, 20)];
-            imgView.contentMode = UIViewContentModeScaleAspectFill;
+            imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 20, 20)];
+            imgView.contentMode = UIViewContentModeScaleAspectFit;
             imgView.image =IMAGENAMED(@"lingyu");
             [view addSubview:imgView];
             
-            label = [[UILabel alloc]initWithFrame:CGRectMake(30, POS_Y(imgView)+10, WIDTH(view)-60, 150)];
+            label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(imgView)+10, WIDTH(view)-20, 150)];
             label.tag =10004;
+            label.font  = SYSTEMFONT(16);
             [view addSubview:label];
             label.numberOfLines = 0;
             label.lineBreakMode = NSLineBreakByWordWrapping;
@@ -293,8 +297,10 @@
             [attributedString1 addAttribute:NSParagraphStyleAttributeName value:paragraphStyle1 range:NSMakeRange(0, [contentStr length])];
             [label setAttributedText:attributedString1];
             [label sizeToFit];
+            
+            [view setFrame:CGRectMake(X(view), Y(view), WIDTH(view), POS_Y(label)+20)];
            
-            scrollView.contentSize = CGSizeMake(WIDTH(scrollView), POS_Y(label)+HEIGHT(self.view)-200);
+            scrollView.contentSize = CGSizeMake(WIDTH(scrollView), POS_Y(view)+100);
              [LoadingUtil closeLoadingView:loadingView];
         }
     }

@@ -154,14 +154,17 @@
 {
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);
-    self.isNetRequestError = YES;
+    self.startLoading =NO;
+    //self.isNetRequestError = YES;
 }
 
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);
+    //self.startLoading =NO;
     self.isNetRequestError = YES;
+    
 }
 //==============================网络请求处理结束==============================//
 

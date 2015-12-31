@@ -153,7 +153,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 120;
+    return 135;
 }
 
 
@@ -181,7 +181,7 @@
     cell.priseLabel.text = [[dic valueForKey:@"read"] stringValue];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tableView.contentSize = CGSizeMake(WIDTH(tableView), 120*self.dataCreateArray.count+55);
+    tableView.contentSize = CGSizeMake(WIDTH(tableView), 135*self.dataCreateArray.count+HEIGHT(typeShow)+15);
     return cell;
 }
 
@@ -327,7 +327,7 @@
             }else{
                 rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
             }
-            self.tableView=[[UITableViewCustomView alloc]initWithFrame:rect style:UITableViewStylePlain];
+            self.tableView=[[UITableViewCustomView alloc]initWithFrame:rect style:UITableViewStyleGrouped];
             self.tableView.bounces=YES;
             self.tableView.delegate=self;
             self.tableView.dataSource=self;

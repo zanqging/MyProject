@@ -75,7 +75,7 @@
         return 120;
     }else if (self.menuType==2) {
         if (self.type==0) {
-            return 100;
+            return 120;
         }else{
             return 120;
         }
@@ -237,7 +237,7 @@
             __block FinalPersonTableViewCell* cell = cellInstance;
             [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"coremember") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                 if (image) {
-                    cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+                    cell.imgView.contentMode = UIViewContentModeScaleToFill;
                 }
             }];
             

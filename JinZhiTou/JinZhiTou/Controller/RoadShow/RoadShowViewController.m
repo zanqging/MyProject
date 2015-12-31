@@ -57,7 +57,7 @@
     //==============================TabBarItem 设置==============================//
 
     //==============================tableView 设置==============================//
-    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-113)];
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-113) style:UITableViewStyleGrouped];
     self.tableView.bounces=NO;
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
@@ -327,20 +327,22 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
 -(UITableViewCell*)tableView:(UITableView *)tableViewInstance cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //声明静态字符串对象，用来标记重用单元格
-    static NSString* RoadShowTableIdentifier=@"RoadShowHomeTableViewCell";
+    static NSString* RoadShowTableIdentifier=@"RoadShowHomeTableViewCellIdentifier";
     //用TableDataIdentifier标记重用单元格
     RoadShowHomeTableViewCell* cellInstance=(RoadShowHomeTableViewCell*)[tableViewInstance dequeueReusableCellWithIdentifier:RoadShowTableIdentifier];
-    if (!cellInstance) {
+    if (cellInstance==nil) {
         cellInstance  = [[RoadShowHomeTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:RoadShowTableIdentifier];
     }
+    
     NSInteger row = indexPath.row;
     NSDictionary* dic = dataArray[row];
     [cellInstance setImageName:[dic valueForKey:@"img"]];
     [cellInstance setHasFinance:[dic valueForKey:@"planfinance"]];
     [cellInstance setCompanyName:[dic valueForKey:@"company"]];
     [cellInstance setDateTime:[dic valueForKey:@"date"]];
+    
     cellInstance.selectionStyle = UITableViewCellSelectionStyleDefault;
-    cellInstance.selectionStyle = UITableViewCellSelectionStyleNone;
+    [self.tableView setContentSize:CGSizeMake(WIDTH(tableViewInstance), dataArray.count*120+HEIGHT(headerView))];
     return cellInstance;
 }
 
@@ -354,6 +356,14 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     return dataArray.count;
 }
 //==============================TableView区域结束==============================//
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    //取消tableViewCell选中状态
+    NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
+    if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
+}
 
 -(void)dealloc
 {

@@ -15,7 +15,7 @@
 -(id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-75, HEIGHT(self)/2-75, 150, 150)];
+        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-50, HEIGHT(self)/2-50, 130, 130)];
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:imageView];
         
@@ -81,7 +81,7 @@
             labelMessage.font = SYSTEMFONT(16);
             labelMessage.textAlignment = NSTextAlignmentCenter;
 
-            refreshButton = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self)/2-75, POS_Y(labelMessage), 150, 40)];
+            refreshButton = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self)/2-60, POS_Y(labelMessage), 120, 40)];
             refreshButton.layer.borderWidth =1;
             refreshButton.layer.cornerRadius =5;
             refreshButton.layer.borderColor = AppColorTheme.CGColor;
@@ -99,7 +99,7 @@
         [labelMessage removeFromSuperview];
         [refreshButton removeFromSuperview];
         
-        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-75, HEIGHT(self)/2-75, 150, 150)];
+        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-50, HEIGHT(self)/2-50, 100, 100)];
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:imageView];
         [self loadImages];
@@ -119,7 +119,7 @@
     if (self.content) {
         [TDUtil setLabelMutableText:labelMessage content:content lineSpacing:3 headIndent:0];
         //重新设置按钮位置
-        [refreshButton setFrame:CGRectMake(WIDTH(self)/2-75, POS_Y(labelMessage), 150, 40)];
+        [refreshButton setFrame:CGRectMake(WIDTH(self)/2-50, POS_Y(labelMessage), 100, 40)];
     }
 }
 

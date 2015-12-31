@@ -18,8 +18,8 @@
 
 - (id)init {
     if (self=[super init]) {
-        self.requestInstance=[[ASIFormDataRequest alloc]init];
-        [self.requestInstance setTimeOutSeconds:5];
+//        self.requestInstance=[[ASIFormDataRequest alloc]init];
+//        [self.requestInstance setTimeOutSeconds:0];
     }
     return self;
 }
@@ -39,6 +39,7 @@
     NSURL* url = [NSURL URLWithString:[SERVICE_URL stringByAppendingString:urlStr]];
     NSLog(@"上传文件:%@",url);
     self.requestInstance=[ASIFormDataRequest requestWithURL:url];
+    [self.requestInstance setTimeOutSeconds:5];
     if (postDic!=nil) {
         for (int i=0; i<postDic.count; i++) {
             NSString* key=[[postDic allKeys] objectAtIndex:i];
@@ -50,7 +51,6 @@
     fileName = [fileName stringByAppendingString:@".jpg"];
     [self.requestInstance setFile:filePath withFileName:fileName andContentType:@"jpg" forKey:@"file"];
     
-    self.requestInstance.timeOutSeconds=10;
     if (delegate) {
         requestInstance.delegate=delegate;
     }else{
@@ -84,6 +84,7 @@
     NSURL* url = [NSURL URLWithString:[SERVICE_URL stringByAppendingString:urlStr]];
     NSLog(@"上传文件:%@",url);
     self.requestInstance=[ASIFormDataRequest requestWithURL:url];
+    [self.requestInstance setTimeOutSeconds:5];
     if (postDic!=nil) {
         for (int i=0; i<postDic.count; i++) {
             NSString* key=[[postDic allKeys] objectAtIndex:i];
@@ -100,7 +101,6 @@
         [self.requestInstance setFile:filePath withFileName:fileName andContentType:@"jpg" forKey:[NSString stringWithFormat:@"%@%d",postName,i]];
     }
     
-    self.requestInstance.timeOutSeconds=10;
     if (delegate) {
         requestInstance.delegate=delegate;
     }else{
@@ -131,6 +131,7 @@
     NSURL* url = [NSURL URLWithString:[SERVICE_URL stringByAppendingString:urlStr]];
     NSLog(@"请求地址:%@",url);
     self.requestInstance=[ASIFormDataRequest requestWithURL:url];
+    [self.requestInstance setTimeOutSeconds:5];
     if (!postDic) {
         [self.requestInstance setRequestMethod:@"GET"];
     }
@@ -141,7 +142,6 @@
             [self.requestInstance setPostValue:value forKey:key];
         }
     }
-    self.requestInstance.timeOutSeconds=10;
     if (delegate) {
         requestInstance.delegate=delegate;
     }else{
@@ -167,6 +167,7 @@
     self.isRequestSuccessed=@"NO";
     NSURL* url = [NSURL URLWithString:[SERVICE_URL stringByAppendingString:urlStr]];
     self.requestInstance=[ASIFormDataRequest requestWithURL:url];
+    [self.requestInstance setTimeOutSeconds:5];
     if (!postDic) {
         [self.requestInstance setRequestMethod:@"GET"];
     }
@@ -202,7 +203,7 @@
     NSURL* url = [NSURL URLWithString:[SERVICE_URL stringByAppendingString:urlStr]];
     NSLog(@"请求地址:%@",url);
     self.requestInstance=[ASIFormDataRequest requestWithURL:url];
-    self.requestInstance.timeOutSeconds=10;
+    self.requestInstance.timeOutSeconds=5;
     [self.requestInstance setRequestMethod:method];
     if (delegate) {
         requestInstance.delegate=delegate;

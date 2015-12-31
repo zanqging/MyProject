@@ -20,7 +20,8 @@
 -(id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        [self performSelector:@selector(layerOut:) withObject:nil afterDelay:0.01];
+//        [self performSelector:@selector(layerOut:) withObject:nil afterDelay:0];
+        [self layerOut:nil];
     }
     return self;
 }
@@ -29,7 +30,7 @@
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
          self.backgroundColor = BackColor;
-        [self performSelector:@selector(layerOut:) withObject:nil afterDelay:0.001];
+        [self layerOut:nil];
     }
     return self;
 }
@@ -37,9 +38,9 @@
 -(void)layerOut:(id)sender
 {
     //内容视图
-    contentView  =[[UIView alloc]initWithFrame:CGRectMake(10, 0, WIDTH(self)-20, HEIGHT(self)-5)];
+    contentView  =[[UIView alloc]initWithFrame:CGRectMake(10, 0, WIDTH(self.contentView)-20, HEIGHT(self.contentView)-5)];
     contentView.backgroundColor  = WriteColor;
-    [self addSubview:contentView];
+    [self.contentView addSubview:contentView];
     
     //图片
     imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 130, HEIGHT(contentView)-10)];
@@ -54,46 +55,74 @@
     }
     
     //标题
-    labelContent = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+5, Y(imgView)+15, WIDTH(contentView)-150, 25)];
-    labelContent.font = SYSTEMFONT(16);
-    [contentView addSubview:labelContent];
-    
-    if (self.companyName) {
-        labelContent.text = self.companyName;
-    }
+    labelTitle = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+5, Y(imgView)+15, WIDTH(contentView)-150, 25)];
+    labelTitle.font = SYSTEMFONT(16);
+    [contentView addSubview:labelTitle];
     
     //融资进度
-    UILabel* labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelContent), POS_Y(labelContent)+5, 50, 20)];
+    UILabel* labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelTitle), POS_Y(labelTitle)+5, 50, 20)];
     labelProess.font =SYSTEMFONT(14);
     labelProess.text = @"已筹:";
     [contentView addSubview:labelProess];
     
     
-    labelProess = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(labelProess), Y(labelProess), 50, HEIGHT(labelProess))];
-    labelProess.font =SYSTEMFONT(14);
-    labelProess.text =[NSString stringWithFormat:@"%@万",self.hasFinance];
-    labelProess.textColor = ColorTheme2;
-    [contentView addSubview:labelProess];
+    labelContent = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(labelProess), Y(labelProess), 50, HEIGHT(labelProess))];
+    labelContent.font =SYSTEMFONT(14);
+    labelContent.textColor = ColorTheme2;
+    [contentView addSubview:labelContent];
 
     
     
-    labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelContent), POS_Y(labelProess)+5, 70, 20)];
+    labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelProess), POS_Y(labelProess)+5, 70, 20)];
     labelProess.text = @"众筹时间:";
     labelProess.font =SYSTEMFONT(14);
     [contentView addSubview:labelProess];
 
    
     
-    labelProess = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(labelProess), Y(labelProess), 150, HEIGHT(labelProess))];
-    labelProess.text = self.dateTime;
-    labelProess.font =SYSTEMFONT(14);
-    labelProess.textColor = ColorTheme2;
-    [contentView addSubview:labelProess];
+    labelDateTime = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(labelProess), Y(labelProess), 150, HEIGHT(labelProess))];
+    labelDateTime.font =SYSTEMFONT(14);
+    labelDateTime.textColor = ColorTheme2;
+    [contentView addSubview:labelDateTime];
     
+    [contentView setFrame:CGRectMake(10, 0, WIDTH(self.contentView)-20, POS_Y(labelDateTime)+20)];
+    [imgView setFrame:CGRectMake(5, 5, 130, HEIGHT(contentView)-10)];
     
+}
+
+-(void)setHasFinance:(NSString *)hasFinance
+{
+    self->_hasFinance = hasFinance;
+    labelContent.text  = [NSString stringWithFormat:@"%@万",self.hasFinance];
+}
+
+-(void)setCompanyName:(NSString *)companyName
+{
+    if ([TDUtil isValidString:companyName]) {
+        self->_companyName = companyName;
+        labelTitle.text = self.companyName;
+    }
+}
+-(void)setImageName:(NSString *)imageName
+{
+    if ([TDUtil isValidString:imageName]) {
+        self->_imageName = imageName;
+        
+        [imgView sd_setImageWithPreviousCachedImageWithURL:[NSURL URLWithString:self.imageName] andPlaceholderImage:IMAGENAMED(@"loading") options:SDWebImageProgressiveDownload progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+            NSLog(@"开始下载:%ld",expectedSize/receivedSize);
+        } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+
+        }];
+    }
+}
+-(void)setDateTime:(NSString *)dateTime
+{
+    if (dateTime && ![dateTime isEqualToString:@""]) {
+        self->_dateTime  =dateTime;
+        labelDateTime.text = self.dateTime;
+    }
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
 }
 @end

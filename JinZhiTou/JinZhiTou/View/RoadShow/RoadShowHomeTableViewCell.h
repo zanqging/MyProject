@@ -20,4 +20,6 @@
 @property(retain,nonatomic)NSString* imageName;  //图片
 @property(retain,nonatomic)NSString* hasFinance;
 @property(retain,nonatomic)NSString* companyName; //公司名称
+
+-(void)layerOut:(id)sender;
 @end

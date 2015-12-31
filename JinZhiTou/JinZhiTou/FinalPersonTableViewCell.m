@@ -20,18 +20,18 @@
         self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 130,HEIGHT(view)-10)];
         self.imgView.image = IMAGENAMED(@"loading");
         self.imgView.contentMode = UIViewContentModeScaleAspectFit;
-        self.imgView.layer.cornerRadius = 3;
+//        self.imgView.layer.cornerRadius = 3;
         self.imgView.layer.masksToBounds = YES;
         [view addSubview:self.imgView];
         [self addSubview:view];
         //名称
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, Y(self.imgView)+10, 130, 21)];
+        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, Y(self.imgView)+20, 130, 21)];
         self.titleLabel.font = SYSTEMFONT(16);
         self.titleLabel.textColor = FONT_COLOR_RED;
         [view addSubview:self.titleLabel];
         
         //描述
-        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, POS_Y(self.titleLabel), WIDTH(self)/2, 21)];
+        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, POS_Y(self.titleLabel), WIDTH(self)/2-10, 21)];
         self.contentLabel.font = SYSTEMFONT(14);
         self.contentLabel.textColor = FONT_COLOR_BLACK;
         [view addSubview:self.contentLabel];

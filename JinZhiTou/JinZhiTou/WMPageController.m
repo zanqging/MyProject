@@ -34,6 +34,7 @@
 // 收到内存警告的次数
 @property (nonatomic, assign) int memoryWarningCount;
 @property (nonatomic,strong) movieViewController * moviePlayer;//视频播放控制器
+@property(retain,nonatomic)NSMutableDictionary* dicDataStore;
 @end
 
 @implementation WMPageController
@@ -654,7 +655,6 @@
             self.itemsWidths = @[@(100),@(100)]; // 这里可以设置不同的宽度
             self.menuView.items = _titles;
             [self resetMenuView];
-//            [self finialCommicuteList];
             break;
         default:
             break;
@@ -793,9 +793,9 @@
     NSInteger gap = (NSInteger)labs(index - currentIndex);
     if (_selectIndex != (int)index) {
 //        _selectIndex = (int)index;
-        self.selectIndex = (int)index;
-        isRefresh = YES;
         self.currentPage=0;
+        isRefresh = YES;
+        self.selectIndex = (int)index;
     }
     _animate = NO;
     CGPoint targetP = CGPointMake(_viewWidth*index, 0);
@@ -827,6 +827,17 @@
 -(void)setDataDic:(NSMutableDictionary *)dataDic
 {
     [super setDataDic:dataDic];
+    
+    //做缓存数据
+    if (!self.dicDataStore) {
+        self.dicDataStore = [[NSMutableDictionary alloc]init];
+    }
+    
+    if (isRefresh) {
+        [self.dicDataStore setValue:[NSString stringWithFormat:@"%d",self.selectIndex] forKey:[NSString stringWithFormat:@"%d",self.menuSelectIndex]];
+    }
+    NSLog(@"%@",self.dicDataStore);
+    
     if (isRefresh) {
         self.currentViewController.dataArray = [self.dataDic valueForKey:@"data"];
     }else{

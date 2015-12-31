@@ -25,7 +25,7 @@
         [view addSubview:self.imgView];
         [self addSubview:view];
         //名称
-        CGFloat len =WIDTH(self)-150;
+        CGFloat len =WIDTH(self)-153;
 //        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, Y(self.imgView),len,20)];
 //        self.titleLabel.font = SYSTEMFONT(18);
 //        self.titleLabel.textColor = FONT_COLOR_BLACK;

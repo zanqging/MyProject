@@ -22,7 +22,7 @@
         
         [self addSubview:view];
         
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10,WIDTH(self)-100, 40)];
+        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10,WIDTH(self)-120, 40)];
         self.titleLabel.numberOfLines  =2;
         self.titleLabel.font  =SYSTEMBOLDFONT(16);
         self.titleLabel.textColor = FONT_COLOR_BLACK;
@@ -47,7 +47,7 @@
         self.typeLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [view addSubview:self.typeLabel];
         
-        self.imgview = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)-90, 0, 80, 80)];
+        self.imgview = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)-110, 0, 100, 80)];
         self.imgview.contentMode = UIViewContentModeScaleAspectFit;
         self.imgview.layer.masksToBounds  =YES;
         [view addSubview:self.imgview];
@@ -66,7 +66,7 @@
 -(void)layoutNeed:(float)height
 {
     UIImageView* imgaeView;
-    imgaeView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.titleLabel), height, WIDTH(self)-2*X(self.titleLabel), 1)];
+    imgaeView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.titleLabel), height+5, WIDTH(self)-2*X(self.titleLabel), 1)];
     imgaeView.backgroundColor  =BackColor;
     [self addSubview:imgaeView];
     
@@ -74,7 +74,7 @@
     w=WIDTH(self)/3;
     h=height;
     
-    self.colletcteLabel =[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-90, Y(imgaeView), 70, 25)];
+    self.colletcteLabel =[[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)-90, Y(imgaeView)+5, 70, 25)];
     self.colletcteLabel.contentMode = UIViewContentModeScaleAspectFill;
     self.colletcteLabel.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
     [view addSubview:self.colletcteLabel];
@@ -94,6 +94,8 @@
     self.priseLabel.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
     
     [view addSubview:self.priseLabel];
+    
+    [view setFrame:CGRectMake(0, 0, WIDTH(self), POS_Y(self.priseLabel)+5)];
 }
 
 @end
