@@ -539,6 +539,9 @@
 		453E23E21B7E2CA30023BB00 /* FinialSuccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 453E23E11B7E2CA30023BB00 /* FinialSuccessViewController.m */; };
 		453E23E41B7ED07F0023BB00 /* read_me.txt in Resources */ = {isa = PBXBuildFile; fileRef = 453E23E31B7ED07F0023BB00 /* read_me.txt */; };
 		453E64251BC6CA2C000B664E /* SystemSwipableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 453E64241BC6CA2C000B664E /* SystemSwipableCell.m */; };
+		453F5A911C3521E8009F9963 /* Jinzht.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 453F5A8F1C3521E8009F9963 /* Jinzht.xcdatamodeld */; };
+		453F5A921C3521E8009F9963 /* Jinzht.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 453F5A8F1C3521E8009F9963 /* Jinzht.xcdatamodeld */; };
+		453F5A931C3521E8009F9963 /* Jinzht.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 453F5A8F1C3521E8009F9963 /* Jinzht.xcdatamodeld */; };
 		453F93CF1BB4379100CA7700 /* FoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 453F93CE1BB4379100CA7700 /* FoldView.m */; };
 		4543EADE1BD08DCB0041DCBD /* ActionDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EAD31BD08DCB0041DCBD /* ActionDetailViewController.m */; };
 		4543EADF1BD08DCB0041DCBD /* ActionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EAD51BD08DCB0041DCBD /* ActionHeader.m */; };
@@ -593,6 +596,30 @@
 		4543EB9F1BD0ABB80041DCBD /* VideoOverlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 4543EB7E1BD0ABB80041DCBD /* VideoOverlay.png */; };
 		4543EBA01BD0ABB80041DCBD /* VideoOverlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4543EB7F1BD0ABB80041DCBD /* VideoOverlay@2x.png */; };
 		4543EBA11BD0ABB80041DCBD /* VideoOverlay@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4543EB801BD0ABB80041DCBD /* VideoOverlay@3x.png */; };
+		454400861C3906C00094696A /* Project+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400771C3906C00094696A /* Project+CoreDataProperties.m */; };
+		454400871C3906C00094696A /* Project+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400771C3906C00094696A /* Project+CoreDataProperties.m */; };
+		454400881C3906C00094696A /* Project+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400771C3906C00094696A /* Project+CoreDataProperties.m */; };
+		454400891C3906C00094696A /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400791C3906C00094696A /* Project.m */; };
+		4544008A1C3906C00094696A /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400791C3906C00094696A /* Project.m */; };
+		4544008B1C3906C00094696A /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400791C3906C00094696A /* Project.m */; };
+		4544008C1C3906C00094696A /* Banner+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544007B1C3906C00094696A /* Banner+CoreDataProperties.m */; };
+		4544008D1C3906C00094696A /* Banner+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544007B1C3906C00094696A /* Banner+CoreDataProperties.m */; };
+		4544008E1C3906C00094696A /* Banner+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544007B1C3906C00094696A /* Banner+CoreDataProperties.m */; };
+		4544008F1C3906C00094696A /* Banner.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544007D1C3906C00094696A /* Banner.m */; };
+		454400901C3906C00094696A /* Banner.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544007D1C3906C00094696A /* Banner.m */; };
+		454400911C3906C00094696A /* Banner.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544007D1C3906C00094696A /* Banner.m */; };
+		454400921C3906C00094696A /* Announcement+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544007F1C3906C00094696A /* Announcement+CoreDataProperties.m */; };
+		454400931C3906C00094696A /* Announcement+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544007F1C3906C00094696A /* Announcement+CoreDataProperties.m */; };
+		454400941C3906C00094696A /* Announcement+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 4544007F1C3906C00094696A /* Announcement+CoreDataProperties.m */; };
+		454400951C3906C00094696A /* Announcement.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400811C3906C00094696A /* Announcement.m */; };
+		454400961C3906C00094696A /* Announcement.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400811C3906C00094696A /* Announcement.m */; };
+		454400971C3906C00094696A /* Announcement.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400811C3906C00094696A /* Announcement.m */; };
+		454400981C3906C00094696A /* Platform+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400831C3906C00094696A /* Platform+CoreDataProperties.m */; };
+		454400991C3906C00094696A /* Platform+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400831C3906C00094696A /* Platform+CoreDataProperties.m */; };
+		4544009A1C3906C00094696A /* Platform+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400831C3906C00094696A /* Platform+CoreDataProperties.m */; };
+		4544009B1C3906C00094696A /* Platform.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400851C3906C00094696A /* Platform.m */; };
+		4544009C1C3906C00094696A /* Platform.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400851C3906C00094696A /* Platform.m */; };
+		4544009D1C3906C00094696A /* Platform.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400851C3906C00094696A /* Platform.m */; };
 		4545D08F1BEB45D400D21FB0 /* WMPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D08E1BEB45D400D21FB0 /* WMPageController.m */; };
 		4545D09A1BEB460B00D21FB0 /* WMFooldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0931BEB460B00D21FB0 /* WMFooldView.m */; };
 		4545D09B1BEB460B00D21FB0 /* WMMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0951BEB460B00D21FB0 /* WMMenuItem.m */; };
@@ -1457,6 +1484,7 @@
 		453E23E31B7ED07F0023BB00 /* read_me.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = read_me.txt; sourceTree = "<group>"; };
 		453E64231BC6CA2C000B664E /* SystemSwipableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SystemSwipableCell.h; path = Controller/UserInfo/SystemSwipableCell.h; sourceTree = "<group>"; };
 		453E64241BC6CA2C000B664E /* SystemSwipableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SystemSwipableCell.m; path = Controller/UserInfo/SystemSwipableCell.m; sourceTree = "<group>"; };
+		453F5A901C3521E8009F9963 /* Jinzht.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Jinzht.xcdatamodel; sourceTree = "<group>"; };
 		453F93CD1BB4379100CA7700 /* FoldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoldView.h; sourceTree = "<group>"; };
 		453F93CE1BB4379100CA7700 /* FoldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoldView.m; sourceTree = "<group>"; };
 		4543EAD21BD08DCB0041DCBD /* ActionDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionDetailViewController.h; sourceTree = "<group>"; };
@@ -1535,6 +1563,22 @@
 		4543EB7E1BD0ABB80041DCBD /* VideoOverlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VideoOverlay.png; sourceTree = "<group>"; };
 		4543EB7F1BD0ABB80041DCBD /* VideoOverlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "VideoOverlay@2x.png"; sourceTree = "<group>"; };
 		4543EB801BD0ABB80041DCBD /* VideoOverlay@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "VideoOverlay@3x.png"; sourceTree = "<group>"; };
+		454400761C3906C00094696A /* Project+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Project+CoreDataProperties.h"; path = "Data/Project+CoreDataProperties.h"; sourceTree = "<group>"; };
+		454400771C3906C00094696A /* Project+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Project+CoreDataProperties.m"; path = "Data/Project+CoreDataProperties.m"; sourceTree = "<group>"; };
+		454400781C3906C00094696A /* Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Project.h; path = Data/Project.h; sourceTree = "<group>"; };
+		454400791C3906C00094696A /* Project.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Project.m; path = Data/Project.m; sourceTree = "<group>"; };
+		4544007A1C3906C00094696A /* Banner+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Banner+CoreDataProperties.h"; path = "Data/Banner+CoreDataProperties.h"; sourceTree = "<group>"; };
+		4544007B1C3906C00094696A /* Banner+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Banner+CoreDataProperties.m"; path = "Data/Banner+CoreDataProperties.m"; sourceTree = "<group>"; };
+		4544007C1C3906C00094696A /* Banner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Banner.h; path = Data/Banner.h; sourceTree = "<group>"; };
+		4544007D1C3906C00094696A /* Banner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Banner.m; path = Data/Banner.m; sourceTree = "<group>"; };
+		4544007E1C3906C00094696A /* Announcement+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Announcement+CoreDataProperties.h"; path = "Data/Announcement+CoreDataProperties.h"; sourceTree = "<group>"; };
+		4544007F1C3906C00094696A /* Announcement+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Announcement+CoreDataProperties.m"; path = "Data/Announcement+CoreDataProperties.m"; sourceTree = "<group>"; };
+		454400801C3906C00094696A /* Announcement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Announcement.h; path = Data/Announcement.h; sourceTree = "<group>"; };
+		454400811C3906C00094696A /* Announcement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Announcement.m; path = Data/Announcement.m; sourceTree = "<group>"; };
+		454400821C3906C00094696A /* Platform+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Platform+CoreDataProperties.h"; path = "Data/Platform+CoreDataProperties.h"; sourceTree = "<group>"; };
+		454400831C3906C00094696A /* Platform+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Platform+CoreDataProperties.m"; path = "Data/Platform+CoreDataProperties.m"; sourceTree = "<group>"; };
+		454400841C3906C00094696A /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = Data/Platform.h; sourceTree = "<group>"; };
+		454400851C3906C00094696A /* Platform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Platform.m; path = Data/Platform.m; sourceTree = "<group>"; };
 		4545D08C1BEB45D400D21FB0 /* WMPageConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPageConst.h; sourceTree = "<group>"; };
 		4545D08D1BEB45D400D21FB0 /* WMPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPageController.h; sourceTree = "<group>"; };
 		4545D08E1BEB45D400D21FB0 /* WMPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPageController.m; sourceTree = "<group>"; };
@@ -2430,6 +2474,30 @@
 			name = WeiXin;
 			sourceTree = "<group>";
 		};
+		453F5A941C35228B009F9963 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				453F5A8F1C3521E8009F9963 /* Jinzht.xcdatamodeld */,
+				454400761C3906C00094696A /* Project+CoreDataProperties.h */,
+				454400771C3906C00094696A /* Project+CoreDataProperties.m */,
+				454400781C3906C00094696A /* Project.h */,
+				454400791C3906C00094696A /* Project.m */,
+				4544007A1C3906C00094696A /* Banner+CoreDataProperties.h */,
+				4544007B1C3906C00094696A /* Banner+CoreDataProperties.m */,
+				4544007C1C3906C00094696A /* Banner.h */,
+				4544007D1C3906C00094696A /* Banner.m */,
+				4544007E1C3906C00094696A /* Announcement+CoreDataProperties.h */,
+				4544007F1C3906C00094696A /* Announcement+CoreDataProperties.m */,
+				454400801C3906C00094696A /* Announcement.h */,
+				454400811C3906C00094696A /* Announcement.m */,
+				454400821C3906C00094696A /* Platform+CoreDataProperties.h */,
+				454400831C3906C00094696A /* Platform+CoreDataProperties.m */,
+				454400841C3906C00094696A /* Platform.h */,
+				454400851C3906C00094696A /* Platform.m */,
+			);
+			name = Data;
+			sourceTree = "<group>";
+		};
 		453F93CC1BB4376200CA7700 /* FoldView */ = {
 			isa = PBXGroup;
 			children = (
@@ -3009,6 +3077,7 @@
 		45DEACEA1B437879001EDA5D /* JinZhiTou */ = {
 			isa = PBXGroup;
 			children = (
+				453F5A941C35228B009F9963 /* Data */,
 				45631F831B5A4B7B009FA35D /* tools */,
 				45631F7C1B5A48AF009FA35D /* model */,
 				451F48A01B5368D800C91B4A /* View */,
@@ -3836,6 +3905,7 @@
 				452533B81C29A116000719AC /* SBJsonBase.m in Sources */,
 				452533B91C29A116000719AC /* PEResizeControl.m in Sources */,
 				452533BA1C29A116000719AC /* UserBasicInfoViewController.m in Sources */,
+				454400881C3906C00094696A /* Project+CoreDataProperties.m in Sources */,
 				452533BB1C29A116000719AC /* MJRefreshBackStateFooter.m in Sources */,
 				452533BC1C29A116000719AC /* ChineseToPinyinResource.m in Sources */,
 				452533BD1C29A116000719AC /* FinialProctoTableViewCell.m in Sources */,
@@ -3845,10 +3915,12 @@
 				452533C11C29A116000719AC /* RoadShowApplyViewController.m in Sources */,
 				452533C21C29A116000719AC /* ReplyMessageTableViewCell.m in Sources */,
 				452533C31C29A116000719AC /* ShareNewsView.m in Sources */,
+				4544008E1C3906C00094696A /* Banner+CoreDataProperties.m in Sources */,
 				452533C41C29A116000719AC /* RoadShowFooter.m in Sources */,
 				452533C51C29A116000719AC /* NSTimer+Addition.m in Sources */,
 				452533C61C29A116000719AC /* ASIDataCompressor.m in Sources */,
 				452533C71C29A116000719AC /* MJRefreshAutoGifFooter.m in Sources */,
+				4544008B1C3906C00094696A /* Project.m in Sources */,
 				452533C81C29A116000719AC /* WMMenuItem.m in Sources */,
 				452533C91C29A116000719AC /* Cell.m in Sources */,
 				452533CA1C29A116000719AC /* FoldView.m in Sources */,
@@ -3863,6 +3935,7 @@
 				452533D31C29A116000719AC /* MWZoomingScrollView.m in Sources */,
 				452533D41C29A116000719AC /* CycleShareTableViewCell.m in Sources */,
 				452533D51C29A116000719AC /* UserJobTableViewCell.m in Sources */,
+				454400971C3906C00094696A /* Announcement.m in Sources */,
 				452533D61C29A116000719AC /* ProjectInfoView.m in Sources */,
 				452533D71C29A116000719AC /* RoadShowBottom.m in Sources */,
 				452533D81C29A116000719AC /* UIReplyLabel.m in Sources */,
@@ -3894,6 +3967,7 @@
 				452533F21C29A116000719AC /* RoadShowTableViewCell.m in Sources */,
 				452533F31C29A116000719AC /* CyclePriseTableViewCell.m in Sources */,
 				452533F41C29A116000719AC /* UserTraceViewController.m in Sources */,
+				453F5A931C3521E8009F9963 /* Jinzht.xcdatamodeld in Sources */,
 				452533F51C29A116000719AC /* AFNetworkReachabilityManager.m in Sources */,
 				452533F61C29A116000719AC /* AFURLRequestSerialization.m in Sources */,
 				452533F71C29A116000719AC /* UIViewController+MMDrawerController.m in Sources */,
@@ -3910,6 +3984,7 @@
 				452534021C29A116000719AC /* FinialAuthDetailViewController.m in Sources */,
 				452534031C29A116000719AC /* UserPhoneTableViewCell.m in Sources */,
 				452534041C29A116000719AC /* WeChatBindController.m in Sources */,
+				4544009A1C3906C00094696A /* Platform+CoreDataProperties.m in Sources */,
 				452534051C29A116000719AC /* AuthTraceTableViewCell.m in Sources */,
 				452534061C29A116000719AC /* CompanyFinial.m in Sources */,
 				452534071C29A116000719AC /* FinialPersonTableViewController.m in Sources */,
@@ -4003,6 +4078,7 @@
 				4525345F1C29A116000719AC /* MWPhotoBrowser.m in Sources */,
 				452534601C29A116000719AC /* PinYinForObjc.m in Sources */,
 				452534611C29A116000719AC /* ALMoviePlayerControls.m in Sources */,
+				454400911C3906C00094696A /* Banner.m in Sources */,
 				452534621C29A116000719AC /* AnnounceView.m in Sources */,
 				452534631C29A116000719AC /* WaterFallHeader.m in Sources */,
 				452534641C29A116000719AC /* FinalKindTableViewCell.m in Sources */,
@@ -4054,6 +4130,7 @@
 				452534921C29A116000719AC /* UserAreaTableViewCell.m in Sources */,
 				452534931C29A116000719AC /* UserInfo.m in Sources */,
 				452534941C29A116000719AC /* UserBasicInfoTableViewCell.m in Sources */,
+				4544009D1C3906C00094696A /* Platform.m in Sources */,
 				452534951C29A116000719AC /* SearchTableViewHeader.m in Sources */,
 				452534961C29A116000719AC /* WMTableViewController.m in Sources */,
 				452534971C29A116000719AC /* PersonalFinial.m in Sources */,
@@ -4110,6 +4187,7 @@
 				452534CA1C29A116000719AC /* AlertView.m in Sources */,
 				452534CB1C29A116000719AC /* SDWebImageCompat.m in Sources */,
 				452534CC1C29A116000719AC /* FinialPlanViewController.m in Sources */,
+				454400941C3906C00094696A /* Announcement+CoreDataProperties.m in Sources */,
 				452534CD1C29A116000719AC /* SDWebImageDownloaderOperation.m in Sources */,
 				452534CE1C29A116000719AC /* UIView+MJExtension.m in Sources */,
 				452534CF1C29A116000719AC /* AFHTTPRequestOperationManager.m in Sources */,
@@ -4143,6 +4221,7 @@
 				454B988C1A54C76500A1CC7E /* SBJsonBase.m in Sources */,
 				454B988D1A54C76500A1CC7E /* PEResizeControl.m in Sources */,
 				454B988E1A54C76500A1CC7E /* UserBasicInfoViewController.m in Sources */,
+				454400871C3906C00094696A /* Project+CoreDataProperties.m in Sources */,
 				454B988F1A54C76500A1CC7E /* MJRefreshBackStateFooter.m in Sources */,
 				454B98901A54C76500A1CC7E /* ChineseToPinyinResource.m in Sources */,
 				454B98911A54C76500A1CC7E /* FinialProctoTableViewCell.m in Sources */,
@@ -4152,10 +4231,12 @@
 				454B98951A54C76500A1CC7E /* RoadShowApplyViewController.m in Sources */,
 				454B98961A54C76500A1CC7E /* ReplyMessageTableViewCell.m in Sources */,
 				454B98971A54C76500A1CC7E /* ShareNewsView.m in Sources */,
+				4544008D1C3906C00094696A /* Banner+CoreDataProperties.m in Sources */,
 				454B98981A54C76500A1CC7E /* RoadShowFooter.m in Sources */,
 				454B98991A54C76500A1CC7E /* NSTimer+Addition.m in Sources */,
 				454B989A1A54C76500A1CC7E /* ASIDataCompressor.m in Sources */,
 				454B989B1A54C76500A1CC7E /* MJRefreshAutoGifFooter.m in Sources */,
+				4544008A1C3906C00094696A /* Project.m in Sources */,
 				454B989C1A54C76500A1CC7E /* WMMenuItem.m in Sources */,
 				454B989D1A54C76500A1CC7E /* Cell.m in Sources */,
 				454B989E1A54C76500A1CC7E /* FoldView.m in Sources */,
@@ -4170,6 +4251,7 @@
 				454B98A71A54C76500A1CC7E /* MWZoomingScrollView.m in Sources */,
 				454B98A81A54C76500A1CC7E /* CycleShareTableViewCell.m in Sources */,
 				454B98A91A54C76500A1CC7E /* UserJobTableViewCell.m in Sources */,
+				454400961C3906C00094696A /* Announcement.m in Sources */,
 				454B98AA1A54C76500A1CC7E /* ProjectInfoView.m in Sources */,
 				454B98AB1A54C76500A1CC7E /* RoadShowBottom.m in Sources */,
 				454B98AC1A54C76500A1CC7E /* UIReplyLabel.m in Sources */,
@@ -4201,6 +4283,7 @@
 				454B98C61A54C76500A1CC7E /* RoadShowTableViewCell.m in Sources */,
 				454B98C71A54C76500A1CC7E /* CyclePriseTableViewCell.m in Sources */,
 				454B98C81A54C76500A1CC7E /* UserTraceViewController.m in Sources */,
+				453F5A921C3521E8009F9963 /* Jinzht.xcdatamodeld in Sources */,
 				454B98C91A54C76500A1CC7E /* AFNetworkReachabilityManager.m in Sources */,
 				454B98CA1A54C76500A1CC7E /* AFURLRequestSerialization.m in Sources */,
 				454B98CB1A54C76500A1CC7E /* UIViewController+MMDrawerController.m in Sources */,
@@ -4217,6 +4300,7 @@
 				454B98D61A54C76500A1CC7E /* FinialAuthDetailViewController.m in Sources */,
 				454B98D71A54C76500A1CC7E /* UserPhoneTableViewCell.m in Sources */,
 				454B98D81A54C76500A1CC7E /* WeChatBindController.m in Sources */,
+				454400991C3906C00094696A /* Platform+CoreDataProperties.m in Sources */,
 				454B98D91A54C76500A1CC7E /* AuthTraceTableViewCell.m in Sources */,
 				454B98DA1A54C76500A1CC7E /* CompanyFinial.m in Sources */,
 				454B98DB1A54C76500A1CC7E /* FinialPersonTableViewController.m in Sources */,
@@ -4310,6 +4394,7 @@
 				454B99331A54C76500A1CC7E /* MWPhotoBrowser.m in Sources */,
 				454B99341A54C76500A1CC7E /* PinYinForObjc.m in Sources */,
 				454B99351A54C76500A1CC7E /* ALMoviePlayerControls.m in Sources */,
+				454400901C3906C00094696A /* Banner.m in Sources */,
 				454B99361A54C76500A1CC7E /* AnnounceView.m in Sources */,
 				454B99371A54C76500A1CC7E /* WaterFallHeader.m in Sources */,
 				454B99381A54C76500A1CC7E /* FinalKindTableViewCell.m in Sources */,
@@ -4361,6 +4446,7 @@
 				454B99661A54C76500A1CC7E /* UserAreaTableViewCell.m in Sources */,
 				454B99671A54C76500A1CC7E /* UserInfo.m in Sources */,
 				454B99681A54C76500A1CC7E /* UserBasicInfoTableViewCell.m in Sources */,
+				4544009C1C3906C00094696A /* Platform.m in Sources */,
 				454B99691A54C76500A1CC7E /* SearchTableViewHeader.m in Sources */,
 				454B996A1A54C76500A1CC7E /* WMTableViewController.m in Sources */,
 				454B996B1A54C76500A1CC7E /* PersonalFinial.m in Sources */,
@@ -4417,6 +4503,7 @@
 				454B999E1A54C76500A1CC7E /* AlertView.m in Sources */,
 				454B999F1A54C76500A1CC7E /* SDWebImageCompat.m in Sources */,
 				454B99A01A54C76500A1CC7E /* FinialPlanViewController.m in Sources */,
+				454400931C3906C00094696A /* Announcement+CoreDataProperties.m in Sources */,
 				454B99A11A54C76500A1CC7E /* SDWebImageDownloaderOperation.m in Sources */,
 				454B99A21A54C76500A1CC7E /* UIView+MJExtension.m in Sources */,
 				454B99A31A54C76500A1CC7E /* AFHTTPRequestOperationManager.m in Sources */,
@@ -4450,6 +4537,7 @@
 				45FCD02A1B75E15A009AD6E3 /* SBJsonBase.m in Sources */,
 				45495BCE1B60DA02007A17FD /* PEResizeControl.m in Sources */,
 				453271701B748E3A0044F8C1 /* UserBasicInfoViewController.m in Sources */,
+				454400861C3906C00094696A /* Project+CoreDataProperties.m in Sources */,
 				45F93B5D1B637311004526F5 /* MJRefreshBackStateFooter.m in Sources */,
 				45495C1C1B60DACA007A17FD /* ChineseToPinyinResource.m in Sources */,
 				45A2ADA41B71AE0900751F78 /* FinialProctoTableViewCell.m in Sources */,
@@ -4459,10 +4547,12 @@
 				45A2ADAD1B7208E300751F78 /* RoadShowApplyViewController.m in Sources */,
 				45E189E41B79E0500082225E /* ReplyMessageTableViewCell.m in Sources */,
 				453441361BE0B6AC00802410 /* ShareNewsView.m in Sources */,
+				4544008C1C3906C00094696A /* Banner+CoreDataProperties.m in Sources */,
 				45E812091B675F40009F840D /* RoadShowFooter.m in Sources */,
 				45F8290F1B6B1A6D0044F6F0 /* NSTimer+Addition.m in Sources */,
 				45F09C6E1B86297B0065D873 /* ASIDataCompressor.m in Sources */,
 				45F93B581B637311004526F5 /* MJRefreshAutoGifFooter.m in Sources */,
+				454400891C3906C00094696A /* Project.m in Sources */,
 				4545D09B1BEB460B00D21FB0 /* WMMenuItem.m in Sources */,
 				45E812151B6790DC009F840D /* Cell.m in Sources */,
 				453F93CF1BB4379100CA7700 /* FoldView.m in Sources */,
@@ -4477,6 +4567,7 @@
 				4543EB0D1BD08E100041DCBD /* MWZoomingScrollView.m in Sources */,
 				4543EAE11BD08DCB0041DCBD /* CycleShareTableViewCell.m in Sources */,
 				453271851B74905D0044F8C1 /* UserJobTableViewCell.m in Sources */,
+				454400951C3906C00094696A /* Announcement.m in Sources */,
 				45F93B6A1B638CEB004526F5 /* ProjectInfoView.m in Sources */,
 				45E8120C1B67835F009F840D /* RoadShowBottom.m in Sources */,
 				458C9E1E1BD52BEC00F66916 /* UIReplyLabel.m in Sources */,
@@ -4508,6 +4599,7 @@
 				45E812031B6748BE009F840D /* RoadShowTableViewCell.m in Sources */,
 				4543EAE01BD08DCB0041DCBD /* CyclePriseTableViewCell.m in Sources */,
 				452381111BAFE21E00C1144A /* UserTraceViewController.m in Sources */,
+				453F5A911C3521E8009F9963 /* Jinzht.xcdatamodeld in Sources */,
 				4517CDBC1B78C7ED00EFBB6A /* AFNetworkReachabilityManager.m in Sources */,
 				4517CDBF1B78C7ED00EFBB6A /* AFURLRequestSerialization.m in Sources */,
 				4501400B1B943024000F8A97 /* UIViewController+MMDrawerController.m in Sources */,
@@ -4524,6 +4616,7 @@
 				45A2ADB01B727CB900751F78 /* FinialAuthDetailViewController.m in Sources */,
 				4532717C1B7490170044F8C1 /* UserPhoneTableViewCell.m in Sources */,
 				457F70EC1BF56C91004241A0 /* WeChatBindController.m in Sources */,
+				454400981C3906C00094696A /* Platform+CoreDataProperties.m in Sources */,
 				45A2ADB31B72811200751F78 /* AuthTraceTableViewCell.m in Sources */,
 				45A2AD9A1B7109F100751F78 /* CompanyFinial.m in Sources */,
 				45F829471B6B62470044F6F0 /* FinialPersonTableViewController.m in Sources */,
@@ -4617,6 +4710,7 @@
 				4543EB0A1BD08E100041DCBD /* MWPhotoBrowser.m in Sources */,
 				45495C151B60DA91007A17FD /* PinYinForObjc.m in Sources */,
 				4511CC1F1BA2B6E300A9D00A /* ALMoviePlayerControls.m in Sources */,
+				4544008F1C3906C00094696A /* Banner.m in Sources */,
 				45735E161BF6B90B00CC8964 /* AnnounceView.m in Sources */,
 				45ECCEFE1B61FED40013CA73 /* WaterFallHeader.m in Sources */,
 				458631F71B65C98D00F06688 /* FinalKindTableViewCell.m in Sources */,
@@ -4668,6 +4762,7 @@
 				453271881B7490740044F8C1 /* UserAreaTableViewCell.m in Sources */,
 				45326F031B7358DB0044F8C1 /* UserInfo.m in Sources */,
 				453271731B748EEB0044F8C1 /* UserBasicInfoTableViewCell.m in Sources */,
+				4544009B1C3906C00094696A /* Platform.m in Sources */,
 				454BF2E61B8EAC8600F1FEE5 /* SearchTableViewHeader.m in Sources */,
 				4545D0A51BEB492900D21FB0 /* WMTableViewController.m in Sources */,
 				45A2AD971B7109D100751F78 /* PersonalFinial.m in Sources */,
@@ -4724,6 +4819,7 @@
 				45271D021B959B4E000544F2 /* AlertView.m in Sources */,
 				45FCD0521B75E216009AD6E3 /* SDWebImageCompat.m in Sources */,
 				45F829441B6B620E0044F6F0 /* FinialPlanViewController.m in Sources */,
+				454400921C3906C00094696A /* Announcement+CoreDataProperties.m in Sources */,
 				45FCD0551B75E216009AD6E3 /* SDWebImageDownloaderOperation.m in Sources */,
 				45F93B651B637311004526F5 /* UIView+MJExtension.m in Sources */,
 				4517CDBA1B78C7ED00EFBB6A /* AFHTTPRequestOperationManager.m in Sources */,
@@ -5035,6 +5131,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		453F5A8F1C3521E8009F9963 /* Jinzht.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				453F5A901C3521E8009F9963 /* Jinzht.xcdatamodel */,
+			);
+			currentVersion = 453F5A901C3521E8009F9963 /* Jinzht.xcdatamodel */;
+			name = Jinzht.xcdatamodeld;
+			path = Data/Jinzht.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 45DEACE01B437879001EDA5D /* Project object */;
 }

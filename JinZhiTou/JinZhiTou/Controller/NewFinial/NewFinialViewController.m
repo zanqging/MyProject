@@ -181,7 +181,7 @@
     cell.priseLabel.text = [[dic valueForKey:@"read"] stringValue];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tableView.contentSize = CGSizeMake(WIDTH(tableView), 140*self.dataCreateArray.count+HEIGHT(typeShow)+15);
+    tableView.contentSize = CGSizeMake(WIDTH(tableView), 140*self.dataCreateArray.count);
     return cell;
 }
 
@@ -323,7 +323,7 @@
             }
             CGRect rect;
             if (typeShow) {
-                rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-30);
+                rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-75);
             }else{
                 rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
             }

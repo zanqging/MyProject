@@ -34,9 +34,11 @@
     [self.navView.leftButton setTitle:@"项目详情" forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
-    self.tableView.dataSource = self;
     self.tableView.delegate = self;
-    //self.tableView.allowsSelection = NO;
+    self.tableView.dataSource = self;
+    self.tableView.backgroundColor = BackColor;
+    [self.tableView setTableHeaderView:[[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 30)]];
+    [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     
     //加载数据
@@ -81,10 +83,12 @@
     FinialPersonTableViewCell* cell=(FinialPersonTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
     if (!cell) {
         cell = [[FinialPersonTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier ];
+        cell.backgroundColor=WriteColor;
     }
     
     if (dicData) {
         NSInteger row = indexPath.row;
+        
         cell.titleLabel.text = dataArray[row];
         double share2give = [[dicData valueForKey:@"share2give"] doubleValue];
         switch (row) {
@@ -130,9 +134,15 @@
 {
     NSInteger row = indexPath.row;
     if (row!=3) {
-        return 70;
+        return 44;
     }else{
-        return 110;
+        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(25, 0, WIDTH(self.view)-35, 0)];
+        label.numberOfLines=0;
+        label.lineBreakMode = NSLineBreakByWordWrapping;
+        NSString* content = [dicData valueForKey:@"usage"];
+        [TDUtil setLabelMutableText:label content:content lineSpacing:0 headIndent:5];
+        
+        return HEIGHT(label)+44;
     }
 }
 
@@ -156,6 +166,11 @@
     
 }
 
+-(void)refresh
+{
+    [super refresh];
+    [self loadData];
+}
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     self.isNetRequestError = YES;

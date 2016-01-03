@@ -112,7 +112,7 @@
         self->_imageName = imageName;
         
         [imgView sd_setImageWithPreviousCachedImageWithURL:[NSURL URLWithString:self.imageName] andPlaceholderImage:IMAGENAMED(@"loading") options:SDWebImageProgressiveDownload progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-            NSLog(@"开始下载:%ld",expectedSize/receivedSize);
+//            NSLog(@"开始下载:%ld",expectedSize/receivedSize);
         } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
 
         }];

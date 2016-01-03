@@ -38,12 +38,19 @@
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     [self addPersonalView];
     
+    [self loadData];
 }
 
 -(void)back:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)loadData
+{
+    self.startLoading  =YES;
+    [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
 }
 
 -(void)addPersonalView
@@ -354,6 +361,17 @@
 }
 
 //*********************************************************网络请求开始*****************************************************//
+-(void)requestFinished:(ASIHTTPRequest*)request
+{
+    NSString* jsonString =[TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    
+    NSMutableDictionary* dic = [jsonString JSONValue];
+    
+    if (dic!=nil) {
+        NSString* code =[dic valueForKey:@"code"];
+    }
+}
 -(void)requestUserInfo:(ASIHTTPRequest*)request
 {
     NSString* jsonString =[TDUtil convertGBKDataToUTF8String:request.responseData];

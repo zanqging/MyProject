@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="14F1021" minimumToolsVersion="Xcode 7.0">
+    <entity name="Announcement" representedClassName="Announcement" syncable="YES">
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Banner" representedClassName="Banner" syncable="YES">
+        <attribute name="imgUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="project" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Cycle" syncable="YES"/>
+    <entity name="Finance" syncable="YES"/>
+    <entity name="HomeInfo" syncable="YES"/>
+    <entity name="NewFinance" syncable="YES"/>
+    <entity name="Platform" representedClassName="Platform" syncable="YES">
+        <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Project" representedClassName="Project" syncable="YES">
+        <attribute name="company" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imgUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="invest" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="planfinance" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="tag" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Banner" positionX="0" positionY="45" width="128" height="88"/>
+        <element name="Cycle" positionX="-18" positionY="27" width="128" height="45"/>
+        <element name="Finance" positionX="-54" positionY="-9" width="128" height="43"/>
+        <element name="Project" positionX="-369" positionY="-45" width="128" height="43"/>
+        <element name="HomeInfo" positionX="18" positionY="63" width="128" height="45"/>
+        <element name="NewFinance" positionX="-36" positionY="9" width="128" height="45"/>
+        <element name="Platform" positionX="-171" positionY="18" width="128" height="75"/>
+        <element name="Announcement" positionX="-162" positionY="27" width="128" height="75"/>
+    </elements>
+</model>

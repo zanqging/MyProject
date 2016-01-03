@@ -503,4 +503,5 @@
  *  @return 是否
  */
 + (BOOL) validateIdentityCard: (NSString *)identityCard;
+
 @end
