@@ -7,14 +7,14 @@
 //
 
 #import "TypeShow.h"
+#import "NewsTag.h"
 #import "GlobalDefine.h"
 #import "UConstants.h"
 #import <QuartzCore/QuartzCore.h>
 @implementation TypeShow
--(id)initWithFrame:(CGRect)frame data:(NSMutableArray *)dataArray
+-(id)initWithFrame:(CGRect)frame
 {
-    if (self = [super initWithFrame:(CGRect)frame]) {
-        self.dataArray  =dataArray;
+    if (self = [super initWithFrame:frame]) {
         frame.origin.x = 0;
         frame.origin.y = 0;
         scrollView = [[UIScrollView alloc]initWithFrame:frame];
@@ -22,13 +22,32 @@
         scrollView.showsVerticalScrollIndicator  =NO;
         scrollView.showsHorizontalScrollIndicator = NO;
         [self addSubview:scrollView];
-        
+    }
+    
+    return self;
+}
+
+-(id)initWithFrame:(CGRect)frame data:(NSMutableArray *)dataArray
+{
+    if (self = [self initWithFrame:(CGRect)frame]) {
+        self.dataArray  =dataArray;
+    }
+    return self;
+}
+
+-(void)setDataArray:(NSMutableArray *)dataArray
+{
+    self->_dataArray = dataArray;
+    if (self.dataArray && self.dataArray.count>0) {
+        for (UIView* v in scrollView.subviews) {
+            [v removeFromSuperview];
+        }
         
         float w ;
         if (dataArray.count >= 4) {
             w = WIDTH(self)/4;
         }else{
-             w = WIDTH(self)/dataArray.count;
+            w = WIDTH(self)/dataArray.count;
         }
         UILabel* label;
         NSDictionary* dic;
@@ -47,16 +66,16 @@
             label.textAlignment  =NSTextAlignmentCenter;
             label.userInteractionEnabled  =YES;
             label.font  =SYSTEMFONT(14);
-           
-//            label.layer.cornerRadius = HEIGHT(self)/2-10;
             label.layer.masksToBounds = YES;
             
-            label.text = [dic valueForKey:@"value"];
-            label.tag =[[dic valueForKey:@"key"] integerValue];
+            NewsTag* newTag = [self.dataArray objectAtIndex:i];
+            
+            label.text = newTag.title;
+            label.tag =[newTag.id integerValue];
             if( i == 0){
                 label.textColor = AppColorTheme;
             }else{
-                 label.textColor = BlackColor;
+                label.textColor = BlackColor;
             }
             
             
@@ -70,8 +89,8 @@
         imgView.backgroundColor=AppColorTheme;
         [scrollView addSubview:imgView];
     }
-    return self;
 }
+
 -(void)selectIndex:(id)sender
 {
     for (UIView* v in scrollView.subviews) {

@@ -7,6 +7,7 @@
 //
 
 #import "NewFinialViewController.h"
+#import "NewsTag.h"
 #import "TypeShow.h"
 #import "ShareView.h"
 #import "MJRefresh.h"
@@ -59,8 +60,37 @@
 }
 -(void)loadOffLineData
 {
+    NewsTag* newsTag = [[NewsTag alloc]init];
+    NSMutableArray* array = [newsTag selectData:100 andOffset:0];
+    typeShow = [[TypeShow alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 40) data:array];
+    typeShow.delegate = self;
+    [self.view addSubview:typeShow];
+    
+    CGRect rect;
+    if (typeShow) {
+        rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-POS_Y(typeShow)-kBottomBarHeight-80);
+    }else{
+        rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
+    }
+    
+    self.tableView=[[UITableViewCustomView alloc]initWithFrame:rect style:UITableViewStyleGrouped];
+    self.tableView.bounces=YES;
+    self.tableView.delegate=self;
+    self.tableView.dataSource=self;
+    self.tableView.allowsSelection=YES;
+    self.tableView.delaysContentTouches=NO;
+    self.tableView.backgroundColor=BackColor;
+    self.tableView.showsVerticalScrollIndicator=NO;
+    self.tableView.showsHorizontalScrollIndicator=NO;
+    self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:self.tableView];
+
+    
+    
     NewFinance * finance = [[NewFinance alloc]init];
     self.dataCreateArray = [finance selectData:10 andOffset:currentpage];
+    
+    
     
 }
 -(void)loadData
@@ -192,7 +222,7 @@
     cell.priseLabel.text = [finance.read stringValue];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tableView.contentSize = CGSizeMake(WIDTH(tableView), 140*self.dataCreateArray.count);
+    tableView.contentSize = CGSizeMake(WIDTH(tableView), 140*self.dataCreateArray.count+5);
     return cell;
 }
 
@@ -277,8 +307,8 @@
             NSDictionary* dic;
             
             NSMutableArray* dataArray = [[NSMutableArray alloc]init];
-            for (int i = 0; i<self.dataCreateArray.count; i++) {
-                dic = self.dataCreateArray[i];
+            for (int i = 0; i<tempArray.count; i++) {
+                dic = tempArray[i];
                 finance = [[NewFinance alloc]init];
                 finance.id =[dic valueForKey:@"id"];
                 finance.img =[dic valueForKey:@"img"];
@@ -356,29 +386,46 @@
             NSMutableArray* array = [jsonDic valueForKey:@"data"];
             
             if (array && array.count>0) {
+                NewsTag* newstagModel = [[NewsTag alloc]init];
+                //移除数据
+                [newstagModel deleteData];
                 
+                NSMutableArray* dataArray  =[[NSMutableArray alloc]init];
                 
-                typeShow = [[TypeShow alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 40) data:array];
-                typeShow.delegate = self;
-                [self.view addSubview:typeShow];
+                for (int i = 0; i<array.count; i++) {
+                    NewsTag* newtag = [[NewsTag alloc]init];
+                    newtag.title = [array[i] valueForKey:@"value"];
+                    newtag.id = [array[i] valueForKey:@"key"];
+                    
+                    [dataArray addObject:newtag];
+                    //保存数据
+                    [newtag save];
+                }
+                if (!typeShow) {
+                    typeShow = [[TypeShow alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 40) data:dataArray];
+                    typeShow.delegate = self;
+                    [self.view addSubview:typeShow];
+                }else{
+                    typeShow.dataArray = dataArray;
+                }
             }
-            CGRect rect;
-            if (typeShow) {
-                rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-75);
-            }else{
-                rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
-            }
-            self.tableView=[[UITableViewCustomView alloc]initWithFrame:rect style:UITableViewStyleGrouped];
-            self.tableView.bounces=YES;
-            self.tableView.delegate=self;
-            self.tableView.dataSource=self;
-            self.tableView.allowsSelection=YES;
-            self.tableView.delaysContentTouches=NO;
-            self.tableView.backgroundColor=BackColor;
-            self.tableView.showsVerticalScrollIndicator=NO;
-            self.tableView.showsHorizontalScrollIndicator=NO;
-            self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
-            [self.view addSubview:self.tableView];
+//            CGRect rect;
+//            if (typeShow) {
+//                rect=CGRectMake(0, POS_Y(typeShow), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-kBottomBarHeight-75);
+//            }else{
+//                rect=CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-HEIGHT(self.navView)-kBottomBarHeight);
+//            }
+//            self.tableView=[[UITableViewCustomView alloc]initWithFrame:rect style:UITableViewStyleGrouped];
+//            self.tableView.bounces=YES;
+//            self.tableView.delegate=self;
+//            self.tableView.dataSource=self;
+//            self.tableView.allowsSelection=YES;
+//            self.tableView.delaysContentTouches=NO;
+//            self.tableView.backgroundColor=BackColor;
+//            self.tableView.showsVerticalScrollIndicator=NO;
+//            self.tableView.showsHorizontalScrollIndicator=NO;
+//            self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+//            [self.view addSubview:self.tableView];
             
             [TDUtil tableView:self.tableView target:self refreshAction:@selector(refresh) loadAction:@selector(loadProject)];
             
@@ -388,7 +435,8 @@
             
             [self updateNewMessage:nil];
 
-            NSInteger  index =[[typeShow.dataArray[0] valueForKey:@"key"] integerValue];
+            NewsTag* newTag =typeShow.dataArray[0];
+            NSInteger  index =[newTag.id integerValue];
             selectedIndex = index;
             [self loadNewsData:index];
             
