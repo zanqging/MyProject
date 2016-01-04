@@ -1,8 +1,8 @@
 //
-//  Project.h
+//  NewFinance.h
 //  JinZhiTou
 //
-//  Created by air on 16/1/3.
+//  Created by air on 16/1/4.
 //  Copyright © 2016年 金指投. All rights reserved.
 //
 
@@ -12,8 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Project : NSManagedObject
-
+@interface NewFinance : NSManagedObject
 /**
  *  保存结果
  *
@@ -31,8 +30,9 @@ NS_ASSUME_NONNULL_BEGIN
 //更新
 - (void)updateData:(NSString*)newsId withIsLook:(NSString*)islook;
 
+
 @end
 
 NS_ASSUME_NONNULL_END
 
-#import "Project+CoreDataProperties.h"
+#import "NewFinance+CoreDataProperties.h"

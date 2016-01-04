@@ -8,12 +8,28 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "DataManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface Banner : NSManagedObject
 
-// Insert code here to declare functionality of your managed object subclass
+/**
+ *  保存结果
+ *
+ *  @return 返回是否执行成功
+ */
+-(BOOL)save;
+
+- (void)saveContext;
+//插入数据
+- (void)insertCoreData:(NSMutableArray*)dataArray;
+//查询
+- (NSMutableArray*)selectData:(int)pageSize andOffset:(int)currentPage;
+//删除
+- (void)deleteData;
+//更新
+- (void)updateData:(NSString*)newsId withIsLook:(NSString*)islook;
 
 @end
 

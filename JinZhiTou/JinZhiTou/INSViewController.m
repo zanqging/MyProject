@@ -145,7 +145,16 @@
     
     if (self.type ==0) {
         RoadShowDetailViewController* controller =[[RoadShowDetailViewController alloc]init];
-        controller.dic = dic;
+        Project* project = [[Project alloc]init];
+        project = [[Project alloc]init];
+        project.imgUrl = [dic valueForKey:@"img"];
+        project.tag = [dic valueForKey:@"tag"];
+        project.company = [dic valueForKey:@"company"];
+        project.projectId = [[dic valueForKey:@"id"] integerValue];
+        project.invest = [NSString stringWithFormat:@"%@",[dic valueForKey:@"invest"]];
+        project.planfinance = [NSString stringWithFormat:@"%@",[dic valueForKey:@"planfinance"]];
+        
+        controller.project = project;
         controller.title = self.navView.title;
         [self.navigationController pushViewController:controller animated:YES];
     }else if(self.type==3){

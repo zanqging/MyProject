@@ -10,6 +10,7 @@
 #import "TypeShow.h"
 #import "ShareView.h"
 #import "MJRefresh.h"
+#import "NewFinance.h"
 #import "SwitchSelect.h"
 #import "INSViewController.h"
 #import "NewFinialTableViewCell.h"
@@ -50,14 +51,22 @@
     [self.view addSubview:self.navView];
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
+    
+    //加载离线数据
+    [self loadOffLineData];
     //开始加载
     [self loadData];
 }
-
+-(void)loadOffLineData
+{
+    NewFinance * finance = [[NewFinance alloc]init];
+    self.dataCreateArray = [finance selectData:10 andOffset:currentpage];
+    
+}
 -(void)loadData
 {
-    self.startLoading  =YES;
-    isShowLoadingView  =YES;
+//    self.startLoading  =YES;
+//    isShowLoadingView  =YES;
     //头部
     [self loadNewsTag];
 }
@@ -169,16 +178,18 @@
         cell =[[NewFinialTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
     }
     
-    NSDictionary* dic = self.dataCreateArray[indexPath.row];
-    NSURL* url = [dic valueForKey:@"img"];
+//    NSDictionary* dic = self.dataCreateArray[indexPath.row];
+    NewFinance* finance = self.dataCreateArray[indexPath.row];
+//    NSURL* url = [dic valueForKey:@"img"];
+    NSURL* url = [NSURL URLWithString:finance.img];
     cell.backgroundColor = BackColor;
     [cell.imgview sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading")];
-    cell.source = [dic valueForKey:@"src"];
-    cell.titleLabel.text = [dic valueForKey:@"title"];
-    cell.typeLabel.text = [dic valueForKey:@"content"];
-    cell.dateTime = [dic valueForKey:@"create_datetime"];
-    cell.colletcteLabel.text = [[dic valueForKey:@"share"] stringValue];
-    cell.priseLabel.text = [[dic valueForKey:@"read"] stringValue];
+    cell.source = finance.src;
+    cell.titleLabel.text = finance.title;
+    cell.typeLabel.text = finance.content;
+    cell.dateTime = finance.create_datetime;
+    cell.colletcteLabel.text = [finance.share stringValue];
+    cell.priseLabel.text = [finance.read stringValue];
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableView.contentSize = CGSizeMake(WIDTH(tableView), 140*self.dataCreateArray.count);
@@ -211,10 +222,8 @@
     self->_dataCreateArray = dataCreateArray;
     if (self.dataCreateArray.count<=0) {
         self.tableView.isNone = YES;
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }else{
         self.tableView.isNone = NO;
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     }
     [self.tableView reloadData];
 }
@@ -255,15 +264,47 @@
             if ([code integerValue] == 2) {
                 self.isEndOfPageSize  =YES;
             }
+            
+            NewFinance* newFinanceModel = [[NewFinance alloc]init];
+            NSMutableArray* tempArray;
+            tempArray = [jsonDic valueForKey:@"data"];
+            
             if (isRefresh) {
-                self.dataCreateArray = [jsonDic valueForKey:@"data"];
+                [newFinanceModel deleteData];
+            }
+            
+            NewFinance* finance;
+            NSDictionary* dic;
+            
+            NSMutableArray* dataArray = [[NSMutableArray alloc]init];
+            for (int i = 0; i<self.dataCreateArray.count; i++) {
+                dic = self.dataCreateArray[i];
+                finance = [[NewFinance alloc]init];
+                finance.id =[dic valueForKey:@"id"];
+                finance.img =[dic valueForKey:@"img"];
+                finance.src =[dic valueForKey:@"src"];
+                finance.url =[dic valueForKey:@"url"];
+                finance.read =[dic valueForKey:@"read"];
+                finance.share =[dic valueForKey:@"share"];
+                finance.title =[dic valueForKey:@"title"];
+                finance.content =[dic valueForKey:@"content"];
+                finance.create_datetime =[dic valueForKey:@"create_datetime"];
+                
+                [dataArray addObject:finance];
+                //保存
+                [finance save];
+            }
+            
+            if (isRefresh) {
+                self.dataCreateArray = dataArray;
             }else{
                 if (!self.dataCreateArray) {
-                    self.dataCreateArray = [jsonDic valueForKey:@"data"];
+                    self.dataCreateArray = dataArray;
                 }
-                [self.dataCreateArray addObjectsFromArray:[jsonDic valueForKey:@"data"]];
+                [self.dataCreateArray addObjectsFromArray:dataArray];
                 [self.tableView reloadData];
             }
+
             
             NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
             [dataStore setValue:nil forKey:@"NewFinialCount"];
@@ -283,11 +324,11 @@
         self.tableView.content = [jsonDic valueForKey:@"msg"];
         
         if (isShowLoadingView) {
-            self.startLoading = NO;
+//            self.startLoading = NO;
         }
         
         if (self.isNetRequestError) {
-            self.isNetRequestError = NO;
+//            self.isNetRequestError = NO;
         }
     }else{
         self.isNetRequestError = YES;

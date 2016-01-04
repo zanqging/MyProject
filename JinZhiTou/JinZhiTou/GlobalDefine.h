@@ -164,8 +164,8 @@
 
 //服务器域名地址
 //#define SERVICE_URL @"http://115.28.110.243/phone4/"//服务器域名地址
-//#define SERVICE_URL @"http://www.jinzht.com/phone4/"//服务器域名地址
-#define SERVICE_URL @"http://www.jinzht.com:8000/phone/"//服务器域名地址
+#define SERVICE_URL @"http://www.jinzht.com/phone4/"//服务器域名地址
+//#define SERVICE_URL @"http://www.jinzht.com:8000/phone/"//服务器域名地址
 //服务器域名地址
 //#define SERVICE_URL @"http://www.jinzht.com/phone/"//服务器域名地址
 //#define SERVICE_URL @"http://192.168.31.236:8080/weini/"

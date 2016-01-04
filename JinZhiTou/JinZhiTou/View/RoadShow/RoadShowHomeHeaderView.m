@@ -7,8 +7,11 @@
 //
 
 #import "RoadShowHomeHeaderView.h"
+#import "Banner.h"
+#import "Platform.h"
 #import "UConstants.h"
 #import "GlobalDefine.h"
+#import "Announcement.h"
 #import "INSViewController.h"
 #import "BannerViewController.h"
 #import "UIImageView+WebCache.h"
@@ -54,8 +57,8 @@
         label.tag=1002;
         label.text = @"征信查询";
         label.font=SYSTEMFONT(14);
-//        label.layer.cornerRadius = 5;
-//        label.layer.masksToBounds= YES;
+        //        label.layer.cornerRadius = 5;
+        //        label.layer.masksToBounds= YES;
         label.textColor  =FONT_COLOR_GRAY;
         label.backgroundColor  =WriteColor;
         label.userInteractionEnabled  =YES;
@@ -78,7 +81,7 @@
         label.textColor  =FONT_COLOR_GRAY;
         [view addSubview:label];
         //图标
-
+        
         label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), 0, WIDTH(label)-15, HEIGHT(view))];
         label.text = @"客服热线电话";
         label.font=SYSTEMBOLDFONT(16);
@@ -94,8 +97,142 @@
         
         self.backgroundColor = BackColor;
         
-        }
+        [self loadOffLineData];
+    }
     return self;
+}
+
+-(void)loadOffLineData
+{
+    //初始化Banner数据操作对象
+    Banner* banner = [[Banner alloc]init];
+    //获取离线数据
+    self.bannerArray = [banner selectData:100 andOffset:0];
+    
+    if (self.bannerArray && self.bannerArray.count>0) {
+        //适配数据
+        self.viewsArray = [NSMutableArray new];
+        
+        //封装
+        //NSMutableArray* bannerArray = [[NSMutableArray alloc]init];
+        for (int  i =0; i<self.bannerArray.count; i++) {
+            //<!-- 将banner数据缓存 -->
+            banner = (Banner*)self.bannerArray[i];
+            //<!-- 将banner数据缓存 -->
+        
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self), HEIGHT(self.mainScorllView))];
+            imageView.backgroundColor = WriteColor;
+            imageView.contentMode = UIViewContentModeScaleAspectFit;
+            imageView.layer.masksToBounds = YES;
+            
+            [self.viewsArray addObject:imageView];
+            
+            //            NSURL* url =[NSURL URLWithString:[dataArray[i] valueForKey:@"img"]];
+            NSURL * url = [NSURL URLWithString:banner.imgUrl];
+            //            __block RoadShowHomeHeaderView* blockSelf =self;
+            [imageView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+                imageView.contentMode = UIViewContentModeScaleAspectFill;
+                imageView.layer.masksToBounds = NO;
+                [self.viewsArray replaceObjectAtIndex:i withObject:imageView];
+            }];
+        }
+        
+        //将数据保存至本地数据库
+//        [banner selectData:10 andOffset:0];
+        
+        __block RoadShowHomeHeaderView *instance = self;
+        self.mainScorllView.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
+            if (instance.viewsArray && instance.viewsArray.count>0) {
+                return [instance.viewsArray objectAtIndex:pageIndex];
+            }else{
+                return 0;
+            }
+        };
+        self.mainScorllView.totalPagesCount = ^NSInteger(void){
+            return [instance.bannerArray count];
+        };
+        
+        self.mainScorllView.TapActionBlock = ^(NSInteger pageIndex){
+            //            NSString* projectId =[dataArray[pageIndex] valueForKey:@"project"];
+            Banner *bannerInstance = instance.bannerArray[pageIndex];
+            NSString* projectId = bannerInstance.project;
+            NSLog(@"imgUrl:%@,url:%@,project:%@",banner.imgUrl,banner.url,banner.project);
+            if (![TDUtil isValidString:projectId]) {
+                //                NSString* urlStr =[dataArray[pageIndex] valueForKey:@"url"];
+                NSString* urlStr = banner.url;
+                if (urlStr && ![urlStr isEqualToString:@""]) {
+                    BannerViewController* controller =[[BannerViewController alloc]init];
+                    controller.titleStr = @"金指投";
+                    controller.title = @"首页";
+                    controller.url =[NSURL URLWithString:urlStr];
+                    if ([instance.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+                        [instance.delegate roadShowHome:instance controller:controller type:0];
+                    }
+                }
+            }else{
+                RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
+                Project* project = [[Project alloc]init];
+                project.projectId  =[projectId integerValue];
+                controller.project = project;
+                controller.title =@"项目";
+                if ([instance.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+                    [instance.delegate roadShowHome:instance controller:controller type:0];
+                }
+            }
+        };
+    }
+    
+    
+    //新手指南
+    Announcement* cement = [[Announcement alloc]init];
+    NSArray* array = [cement selectData:100 andOffset:0];
+    if(array && array.count>0){
+        Announcement* ce = array[0];
+        //公告
+        UILabel* label = [self viewWithTag:1001];
+        if ([TDUtil isValidString:ce.title]) {
+            label.text = [NSString stringWithFormat:@"%@",ce.title];
+        }        
+    }
+    
+    //平台展示信息
+    //平台信息
+    UILabel* label =[self viewWithTag:1002];
+    
+    Platform* platForm = [[Platform alloc]init];
+    array = [platForm  selectData:100 andOffset:0];
+    if (array && array.count>0) {
+        //移除缓存数据
+        Platform* platform;
+        float pos_x = 0,pos_y=POS_Y(label)+3;
+        for (int i=0;i<array.count;i++) {
+            platform = [array objectAtIndex:i];
+            
+            //成果融资额度
+            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 25)];
+            label.textAlignment = NSTextAlignmentCenter;
+            label.textColor = ColorTheme2;
+            label.backgroundColor  =WriteColor;
+            label.text = [NSString stringWithFormat:@"%@",platform.value];
+            [self addSubview:label];
+            
+            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2, 25)];
+            label.font = SYSTEMFONT(14);
+            label.textColor = FONT_COLOR_GRAY;
+            label.backgroundColor  =WriteColor;
+            label.textAlignment = NSTextAlignmentCenter;
+            label.text = [NSString stringWithFormat:@"%@",platform.key];
+            [self addSubview:label];
+            if ((i+1)%2==0) {
+                pos_x=0;
+                pos_y+=51;
+            }else{
+                pos_x=WIDTH(self)/2+1;
+            }
+        }
+    }
+    
+    
 }
 
 
@@ -118,61 +255,135 @@
     self->_dataDic = dataDic;
     NSMutableArray* dataArray = [self.dataDic valueForKey:@"banner"];
     if (dataArray) {
-        self.viewsArray = [NSMutableArray new];
+        //                self.viewsArray = [NSMutableArray new];
         
+        //封装
+        NSMutableArray* bannerArray = [[NSMutableArray alloc]init];
+        Banner* bannerModel;
+        bannerModel = [[Banner alloc]init];
+        //删除本地数据
+        [bannerModel deleteData];
         for (int  i =0; i<dataArray.count; i++) {
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self), HEIGHT(self.mainScorllView))];
-            imageView.backgroundColor = WriteColor;
-            imageView.contentMode = UIViewContentModeScaleAspectFit;
-            imageView.layer.masksToBounds = YES;
-            
-            NSString* fileName=[NSString stringWithFormat:@"%d",i+1];
-            imageView.image =IMAGE(fileName, @"jpg");
-            
-            [self.viewsArray addObject:imageView];
-            
-            NSURL* url =[NSURL URLWithString:[dataArray[i] valueForKey:@"img"]];
-            //            __block RoadShowHomeHeaderView* blockSelf =self;
-            [imageView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
-                imageView.contentMode = UIViewContentModeScaleAspectFill;
-                imageView.layer.masksToBounds = NO;
-                [self.viewsArray replaceObjectAtIndex:i withObject:imageView];
-            }];
-        }
-        __block RoadShowHomeHeaderView *instance = self;
-        self.mainScorllView.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
-            return [instance.viewsArray objectAtIndex:pageIndex];
-        };
-        self.mainScorllView.totalPagesCount = ^NSInteger(void){
-            return [dataArray count];
-        };
-        
-        __block RoadShowHomeHeaderView* roadShow=self;
-        self.mainScorllView.TapActionBlock = ^(NSInteger pageIndex){
-            NSString* projectId =[dataArray[pageIndex] valueForKey:@"project"];
-            if ([projectId isKindOfClass:NSNull.class]) {
-                NSString* urlStr =[dataArray[pageIndex] valueForKey:@"url"];
-                if (urlStr && ![urlStr isEqualToString:@""]) {
-                    BannerViewController* controller =[[BannerViewController alloc]init];
-                    controller.titleStr = @"金指投";
-                    controller.title = @"首页";
-                    controller.url =[NSURL URLWithString:urlStr];
-                    if ([roadShow.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
-                        [roadShow.delegate roadShowHome:roadShow controller:controller type:0];
-                    }
-                }
-
-                
+            //<!-- 将banner数据缓存 -->
+            Banner* banner = [[Banner alloc]init];
+            banner.imgUrl =[dataArray[i] valueForKey:@"img"];
+            banner.url = [dataArray[i] valueForKey:@"url"];
+            NSString* projectId =[dataArray[i] valueForKey:@"project"];
+            if (![projectId isKindOfClass:NSNull.class]) {
+                banner.project = [NSString stringWithFormat:@"%ld",[projectId integerValue]];
             }else{
-                RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
-                NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:projectId forKey:@"id"];
-                controller.dic = dic;
-                controller.title =@"项目";
-                if ([roadShow.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
-                    [roadShow.delegate roadShowHome:roadShow controller:controller type:0];
-                }
+                banner.project = @"";
             }
-        };
+            
+            [bannerArray addObject:banner];
+            //<!-- 将banner数据缓存 -->
+        }
+        self.bannerArray = bannerArray;
+        bannerModel = [[Banner alloc]init];
+        //将数据保存至本地数据库
+        [bannerModel insertCoreData:bannerArray];
+        //    }
+        
+        
+        
+        //
+        //
+        //            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self), HEIGHT(self.mainScorllView))];
+        //            imageView.backgroundColor = WriteColor;
+        //            imageView.contentMode = UIViewContentModeScaleAspectFit;
+        //            imageView.layer.masksToBounds = YES;
+        //
+        ////            NSString* fileName=[NSString stringWithFormat:@"%d",i+1];
+        ////            imageView.image =IMAGE(fileName, @"jpg");
+        //
+        //            [self.viewsArray addObject:imageView];
+        //
+        ////            NSURL* url =[NSURL URLWithString:[dataArray[i] valueForKey:@"img"]];
+        //            NSURL * url = [NSURL URLWithString:banner.imgUrl];
+        //            //            __block RoadShowHomeHeaderView* blockSelf =self;
+        //            [imageView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+        //                imageView.contentMode = UIViewContentModeScaleAspectFill;
+        //                imageView.layer.masksToBounds = NO;
+        //                [self.viewsArray replaceObjectAtIndex:i withObject:imageView];
+        //            }];
+        //        }
+        //
+        //        //将数据保存至本地数据库
+        ////        banner = [[Banner alloc]init];
+        ////        [banner insertCoreData:bannerArray];
+        ////        [banner deleteData];
+        ////        bannerArray = [banner selectData:10 andOffset:0];
+        //        [banner selectData:10 andOffset:0];
+        //
+        //        __block RoadShowHomeHeaderView *instance = self;
+        //        self.mainScorllView.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
+        //            return [instance.viewsArray objectAtIndex:pageIndex];
+        //        };
+        //        self.mainScorllView.totalPagesCount = ^NSInteger(void){
+        //            return [dataArray count];
+        //        };
+        //
+        //        __block RoadShowHomeHeaderView* roadShow=self;
+        //        self.mainScorllView.TapActionBlock = ^(NSInteger pageIndex){
+        ////            NSString* projectId =[dataArray[pageIndex] valueForKey:@"project"];
+        //            NSString* projectId = banner.project;
+        //            if ([TDUtil isValidString:projectId]) {
+        ////                NSString* urlStr =[dataArray[pageIndex] valueForKey:@"url"];
+        //                NSString* urlStr = banner.url;
+        //                if (urlStr && ![urlStr isEqualToString:@""]) {
+        //                    BannerViewController* controller =[[BannerViewController alloc]init];
+        //                    controller.titleStr = @"金指投";
+        //                    controller.title = @"首页";
+        //                    controller.url =[NSURL URLWithString:urlStr];
+        //                    if ([roadShow.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+        //                        [roadShow.delegate roadShowHome:roadShow controller:controller type:0];
+        //                    }
+        //                }
+        //            }else{
+        //                RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
+        //                NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:projectId forKey:@"id"];
+        //                controller.dic = dic;
+        //                controller.title =@"项目";
+        //                if ([roadShow.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+        //                    [roadShow.delegate roadShowHome:roadShow controller:controller type:0];
+        //                }
+        //            }
+        //
+        ////            if ([projectId isKindOfClass:NSNull.class]) {
+        ////                NSString* urlStr =[dataArray[pageIndex] valueForKey:@"url"];
+        ////                if (urlStr && ![urlStr isEqualToString:@""]) {
+        ////                    BannerViewController* controller =[[BannerViewController alloc]init];
+        ////                    controller.titleStr = @"金指投";
+        ////                    controller.title = @"首页";
+        ////                    controller.url =[NSURL URLWithString:urlStr];
+        ////                    if ([roadShow.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+        ////                        [roadShow.delegate roadShowHome:roadShow controller:controller type:0];
+        ////                    }
+        ////                }
+        ////
+        ////
+        ////            }else{
+        ////                RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
+        ////                NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:projectId forKey:@"id"];
+        ////                controller.dic = dic;
+        ////                controller.title =@"项目";
+        ////                if ([roadShow.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+        ////                    [roadShow.delegate roadShowHome:roadShow controller:controller type:0];
+        ////                }
+        ////            }
+        //        };
+        
+
+        Announcement* cement =[[Announcement alloc]init];
+        //移除旧数据
+        [cement deleteData];
+        
+        //缓存新数据
+        cement =[[Announcement alloc]init];
+        cement.title = [[self.dataDic valueForKey:@"announcement"] valueForKey:@"title"];
+        cement.url = [[self.dataDic valueForKey:@"announcement"] valueForKey:@"url"];
+        
+        [cement save];
         
         //公告
         UILabel* label = [self viewWithTag:1001];
@@ -183,39 +394,48 @@
         
         //平台信息
         label =[self viewWithTag:1002];
-    
         
         NSMutableArray* array =[self.dataDic valueForKey:@"platform"];
+        
+        //移除缓存数据
+        Platform* platFormModel = [[Platform alloc]init];
+        [platFormModel deleteData];
+        
+        NSMutableArray * platArray = [[NSMutableArray alloc]init];
         NSDictionary* dic;
-        float pos_x = 0,pos_y=POS_Y(label)+3;
+//        float pos_x = 0,pos_y=POS_Y(label)+3;
         for (int i=0;i<array.count;i++) {
+            Platform *pm = [[Platform alloc]init];
             dic = [array objectAtIndex:i];
-            NSString* key = [dic valueForKey:@"key"];
-            NSString* value = [dic valueForKey:@"value"];
+            pm.key = [dic valueForKey:@"key"];
+            pm.value = [dic valueForKey:@"value"];
+            [platArray addObject:pm];
             
-            //成果融资额度
-            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 25)];
-            label.textAlignment = NSTextAlignmentCenter;
-            label.textColor = ColorTheme2;
-            label.backgroundColor  =WriteColor;
-            label.text = [NSString stringWithFormat:@"%@",value];
-            [self addSubview:label];
-            
-            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2, 25)];
-            label.font = SYSTEMFONT(14);
-            label.textColor = FONT_COLOR_GRAY;
-            label.backgroundColor  =WriteColor;
-            label.textAlignment = NSTextAlignmentCenter;
-            label.text = [NSString stringWithFormat:@"%@",key];
-            [self addSubview:label];
-            if ((i+1)%2==0) {
-                pos_x=0;
-                pos_y+=51;
-            }else{
-                pos_x=WIDTH(self)/2+1;
-            }
+//            //成果融资额度
+//            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 25)];
+//            label.textAlignment = NSTextAlignmentCenter;
+//            label.textColor = ColorTheme2;
+//            label.backgroundColor  =WriteColor;
+//            label.text = [NSString stringWithFormat:@"%@",plat.value];
+//            [self addSubview:label];
+//            
+//            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2, 25)];
+//            label.font = SYSTEMFONT(14);
+//            label.textColor = FONT_COLOR_GRAY;
+//            label.backgroundColor  =WriteColor;
+//            label.textAlignment = NSTextAlignmentCenter;
+//            label.text = [NSString stringWithFormat:@"%@",plat.key];
+//            [self addSubview:label];
+//            if ((i+1)%2==0) {
+//                pos_x=0;
+//                pos_y+=51;
+//            }else{
+//                pos_x=WIDTH(self)/2+1;
+//            }
         }
-
+        
+//        platFormModel = [[Platform alloc]init];
+        [platFormModel insertCoreData:platArray];
     }
 }
 
@@ -240,10 +460,19 @@
     BannerViewController* controller =[[BannerViewController alloc]init];
     controller.title = @"首页";
     controller.titleStr = @"公告";
-    controller.url = [NSURL URLWithString:[[self.dataDic valueForKey:@"announcement"] valueForKey:@"url"]];
-    if ([_delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
-        [_delegate roadShowHome:self controller:controller type:0];
+    
+    //新手指南
+    Announcement* cement = [[Announcement alloc]init];
+    NSArray* array = [cement selectData:100 andOffset:0];
+    if(array && array.count>0){
+        Announcement* ce = array[0];
+        controller.url = [NSURL URLWithString:ce.url];
+        if ([_delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+            [_delegate roadShowHome:self controller:controller type:0];
+        }
     }
+        
+    
 }
 
 

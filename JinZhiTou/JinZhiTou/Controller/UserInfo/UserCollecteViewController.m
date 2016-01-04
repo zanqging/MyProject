@@ -207,7 +207,18 @@
 {
     RoadShowDetailViewController* controller =[[RoadShowDetailViewController alloc]init];
     controller.title =self.navView.title;
-    controller.dic = self.dataArray[indexPath.row];
+    NSDictionary* dic = self.dataArray[indexPath.row];
+    Project* project = [[Project alloc]init];
+    project = [[Project alloc]init];
+    project.imgUrl = [dic valueForKey:@"img"];
+    project.tag = [dic valueForKey:@"tag"];
+    project.company = [dic valueForKey:@"company"];
+    project.projectId = [[dic valueForKey:@"id"] integerValue];
+    project.invest = [NSString stringWithFormat:@"%@",[dic valueForKey:@"invest"]];
+    project.planfinance = [NSString stringWithFormat:@"%@",[dic valueForKey:@"planfinance"]];
+    
+    controller.project = project;
+
     [self.navigationController pushViewController:controller animated:YES];
 }
 

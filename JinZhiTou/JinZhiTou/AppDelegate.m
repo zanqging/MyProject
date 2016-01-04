@@ -377,9 +377,10 @@ fetchCompletionHandler:(void
 -(void)loadProjectDetail:(NSInteger)index
 {
     RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
-    NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:[NSString stringWithFormat:@"%ld",(long)index] forKey:@"id"];
+    Project* project =[[Project  alloc]init];
+    project.projectId = index;
     controller.type=1;
-    controller.dic = dic;
+    controller.project = project;
     controller.title = @"首页";
     [self.iNav pushViewController:controller animated:YES];
 }
@@ -458,6 +459,26 @@ fetchCompletionHandler:(void
             httpUtils  = [[HttpUtils alloc]init];
         }
         [httpUtils getDataFromAPIWithOps:USER_LOGIN postParam:dic type:0 delegate:self sel:@selector(requestLogin:)];
+    }else{
+        UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        UIViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"loginViewController"];
+        
+        int num = 0;
+        for(UIViewController* c in self.iNav.childViewControllers){
+            if ([c isKindOfClass:controller.class]) {
+                num ++;
+            }
+        }
+        
+        if (num==0) {
+            [self.iNav pushViewController:controller animated:YES];
+        }
+        
+        for(UIViewController* c in self.iNav.childViewControllers){
+            if (![c isKindOfClass:controller.class]) {
+                [c removeFromParentViewController];
+            }
+        }
     }
 }
 

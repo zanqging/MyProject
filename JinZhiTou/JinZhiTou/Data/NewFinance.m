@@ -1,14 +1,14 @@
 //
-//  Announcement.m
+//  NewFinance.m
 //  JinZhiTou
 //
-//  Created by air on 16/1/3.
+//  Created by air on 16/1/4.
 //  Copyright © 2016年 金指投. All rights reserved.
 //
 
-#import "Announcement.h"
-#define TableName @"Announcement"
-@implementation Announcement
+#import "NewFinance.h"
+#define TableName @"NewFinance"
+@implementation NewFinance
 -(id)init
 {
     self  = [NSEntityDescription  insertNewObjectForEntityForName:TableName inManagedObjectContext:[DataManager shareInstance].context];
@@ -48,14 +48,21 @@
 //插入数据
 - (void)insertCoreData:(NSMutableArray*)dataArray
 {
-    NSManagedObjectContext *context = [self managedObjectContext];
-    for (Announcement *instance in dataArray) {
+    //    NSManagedObjectContext *context = [self managedObjectContext];
+    for (NewFinance *instance in dataArray) {
         //        Banner *bannerInfo = [NSEntityDescription insertNewObjectForEntityForName:TableName inManagedObjectContext:context];
-        self.title = instance.title;
+        self.create_datetime = instance.create_datetime;
         self.url = instance.url;
+        self.content  = instance.content;
+        self.img = instance.img;
+        self.title = instance.title;
+        self.read = instance.read;
+        self.share = instance.share;
+        self.id = instance.id;
+        self.src = instance.src;
         
         NSError *error;
-        if(![context save:&error])
+        if(![[DataManager shareInstance].context save:&error])
         {
             NSLog(@"不能保存：%@",[error localizedDescription]);
         }
@@ -82,9 +89,8 @@
     NSArray *fetchedObjects = [[DataManager shareInstance].context executeFetchRequest:fetchRequest error:&error];
     NSMutableArray *resultArray = [NSMutableArray array];
     
-    for (Announcement *pro in fetchedObjects) {
-        
-        if (pro.title) {
+    for (NewFinance *pro in fetchedObjects) {
+        if (pro.content && pro.src) {
             [resultArray addObject:pro];
         }
     }
@@ -94,21 +100,21 @@
 //删除
 -(void)deleteData
 {
-    NSManagedObjectContext *context = [self managedObjectContext];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:TableName inManagedObjectContext:context];
+    //    NSManagedObjectContext *context = [self managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:TableName inManagedObjectContext:[DataManager shareInstance].context];
     
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setIncludesPropertyValues:NO];
     [request setEntity:entity];
     NSError *error = nil;
-    NSArray *datas = [context executeFetchRequest:request error:&error];
+    NSArray *datas = [[DataManager shareInstance].context executeFetchRequest:request error:&error];
     if (!error && datas && [datas count])
     {
         for (NSManagedObject *obj in datas)
         {
-            [context deleteObject:obj];
+            [[DataManager shareInstance].context deleteObject:obj];
         }
-        if (![context save:&error])
+        if (![[DataManager shareInstance].context save:&error])
         {
             NSLog(@"error:%@",error);
         }
@@ -117,24 +123,23 @@
 //更新
 - (void)updateData:(NSString*)newsId  withIsLook:(NSString*)islook
 {
-    NSManagedObjectContext *context = [self managedObjectContext];
+    //    NSManagedObjectContext *context = [self managedObjectContext];
     
     NSPredicate *predicate = [NSPredicate
                               predicateWithFormat:@"newsid like[cd] %@",newsId];
     
     //首先你需要建立一个request
     NSFetchRequest * request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:TableName inManagedObjectContext:context]];
+    [request setEntity:[NSEntityDescription entityForName:TableName inManagedObjectContext:[DataManager shareInstance].context]];
     [request setPredicate:predicate];//这里相当于sqlite中的查询条件，具体格式参考苹果文档
     
     //https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/Predicates/Articles/pCreating.html
     NSError *error = nil;
-    NSArray *result = [context executeFetchRequest:request error:&error];//这里获取到的是一个数组，你需要取出你要更新的那个obj
+    NSArray *result = [[DataManager shareInstance].context executeFetchRequest:request error:&error];//这里获取到的是一个数组，你需要取出你要更新的那个obj
     //保存
-    if ([context save:&error]) {
+    if ([[DataManager shareInstance].context save:&error]) {
         //更新成功
         NSLog(@"更新成功");
     }
 }
-
 @end

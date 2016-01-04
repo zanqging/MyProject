@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Project.h"
 #import "RootViewController.h"
 #import "RoadShowTableViewCell.h"
 
 @interface RoadShowDetailViewController : RootViewController
 @property(assign,nonatomic)int type;
 @property(retain,nonatomic)NSString* backTitle;
-@property(retain,nonatomic)NSMutableDictionary * dic;
+@property(retain,nonatomic)Project * project;
 
 @end

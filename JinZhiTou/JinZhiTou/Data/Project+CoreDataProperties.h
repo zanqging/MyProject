@@ -16,11 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Project (CoreDataProperties)
 
 @property (nullable, nonatomic, retain) NSString *imgUrl;
-@property (nullable, nonatomic, retain) NSNumber *planfinance;
+@property (nullable, nonatomic, retain) NSString *planfinance;
 @property (nullable, nonatomic, retain) NSString *tag;
-@property (nullable, nonatomic, retain) NSNumber *invest;
+@property (nullable, nonatomic, retain) NSString *invest;
 @property (nullable, nonatomic, retain) NSString *date;
 @property (nullable, nonatomic, retain) NSString *company;
+@property (nonatomic, assign) NSInteger projectId;
 
 @end
 

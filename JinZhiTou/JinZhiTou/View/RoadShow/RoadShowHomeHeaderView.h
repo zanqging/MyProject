@@ -23,6 +23,7 @@
 }
 @property(retain,nonatomic)id <RoadShowHomeDelegate> delegate;
 @property(retain,nonatomic)NSMutableDictionary* dataDic;
+@property(retain,nonatomic)NSMutableArray* bannerArray;
 @property(retain,nonatomic)NSMutableArray* viewsArray;
 @property(retain,nonatomic)CycleScrollView* mainScorllView;//Banner
 
