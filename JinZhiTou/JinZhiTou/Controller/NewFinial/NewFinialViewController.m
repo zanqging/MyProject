@@ -84,7 +84,8 @@
     self.tableView.showsHorizontalScrollIndicator=NO;
     self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.tableView];
-
+    
+    [TDUtil tableView:self.tableView target:self refreshAction:@selector(refresh) loadAction:@selector(loadProject)];
     
     
     NewFinance * finance = [[NewFinance alloc]init];
@@ -260,7 +261,7 @@
 //==============================刷新功能区域开始==============================//
 -(void)refresh
 {
-    [super refresh];
+//    [super refresh];
     
     if (self.tableView.header.isRefreshing) {
         [self.tableView.header endRefreshing];
@@ -272,13 +273,13 @@
     //刷新页码为
     currentpage = 0;
     isRefresh  = YES;
-    isShowLoadingView = YES;
+    isShowLoadingView = NO;
     self.isEndOfPageSize  =NO;
     if (selectedIndex==0) {
         selectedIndex=1;
     }
     [self loadNewsData:selectedIndex];
-    self.isTransparent  =NO;
+//    self.isTransparent  =NO;
 }
 //==============================刷新功能区域结束==============================//
 //==============================网络请求区域开始==============================//
@@ -427,7 +428,7 @@
 //            self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
 //            [self.view addSubview:self.tableView];
             
-            [TDUtil tableView:self.tableView target:self refreshAction:@selector(refresh) loadAction:@selector(loadProject)];
+            //[TDUtil tableView:self.tableView target:self refreshAction:@selector(refresh) loadAction:@selector(loadProject)];
             
             
             //添加监听

@@ -7,9 +7,13 @@
 //
 
 #import "ViewController.h"
+#import "Pic.h"
+#import "Cycle.h"
+#import "Likers.h"
+#import "Comment.h"
 #import "MJRefresh.h"
-#import "UIImage+Crop.h"
 #import "CycleHeader.h"
+#import "UIImage+Crop.h"
 #import "DAKeyboardControl.h"
 #import "PECropViewController.h"
 #import "BannerViewController.h"
@@ -130,7 +134,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContentNotification:) name:@"publishContent" object:nil];
     
     //加载动画
-    self.startLoading  =YES;
+//    self.startLoading  =YES;
     //加载数据
     [self loadData];
 }
@@ -739,7 +743,7 @@
                 [self.tableView.footer endRefreshing];
             }
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
-            self.startLoading = NO;
+//            self.startLoading = NO;
             //移除重新加载数据监听
             [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
         }else if([code intValue]==-1){
@@ -831,7 +835,6 @@
         if ([code integerValue] == 0) {
             NSDictionary* dataDic = [dic valueForKey:@"data"];
             [self.dataArray replaceObjectAtIndex:0 withObject:dataDic];
-//            [self.tableView reloadData];
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
         }
         

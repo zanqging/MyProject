@@ -9,7 +9,34 @@
         <attribute name="project" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="Cycle" syncable="YES"/>
+    <entity name="Comment" representedClassName="Comment" syncable="YES">
+        <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cycleId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="flag" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="photo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="cycle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Cycle" inverseName="comment" inverseEntity="Cycle" syncable="YES"/>
+    </entity>
+    <entity name="Cycle" representedClassName="Cycle" syncable="YES">
+        <attribute name="addr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="company" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="datetime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flag" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="is_like" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="photo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="position" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="remain_comment" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="remain_like" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="comment" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="cycle" inverseEntity="Comment" syncable="YES"/>
+        <relationship name="likers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Likers" inverseName="cycle" inverseEntity="Likers" syncable="YES"/>
+        <relationship name="pic" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Pic" inverseName="cycle" inverseEntity="Pic" syncable="YES"/>
+    </entity>
     <entity name="Finance" syncable="YES">
         <attribute name="img" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="projectId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -40,6 +67,13 @@
         <attribute name="position" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
+    <entity name="Likers" representedClassName="Likers" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="photo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uid" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="cycle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Cycle" inverseName="likers" inverseEntity="Cycle" syncable="YES"/>
+    </entity>
     <entity name="NewFinance" representedClassName="NewFinance" syncable="YES">
         <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="create_datetime" optional="YES" attributeType="String" syncable="YES"/>
@@ -54,6 +88,11 @@
     <entity name="NewsTag" representedClassName="NewsTag" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Pic" representedClassName="Pic" syncable="YES">
+        <attribute name="cycleId" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="cycle" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Cycle" inverseName="pic" inverseEntity="Cycle" syncable="YES"/>
     </entity>
     <entity name="Platform" representedClassName="Platform" syncable="YES">
         <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
@@ -95,7 +134,7 @@
     <elements>
         <element name="Announcement" positionX="-162" positionY="27" width="128" height="75"/>
         <element name="Banner" positionX="0" positionY="45" width="128" height="88"/>
-        <element name="Cycle" positionX="-18" positionY="27" width="128" height="45"/>
+        <element name="Cycle" positionX="-18" positionY="27" width="128" height="283"/>
         <element name="Finance" positionX="-54" positionY="-9" width="128" height="75"/>
         <element name="Financed" positionX="-153" positionY="45" width="128" height="150"/>
         <element name="Financing" positionX="-162" positionY="36" width="128" height="45"/>
@@ -103,11 +142,14 @@
         <element name="InvestorC" positionX="-126" positionY="126" width="128" height="120"/>
         <element name="InvestorP" positionX="-135" positionY="117" width="128" height="135"/>
         <element name="NewFinance" positionX="-36" positionY="9" width="128" height="180"/>
+        <element name="NewsTag" positionX="-171" positionY="81" width="128" height="75"/>
         <element name="Platform" positionX="-171" positionY="18" width="128" height="75"/>
         <element name="PreProject" positionX="-144" positionY="81" width="128" height="165"/>
-        <element name="Project" positionX="-369" positionY="-45" width="128" height="150"/>
+        <element name="Project" positionX="-414" positionY="18" width="128" height="150"/>
         <element name="ThinkTank" positionX="-117" positionY="135" width="128" height="120"/>
-        <element name="WaitForFinance" positionX="-171" positionY="18" width="128" height="120"/>
-        <element name="NewsTag" positionX="-171" positionY="81" width="128" height="75"/>
+        <element name="WaitForFinance" positionX="-306" positionY="204" width="128" height="120"/>
+        <element name="Comment" positionX="-171" positionY="81" width="128" height="165"/>
+        <element name="Likers" positionX="-162" positionY="90" width="128" height="120"/>
+        <element name="Pic" positionX="-153" positionY="99" width="128" height="90"/>
     </elements>
 </model>

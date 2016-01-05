@@ -1086,6 +1086,30 @@
 		456ED38F1BFC3C220067685A /* ResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 456ED38E1BFC3C220067685A /* ResetPasswordViewController.m */; };
 		456ED3921BFC91C90067685A /* empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 456ED3901BFC91C90067685A /* empty.png */; };
 		45735E161BF6B90B00CC8964 /* AnnounceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45735E151BF6B90B00CC8964 /* AnnounceView.m */; };
+		45778FAD1C3B620000FF8691 /* Likers+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778F9E1C3B620000FF8691 /* Likers+CoreDataProperties.m */; };
+		45778FAE1C3B620000FF8691 /* Likers+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778F9E1C3B620000FF8691 /* Likers+CoreDataProperties.m */; };
+		45778FAF1C3B620000FF8691 /* Likers+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778F9E1C3B620000FF8691 /* Likers+CoreDataProperties.m */; };
+		45778FB01C3B620000FF8691 /* Likers.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA01C3B620000FF8691 /* Likers.m */; };
+		45778FB11C3B620000FF8691 /* Likers.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA01C3B620000FF8691 /* Likers.m */; };
+		45778FB21C3B620000FF8691 /* Likers.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA01C3B620000FF8691 /* Likers.m */; };
+		45778FB31C3B620000FF8691 /* Cycle+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA21C3B620000FF8691 /* Cycle+CoreDataProperties.m */; };
+		45778FB41C3B620000FF8691 /* Cycle+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA21C3B620000FF8691 /* Cycle+CoreDataProperties.m */; };
+		45778FB51C3B620000FF8691 /* Cycle+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA21C3B620000FF8691 /* Cycle+CoreDataProperties.m */; };
+		45778FB61C3B620000FF8691 /* Cycle.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA41C3B620000FF8691 /* Cycle.m */; };
+		45778FB71C3B620000FF8691 /* Cycle.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA41C3B620000FF8691 /* Cycle.m */; };
+		45778FB81C3B620000FF8691 /* Cycle.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA41C3B620000FF8691 /* Cycle.m */; };
+		45778FB91C3B620000FF8691 /* Comment+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA61C3B620000FF8691 /* Comment+CoreDataProperties.m */; };
+		45778FBA1C3B620000FF8691 /* Comment+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA61C3B620000FF8691 /* Comment+CoreDataProperties.m */; };
+		45778FBB1C3B620000FF8691 /* Comment+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA61C3B620000FF8691 /* Comment+CoreDataProperties.m */; };
+		45778FBC1C3B620000FF8691 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA81C3B620000FF8691 /* Comment.m */; };
+		45778FBD1C3B620000FF8691 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA81C3B620000FF8691 /* Comment.m */; };
+		45778FBE1C3B620000FF8691 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FA81C3B620000FF8691 /* Comment.m */; };
+		45778FBF1C3B620000FF8691 /* Pic+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FAA1C3B620000FF8691 /* Pic+CoreDataProperties.m */; };
+		45778FC01C3B620000FF8691 /* Pic+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FAA1C3B620000FF8691 /* Pic+CoreDataProperties.m */; };
+		45778FC11C3B620000FF8691 /* Pic+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FAA1C3B620000FF8691 /* Pic+CoreDataProperties.m */; };
+		45778FC21C3B620000FF8691 /* Pic.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FAC1C3B620000FF8691 /* Pic.m */; };
+		45778FC31C3B620000FF8691 /* Pic.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FAC1C3B620000FF8691 /* Pic.m */; };
+		45778FC41C3B620000FF8691 /* Pic.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FAC1C3B620000FF8691 /* Pic.m */; };
 		457E04281B7060E500BC4161 /* ForgetPassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457E04271B7060E500BC4161 /* ForgetPassViewController.m */; };
 		457F70EC1BF56C91004241A0 /* WeChatBindController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457F70EB1BF56C91004241A0 /* WeChatBindController.m */; };
 		4581152B1B7EDFB0006EEBBC /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4581152A1B7EDFB0006EEBBC /* MessageUI.framework */; };
@@ -1704,6 +1728,22 @@
 		456ED3901BFC91C90067685A /* empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty.png; sourceTree = "<group>"; };
 		45735E141BF6B90B00CC8964 /* AnnounceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnounceView.h; path = View/announce/AnnounceView.h; sourceTree = "<group>"; };
 		45735E151BF6B90B00CC8964 /* AnnounceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnnounceView.m; path = View/announce/AnnounceView.m; sourceTree = "<group>"; };
+		45778F9D1C3B620000FF8691 /* Likers+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Likers+CoreDataProperties.h"; path = "Data/Likers+CoreDataProperties.h"; sourceTree = "<group>"; };
+		45778F9E1C3B620000FF8691 /* Likers+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Likers+CoreDataProperties.m"; path = "Data/Likers+CoreDataProperties.m"; sourceTree = "<group>"; };
+		45778F9F1C3B620000FF8691 /* Likers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Likers.h; path = Data/Likers.h; sourceTree = "<group>"; };
+		45778FA01C3B620000FF8691 /* Likers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Likers.m; path = Data/Likers.m; sourceTree = "<group>"; };
+		45778FA11C3B620000FF8691 /* Cycle+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Cycle+CoreDataProperties.h"; path = "Data/Cycle+CoreDataProperties.h"; sourceTree = "<group>"; };
+		45778FA21C3B620000FF8691 /* Cycle+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Cycle+CoreDataProperties.m"; path = "Data/Cycle+CoreDataProperties.m"; sourceTree = "<group>"; };
+		45778FA31C3B620000FF8691 /* Cycle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cycle.h; path = Data/Cycle.h; sourceTree = "<group>"; };
+		45778FA41C3B620000FF8691 /* Cycle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Cycle.m; path = Data/Cycle.m; sourceTree = "<group>"; };
+		45778FA51C3B620000FF8691 /* Comment+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Comment+CoreDataProperties.h"; path = "Data/Comment+CoreDataProperties.h"; sourceTree = "<group>"; };
+		45778FA61C3B620000FF8691 /* Comment+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Comment+CoreDataProperties.m"; path = "Data/Comment+CoreDataProperties.m"; sourceTree = "<group>"; };
+		45778FA71C3B620000FF8691 /* Comment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Comment.h; path = Data/Comment.h; sourceTree = "<group>"; };
+		45778FA81C3B620000FF8691 /* Comment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Comment.m; path = Data/Comment.m; sourceTree = "<group>"; };
+		45778FA91C3B620000FF8691 /* Pic+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Pic+CoreDataProperties.h"; path = "Data/Pic+CoreDataProperties.h"; sourceTree = "<group>"; };
+		45778FAA1C3B620000FF8691 /* Pic+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Pic+CoreDataProperties.m"; path = "Data/Pic+CoreDataProperties.m"; sourceTree = "<group>"; };
+		45778FAB1C3B620000FF8691 /* Pic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pic.h; path = Data/Pic.h; sourceTree = "<group>"; };
+		45778FAC1C3B620000FF8691 /* Pic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Pic.m; path = Data/Pic.m; sourceTree = "<group>"; };
 		457E04261B7060E500BC4161 /* ForgetPassViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ForgetPassViewController.h; path = Controller/Login/ForgetPassViewController.h; sourceTree = "<group>"; };
 		457E04271B7060E500BC4161 /* ForgetPassViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ForgetPassViewController.m; path = Controller/Login/ForgetPassViewController.m; sourceTree = "<group>"; };
 		457F70EA1BF56C91004241A0 /* WeChatBindController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeChatBindController.h; path = Controller/Company/WeChatBindController.h; sourceTree = "<group>"; };
@@ -2529,6 +2569,22 @@
 				4519C5801C3A87AA005D4799 /* NewsTag+CoreDataProperties.m */,
 				4519C5811C3A87AA005D4799 /* NewsTag.h */,
 				4519C5821C3A87AA005D4799 /* NewsTag.m */,
+				45778F9D1C3B620000FF8691 /* Likers+CoreDataProperties.h */,
+				45778F9E1C3B620000FF8691 /* Likers+CoreDataProperties.m */,
+				45778F9F1C3B620000FF8691 /* Likers.h */,
+				45778FA01C3B620000FF8691 /* Likers.m */,
+				45778FA11C3B620000FF8691 /* Cycle+CoreDataProperties.h */,
+				45778FA21C3B620000FF8691 /* Cycle+CoreDataProperties.m */,
+				45778FA31C3B620000FF8691 /* Cycle.h */,
+				45778FA41C3B620000FF8691 /* Cycle.m */,
+				45778FA51C3B620000FF8691 /* Comment+CoreDataProperties.h */,
+				45778FA61C3B620000FF8691 /* Comment+CoreDataProperties.m */,
+				45778FA71C3B620000FF8691 /* Comment.h */,
+				45778FA81C3B620000FF8691 /* Comment.m */,
+				45778FA91C3B620000FF8691 /* Pic+CoreDataProperties.h */,
+				45778FAA1C3B620000FF8691 /* Pic+CoreDataProperties.m */,
+				45778FAB1C3B620000FF8691 /* Pic.h */,
+				45778FAC1C3B620000FF8691 /* Pic.m */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -3621,6 +3677,9 @@
 					452533AC1C29A116000719AC = {
 						DevelopmentTeam = PT9XT89LQL;
 					};
+					454B98801A54C76500A1CC7E = {
+						DevelopmentTeam = PT9XT89LQL;
+					};
 					45DEACE71B437879001EDA5D = {
 						CreatedOnToolsVersion = 6.3.2;
 						DevelopmentTeam = PT9XT89LQL;
@@ -3988,6 +4047,7 @@
 				452533E31C29A116000719AC /* ForgetPassViewController.m in Sources */,
 				452533E41C29A116000719AC /* MJRefreshBackGifFooter.m in Sources */,
 				452533E51C29A116000719AC /* ProjectFinanceDetailViewController.m in Sources */,
+				45778FAF1C3B620000FF8691 /* Likers+CoreDataProperties.m in Sources */,
 				452533E61C29A116000719AC /* UserInfoViewController.m in Sources */,
 				452533E71C29A116000719AC /* FinialApplyViewController.m in Sources */,
 				452533E81C29A116000719AC /* PECropRectView.m in Sources */,
@@ -4027,6 +4087,7 @@
 				452534071C29A116000719AC /* FinialPersonTableViewController.m in Sources */,
 				452534081C29A116000719AC /* TableViewCell.m in Sources */,
 				452534091C29A116000719AC /* ZHTableViewController.m in Sources */,
+				45778FBB1C3B620000FF8691 /* Comment+CoreDataProperties.m in Sources */,
 				4525340A1C29A116000719AC /* MBProgressHUD.m in Sources */,
 				4525340B1C29A116000719AC /* DialogView.m in Sources */,
 				4525340C1C29A116000719AC /* MJRefreshStateHeader.m in Sources */,
@@ -4063,6 +4124,7 @@
 				452534291C29A116000719AC /* ModifyPositionViewController.m in Sources */,
 				4525342A1C29A116000719AC /* NSData+ImageContentType.m in Sources */,
 				4525342B1C29A116000719AC /* QNResumeUpload.m in Sources */,
+				45778FB21C3B620000FF8691 /* Likers.m in Sources */,
 				4525342C1C29A116000719AC /* UploadingView.m in Sources */,
 				4525342D1C29A116000719AC /* FinialPlanTableViewCell.m in Sources */,
 				4525342E1C29A116000719AC /* SlideViewStartPage.m in Sources */,
@@ -4070,6 +4132,7 @@
 				452534301C29A116000719AC /* AppDelegate.m in Sources */,
 				452534311C29A116000719AC /* UIImage+Alpha.m in Sources */,
 				452534321C29A116000719AC /* WaterFallFooter.m in Sources */,
+				45778FC11C3B620000FF8691 /* Pic+CoreDataProperties.m in Sources */,
 				452534331C29A116000719AC /* LineLayout.m in Sources */,
 				452534341C29A116000719AC /* FinalingTableViewCell.m in Sources */,
 				452534351C29A116000719AC /* AFURLConnectionOperation.m in Sources */,
@@ -4107,6 +4170,7 @@
 				452534551C29A116000719AC /* WaterF.m in Sources */,
 				452534561C29A116000719AC /* UserCompanyTableViewCell.m in Sources */,
 				452534571C29A116000719AC /* INSViewController.m in Sources */,
+				45778FBE1C3B620000FF8691 /* Comment.m in Sources */,
 				452534581C29A116000719AC /* SlideView.m in Sources */,
 				452534591C29A116000719AC /* QNConfiguration.m in Sources */,
 				4525345A1C29A116000719AC /* UserInfoSettingViewController.m in Sources */,
@@ -4150,6 +4214,7 @@
 				4525347F1C29A116000719AC /* ASIFormDataRequest.m in Sources */,
 				452534801C29A116000719AC /* WMPageController.m in Sources */,
 				452534811C29A116000719AC /* PECropView.m in Sources */,
+				45778FC41C3B620000FF8691 /* Pic.m in Sources */,
 				452534821C29A116000719AC /* DAKeyboardControl.m in Sources */,
 				452534831C29A116000719AC /* ActionDetailViewController.m in Sources */,
 				452534841C29A116000719AC /* NSData+AES.m in Sources */,
@@ -4231,6 +4296,7 @@
 				452534CE1C29A116000719AC /* UIView+MJExtension.m in Sources */,
 				452534CF1C29A116000719AC /* AFHTTPRequestOperationManager.m in Sources */,
 				452534D01C29A116000719AC /* FinialPersonTableViewCell.m in Sources */,
+				45778FB81C3B620000FF8691 /* Cycle.m in Sources */,
 				452534D11C29A116000719AC /* AutoShowView.m in Sources */,
 				4591F37E1A54D81C0079E1D0 /* DataManager.m in Sources */,
 				452534D21C29A116000719AC /* MWPhoto.m in Sources */,
@@ -4238,6 +4304,7 @@
 				452534D41C29A116000719AC /* FinalPersonTableViewCell.m in Sources */,
 				452534D51C29A116000719AC /* QNSessionManager.m in Sources */,
 				452534D61C29A116000719AC /* UserFinialViewController.m in Sources */,
+				45778FB51C3B620000FF8691 /* Cycle+CoreDataProperties.m in Sources */,
 				452534D71C29A116000719AC /* AFHTTPSessionManager.m in Sources */,
 				452534D81C29A116000719AC /* PinyinFormatter.m in Sources */,
 				452534D91C29A116000719AC /* TDUtil.m in Sources */,
@@ -4309,6 +4376,7 @@
 				454B98B71A54C76500A1CC7E /* ForgetPassViewController.m in Sources */,
 				454B98B81A54C76500A1CC7E /* MJRefreshBackGifFooter.m in Sources */,
 				454B98B91A54C76500A1CC7E /* ProjectFinanceDetailViewController.m in Sources */,
+				45778FAE1C3B620000FF8691 /* Likers+CoreDataProperties.m in Sources */,
 				454B98BA1A54C76500A1CC7E /* UserInfoViewController.m in Sources */,
 				454B98BB1A54C76500A1CC7E /* FinialApplyViewController.m in Sources */,
 				454B98BC1A54C76500A1CC7E /* PECropRectView.m in Sources */,
@@ -4348,6 +4416,7 @@
 				454B98DB1A54C76500A1CC7E /* FinialPersonTableViewController.m in Sources */,
 				454B98DC1A54C76500A1CC7E /* TableViewCell.m in Sources */,
 				454B98DD1A54C76500A1CC7E /* ZHTableViewController.m in Sources */,
+				45778FBA1C3B620000FF8691 /* Comment+CoreDataProperties.m in Sources */,
 				454B98DE1A54C76500A1CC7E /* MBProgressHUD.m in Sources */,
 				454B98DF1A54C76500A1CC7E /* DialogView.m in Sources */,
 				454B98E01A54C76500A1CC7E /* MJRefreshStateHeader.m in Sources */,
@@ -4384,6 +4453,7 @@
 				454B98FD1A54C76500A1CC7E /* ModifyPositionViewController.m in Sources */,
 				454B98FE1A54C76500A1CC7E /* NSData+ImageContentType.m in Sources */,
 				454B98FF1A54C76500A1CC7E /* QNResumeUpload.m in Sources */,
+				45778FB11C3B620000FF8691 /* Likers.m in Sources */,
 				454B99001A54C76500A1CC7E /* UploadingView.m in Sources */,
 				454B99011A54C76500A1CC7E /* FinialPlanTableViewCell.m in Sources */,
 				454B99021A54C76500A1CC7E /* SlideViewStartPage.m in Sources */,
@@ -4391,6 +4461,7 @@
 				454B99041A54C76500A1CC7E /* AppDelegate.m in Sources */,
 				454B99051A54C76500A1CC7E /* UIImage+Alpha.m in Sources */,
 				454B99061A54C76500A1CC7E /* WaterFallFooter.m in Sources */,
+				45778FC01C3B620000FF8691 /* Pic+CoreDataProperties.m in Sources */,
 				454B99071A54C76500A1CC7E /* LineLayout.m in Sources */,
 				454B99081A54C76500A1CC7E /* FinalingTableViewCell.m in Sources */,
 				454B99091A54C76500A1CC7E /* AFURLConnectionOperation.m in Sources */,
@@ -4428,6 +4499,7 @@
 				454B99291A54C76500A1CC7E /* WaterF.m in Sources */,
 				454B992A1A54C76500A1CC7E /* UserCompanyTableViewCell.m in Sources */,
 				454B992B1A54C76500A1CC7E /* INSViewController.m in Sources */,
+				45778FBD1C3B620000FF8691 /* Comment.m in Sources */,
 				454B992C1A54C76500A1CC7E /* SlideView.m in Sources */,
 				454B992D1A54C76500A1CC7E /* QNConfiguration.m in Sources */,
 				454B992E1A54C76500A1CC7E /* UserInfoSettingViewController.m in Sources */,
@@ -4471,6 +4543,7 @@
 				454B99531A54C76500A1CC7E /* ASIFormDataRequest.m in Sources */,
 				454B99541A54C76500A1CC7E /* WMPageController.m in Sources */,
 				454B99551A54C76500A1CC7E /* PECropView.m in Sources */,
+				45778FC31C3B620000FF8691 /* Pic.m in Sources */,
 				454B99561A54C76500A1CC7E /* DAKeyboardControl.m in Sources */,
 				454B99571A54C76500A1CC7E /* ActionDetailViewController.m in Sources */,
 				454B99581A54C76500A1CC7E /* NSData+AES.m in Sources */,
@@ -4552,6 +4625,7 @@
 				454B99A21A54C76500A1CC7E /* UIView+MJExtension.m in Sources */,
 				454B99A31A54C76500A1CC7E /* AFHTTPRequestOperationManager.m in Sources */,
 				454B99A41A54C76500A1CC7E /* FinialPersonTableViewCell.m in Sources */,
+				45778FB71C3B620000FF8691 /* Cycle.m in Sources */,
 				454B99A51A54C76500A1CC7E /* AutoShowView.m in Sources */,
 				4591F37D1A54D81C0079E1D0 /* DataManager.m in Sources */,
 				454B99A61A54C76500A1CC7E /* MWPhoto.m in Sources */,
@@ -4559,6 +4633,7 @@
 				454B99A81A54C76500A1CC7E /* FinalPersonTableViewCell.m in Sources */,
 				454B99A91A54C76500A1CC7E /* QNSessionManager.m in Sources */,
 				454B99AA1A54C76500A1CC7E /* UserFinialViewController.m in Sources */,
+				45778FB41C3B620000FF8691 /* Cycle+CoreDataProperties.m in Sources */,
 				454B99AB1A54C76500A1CC7E /* AFHTTPSessionManager.m in Sources */,
 				454B99AC1A54C76500A1CC7E /* PinyinFormatter.m in Sources */,
 				454B99AD1A54C76500A1CC7E /* TDUtil.m in Sources */,
@@ -4630,6 +4705,7 @@
 				457E04281B7060E500BC4161 /* ForgetPassViewController.m in Sources */,
 				45F93B5B1B637311004526F5 /* MJRefreshBackGifFooter.m in Sources */,
 				458115631B8034DA006EEBBC /* ProjectFinanceDetailViewController.m in Sources */,
+				45778FAD1C3B620000FF8691 /* Likers+CoreDataProperties.m in Sources */,
 				45326EF41B7326110044F8C1 /* UserInfoViewController.m in Sources */,
 				45A2ADA71B71FEEB00751F78 /* FinialApplyViewController.m in Sources */,
 				45495BCB1B60DA02007A17FD /* PECropRectView.m in Sources */,
@@ -4669,6 +4745,7 @@
 				45F829471B6B62470044F6F0 /* FinialPersonTableViewController.m in Sources */,
 				4517CD671B785AA000EFBB6A /* TableViewCell.m in Sources */,
 				45D49D931B82336F00EC529F /* ZHTableViewController.m in Sources */,
+				45778FB91C3B620000FF8691 /* Comment+CoreDataProperties.m in Sources */,
 				45F09C661B86297B0065D873 /* MBProgressHUD.m in Sources */,
 				45EF9CE61B7B22F80052E927 /* DialogView.m in Sources */,
 				45F93B601B637311004526F5 /* MJRefreshStateHeader.m in Sources */,
@@ -4705,6 +4782,7 @@
 				45984A471BE8C6E3003D5F50 /* ModifyPositionViewController.m in Sources */,
 				45FCD0501B75E216009AD6E3 /* NSData+ImageContentType.m in Sources */,
 				452609B51BDF0963006776B2 /* QNResumeUpload.m in Sources */,
+				45778FB01C3B620000FF8691 /* Likers.m in Sources */,
 				458115421B7F1A15006EEBBC /* UploadingView.m in Sources */,
 				45F8294D1B6C79150044F6F0 /* FinialPlanTableViewCell.m in Sources */,
 				450876311B8F647C006EFC1A /* SlideViewStartPage.m in Sources */,
@@ -4712,6 +4790,7 @@
 				45DEACF11B437879001EDA5D /* AppDelegate.m in Sources */,
 				45495BCF1B60DA02007A17FD /* UIImage+Alpha.m in Sources */,
 				45ECCEFD1B61FED40013CA73 /* WaterFallFooter.m in Sources */,
+				45778FBF1C3B620000FF8691 /* Pic+CoreDataProperties.m in Sources */,
 				45E812121B678E84009F840D /* LineLayout.m in Sources */,
 				45158BA31BF96A920095CB91 /* FinalingTableViewCell.m in Sources */,
 				4517CDBE1B78C7ED00EFBB6A /* AFURLConnectionOperation.m in Sources */,
@@ -4749,6 +4828,7 @@
 				45ECCEFC1B61FED40013CA73 /* WaterF.m in Sources */,
 				453271821B7490450044F8C1 /* UserCompanyTableViewCell.m in Sources */,
 				45E189DE1B79D2490082225E /* INSViewController.m in Sources */,
+				45778FBC1C3B620000FF8691 /* Comment.m in Sources */,
 				4508762D1B8F644E006EFC1A /* SlideView.m in Sources */,
 				452609B31BDF0963006776B2 /* QNConfiguration.m in Sources */,
 				4532718E1B74A5360044F8C1 /* UserInfoSettingViewController.m in Sources */,
@@ -4792,6 +4872,7 @@
 				45F09C711B86297B0065D873 /* ASIFormDataRequest.m in Sources */,
 				4545D08F1BEB45D400D21FB0 /* WMPageController.m in Sources */,
 				45495BCC1B60DA02007A17FD /* PECropView.m in Sources */,
+				45778FC21C3B620000FF8691 /* Pic.m in Sources */,
 				45B435CF1BD1E87D0031B799 /* DAKeyboardControl.m in Sources */,
 				4543EADE1BD08DCB0041DCBD /* ActionDetailViewController.m in Sources */,
 				45326F121B74432C0044F8C1 /* NSData+AES.m in Sources */,
@@ -4873,6 +4954,7 @@
 				45F93B651B637311004526F5 /* UIView+MJExtension.m in Sources */,
 				4517CDBA1B78C7ED00EFBB6A /* AFHTTPRequestOperationManager.m in Sources */,
 				45F8294A1B6C64DB0044F6F0 /* FinialPersonTableViewCell.m in Sources */,
+				45778FB61C3B620000FF8691 /* Cycle.m in Sources */,
 				4517CD641B78586F00EFBB6A /* AutoShowView.m in Sources */,
 				4591F37C1A54D81C0079E1D0 /* DataManager.m in Sources */,
 				4543EB091BD08E100041DCBD /* MWPhoto.m in Sources */,
@@ -4880,6 +4962,7 @@
 				45158BA61BF97BF80095CB91 /* FinalPersonTableViewCell.m in Sources */,
 				452609B01BDF0963006776B2 /* QNSessionManager.m in Sources */,
 				4532719D1B751CAD0044F8C1 /* UserFinialViewController.m in Sources */,
+				45778FB31C3B620000FF8691 /* Cycle+CoreDataProperties.m in Sources */,
 				4517CDBB1B78C7ED00EFBB6A /* AFHTTPSessionManager.m in Sources */,
 				45495C141B60DA91007A17FD /* PinyinFormatter.m in Sources */,
 				45326F091B74424F0044F8C1 /* TDUtil.m in Sources */,
@@ -4911,7 +4994,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1264b681-7bfc-423d-8e28-2da41ee455b7";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -4938,7 +5021,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1264b681-7bfc-423d-8e28-2da41ee455b7";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -4966,7 +5049,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1264b681-7bfc-423d-8e28-2da41ee455b7";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -4993,7 +5076,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "1264b681-7bfc-423d-8e28-2da41ee455b7";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
