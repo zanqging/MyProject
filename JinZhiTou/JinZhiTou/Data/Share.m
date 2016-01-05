@@ -1,15 +1,15 @@
 //
-//  Likers.m
+//  Share.m
 //  JinZhiTou
 //
 //  Created by air on 16/1/5.
 //  Copyright © 2016年 金指投. All rights reserved.
 //
 
-#import "Likers.h"
+#import "Share.h"
 #import "Cycle.h"
-#define TableName @"Likers"
-@implementation Likers
+#define TableName @"Share"
+@implementation Share
 -(id)init
 {
     self  = [NSEntityDescription  insertNewObjectForEntityForName:TableName inManagedObjectContext:[DataManager shareInstance].context];
@@ -50,11 +50,11 @@
 - (void)insertCoreData:(NSMutableArray*)dataArray
 {
     //    NSManagedObjectContext *context = [self managedObjectContext];
-    for (Cycle *instance in dataArray) {
+    for (Share *instance in dataArray) {
         self.id = instance.id;
-        self.uid = instance.uid;
-        self.name = instance.name;
-        self.photo = instance.photo;
+        self.url = instance.url;
+        self.img  = instance.img;
+        self.title = instance.title;
         
         NSError *error;
         if(![[DataManager shareInstance].context save:&error])
@@ -137,5 +137,6 @@
         NSLog(@"更新成功");
     }
 }
+
 
 @end

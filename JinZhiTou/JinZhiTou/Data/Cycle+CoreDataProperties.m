@@ -29,5 +29,6 @@
 @dynamic comment;
 @dynamic likers;
 @dynamic pic;
+@dynamic share;
 
 @end

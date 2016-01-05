@@ -13,7 +13,6 @@
 
 @implementation Pic (CoreDataProperties)
 
-@dynamic cycleId;
 @dynamic url;
 @dynamic cycle;
 

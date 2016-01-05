@@ -10,7 +10,7 @@
 //
 
 #import "Cycle.h"
-
+#import "Share.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface Cycle (CoreDataProperties)
@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, retain) NSSet<Comment *> *comment;
 @property (nullable, nonatomic, retain) NSSet<Likers *> *likers;
 @property (nullable, nonatomic, retain) NSSet<Pic *> *pic;
+@property (nullable, nonatomic, retain) Share* share;
 
 @end
 
@@ -50,7 +51,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removePicObject:(Pic *)value;
 - (void)addPic:(NSSet<Pic *> *)values;
 - (void)removePic:(NSSet<Pic *> *)values;
-
 @end
 
 NS_ASSUME_NONNULL_END

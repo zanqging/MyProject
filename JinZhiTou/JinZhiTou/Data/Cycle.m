@@ -78,6 +78,7 @@
         self.addr = instance.addr;
         self.flag = instance.flag;
         self.photo = instance.photo;
+        self.share = instance.share;
         self.likers = instance.likers;
         self.company = instance.company;
         self.content = instance.content;
@@ -111,12 +112,15 @@
     
     NSEntityDescription *entity = [NSEntityDescription entityForName:TableName inManagedObjectContext:[DataManager shareInstance].context];
     [fetchRequest setEntity:entity];
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:NO];
+    [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
+    
     NSError *error;
     NSArray *fetchedObjects = [[DataManager shareInstance].context executeFetchRequest:fetchRequest error:&error];
     NSMutableArray *resultArray = [NSMutableArray array];
     
     for (Cycle *pro in fetchedObjects) {
-        if (pro.id && pro.uid) {
+        if ([pro.id integerValue]!=0 && [pro.uid integerValue]!=0) {
             [resultArray addObject:pro];
         }
     }

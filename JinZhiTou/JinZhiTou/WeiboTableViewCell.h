@@ -7,6 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Pic.h"
+#import "Share.h"
+#import "Cycle.h"
+#import "Likers.h"
+#import "Comment.h"
 #import "HttpUtils.h"
 #import "MWPhotoBrowser.h"
 #import "UIImageView+WebCache.h"
@@ -14,7 +19,7 @@
 @protocol WeiboTableViewCellDelegate <NSObject>
 
 -(void)weiboTableViewCell:(id)weiboTableViewCell refresh:(BOOL)refresh;
--(void)weiboTableViewCell:(id)weiboTableViewCell deleteDic:(NSDictionary*)dic;
+-(void)weiboTableViewCell:(id)weiboTableViewCell deleteDic:(Cycle*) cycle;
 -(void)weiboTableViewCell:(id)weiboTableViewCell priseDic:(NSDictionary*)dic msg:(NSString*)msg;
 -(void)weiboTableViewCell:(id)weiboTableViewCell userId:(NSString*)userId isSelf:(BOOL) isSelf;
 -(void)weiboTableViewCell:(id)weiboTableViewCell contentId:(NSString*)contentId atId:(NSString*)atId isSelf:(BOOL) isSelf;
@@ -50,9 +55,8 @@
 @property (retain, nonatomic)  UIView *imgContentView;
 @property (retain, nonatomic)  UIButton *expandButton;
 @property (retain, nonatomic)  UIButton *deleteButton;
-@property (retain, nonatomic)  NSMutableDictionary* dic;
+@property (retain, nonatomic)  Cycle* cycle;
 @property (retain, nonatomic)  UIImageView *headerImgView;
-
 //---------------分享功能--------------//
 @property (retain, nonatomic)  UIView *shareView; //点赞区域
 @property (retain, nonatomic)  UIImageView *shareImgView;

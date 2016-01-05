@@ -87,7 +87,7 @@
 -(void)commentAction:(id)sender
 {
     if ([_delegate respondsToSelector:@selector(weiboTableViewCell:contentId:atId:isSelf:)]) {
-        [_delegate weiboTableViewCell:self contentId:[self.dic valueForKey:@"id"] atId:nil isSelf:NO];
+        [_delegate weiboTableViewCell:self contentId:[NSString stringWithFormat:@"%@",self.cycle.id] atId:nil isSelf:NO];
     }
 }
 
@@ -96,9 +96,8 @@
     if (!httpUtils) {
         httpUtils = [[HttpUtils alloc]init];
     }
-    if([self.dic valueForKey:@"id"]){
-        NSString* serverUrl = [CYCLE_CONTENT_PRISE stringByAppendingFormat:@"%@/%d/",[self.dic
-                                                                                      valueForKey:@"id"],[[self.dic valueForKey:@"is_like"] boolValue]];
+    if(self.cycle.id){
+        NSString* serverUrl = [CYCLE_CONTENT_PRISE stringByAppendingFormat:@"%@/%@/",self.cycle.id,self.cycle.is_like];
         [httpUtils getDataFromAPIWithOps:serverUrl  type:0 delegate:self sel:@selector(requestPriseFinished:) method:@"GET"];
     }
     
@@ -113,7 +112,7 @@
 -(void)deleteAction:(id)sender
 {
     UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"删除" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除", nil];
-    alertView.tag  = [[self.dic valueForKey:@"id"] integerValue];
+    alertView.tag  = [self.cycle.id integerValue];
     alertView.delegate = self;
     [alertView show];
     currentTag =1;
@@ -156,7 +155,7 @@
     currentSelectedCellIndex = indexPath;
     if(![[dic valueForKey:@"flag"] boolValue]){
         if ([_delegate respondsToSelector:@selector(weiboTableViewCell:contentId:atId:isSelf:)]) {
-            [_delegate weiboTableViewCell:self contentId:[self.dic valueForKey:@"id"] atId:[dic valueForKey:@"id"] isSelf:NO];
+            [_delegate weiboTableViewCell:self contentId:[NSString stringWithFormat:@"%@",self.cycle.id] atId:[dic valueForKey:@"id"] isSelf:NO];
         }
     }else{
         UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"删除" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除", nil];
@@ -169,15 +168,15 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary* dic  = self.dataArray[indexPath.row];
-    NSString* name  = [dic valueForKey:@"name"];
-    NSString* atName = [dic valueForKey:@"at_name"];
+    Comment* comment  = self.dataArray[indexPath.row];
+    NSString* name  = comment.name;
+    NSString* atName = comment.atName;
     NSString* atLabel = @"";
     NSString* suffix  =@":";
     if(atName && ![atName isEqualToString:@""]){
         atLabel = @"回复";
     }
-    NSString* content =  [dic valueForKey:@"content"];
+    NSString* content =  comment.content;
     NSString* str = name;
     if (atLabel) {
         str = [str stringByAppendingString:atLabel];
@@ -195,12 +194,18 @@
         str = [str stringByAppendingString:content];
     }
 
-    NSInteger line = [TDUtil convertToInt:str]/17;
-    if (line>0) {
-        return (line+1)*13+10;
-    }else{
-        return 21;
-    }
+    UIReplyLabel* label = [[UIReplyLabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 0)];
+    [TDUtil setLabelMutableText:label content:str lineSpacing:5 headIndent:0];
+    
+    
+    float height = POS_Y(label)+15;
+    return height;
+//    NSInteger line = [TDUtil convertToInt:str]/17;
+//    if (line>0) {
+//        return (line+1)*13+10;
+//    }else{
+//        return 21;
+//    }
     
 }
 -(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -219,18 +224,20 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
     }
     
-    UIReplyLabel* label = [[UIReplyLabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
+    UIReplyLabel* label = [[UIReplyLabel alloc]initWithFrame:CGRectMake(0, 5, WIDTH(self.tableView), height-5)];
     label.userInteractionEnabled = YES;
     
-    NSDictionary* dic  = self.dataArray[indexPath.row];
-    NSString* name  = [dic valueForKey:@"name"];
-    NSString* atName = [dic valueForKey:@"at_name"];
+    Comment* comment = self.dataArray[indexPath.row];
+    NSString* name  = comment.name;
+    NSString* atName = comment.atName;
     NSString* atLabel = @"";
     NSString* suffix  =@":";
+    
+    
     if(atName && ![atName isEqualToString:@""]){
         atLabel = @"回复";
     }
-    NSString* content =  [dic valueForKey:@"content"];
+    NSString* content = comment.content;
     NSString* str = name;
     if (name) {
         //监听事件
@@ -263,10 +270,8 @@
     
     
     [cell addSubview:label];
-    //cell.backgroundColor = [UIColor colorWithRed:238.0f/255.0 green:238.0f/255.0 blue:238.0f/255.0 alpha:1];
     cell.backgroundColor = ClearColor;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    //    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
 }
 
@@ -279,17 +284,20 @@
 
 -(void)showImage:(UITapGestureRecognizer*)sender
 {
-    NSMutableArray* dataArray = [self.dic valueForKey:@"pic"];
+    NSArray* dataArray = [self.cycle.pic allObjects];
     
     MWPhoto* photo;
     NSMutableArray* thumbs = [NSMutableArray new];
     
+    Pic* pic;
     for (int i= 0 ; i <dataArray.count;i++) {
-        if ([dataArray[i] isKindOfClass:NSString.class]) {
-            photo = [MWPhoto photoWithURL:[NSURL URLWithString:dataArray[i]]];
-        }else if ([dataArray[i] isKindOfClass:UIImage.class]){
-             photo = [MWPhoto photoWithImage:dataArray[i]];
-        }
+//        if ([dataArray[i] isKindOfClass:NSString.class]) {
+//            photo = [MWPhoto photoWithURL:[NSURL URLWithString:dataArray[i]]];
+//        }else if ([dataArray[i] isKindOfClass:UIImage.class]){
+//             photo = [MWPhoto photoWithImage:dataArray[i]];
+//        }
+        pic = dataArray[i];
+        photo = [MWPhoto photoWithURL:[NSURL URLWithString:pic.url]];
         [thumbs addObject:photo];
     }
     self.thumbs = thumbs;
@@ -339,27 +347,26 @@
             if (!httpUtils) {
                 httpUtils = [[HttpUtils alloc]init];
             }
-            NSString* serverUrl = [CYCLE_CONTENT_DELETE stringByAppendingFormat:@"%@/",[self.dic
-                                                                                        valueForKey:@"id"]];
+            NSString* serverUrl = [CYCLE_CONTENT_DELETE stringByAppendingFormat:@"%@/",self.cycle.id];
             [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestDeleteFinished:)];
         }
         
     }
 }
 
--(void)setDic:(NSMutableDictionary *)dic
+-(void)setCycle:(Cycle *)cycle
 {
-    if (dic) {
-        self->_dic =dic;
+    if (cycle && cycle.id) {
+        self->_cycle =cycle;
         //事件
-        if ([dic valueForKey:@"id"]) {
-//            [self.headerImgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
-//            [self.nameLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
-        }
+//        if (self.cycle.id) {
+////            [self.headerImgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+////            [self.nameLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+//        }
         
         //头像
-        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"photo"]];
-        self.headerImgView.tag = [[self.dic valueForKey:@"uid"] integerValue];
+        NSURL* url = [NSURL URLWithString:self.cycle.photo];
+        self.headerImgView.tag = [self.cycle.uid integerValue];
         [self.headerImgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"coremember")];
         
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
@@ -370,16 +377,16 @@
         
         [paragraphStyle setHeadIndent:-50];
         
-        NSString* content = [dic valueForKey:@"name"];
+        NSString* content = self.cycle.name;
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
         [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
         self.nameLabel.attributedText = attributedString;//ios 6
-        self.nameLabel.tag = [[self.dic valueForKey:@"uid"] integerValue];
-        self.nameLabel.index =[self.dic valueForKey:@"uid"];
+        self.nameLabel.tag = [self.cycle.uid integerValue];
+        self.nameLabel.index =self.cycle.uid;
         [self.nameLabel sizeToFit];
         
         //内容
-         NSString* arr = [dic valueForKey:@"position"];
+         NSString* arr = self.cycle.position;
         if (arr) {
             NSString* content;
             if ([arr isKindOfClass:NSArray.class]) {
@@ -388,7 +395,7 @@
                 content =arr;
             }
             
-            content = [[self.dic valueForKey:@"addr"] stringByAppendingFormat:@"|%@",content];
+            content = [self.cycle.addr stringByAppendingFormat:@"|%@",content];
             attributedString = [[NSMutableAttributedString alloc] initWithString:content];
             [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
             self.companyLabel.attributedText = attributedString;//ios 6
@@ -397,21 +404,21 @@
         
         
         //内容
-        content = [dic valueForKey:@"content"];
+        content = self.cycle.content;
         attributedString = [[NSMutableAttributedString alloc] initWithString:content];
         [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
         self.contentLabel.attributedText = attributedString;//ios 6
         [self.contentLabel sizeToFit];
         
         //分享内容
-        if ([self.dic valueForKey:@"share"]) {
+        if (self.cycle.share && self.cycle.share.title) {
             self.shareView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.contentLabel), WIDTH(self)-80,60)];
             self.shareView.backgroundColor=[UIColor colorWithRed:238.0f/255.0 green:238.0f/255.0 blue:238.0f/255.0 alpha:1];
             self.shareView.userInteractionEnabled  =YES;
             [self.shareView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(shareContentTaped:)]];
             //分享图片
             self.shareImgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 50, 50)];
-            [self.shareImgView sd_setImageWithURL:[NSURL URLWithString:[[self.dic valueForKey:@"share"] valueForKey:@"img"]] placeholderImage:IMAGENAMED(@"loading")];
+            [self.shareImgView sd_setImageWithURL:[NSURL URLWithString:self.cycle.share.img] placeholderImage:IMAGENAMED(@"loading")];
             [self.shareView addSubview:self.shareImgView];
             
             //分享文字
@@ -421,7 +428,7 @@
             self.shareLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             [self.shareView addSubview:self.shareLabel];
             
-            content = [[self.dic valueForKey:@"share"] valueForKey:@"title"];
+            content = self.cycle.share.title;
             NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
             
             //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
@@ -439,7 +446,7 @@
         }
         
         
-        NSArray* pics =[self.dic valueForKey:@"pic"];
+        NSArray* pics =[self.cycle.pic allObjects];
         NSInteger value = pics.count;
         NSInteger number = value/3;
         
@@ -462,13 +469,10 @@
             imgView.userInteractionEnabled  = YES;
             [self.imgContentView addSubview:imgView];
             imgView.contentMode = UIViewContentModeScaleAspectFill;
-            id obj =[pics objectAtIndex:i];
-            if ([obj isKindOfClass:NSString.class]) {
-                NSURL* url =[NSURL URLWithString:[pics objectAtIndex:i]];
-                [imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"coremember")];
-            }else if ([obj isKindOfClass:UIImage.class]){
-                [imgView setImage:[pics objectAtIndex:i]];
-            }
+            
+            Pic* pic = [pics objectAtIndex:i];
+            NSURL* url =[NSURL URLWithString:pic.url];
+            [imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"coremember")];
             [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showImage:)]];
             
             [array addObject:[NSString stringWithFormat:@"%d",i+1]];
@@ -490,7 +494,8 @@
         }
         self.dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.contentLabel), posY, 100, 30)];
         self.dateTimeLabel.font  =SYSTEMFONT(14);
-        self.dateTimeLabel.text = [dic valueForKey:@"datetime"];
+        self.dateTimeLabel.text = self.cycle.datetime;
+        [TDUtil setLabelMutableText:self.dateTimeLabel content:self.cycle.datetime lineSpacing:0 headIndent:0];
         self.dateTimeLabel.textColor  =FONT_COLOR_GRAY;
         [self addSubview:self.dateTimeLabel];
         
@@ -499,8 +504,8 @@
         [self addSubview:self.funView];
         
         //点赞，分享,评论
-        NSMutableArray* dataCriticalArray = [self.dic valueForKey:@"comment"];
-        self.dataArray = dataCriticalArray;
+        NSArray* dataCriticalArray = [self.cycle.comment allObjects];
+        self.dataArray = [NSMutableArray arrayWithArray:dataCriticalArray];
         
         //评论
         self.criticalButton = [[UIButton alloc]initWithFrame:CGRectMake(WIDTH(self.funView)-40, 0, 50, 30)];
@@ -531,9 +536,9 @@
             if (self.shareView) {
                 posY=POS_Y(self.shareView);
             }else{
-                posY=Y(self.dateTimeLabel)-10;
+                posY=Y(self.dateTimeLabel)-20;
             }
-            self.expandButton = [[UIButton alloc]initWithFrame:CGRectMake(X(self.contentLabel)+50, posY, 50, 50)];
+            self.expandButton = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(self.dateTimeLabel), posY, 50, 50)];
             self.expandButton.titleLabel.font  =FONT(@"Arial", 12);
             [self.expandButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
             [self.expandButton setTitle:@"全文" forState:UIControlStateNormal];
@@ -543,7 +548,7 @@
         }
         
         //删除按钮
-        if ([[dic valueForKey:@"flag"] boolValue] && [dic valueForKey:@"id"]) {
+        if ([self.cycle.flag boolValue] && self.cycle.id) {
             if (self.expandButton) {
                 self.deleteButton = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(self.expandButton), Y(self.expandButton), 50, 50)];
             }else{
@@ -569,7 +574,7 @@
 -(void)setPriseListData
 {
     //点赞评论区域
-    NSArray* dataPriseArray = [self.dic valueForKey:@"like"];
+    NSArray* dataPriseArray = [self.cycle.likers allObjects];
     if (!self.priseView) {
         self.priseView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView)+5, WIDTH(self.funView), 0)];
         [self addSubview:self.priseView];
@@ -595,7 +600,11 @@
         if ([TDUtil isValidString:name]) {
             NSString* str;
             if (dataPriseArray.count>1) {
-                str = [NSString stringWithFormat:@"%@,",[dic valueForKey:@"name"]];
+                if (i!=dataPriseArray.count-1) {
+                    str = [NSString stringWithFormat:@"%@,",[dic valueForKey:@"name"]];
+                }else{
+                    str = [NSString stringWithFormat:@"%@",[dic valueForKey:@"name"]];
+                }
             }else{
                 str = [NSString stringWithFormat:@"%@",[dic valueForKey:@"name"]];
             }
@@ -615,22 +624,29 @@
         }
     }
     if (dataPriseArray.count>0) {
-        [self.priseListView setFrame:CGRectMake(0,0, WIDTH(self.priseView),(num+1)*20)];
+        [self.priseListView setFrame:CGRectMake(0,0, WIDTH(self.priseView),(num+1)*30)];
+        
+        //分割线
+        UIImageView* lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, HEIGHT(self.priseListView)-1, WIDTH(self.priseListView), 1)];
+        lineImgView.backgroundColor = BackColor;
+        [self.priseListView addSubview:lineImgView];
     }else{
         [self.priseListView setFrame:CGRectMake(0, 0, WIDTH(self.priseView),num*30)];
     }
     
+    
+    
     float comment_height =0;
     for (int i=0; i<self.dataArray.count; i++) {
-        NSDictionary* dic  = self.dataArray[i];
-        NSString* name  = [dic valueForKey:@"name"];
-        NSString* atName = [dic valueForKey:@"at_name"];
+        Comment* comment  = self.dataArray[i];
+        NSString* name  = comment.name;
+        NSString* atName = comment.atName;
         NSString* atLabel = @"";
         NSString* suffix  =@":";
         if(atName && ![atName isEqualToString:@""]){
             atLabel = @"回复";
         }
-        NSString* content =  [dic valueForKey:@"content"];
+        NSString* content =  comment.content;
         NSString* str = name;
         if (atLabel) {
             str = [str stringByAppendingString:atLabel];
@@ -648,13 +664,20 @@
             str = [str stringByAppendingString:content];
         }
         
-        NSInteger line = [TDUtil convertToInt:str]/17;
+        UIReplyLabel* label = [[UIReplyLabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 0)];
+        [TDUtil setLabelMutableText:label content:str lineSpacing:5 headIndent:0];
         
-        if (line>0) {
-            comment_height+=(line+1)*13+10;
-        }else{
-            comment_height += 23;
-        }
+        
+        float height = POS_Y(label)+15;
+        comment_height+=height;
+        
+//        NSInteger line = [TDUtil convertToInt:str]/17;
+//        
+//        if (line>0) {
+//            comment_height+=(line+1)*13+10;
+//        }else{
+//            comment_height += 23;
+//        }
     }
     
     if (dataPriseArray.count>0 && self.dataArray.count>0) {
@@ -678,8 +701,8 @@
             [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), HEIGHT(self.priseView)-5)];
         }else {
             float height =33;
-            if (self.dataArray.count>1) {
-                height = HEIGHT(self.priseView)-10;
+            if (self.dataArray.count>0) {
+                height = HEIGHT(self.priseView)-12;
             }
             [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), height)];
         }
@@ -701,7 +724,7 @@
 -(void)shareContentTaped:(id)sender
 {
     if ([_delegate respondsToSelector:@selector(weiboTableViewCell:didSelectedShareContentUrl:)]) {
-        [_delegate weiboTableViewCell:self didSelectedShareContentUrl:[NSURL URLWithString:[[self.dic valueForKey:@"share"] valueForKey:@"href"]]];
+        [_delegate weiboTableViewCell:self didSelectedShareContentUrl:[NSURL URLWithString:self.cycle.share.url]];
     }
 }
 #pragma mark - MWPhotoBrowserDelegate
@@ -779,11 +802,11 @@
     if (dic!=nil) {
         NSString* status = [dic valueForKey:@"status"];
         if ([status integerValue]==0) {
-            BOOL flag = ![[self.dic valueForKey:@"is_like"] boolValue];
+            BOOL flag = !self.cycle.is_like;
             NSString* flagStr = flag==true?@"True":@"False";
-            [self.dic setValue:flagStr forKey:@"is_like"];
+            self.cycle.is_like = [NSNumber numberWithBool:[flagStr boolValue]];
             NSInteger num = [self.priseButton.titleLabel.text integerValue];
-            if ([[self.dic valueForKey:@"is_like"]boolValue]) {
+            if (self.cycle.is_like) {
                 [self.priseButton setTitle:[NSString stringWithFormat:@"%ld",++num] forState:UIControlStateNormal];
             }else{
                 [self.priseButton setTitle:[NSString stringWithFormat:@"%ld",--num] forState:UIControlStateNormal];
@@ -844,7 +867,7 @@
         NSString* status = [dic valueForKey:@"status"];
         if ([status integerValue]==0) {
             if ([_delegate respondsToSelector:@selector(weiboTableViewCell:deleteDic:)]) {
-                [_delegate weiboTableViewCell:self deleteDic:self.dic];
+                [_delegate weiboTableViewCell:self deleteDic:self.cycle];
             }
         }
     }

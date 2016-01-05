@@ -1,5 +1,5 @@
 //
-//  Comment.h
+//  Share.h
 //  JinZhiTou
 //
 //  Created by air on 16/1/5.
@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface Comment : NSManagedObject
+@interface Share : NSManagedObject
 /**
  *  保存结果
  *
@@ -35,4 +35,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
-#import "Comment+CoreDataProperties.h"
+#import "Share+CoreDataProperties.h"

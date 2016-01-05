@@ -135,6 +135,8 @@
     
     //加载动画
 //    self.startLoading  =YES;
+    //加载离线数据
+    [self loadOffLineData];
     //加载数据
     [self loadData];
 }
@@ -153,6 +155,16 @@
         [self.navView setIsHasNewMessage:YES];
     }
     
+}
+
+-(void)loadOffLineData
+{
+    Cycle* cycleModel = [[Cycle alloc]init];
+    NSMutableArray* dataArray = [cycleModel selectData:10 andOffset:(int)currentPage];
+    
+    if (dataArray && dataArray.count>0) {
+        self.dataArray = dataArray;
+    }
 }
 
 /**
@@ -320,8 +332,9 @@
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     if(self.dataArray.count>0){
-        NSMutableDictionary* dic =self.dataArray[indexPath.row];
-        cell.dic =dic; 
+//        NSMutableDictionary* dic =self.dataArray[indexPath.row];
+        Cycle*  cycle = self.dataArray[indexPath.row];
+        cell.cycle =cycle;
     }
     return cell;
 }
@@ -366,10 +379,10 @@
     [textView becomeFirstResponder];
 }
 
--(void)weiboTableViewCell:(id)weiboTableViewCell deleteDic:(NSDictionary *)dic
+-(void)weiboTableViewCell:(id)weiboTableViewCell deleteDic:(Cycle*)cycle
 {
-    if ([self.dataArray containsObject:dic]) {
-        [self.dataArray removeObject:dic];
+    if ([self.dataArray containsObject:cycle]) {
+        [self.dataArray removeObject:cycle];
         [self.tableView reloadData];
     }
 }
@@ -446,23 +459,23 @@
 
 -(void)weiboTableViewCell:(id)weiboTableViewCell didSelectedShareContentUrl:(NSURL *)urlStr
 {
-    NSDictionary* dic =((WeiboTableViewCell*)weiboTableViewCell).dic;
-    BannerViewController* controller =[[BannerViewController alloc]init];
-    controller.titleStr=@"咨询详情";
-    controller.dic = [dic valueForKey:@"share"];
-    controller.title=@"圈子";
-    controller.type=3;
-    controller.url =[NSURL URLWithString:[[dic valueForKey:@"share"] valueForKey:@"url"]];
-    [self.navigationController pushViewController:controller animated:YES];
+    Cycle* cycle =((WeiboTableViewCell*)weiboTableViewCell).cycle;
+//    BannerViewController* controller =[[BannerViewController alloc]init];
+//    controller.titleStr=@"咨询详情";
+//    controller.dic = [dic valueForKey:@"share"];
+//    controller.title=@"圈子";
+//    controller.type=3;
+//    controller.url =[NSURL URLWithString:[[dic valueForKey:@"share"] valueForKey:@"url"]];
+//    [self.navigationController pushViewController:controller animated:YES];
 }
 -(CGFloat)getHeightItemWithIndexpath:(NSIndexPath*) indexpath
 {
-    NSDictionary* dic = self.dataArray[indexpath.row];
+    Cycle* cycle = self.dataArray[indexpath.row];
     //内容
-    NSString* content = [dic valueForKey:@"content"];
-    NSInteger picsCount = [[dic valueForKey:@"pic"] count];
-    NSInteger likersCount = [[dic valueForKey:@"like"] count];
-    NSInteger commentCount = [[dic valueForKey:@"comment"] count];
+    NSString* content = cycle.content;
+    NSInteger picsCount = cycle.pic.count;
+    NSInteger likersCount = cycle.likers.count;
+    NSInteger commentCount = cycle.comment.count;
     
     
     int number = [TDUtil convertToInt:content] / 17;
@@ -495,16 +508,16 @@
     
     
     for (int i=0; i<commentCount; i++) {
-        NSMutableArray* array  = [dic valueForKey:@"comment"];
-        NSDictionary* dic  = array[i];
-        NSString* name  = [dic valueForKey:@"name"];
-        NSString* atName = [dic valueForKey:@"at_name"];
+        NSArray *commentArray  = [cycle.comment allObjects];
+        Comment* comment  = commentArray[i];
+        NSString* name  = comment.name;
+        NSString* atName = comment.atName;
         NSString* atLabel = @"";
         NSString* suffix  =@":";
         if(atName && ![atName isEqualToString:@""]){
             atLabel = @"回复";
         }
-        NSString* content =  [dic valueForKey:@"content"];
+        NSString* content =  comment.content;
         NSString* str = name;
         if (atLabel) {
             str = [str stringByAppendingString:atLabel];
@@ -522,21 +535,28 @@
             str = [str stringByAppendingString:content];
         }
         
-        NSInteger number = [TDUtil convertToInt:str];
-        NSInteger line = number/17;
+        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(70, 0, WIDTH(self.tableView)-90, 0)];
+        [TDUtil setLabelMutableText:label content:str lineSpacing:5 headIndent:0];
         
-        if (line>0) {
-            height+=(line+1)*13+10;
-        }else{
-            if (number>0) {
-                height += 25;
-            }
-        }
+        float h = POS_Y(label)+15;
+        height+=h;
+//        return height;
+        
+//        NSInteger number = [TDUtil convertToInt:str];
+//        NSInteger line = number/17;
+//        
+//        if (line>0) {
+//            height+=(line+1)*13+10;
+//        }else{
+//            if (number>0) {
+//                height += 25;
+//            }
+//        }
         
     }
     
     
-    if ([dic valueForKey:@"share"]) {
+    if (cycle.share && cycle.share.title) {
         height+=60;
         if (commentCount>0 && commentCount<=5 && likersCount==0) {
             height+=20;
@@ -718,25 +738,132 @@
     NSMutableDictionary * dic =[jsonString JSONValue];
     if (dic!=nil) {
         NSString* code = [dic valueForKey:@"code"];
-        NSMutableArray* dataArray = [NSMutableArray new];
-        NSMutableArray* arrayData = [dic valueForKey:@"data"];
+        NSMutableArray* dataArray = [[NSMutableArray alloc]init];
         if ([code integerValue]==0  || [code integerValue]==2) {
+            NSMutableArray* arrayData = [dic valueForKey:@"data"];
+    
+            //开始进行圈子数据缓存
+            Cycle* cycleModel = [[Cycle alloc]init];
+            //移除先前缓存数据
+            [cycleModel deleteData];
+            //将对象实例添加至新数组中
+            NSMutableArray* cycleArray = [[NSMutableArray alloc]init];
+            Cycle* cycle;
+            NSDictionary* dic;
+            for (int i = 0; i<arrayData.count; i++) {
+                dic = arrayData[i];
+                
+                cycle = [[Cycle alloc]init];
+                cycle.id = [dic valueForKey:@"id"];
+                cycle.flag = [dic valueForKey:@"flag"];
+                cycle.position = [dic valueForKey:@"position"];
+                cycle.name = [dic valueForKey:@"name"];
+                cycle.datetime = [dic valueForKey:@"datetime"];
+                cycle.is_like = [dic valueForKey:@"is_like"];
+                cycle.addr = [dic valueForKey:@"addr"];
+                cycle.remain_comment = [dic valueForKey:@"remain_comment"];
+                cycle.flag = [dic valueForKey:@"flag"];
+                cycle.remain_like = [dic valueForKey:@"remain_like"];
+                cycle.photo = [dic valueForKey:@"photo"];
+                cycle.uid = [dic valueForKey:@"uid"];
+                cycle.company = [dic valueForKey:@"company"];
+                cycle.content = [dic valueForKey:@"content"];
+                
+                //分享
+                NSDictionary* dicShare =[dic valueForKey:@"share"];
+                if (dic) {
+                    Share* share = [[Share alloc]init];
+                    share.id = [dicShare valueForKey:@"id"];
+                    share.url = [dicShare valueForKey:@"url"];
+                    share.img = [dicShare valueForKey:@"img"];
+                    share.title = [dicShare valueForKey:@"title"];
+                    cycle.share = share;
+                }
+                
+                //评论列表
+                NSArray* array = [dic valueForKey:@"comment"];
+                if (array && array.count>0) {
+                    Comment* comment;
+                    NSMutableSet<Comment*> *commentSet = [[NSMutableSet alloc]init];
+                    NSDictionary* commentDic;
+                    for (int j = 0; j<array.count; j++) {
+                        commentDic = [array objectAtIndex:j];
+                        comment = [[Comment alloc]init];
+                        comment.id = [NSNumber numberWithInteger:[[commentDic valueForKey:@"id"] integerValue]];
+                        comment.uid = [NSNumber numberWithInteger:[[commentDic valueForKey:@"uid"] integerValue]];
+                        comment.flag = [NSNumber numberWithInt:[[commentDic valueForKey:@"flag"] intValue]];
+                        comment.name = [NSString stringWithFormat:@"%@",[commentDic valueForKey:@"name"]];
+                        comment.atName = [NSString stringWithFormat:@"%@",[commentDic valueForKey:@"at_name"]];
+                        
+                        if ([comment.atName isEqualToString:@"(null)"]) {
+                            comment.atName = @"";
+                        }
+                        comment.photo = [commentDic valueForKey:@"photo"];
+                        comment.content = [commentDic valueForKey:@"content"];
+                        
+                        [commentSet addObject:comment];
+                    }
+                    cycle.comment = commentSet;
+                }
+                
+                //评论列表
+                array = [dic valueForKey:@"pic"];
+                if (array && array.count>0) {
+                    Pic* pic;
+                    NSMutableSet<Pic*> *picSet = [[NSMutableSet alloc]init];
+                    for (int j = 0; j<array.count; j++) {
+                        pic = [[Pic alloc]init];
+                        pic.url = [array objectAtIndex:j];
+                        [picSet addObject:pic];
+                    }
+                    cycle.pic = picSet;
+                }
+                
+                //点赞列表
+                array = [dic valueForKey:@"like"];
+                if (array && array.count>0) {
+                    Likers* liker;
+                    NSMutableSet<Likers*> *likersSet = [[NSMutableSet alloc]init];
+                    NSDictionary* likerDic;
+                    for (int j = 0; j<array.count; j++) {
+                        likerDic = [array objectAtIndex:j];
+                        liker = [[Likers alloc]init];
+                        liker.id = [NSNumber numberWithInteger:[[likerDic valueForKey:@"id"] integerValue]];
+                        liker.uid = [NSNumber numberWithInteger:[[likerDic valueForKey:@"uid"] integerValue]];
+                        liker.name = [NSString stringWithFormat:@"%@",[likerDic valueForKey:@"name"]];
+                        liker.photo = [likerDic valueForKey:@"photo"];
+                        [likersSet addObject:liker];
+                    }
+                    cycle.likers = likersSet;
+                }
+                
+                [cycle save];
+                [cycleArray addObject:cycle];
+            }
+            
             if (isRefresh) {
-                dataArray = arrayData;
+                self.dataArray = cycleArray;
             }else{
                 if (self.dataArray) {
-                    dataArray = self.dataArray;
+                    dataArray = [NSMutableArray arrayWithArray:self.dataArray];
                 }
-                for (int i=0; i<arrayData.count; i++) {
-                    [dataArray addObject:arrayData[i]];
+                for (int i=0; i<cycleArray.count; i++) {
+                    [dataArray addObject:cycleArray[i]];
                 }
             }
+            
+            self.dataArray = [cycleArray copy];
+            
+            //保存数据
+//            cycleModel = [[Cycle alloc]init];
+//            [cycleModel insertCoreData:cycleArray];
+            
 //            NSDictionary* dic =[[dataArray[0] valueForKey:@"likers"] objectAtIndex:0];
 //            for (int i=0; i<45; i++) {
 //                [dic setValue:[NSString stringWithFormat:@"%d",i] forKey:@"uid"];
 //                [[dataArray[0] valueForKey:@"likers"] addObject:dic];
 //            }
-            self.dataArray = dataArray;
+            
             if (isRefresh) {
                 [self.tableView.header endRefreshing];
             }else{

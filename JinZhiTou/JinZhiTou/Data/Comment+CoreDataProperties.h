@@ -14,8 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface Comment (CoreDataProperties)
-
-@property (nullable, nonatomic, retain) NSNumber *cycleId;
+@property (nullable, nonatomic, retain) NSString *atName;
 @property (nullable, nonatomic, retain) NSString *name;
 @property (nullable, nonatomic, retain) NSString *photo;
 @property (nullable, nonatomic, retain) NSNumber *uid;

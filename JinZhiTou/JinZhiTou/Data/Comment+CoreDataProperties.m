@@ -13,7 +13,6 @@
 
 @implementation Comment (CoreDataProperties)
 
-@dynamic cycleId;
 @dynamic name;
 @dynamic photo;
 @dynamic uid;
@@ -21,5 +20,5 @@
 @dynamic flag;
 @dynamic content;
 @dynamic cycle;
-
+@dynamic atName;
 @end

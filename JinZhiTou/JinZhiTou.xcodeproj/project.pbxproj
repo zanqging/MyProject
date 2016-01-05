@@ -1110,6 +1110,12 @@
 		45778FC21C3B620000FF8691 /* Pic.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FAC1C3B620000FF8691 /* Pic.m */; };
 		45778FC31C3B620000FF8691 /* Pic.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FAC1C3B620000FF8691 /* Pic.m */; };
 		45778FC41C3B620000FF8691 /* Pic.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FAC1C3B620000FF8691 /* Pic.m */; };
+		45778FC91C3B75C500FF8691 /* Share+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FC61C3B75C500FF8691 /* Share+CoreDataProperties.m */; };
+		45778FCA1C3B75C500FF8691 /* Share+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FC61C3B75C500FF8691 /* Share+CoreDataProperties.m */; };
+		45778FCB1C3B75C500FF8691 /* Share+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FC61C3B75C500FF8691 /* Share+CoreDataProperties.m */; };
+		45778FCC1C3B75C500FF8691 /* Share.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FC81C3B75C500FF8691 /* Share.m */; };
+		45778FCD1C3B75C500FF8691 /* Share.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FC81C3B75C500FF8691 /* Share.m */; };
+		45778FCE1C3B75C500FF8691 /* Share.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FC81C3B75C500FF8691 /* Share.m */; };
 		457E04281B7060E500BC4161 /* ForgetPassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457E04271B7060E500BC4161 /* ForgetPassViewController.m */; };
 		457F70EC1BF56C91004241A0 /* WeChatBindController.m in Sources */ = {isa = PBXBuildFile; fileRef = 457F70EB1BF56C91004241A0 /* WeChatBindController.m */; };
 		4581152B1B7EDFB0006EEBBC /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4581152A1B7EDFB0006EEBBC /* MessageUI.framework */; };
@@ -1744,6 +1750,10 @@
 		45778FAA1C3B620000FF8691 /* Pic+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Pic+CoreDataProperties.m"; path = "Data/Pic+CoreDataProperties.m"; sourceTree = "<group>"; };
 		45778FAB1C3B620000FF8691 /* Pic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pic.h; path = Data/Pic.h; sourceTree = "<group>"; };
 		45778FAC1C3B620000FF8691 /* Pic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Pic.m; path = Data/Pic.m; sourceTree = "<group>"; };
+		45778FC51C3B75C500FF8691 /* Share+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Share+CoreDataProperties.h"; path = "Data/Share+CoreDataProperties.h"; sourceTree = "<group>"; };
+		45778FC61C3B75C500FF8691 /* Share+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Share+CoreDataProperties.m"; path = "Data/Share+CoreDataProperties.m"; sourceTree = "<group>"; };
+		45778FC71C3B75C500FF8691 /* Share.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Share.h; path = Data/Share.h; sourceTree = "<group>"; };
+		45778FC81C3B75C500FF8691 /* Share.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Share.m; path = Data/Share.m; sourceTree = "<group>"; };
 		457E04261B7060E500BC4161 /* ForgetPassViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ForgetPassViewController.h; path = Controller/Login/ForgetPassViewController.h; sourceTree = "<group>"; };
 		457E04271B7060E500BC4161 /* ForgetPassViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ForgetPassViewController.m; path = Controller/Login/ForgetPassViewController.m; sourceTree = "<group>"; };
 		457F70EA1BF56C91004241A0 /* WeChatBindController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WeChatBindController.h; path = Controller/Company/WeChatBindController.h; sourceTree = "<group>"; };
@@ -2585,6 +2595,10 @@
 				45778FAA1C3B620000FF8691 /* Pic+CoreDataProperties.m */,
 				45778FAB1C3B620000FF8691 /* Pic.h */,
 				45778FAC1C3B620000FF8691 /* Pic.m */,
+				45778FC51C3B75C500FF8691 /* Share+CoreDataProperties.h */,
+				45778FC61C3B75C500FF8691 /* Share+CoreDataProperties.m */,
+				45778FC71C3B75C500FF8691 /* Share.h */,
+				45778FC81C3B75C500FF8691 /* Share.m */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -4002,6 +4016,7 @@
 				45EAED291C3A7E0D00BEA468 /* NewFinance.m in Sources */,
 				454400881C3906C00094696A /* Project+CoreDataProperties.m in Sources */,
 				452533BB1C29A116000719AC /* MJRefreshBackStateFooter.m in Sources */,
+				45778FCB1C3B75C500FF8691 /* Share+CoreDataProperties.m in Sources */,
 				452533BC1C29A116000719AC /* ChineseToPinyinResource.m in Sources */,
 				452533BD1C29A116000719AC /* FinialProctoTableViewCell.m in Sources */,
 				452533BE1C29A116000719AC /* ProgressTraceView.m in Sources */,
@@ -4282,6 +4297,7 @@
 				452534C11C29A116000719AC /* WeiboData.m in Sources */,
 				452534C21C29A116000719AC /* SBJsonParser.m in Sources */,
 				452534C31C29A116000719AC /* MJRefreshHeader.m in Sources */,
+				45778FCE1C3B75C500FF8691 /* Share.m in Sources */,
 				452534C41C29A116000719AC /* UIImageView+HighlightedWebCache.m in Sources */,
 				452534C51C29A116000719AC /* CycleScrollView.m in Sources */,
 				452534C61C29A116000719AC /* MKAnnotationView+WebCache.m in Sources */,
@@ -4331,6 +4347,7 @@
 				45EAED281C3A7E0D00BEA468 /* NewFinance.m in Sources */,
 				454400871C3906C00094696A /* Project+CoreDataProperties.m in Sources */,
 				454B988F1A54C76500A1CC7E /* MJRefreshBackStateFooter.m in Sources */,
+				45778FCA1C3B75C500FF8691 /* Share+CoreDataProperties.m in Sources */,
 				454B98901A54C76500A1CC7E /* ChineseToPinyinResource.m in Sources */,
 				454B98911A54C76500A1CC7E /* FinialProctoTableViewCell.m in Sources */,
 				454B98921A54C76500A1CC7E /* ProgressTraceView.m in Sources */,
@@ -4611,6 +4628,7 @@
 				454B99951A54C76500A1CC7E /* WeiboData.m in Sources */,
 				454B99961A54C76500A1CC7E /* SBJsonParser.m in Sources */,
 				454B99971A54C76500A1CC7E /* MJRefreshHeader.m in Sources */,
+				45778FCD1C3B75C500FF8691 /* Share.m in Sources */,
 				454B99981A54C76500A1CC7E /* UIImageView+HighlightedWebCache.m in Sources */,
 				454B99991A54C76500A1CC7E /* CycleScrollView.m in Sources */,
 				454B999A1A54C76500A1CC7E /* MKAnnotationView+WebCache.m in Sources */,
@@ -4660,6 +4678,7 @@
 				45EAED271C3A7E0D00BEA468 /* NewFinance.m in Sources */,
 				454400861C3906C00094696A /* Project+CoreDataProperties.m in Sources */,
 				45F93B5D1B637311004526F5 /* MJRefreshBackStateFooter.m in Sources */,
+				45778FC91C3B75C500FF8691 /* Share+CoreDataProperties.m in Sources */,
 				45495C1C1B60DACA007A17FD /* ChineseToPinyinResource.m in Sources */,
 				45A2ADA41B71AE0900751F78 /* FinialProctoTableViewCell.m in Sources */,
 				458115681B803F7D006EEBBC /* ProgressTraceView.m in Sources */,
@@ -4940,6 +4959,7 @@
 				45F09B851B86297B0065D873 /* WeiboData.m in Sources */,
 				45FCD02B1B75E15A009AD6E3 /* SBJsonParser.m in Sources */,
 				45F93B571B637311004526F5 /* MJRefreshHeader.m in Sources */,
+				45778FCC1C3B75C500FF8691 /* Share.m in Sources */,
 				45FCD05C1B75E216009AD6E3 /* UIImageView+HighlightedWebCache.m in Sources */,
 				45F8290C1B6B1A630044F6F0 /* CycleScrollView.m in Sources */,
 				45FCD04F1B75E216009AD6E3 /* MKAnnotationView+WebCache.m in Sources */,

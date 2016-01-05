@@ -1,5 +1,5 @@
 //
-//  Pic+CoreDataProperties.h
+//  Share+CoreDataProperties.m
 //  JinZhiTou
 //
 //  Created by air on 16/1/5.
@@ -9,15 +9,14 @@
 //  to delete and recreate this implementation file for your updated model.
 //
 
-#import "Pic.h"
+#import "Share+CoreDataProperties.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation Share (CoreDataProperties)
 
-@interface Pic (CoreDataProperties)
-
-@property (nullable, nonatomic, retain) NSString *url;
-@property (nullable, nonatomic, retain) Cycle *cycle;
+@dynamic id;
+@dynamic img;
+@dynamic url;
+@dynamic title;
+@dynamic cycle;
 
 @end
-
-NS_ASSUME_NONNULL_END
