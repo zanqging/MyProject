@@ -470,105 +470,106 @@
 }
 -(CGFloat)getHeightItemWithIndexpath:(NSIndexPath*) indexpath
 {
-    Cycle* cycle = self.dataArray[indexpath.row];
-    //内容
-    NSString* content = cycle.content;
-    NSInteger picsCount = cycle.pic.count;
-    NSInteger likersCount = cycle.likers.count;
-    NSInteger commentCount = cycle.comment.count;
-    
-    
-    int number = [TDUtil convertToInt:content] / 17;
-    if (number>5) {
-        number  =5;
-    }else{
-        if ([content length]>0) {
-            number++;
-        }
-    }
-    
-    CGFloat height = number*20;
-    if(picsCount>0 && picsCount<=3){
-        height +=70;
-    }else{
-        if (picsCount>0) {
-            if (picsCount%3!=0) {
-                height += (picsCount/3+1)*75;
-            }else{
-                height += (picsCount/3)*75;
-            }            
-        }
-    }
-    
-    if (likersCount>0 && likersCount<=4) {
-        height+=70;
-    }else{
-        height += (likersCount/4+1)*25;
-    }
-    
-    
-    for (int i=0; i<commentCount; i++) {
-        NSArray *commentArray  = [cycle.comment allObjects];
-        Comment* comment  = commentArray[i];
-        NSString* name  = comment.name;
-        NSString* atName = comment.atName;
-        NSString* atLabel = @"";
-        NSString* suffix  =@":";
-        if(atName && ![atName isEqualToString:@""]){
-            atLabel = @"回复";
-        }
-        NSString* content =  comment.content;
-        NSString* str = name;
-        if (atLabel) {
-            str = [str stringByAppendingString:atLabel];
-        }
-        
-        if (atName) {
-            str = [str stringByAppendingString:atName];
-        }
-        
-        if (suffix) {
-            str = [str stringByAppendingString:suffix];
-        }
-        
-        if (content) {
-            str = [str stringByAppendingString:content];
-        }
-        
-        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(70, 0, WIDTH(self.tableView)-90, 0)];
-        [TDUtil setLabelMutableText:label content:str lineSpacing:5 headIndent:0];
-        
-        float h = POS_Y(label)+15;
-        height+=h;
-//        return height;
-        
-//        NSInteger number = [TDUtil convertToInt:str];
-//        NSInteger line = number/17;
-//        
-//        if (line>0) {
-//            height+=(line+1)*13+10;
-//        }else{
-//            if (number>0) {
-//                height += 25;
-//            }
+//    Cycle* cycle = self.dataArray[indexpath.row];
+//    //内容
+//    NSString* content = cycle.content;
+//    NSInteger picsCount = cycle.pic.count;
+//    NSInteger likersCount = cycle.likers.count;
+//    NSInteger commentCount = cycle.comment.count;
+//    
+//    
+//    int number = [TDUtil convertToInt:content] / 17;
+//    if (number>5) {
+//        number  =5;
+//    }else{
+//        if ([content length]>0) {
+//            number++;
 //        }
-        
-    }
-    
-    
-    if (cycle.share && cycle.share.title) {
-        height+=60;
-        if (commentCount>0 && commentCount<=5 && likersCount==0) {
-            height+=20;
-        }
-    }else{
-        if (commentCount>0 && commentCount<=5) {
-            height+=20;
-        }
-    }
-    
-    height+=80;
-    return height;
+//    }
+//    
+//    CGFloat height = number*20;
+//    if(picsCount>0 && picsCount<=3){
+//        height +=70;
+//    }else{
+//        if (picsCount>0) {
+//            if (picsCount%3!=0) {
+//                height += (picsCount/3+1)*75;
+//            }else{
+//                height += (picsCount/3)*75;
+//            }            
+//        }
+//    }
+//    
+//    if (likersCount>0 && likersCount<=4) {
+//        height+=70;
+//    }else{
+//        height += (likersCount/4+1)*25;
+//    }
+//    
+//    
+//    for (int i=0; i<commentCount; i++) {
+//        NSArray *commentArray  = [cycle.comment allObjects];
+//        Comment* comment  = commentArray[i];
+//        NSString* name  = comment.name;
+//        NSString* atName = comment.atName;
+//        NSString* atLabel = @"";
+//        NSString* suffix  =@":";
+//        if(atName && ![atName isEqualToString:@""]){
+//            atLabel = @"回复";
+//        }
+//        NSString* content =  comment.content;
+//        NSString* str = name;
+//        if (atLabel) {
+//            str = [str stringByAppendingString:atLabel];
+//        }
+//        
+//        if (atName) {
+//            str = [str stringByAppendingString:atName];
+//        }
+//        
+//        if (suffix) {
+//            str = [str stringByAppendingString:suffix];
+//        }
+//        
+//        if (content) {
+//            str = [str stringByAppendingString:content];
+//        }
+//        
+//        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(70, 0, WIDTH(self.tableView)-90, 0)];
+//        [TDUtil setLabelMutableText:label content:str lineSpacing:5 headIndent:0];
+//        
+//        float h = POS_Y(label)+15;
+//        height+=h;
+////        return height;
+//        
+////        NSInteger number = [TDUtil convertToInt:str];
+////        NSInteger line = number/17;
+////        
+////        if (line>0) {
+////            height+=(line+1)*13+10;
+////        }else{
+////            if (number>0) {
+////                height += 25;
+////            }
+////        }
+//        
+//    }
+//    
+//    
+//    if (cycle.share && cycle.share.title) {
+//        height+=60;
+//        if (commentCount>0 && commentCount<=5 && likersCount==0) {
+//            height+=20;
+//        }
+//    }else{
+//        if (commentCount>0 && commentCount<=5) {
+//            height+=20;
+//        }
+//    }
+//    
+//    height+=80;
+//    return height;
+    return 500;
 }
 
 #pragma UploadPic
@@ -741,6 +742,7 @@
         NSMutableArray* dataArray = [[NSMutableArray alloc]init];
         if ([code integerValue]==0  || [code integerValue]==2) {
             NSMutableArray* arrayData = [dic valueForKey:@"data"];
+            
     
             //开始进行圈子数据缓存
             Cycle* cycleModel = [[Cycle alloc]init];
@@ -821,6 +823,7 @@
                 
                 //点赞列表
                 array = [dic valueForKey:@"like"];
+                
                 if (array && array.count>0) {
                     Likers* liker;
                     NSMutableSet<Likers*> *likersSet = [[NSMutableSet alloc]init];
@@ -833,6 +836,20 @@
                         liker.name = [NSString stringWithFormat:@"%@",[likerDic valueForKey:@"name"]];
                         liker.photo = [likerDic valueForKey:@"photo"];
                         [likersSet addObject:liker];
+                        
+                        
+                        /**
+                         *  模拟点赞
+                         */
+                        for (int m=0; m<10; m++) {
+                            Likers* l = [[Likers alloc]init];
+                            l.name = [NSString stringWithFormat:@"陈生珠%d",m];
+                            [likersSet addObject:l];
+                        }
+                        /**
+                         *  模拟点赞
+                         */
+                        
                     }
                     cycle.likers = likersSet;
                 }
@@ -857,12 +874,6 @@
             //保存数据
 //            cycleModel = [[Cycle alloc]init];
 //            [cycleModel insertCoreData:cycleArray];
-            
-//            NSDictionary* dic =[[dataArray[0] valueForKey:@"likers"] objectAtIndex:0];
-//            for (int i=0; i<45; i++) {
-//                [dic setValue:[NSString stringWithFormat:@"%d",i] forKey:@"uid"];
-//                [[dataArray[0] valueForKey:@"likers"] addObject:dic];
-//            }
             
             if (isRefresh) {
                 [self.tableView.header endRefreshing];

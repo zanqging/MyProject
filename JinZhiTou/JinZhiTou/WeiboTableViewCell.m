@@ -27,20 +27,20 @@
         [self addSubview:self.headerImgView];
         
         //名称
-        self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.headerImgView)+10, Y(self.headerImgView), 50, 14)];
-        self.nameLabel.font = SYSTEMBOLDFONT(16);
+        self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.headerImgView)+10, Y(self.headerImgView), 50, 15)];
+        self.nameLabel.font = SYSTEMBOLDFONT(15);
         self.nameLabel.textColor = [UIColor colorWithRed:211.0f/255.0 green:161.0f/255.0 blue:36.0f/255.0 alpha:1];
         self.nameLabel.userInteractionEnabled = YES;
         [self addSubview:self.nameLabel];
         
         //公司
         self.companyLabel  = [[ UILabel alloc]initWithFrame:CGRectMake(X(self.nameLabel), POS_Y(self.nameLabel)+10, 5, HEIGHT(self.nameLabel))];
-        self.companyLabel.font  =FONT(@"Arial", 14);
+        self.companyLabel.font  =SYSTEMFONT(12);
         self.companyLabel.textColor  =FONT_COLOR_GRAY;
         [self addSubview:self.companyLabel];
         
         self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.nameLabel), POS_Y(self.companyLabel)+10, WIDTH(self)-90, 80)];
-        self.contentLabel.font  =FONT(@"Arial", 14);
+        self.contentLabel.font  =SYSTEMFONT(14);
         self.contentLabel.textColor  =FONT_COLOR_BLACK;
         self.contentLabel.numberOfLines  =5;
         self.contentLabel.userInteractionEnabled  =YES;
@@ -168,45 +168,54 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Comment* comment  = self.dataArray[indexPath.row];
+    UIReplyLabel* label = [[UIReplyLabel alloc]initWithFrame:CGRectMake(0, 5, WIDTH(self.tableView), 0)];
+    label.userInteractionEnabled = YES;
+    
+    Comment* comment = self.dataArray[indexPath.row];
     NSString* name  = comment.name;
     NSString* atName = comment.atName;
     NSString* atLabel = @"";
     NSString* suffix  =@":";
+    
+    
     if(atName && ![atName isEqualToString:@""]){
         atLabel = @"回复";
     }
-    NSString* content =  comment.content;
+    NSString* content = comment.content;
     NSString* str = name;
+    if (name) {
+        //监听事件
+        //        label.nameLabel.userInteractionEnabled  =YES;
+        //        [label.nameLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+        [label setName:name];
+    }
+    
     if (atLabel) {
         str = [str stringByAppendingString:atLabel];
+        [label setAtString:atLabel];
     }
     
     if (atName) {
         str = [str stringByAppendingString:atName];
+        label.atNameLabel.userInteractionEnabled  =YES;
+        [label.atNameLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+        [label setAtName:atName];
     }
     
     if (suffix) {
         str = [str stringByAppendingString:suffix];
+        [label setSuffix:suffix];
     }
     
     if (content) {
         str = [str stringByAppendingString:content];
+        [label setContent:content];
     }
 
-    UIReplyLabel* label = [[UIReplyLabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 0)];
-    [TDUtil setLabelMutableText:label content:str lineSpacing:5 headIndent:0];
     
     
-    float height = POS_Y(label)+15;
+    float height = POS_Y(label);
     return height;
-//    NSInteger line = [TDUtil convertToInt:str]/17;
-//    if (line>0) {
-//        return (line+1)*13+10;
-//    }else{
-//        return 21;
-//    }
-    
 }
 -(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -386,7 +395,8 @@
         [self.nameLabel sizeToFit];
         
         //内容
-         NSString* arr = self.cycle.position;
+        float height=POS_Y(self.nameLabel);
+        NSString* arr = self.cycle.position;
         if (arr) {
             NSString* content;
             if ([arr isKindOfClass:NSArray.class]) {
@@ -395,36 +405,47 @@
                 content =arr;
             }
             
-            content = [self.cycle.addr stringByAppendingFormat:@"|%@",content];
+            if (content && ![content isEqualToString:@""]) {
+                content = [self.cycle.addr stringByAppendingFormat:@"|%@",content];
+            }
+            
             attributedString = [[NSMutableAttributedString alloc] initWithString:content];
             [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
             self.companyLabel.attributedText = attributedString;//ios 6
             [self.companyLabel sizeToFit];
+            
+            height = POS_Y(self.companyLabel);
         }
         
         
         //内容
         content = self.cycle.content;
-        attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
-        self.contentLabel.attributedText = attributedString;//ios 6
-        [self.contentLabel sizeToFit];
+        if ([TDUtil isValidString:content]) {
+            [self.contentLabel setFrame:CGRectMake(X(self.contentLabel), height, WIDTH(self.contentLabel), HEIGHT(self.contentLabel))];
+            attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+            [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+            self.contentLabel.attributedText = attributedString;//ios 6
+            [self.contentLabel sizeToFit];
+            
+            height =POS_Y(self.contentLabel);
+        }
+        
         
         //分享内容
         if (self.cycle.share && self.cycle.share.title) {
-            self.shareView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.contentLabel), WIDTH(self)-80,60)];
+            self.shareView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel),height, WIDTH(self)-80,50)];
             self.shareView.backgroundColor=[UIColor colorWithRed:238.0f/255.0 green:238.0f/255.0 blue:238.0f/255.0 alpha:1];
             self.shareView.userInteractionEnabled  =YES;
             [self.shareView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(shareContentTaped:)]];
             //分享图片
-            self.shareImgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 50, 50)];
+            self.shareImgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, HEIGHT(self.shareView)-10, HEIGHT(self.shareView)-10)];
             [self.shareImgView sd_setImageWithURL:[NSURL URLWithString:self.cycle.share.img] placeholderImage:IMAGENAMED(@"loading")];
             [self.shareView addSubview:self.shareImgView];
             
             //分享文字
-            self.shareLabel =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.shareImgView)+5, 20, WIDTH(self.shareView)-77, HEIGHT(self)-20)];
+            self.shareLabel =[[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.shareImgView)+5, Y(self.shareImgView)+5, WIDTH(self.shareView)-57, HEIGHT(self))];
             self.shareLabel.numberOfLines=2;
-            self.shareLabel.font = SYSTEMFONT(14);
+            self.shareLabel.font = SYSTEMFONT(12);
             self.shareLabel.lineBreakMode = NSLineBreakByTruncatingTail;
             [self.shareView addSubview:self.shareLabel];
             
@@ -433,7 +454,7 @@
             
             //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
             
-            [paragraphStyle setLineSpacing:0];//调整行间距
+            [paragraphStyle setLineSpacing:3];//调整行间距
             //    [paragraphStyle setAlignment:NSTextAlignmentLeft];
             [paragraphStyle setFirstLineHeadIndent:0];
             [paragraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -455,7 +476,7 @@
         }else if (value<3 && value >0){
             number++;
         }
-        self.imgContentView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), POS_Y(self.contentLabel),240, number*80)];
+        self.imgContentView = [[UIView alloc]initWithFrame:CGRectMake(X(self.contentLabel), height,240, number*80)];
         [self addSubview:self.imgContentView];
         
         UIImageView* imgView;
@@ -493,7 +514,7 @@
             posY=POS_Y(self.imgContentView)+5;
         }
         self.dateTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(self.contentLabel), posY, 100, 30)];
-        self.dateTimeLabel.font  =SYSTEMFONT(14);
+        self.dateTimeLabel.font  =SYSTEMFONT(12);
         self.dateTimeLabel.text = self.cycle.datetime;
         [TDUtil setLabelMutableText:self.dateTimeLabel content:self.cycle.datetime lineSpacing:0 headIndent:0];
         self.dateTimeLabel.textColor  =FONT_COLOR_GRAY;
@@ -539,7 +560,7 @@
                 posY=Y(self.dateTimeLabel)-20;
             }
             self.expandButton = [[UIButton alloc]initWithFrame:CGRectMake(POS_X(self.dateTimeLabel), posY, 50, 50)];
-            self.expandButton.titleLabel.font  =FONT(@"Arial", 12);
+            self.expandButton.titleLabel.font  =SYSTEMFONT(12);
             [self.expandButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
             [self.expandButton setTitle:@"全文" forState:UIControlStateNormal];
             [self.expandButton addTarget:self action:@selector(expandAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -562,7 +583,7 @@
             }
             
             //删除按钮
-            self.deleteButton.titleLabel.font  =FONT(@"Arial", 12);
+            self.deleteButton.titleLabel.font  =SYSTEMFONT(12);
             [self.deleteButton setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
             [self.deleteButton setTitle:@"删除" forState:UIControlStateNormal];
             [self.deleteButton addTarget:self action:@selector(deleteAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -594,7 +615,7 @@
     int num=0;
     for (int i = 0; i<dataPriseArray.count; i++) {
         dic =dataPriseArray[i];
-        label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x,pos_y, 50, 15)];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x,pos_y, 50, 13)];
         label.index =[NSString stringWithFormat:@"%@",[dic valueForKey:@"uid"]];
         NSString* name = [dic valueForKey:@"name"];
         if ([TDUtil isValidString:name]) {
@@ -617,7 +638,7 @@
             [self.priseListView addSubview:label];
             pos_x = POS_X(label)-10;
             if (pos_x > WIDTH(self.priseListView)-40) {
-                pos_y+=HEIGHT(label)+5;
+                pos_y+=HEIGHT(label);
                 pos_x = 10;
                 num++;
             }
@@ -626,10 +647,12 @@
     if (dataPriseArray.count>0) {
         [self.priseListView setFrame:CGRectMake(0,0, WIDTH(self.priseView),(num+1)*30)];
         
-        //分割线
-        UIImageView* lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, HEIGHT(self.priseListView)-1, WIDTH(self.priseListView), 1)];
-        lineImgView.backgroundColor = BackColor;
-        [self.priseListView addSubview:lineImgView];
+        if (self.dataArray.count>0) {
+            //分割线
+            UIImageView* lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, HEIGHT(self.priseListView)-1, WIDTH(self.priseListView), 1)];
+            lineImgView.backgroundColor = BackColor;
+            [self.priseListView addSubview:lineImgView];
+        }
     }else{
         [self.priseListView setFrame:CGRectMake(0, 0, WIDTH(self.priseView),num*30)];
     }
@@ -637,38 +660,55 @@
     
     
     float comment_height =0;
+
     for (int i=0; i<self.dataArray.count; i++) {
-        Comment* comment  = self.dataArray[i];
+        UIReplyLabel* label = [[UIReplyLabel alloc]initWithFrame:CGRectMake(0, 5, WIDTH(self.funView), 0)];
+        label.userInteractionEnabled = YES;
+        
+        Comment* comment = self.dataArray[i];
         NSString* name  = comment.name;
         NSString* atName = comment.atName;
         NSString* atLabel = @"";
         NSString* suffix  =@":";
+        
+        
         if(atName && ![atName isEqualToString:@""]){
             atLabel = @"回复";
         }
-        NSString* content =  comment.content;
+        NSString* content = comment.content;
         NSString* str = name;
+        if (name) {
+            //监听事件
+            //        label.nameLabel.userInteractionEnabled  =YES;
+            //        [label.nameLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+            [label setName:name];
+        }
+        
         if (atLabel) {
             str = [str stringByAppendingString:atLabel];
+            [label setAtString:atLabel];
         }
         
         if (atName) {
             str = [str stringByAppendingString:atName];
+            label.atNameLabel.userInteractionEnabled  =YES;
+            [label.atNameLabel addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
+            [label setAtName:atName];
         }
         
         if (suffix) {
             str = [str stringByAppendingString:suffix];
+            [label setSuffix:suffix];
         }
         
         if (content) {
             str = [str stringByAppendingString:content];
+            [label setContent:content];
         }
         
-        UIReplyLabel* label = [[UIReplyLabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 0)];
-        [TDUtil setLabelMutableText:label content:str lineSpacing:5 headIndent:0];
         
         
-        float height = POS_Y(label)+15;
+        float height = POS_Y(label);
         comment_height+=height;
         
 //        NSInteger line = [TDUtil convertToInt:str]/17;
@@ -677,6 +717,9 @@
 //            comment_height+=(line+1)*13+10;
 //        }else{
 //            comment_height += 23;
+//        }
+//        if (self.dataArray.count==1) {
+//            comment_height += 15;
 //        }
     }
     
@@ -703,10 +746,14 @@
             float height =33;
             if (self.dataArray.count>0) {
                 height = HEIGHT(self.priseView)-12;
+            }else if (dataPriseArray.count>0){
+                height+=num*30;
             }
             [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), height)];
         }
         [self addSubview:imgView];
+        
+        NSLog(@"尺寸:%@",[imgView description]);
         [self sendSubviewToBack:imgView];
     }
     

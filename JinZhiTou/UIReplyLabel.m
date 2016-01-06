@@ -116,7 +116,7 @@
     
     //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
     
-    [paragraphStyle setLineSpacing:5];//调整行间距
+    [paragraphStyle setLineSpacing:3];//调整行间距
     //    [paragraphStyle setAlignment:NSTextAlignmentLeft];
     [paragraphStyle setFirstLineHeadIndent:0];
     [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
@@ -131,6 +131,8 @@
     
     self.contentLabel.attributedText = attributedString;//ios 6
     [self.contentLabel sizeToFit];
+    
+    [self setFrame:CGRectMake(X(self), Y(self), WIDTH(self), POS_Y(self.contentLabel)+10)];
     
 }
 
