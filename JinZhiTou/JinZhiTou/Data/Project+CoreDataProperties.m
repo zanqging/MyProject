@@ -19,5 +19,7 @@
 @dynamic invest;
 @dynamic date;
 @dynamic company;
+@dynamic projectId;
+
 
 @end

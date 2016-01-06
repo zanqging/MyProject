@@ -48,7 +48,7 @@
 @property (retain, nonatomic)  UILabel *companyLabel;
 @property (retain, nonatomic)  UILabel *dateTimeLabel;
 @property (nonatomic, retain)  NSMutableArray *assets;
-@property (retain, nonatomic)  UIView *priseListView;
+@property (retain, nonatomic)  UILabel *priseListLabel;
 @property (retain, nonatomic)  UILabel *contentLabel;
 @property(retain,nonatomic)    UIButton* criticalButton;
 @property(retain,nonatomic)    NSMutableArray* dataArray;

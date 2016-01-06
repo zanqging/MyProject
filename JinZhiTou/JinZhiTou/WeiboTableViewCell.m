@@ -82,7 +82,6 @@
         }
     }
    
-   
 }
 -(void)commentAction:(id)sender
 {
@@ -606,57 +605,43 @@
     self.priseView.layer.cornerRadius = 5;
 //    self.priseView.backgroundColor = [UIColor colorWithRed:238.0f/255.0 green:238.0f/255.0 blue:238.0f/255.0 alpha:1];
     
-    self.priseListView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.priseView),20)];
-    [self.priseView addSubview:self.priseListView];
+    self.priseListLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, WIDTH(self.priseView)-10,0)];
+    self.priseListLabel.textColor = ColorCompanyTheme;
+    self.priseListLabel.font  =SYSTEMFONT(12);
+    self.priseListLabel.numberOfLines=0;
+    self.priseListLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    [self.priseView addSubview:self.priseListLabel];
     
-    UILabel* label;
-    float pos_x =30,pos_y =10;
+    NSString* str=@"";
     NSDictionary* dic;
-    int num=0;
     for (int i = 0; i<dataPriseArray.count; i++) {
+        str = @"    ";
         dic =dataPriseArray[i];
-        label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x,pos_y, 50, 13)];
-        label.index =[NSString stringWithFormat:@"%@",[dic valueForKey:@"uid"]];
         NSString* name = [dic valueForKey:@"name"];
         if ([TDUtil isValidString:name]) {
-            NSString* str;
+            
             if (dataPriseArray.count>1) {
                 if (i!=dataPriseArray.count-1) {
-                    str = [NSString stringWithFormat:@"%@,",[dic valueForKey:@"name"]];
+                    str = [str stringByAppendingFormat:@"%@,",[dic valueForKey:@"name"]];
                 }else{
-                    str = [NSString stringWithFormat:@"%@",[dic valueForKey:@"name"]];
+                    str = [str stringByAppendingFormat:@"%@",[dic valueForKey:@"name"]];
                 }
             }else{
-                str = [NSString stringWithFormat:@"%@",[dic valueForKey:@"name"]];
-            }
-            [TDUtil setLabelMutableText:label content:str lineSpacing:3 headIndent:0];
-            
-            label.font  = FONT(@"Arial", 13);
-            label.textColor = [UIColor colorWithRed:211.0f/255.0 green:161.0f/255.0 blue:36.0f/255.0 alpha:1];
-            label.userInteractionEnabled = YES;
-            [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoAction:)]];
-            [self.priseListView addSubview:label];
-            pos_x = POS_X(label)-10;
-            if (pos_x > WIDTH(self.priseListView)-40) {
-                pos_y+=HEIGHT(label);
-                pos_x = 10;
-                num++;
+                str = [str stringByAppendingFormat:@"%@",[dic valueForKey:@"name"]];
             }
         }
-    }
-    if (dataPriseArray.count>0) {
-        [self.priseListView setFrame:CGRectMake(0,0, WIDTH(self.priseView),(num+1)*30)];
-        
-        if (self.dataArray.count>0) {
-            //分割线
-            UIImageView* lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, HEIGHT(self.priseListView)-1, WIDTH(self.priseListView), 1)];
-            lineImgView.backgroundColor = BackColor;
-            [self.priseListView addSubview:lineImgView];
-        }
-    }else{
-        [self.priseListView setFrame:CGRectMake(0, 0, WIDTH(self.priseView),num*30)];
     }
     
+    [TDUtil setLabelMutableText:self.priseListLabel content:str lineSpacing:3 headIndent:15];
+    
+    if (dataPriseArray.count>0) {
+        if (self.dataArray.count>0) {
+            //分割线
+            UIImageView* lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, HEIGHT(self.priseListLabel)-1, WIDTH(self.funView), 1)];
+            lineImgView.backgroundColor = BackColor;
+            [self.priseListLabel addSubview:lineImgView];
+        }
+    }
     
     
     float comment_height =0;
@@ -724,7 +709,7 @@
     }
     
     if (dataPriseArray.count>0 && self.dataArray.count>0) {
-        [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView), num*25+comment_height+HEIGHT(self.priseListView)+10)];
+        [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView), comment_height+HEIGHT(self.priseListLabel)+10)];
     }else{
         float height = 0;
         if (!dataPriseArray.count>0) {
@@ -732,7 +717,7 @@
                 height = 20;
             }
         }
-        [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView),comment_height+HEIGHT(self.priseListView)+height)];
+        [self.priseView setFrame:CGRectMake(X(self.contentLabel), POS_Y(self.funView), WIDTH(self.funView),comment_height+HEIGHT(self.priseListLabel)+height)];
     }
     
     //回复背景
@@ -741,13 +726,13 @@
     UIImageView *imgView=[[UIImageView alloc]initWithImage:image];
     if (dataPriseArray.count>0 || self.dataArray.count>0) {
         if (dataPriseArray.count>0 && self.dataArray.count>0) {
-            [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), HEIGHT(self.priseView)-5)];
+            [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), HEIGHT(self.priseView))];
         }else {
-            float height =33;
+            float height =0;
             if (self.dataArray.count>0) {
-                height = HEIGHT(self.priseView)-12;
+                height = HEIGHT(self.priseView)-5;
             }else if (dataPriseArray.count>0){
-                height+=num*30;
+                height+=POS_Y(self.priseListLabel);
             }
             [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), height)];
         }
@@ -760,12 +745,12 @@
   
     
     if (dataPriseArray.count>0) {
-        UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(10, 12, 15, 15)];
+        UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(10, 12, 10, 10)];
         imgview.image = IMAGENAMED(@"gossip_like_normal");
         [self.priseView addSubview:imgview];
     }
     
-    [self setTableViewFrame:self.priseListView replyDataHeigt:comment_height];
+    [self setTableViewFrame:self.priseListLabel replyDataHeigt:comment_height];
 }
 
 -(void)shareContentTaped:(id)sender

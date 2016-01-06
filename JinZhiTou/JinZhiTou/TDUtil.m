@@ -1262,7 +1262,7 @@
         
         [paragraphStyle setLineSpacing:lineSpacing];//调整行间距
         //    [paragraphStyle setAlignment:NSTextAlignmentLeft];
-        [paragraphStyle setFirstLineHeadIndent:indent];
+        [paragraphStyle setHeadIndent:indent];
         [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
         NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
         [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
