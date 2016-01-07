@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MJRefresh.h"
+#import "RootViewController.h"
 #import "UITableViewCustomView.h"
 @protocol WMtableViewCellDelegate <NSObject>
 -(void)wmTableViewController:(id)wmTableViewController thinkTankDetailData:(NSDictionary*)dic;
@@ -18,10 +19,12 @@
 
 @end
 
-@interface WMTableViewController : UIViewController
-@property(assign,nonatomic)int type;
-@property(assign,nonatomic)int menuType;
+@interface WMTableViewController : RootViewController
+@property(assign,nonatomic)int menuSelectIndex;
+@property(assign,nonatomic)int currentPage;
+@property(assign,nonatomic)int selectIndex;
 @property (nonatomic, copy) NSNumber *age;
+
 @property(retain,nonatomic)NSMutableArray* dataArray;
 @property(retain,nonatomic)UITableViewCustomView* tableView;
 @property(retain,nonatomic)id <WMtableViewCellDelegate>delegate;

@@ -737,8 +737,6 @@
             [imgView setFrame:CGRectMake(X(self.priseView), Y(self.priseView), WIDTH(self.priseView), height)];
         }
         [self addSubview:imgView];
-        
-        NSLog(@"尺寸:%@",[imgView description]);
         [self sendSubviewToBack:imgView];
     }
     

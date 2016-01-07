@@ -7,14 +7,14 @@
 //
 #import <UIKit/UIKit.h>
 #import "WMPageConst.h"
-#import "WMPageController.h"
+#import "WMPageController_bak.h"
 #import "INSViewController.h"
 #import "movieViewController.h"
 #import "WMTableViewController.h"
 #import "ThinkTankViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "RoadShowDetailViewController.h"
-@interface WMPageController () <WMMenuViewDelegate,UIScrollViewDelegate,navViewDelegate,WMtableViewCellDelegate> {
+@interface WMPageController_bak () <WMMenuViewDelegate,UIScrollViewDelegate,navViewDelegate,WMtableViewCellDelegate> {
     CGFloat _viewHeight;
     CGFloat _viewWidth;
     CGFloat _viewX;
@@ -44,7 +44,7 @@
 @property(retain,nonatomic)NSMutableArray* thinkTankData; //智囊团缓存数据
 @end
 
-@implementation WMPageController
+@implementation WMPageController_bak
 #pragma mark - Life Cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -279,33 +279,33 @@
     self.scrollView = scrollView;
 }
 
-- (void)addMenuView {
-    if (self.titles.count>0) {
-        CGRect frame = CGRectMake(_viewX, _viewY, _viewWidth, self.menuHeight);
-        WMMenuView *menuView = [[WMMenuView alloc] initWithFrame:frame buttonItems:self.titles backgroundColor:self.menuBGColor norSize:self.titleSizeNormal selSize:self.titleSizeSelected norColor:self.titleColorNormal selColor:self.titleColorSelected];
-        menuView.delegate = self;
-        menuView.style = self.menuViewStyle;
-        menuView.progressHeight = self.progressHeight;
-        if (self.titleFontName) {
-            menuView.fontName = self.titleFontName;
-        }
-        if (self.progressColor) {
-            menuView.lineColor = self.progressColor;
-        }
-        [self.view addSubview:menuView];
-        self.menuView = menuView;
-        // 如果设置了初始选择的序号，那么选中该item
-        if (self.selectIndex != 0) {
-            [self.menuView selectItemAtIndex:self.selectIndex];
-        }
-        self.loadingViewFrame = CGRectMake(0, POS_Y(self.menuView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.menuView));
-    }else{
-        self.loadingViewFrame = CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view));
-    }
-    
-    
-    
-}
+//- (void)addMenuView {
+//    if (self.titles.count>0) {
+//        CGRect frame = CGRectMake(_viewX, _viewY, _viewWidth, self.menuHeight);
+//        WMMenuView *menuView = [[WMMenuView alloc] initWithFrame:frame buttonItems:self.titles backgroundColor:self.menuBGColor norSize:self.titleSizeNormal selSize:self.titleSizeSelected norColor:self.titleColorNormal selColor:self.titleColorSelected];
+//        menuView.delegate = self;
+//        menuView.style = self.menuViewStyle;
+//        menuView.progressHeight = self.progressHeight;
+//        if (self.titleFontName) {
+//            menuView.fontName = self.titleFontName;
+//        }
+//        if (self.progressColor) {
+//            menuView.lineColor = self.progressColor;
+//        }
+//        [self.view addSubview:menuView];
+//        self.menuView = menuView;
+//        // 如果设置了初始选择的序号，那么选中该item
+//        if (self.selectIndex != 0) {
+//            [self.menuView selectItemAtIndex:self.selectIndex];
+//        }
+//        self.loadingViewFrame = CGRectMake(0, POS_Y(self.menuView), WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.menuView));
+//    }else{
+//        self.loadingViewFrame = CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view));
+//    }
+//    
+//    
+//    
+//}
 
 
 - (void)layoutChildViewControllers {
@@ -440,7 +440,7 @@
 
 - (void)resetMenuView {
     WMMenuView *oldMenuView = self.menuView;
-    [self addMenuView];
+//    [self addMenuView];
     [oldMenuView removeFromSuperview];
 }
 
@@ -653,31 +653,31 @@
 }
 
 #pragma NavViewDelegate
--(void)navView:(id)navView tapIndex:(int)index
-{
-    if (self.menuSelectIndex!=index) {
-        NSLog(@"点击:%d",index);
-        isRefresh  =YES;
-        self.menuSelectIndex = index;
-        self.selectIndex = 0;
-        switch (self.menuSelectIndex) {
-            case 0:
-                _titles  =@[@"待融资",@"融资中", @"已融资", @"预选项目"];
-                self.itemsWidths =  @[@(70),@(70),@(70),@(70)];
-                self.menuView.items = _titles;
-                [self resetMenuView];
-                break;
-            case 1:
-                _titles  =@[@"个人投资人",@"机构投资人",@"智囊团"];
-                self.itemsWidths = @[@(100),@(100),@(100)]; // 这里可以设置不同的宽度
-                self.menuView.items = _titles;
-                [self resetMenuView];
-                break;
-            default:
-                break;
-        }
-    }
-}
+//-(void)navView:(id)navView tapIndex:(int)index
+//{
+//    if (self.menuSelectIndex!=index) {
+//        NSLog(@"点击:%d",index);
+//        isRefresh  =YES;
+//        self.menuSelectIndex = index;
+//        self.selectIndex = 0;
+//        switch (self.menuSelectIndex) {
+//            case 0:
+//                _titles  =@[@"待融资",@"融资中", @"已融资", @"预选项目"];
+//                self.itemsWidths =  @[@(70),@(70),@(70),@(70)];
+//                self.menuView.items = _titles;
+//                [self resetMenuView];
+//                break;
+//            case 1:
+//                _titles  =@[@"个人投资人",@"机构投资人",@"智囊团"];
+//                self.itemsWidths = @[@(100),@(100),@(100)]; // 这里可以设置不同的宽度
+//                self.menuView.items = _titles;
+//                [self resetMenuView];
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+//}
 #pragma mark - UIScrollView Delegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self layoutChildViewControllers];
@@ -961,8 +961,8 @@
         [array addObjectsFromArray:self.projectData];
         self.currentViewController.dataArray  =array;
     }
-    self.currentViewController.type = self.selectIndex;
-    self.currentViewController.menuType = self.menuSelectIndex;
+    self.currentViewController.selectIndex = self.selectIndex;
+    self.currentViewController.menuSelectIndex = self.menuSelectIndex;
     if (!self.currentViewController.delegate) {
         self.currentViewController.delegate  = self;
     }
@@ -980,8 +980,8 @@
         [array addObjectsFromArray:self.waitFinanceData];
         self.currentViewController.dataArray  =array;
     }
-    self.currentViewController.type = self.selectIndex;
-    self.currentViewController.menuType = self.menuSelectIndex;
+    self.currentViewController.selectIndex = self.selectIndex;
+    self.currentViewController.menuSelectIndex = self.menuSelectIndex;
     if (!self.currentViewController.delegate) {
         self.currentViewController.delegate  = self;
     }
@@ -999,8 +999,8 @@
         [array addObjectsFromArray:self.financingData];
         self.currentViewController.dataArray  =array;
     }
-    self.currentViewController.type = self.selectIndex;
-    self.currentViewController.menuType = self.menuSelectIndex;
+    self.currentViewController.selectIndex = self.selectIndex;
+    self.currentViewController.menuSelectIndex = self.menuSelectIndex;
     if (!self.currentViewController.delegate) {
         self.currentViewController.delegate  = self;
     }
@@ -1019,8 +1019,8 @@
         [array addObjectsFromArray:self.financedData];
         self.currentViewController.dataArray  =array;
     }
-    self.currentViewController.type = self.selectIndex;
-    self.currentViewController.menuType = self.menuSelectIndex;
+    self.currentViewController.selectIndex = self.selectIndex;
+    self.currentViewController.menuSelectIndex = self.menuSelectIndex;
     if (!self.currentViewController.delegate) {
         self.currentViewController.delegate  = self;
     }
@@ -1040,8 +1040,8 @@
         [array addObjectsFromArray:self.personData];
         self.currentViewController.dataArray  =array;
     }
-    self.currentViewController.type = self.selectIndex;
-    self.currentViewController.menuType = self.menuSelectIndex;
+    self.currentViewController.selectIndex = self.selectIndex;
+    self.currentViewController.menuSelectIndex = self.menuSelectIndex;
     if (!self.currentViewController.delegate) {
         self.currentViewController.delegate  = self;
     }
@@ -1060,8 +1060,8 @@
         [array addObjectsFromArray:self.comData];
         self.currentViewController.dataArray  =array;
     }
-    self.currentViewController.type = self.selectIndex;
-    self.currentViewController.menuType = self.menuSelectIndex;
+    self.currentViewController.selectIndex = self.selectIndex;
+    self.currentViewController.menuSelectIndex = self.menuSelectIndex;
     if (!self.currentViewController.delegate) {
         self.currentViewController.delegate  = self;
     }
@@ -1079,8 +1079,8 @@
         [array addObjectsFromArray:self.thinkTankData];
         self.currentViewController.dataArray  =array;
     }
-    self.currentViewController.type = self.selectIndex;
-    self.currentViewController.menuType = self.menuSelectIndex;
+    self.currentViewController.selectIndex = self.selectIndex;
+    self.currentViewController.menuSelectIndex = self.menuSelectIndex;
     if (!self.currentViewController.delegate) {
         self.currentViewController.delegate  = self;
     }

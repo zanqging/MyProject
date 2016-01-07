@@ -26,7 +26,7 @@ typedef NS_ENUM(NSUInteger, WMPageControllerCachePolicy){
     WMPageControllerCachePolicyHigh      = 5   // High
 };
 
-@interface WMPageController : RootViewController
+@interface WMPageController_bak : RootViewController
 
 /**
  *  values and keys can set properties when initialize child controlelr (it's KVC)

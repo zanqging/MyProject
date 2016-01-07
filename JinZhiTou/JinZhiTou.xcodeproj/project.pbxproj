@@ -45,6 +45,24 @@
 		4511CC2E1BA2B6E300A9D00A /* moviePlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 4511CC1A1BA2B6E300A9D00A /* moviePlay.png */; };
 		4511CC2F1BA2B6E300A9D00A /* moviePlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4511CC1B1BA2B6E300A9D00A /* moviePlay@2x.png */; };
 		4511CC321BA2C6B700A9D00A /* movieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4511CC311BA2C6B700A9D00A /* movieViewController.m */; };
+		4515381B1C3E422300C2F08F /* WMFooldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4515380F1C3E422300C2F08F /* WMFooldView.m */; };
+		4515381C1C3E422300C2F08F /* WMFooldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4515380F1C3E422300C2F08F /* WMFooldView.m */; };
+		4515381D1C3E422300C2F08F /* WMFooldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4515380F1C3E422300C2F08F /* WMFooldView.m */; };
+		4515381E1C3E422300C2F08F /* WMMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538111C3E422300C2F08F /* WMMenuItem.m */; };
+		4515381F1C3E422300C2F08F /* WMMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538111C3E422300C2F08F /* WMMenuItem.m */; };
+		451538201C3E422300C2F08F /* WMMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538111C3E422300C2F08F /* WMMenuItem.m */; };
+		451538211C3E422300C2F08F /* WMMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538131C3E422300C2F08F /* WMMenuView.m */; };
+		451538221C3E422300C2F08F /* WMMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538131C3E422300C2F08F /* WMMenuView.m */; };
+		451538231C3E422300C2F08F /* WMMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538131C3E422300C2F08F /* WMMenuView.m */; };
+		451538241C3E422300C2F08F /* WMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538151C3E422300C2F08F /* WMProgressView.m */; };
+		451538251C3E422300C2F08F /* WMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538151C3E422300C2F08F /* WMProgressView.m */; };
+		451538261C3E422300C2F08F /* WMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538151C3E422300C2F08F /* WMProgressView.m */; };
+		451538271C3E422300C2F08F /* WMScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538171C3E422300C2F08F /* WMScrollView.m */; };
+		451538281C3E422300C2F08F /* WMScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538171C3E422300C2F08F /* WMScrollView.m */; };
+		451538291C3E422300C2F08F /* WMScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538171C3E422300C2F08F /* WMScrollView.m */; };
+		4515382A1C3E422300C2F08F /* WMPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4515381A1C3E422300C2F08F /* WMPageController.m */; };
+		4515382B1C3E422300C2F08F /* WMPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4515381A1C3E422300C2F08F /* WMPageController.m */; };
+		4515382C1C3E422300C2F08F /* WMPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4515381A1C3E422300C2F08F /* WMPageController.m */; };
 		45158BA31BF96A920095CB91 /* FinalingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45158BA21BF96A920095CB91 /* FinalingTableViewCell.m */; };
 		45158BA61BF97BF80095CB91 /* FinalPersonTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45158BA51BF97BF70095CB91 /* FinalPersonTableViewCell.m */; };
 		45158BA91BF97CD30095CB91 /* FinalCompanyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45158BA81BF97CD30095CB91 /* FinalCompanyTableViewCell.m */; };
@@ -111,7 +129,6 @@
 		452533C51C29A116000719AC /* NSTimer+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F8290E1B6B1A6D0044F6F0 /* NSTimer+Addition.m */; };
 		452533C61C29A116000719AC /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F09B551B86297B0065D873 /* ASIDataCompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		452533C71C29A116000719AC /* MJRefreshAutoGifFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F93B361B637311004526F5 /* MJRefreshAutoGifFooter.m */; };
-		452533C81C29A116000719AC /* WMMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0951BEB460B00D21FB0 /* WMMenuItem.m */; };
 		452533C91C29A116000719AC /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E812141B6790DC009F840D /* Cell.m */; };
 		452533CA1C29A116000719AC /* FoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 453F93CE1BB4379100CA7700 /* FoldView.m */; };
 		452533CB1C29A116000719AC /* LoadVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 4581153E1B7F1987006EEBBC /* LoadVideo.m */; };
@@ -152,7 +169,6 @@
 		452533EE1C29A116000719AC /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4517CDB01B78C7ED00EFBB6A /* AFSecurityPolicy.m */; };
 		452533EF1C29A116000719AC /* RoadShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E811FA1B6717D1009F840D /* RoadShowDetailViewController.m */; };
 		452533F01C29A116000719AC /* UIImage+Crop.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FE76CE1BD742AE002D4F04 /* UIImage+Crop.m */; };
-		452533F11C29A116000719AC /* WMMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0971BEB460B00D21FB0 /* WMMenuView.m */; };
 		452533F21C29A116000719AC /* RoadShowTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E812021B6748BE009F840D /* RoadShowTableViewCell.m */; };
 		452533F31C29A116000719AC /* CyclePriseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EAD71BD08DCB0041DCBD /* CyclePriseTableViewCell.m */; };
 		452533F41C29A116000719AC /* UserTraceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4523810F1BAFE21E00C1144A /* UserTraceViewController.m */; };
@@ -228,7 +244,6 @@
 		4525343A1C29A116000719AC /* NewFinialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F90B121B709C67005E8D15 /* NewFinialViewController.m */; };
 		4525343B1C29A116000719AC /* ModifyCompanyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45984A431BE8C159003D5F50 /* ModifyCompanyViewController.m */; };
 		4525343C1C29A116000719AC /* VoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FD86CC1B6A14A900823451 /* VoteViewController.m */; };
-		4525343D1C29A116000719AC /* WMFooldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0931BEB460B00D21FB0 /* WMFooldView.m */; };
 		4525343E1C29A116000719AC /* StartPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450876271B8F6414006EFC1A /* StartPageViewController.m */; };
 		4525343F1C29A116000719AC /* FinialSubmmitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F8294F1B6D38730044F6F0 /* FinialSubmmitViewController.m */; };
 		452534401C29A116000719AC /* MJRefreshComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F93B2D1B637311004526F5 /* MJRefreshComponent.m */; };
@@ -295,7 +310,7 @@
 		4525347D1C29A116000719AC /* SwipeableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D27B8B1BC631ED00ECD9D7 /* SwipeableCell.m */; };
 		4525347E1C29A116000719AC /* UserInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45326EFB1B7330180044F8C1 /* UserInfoTableViewCell.m */; };
 		4525347F1C29A116000719AC /* ASIFormDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F09B5B1B86297B0065D873 /* ASIFormDataRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		452534801C29A116000719AC /* WMPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D08E1BEB45D400D21FB0 /* WMPageController.m */; };
+		452534801C29A116000719AC /* WMPageController_bak.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D08E1BEB45D400D21FB0 /* WMPageController_bak.m */; };
 		452534811C29A116000719AC /* PECropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45495BB91B60DA02007A17FD /* PECropView.m */; };
 		452534821C29A116000719AC /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 45B435CE1BD1E87D0031B799 /* DAKeyboardControl.m */; };
 		452534831C29A116000719AC /* ActionDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EAD31BD08DCB0041DCBD /* ActionDetailViewController.m */; };
@@ -350,7 +365,6 @@
 		452534B41C29A116000719AC /* FinialAuthTraceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A2ADB51B72823800751F78 /* FinialAuthTraceViewController.m */; };
 		452534B51C29A116000719AC /* DialogUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F09B3E1B86297B0065D873 /* DialogUtil.m */; };
 		452534B61C29A116000719AC /* ReplyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D27B911BC66BF700ECD9D7 /* ReplyView.m */; };
-		452534B71C29A116000719AC /* WMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0991BEB460B00D21FB0 /* WMProgressView.m */; };
 		452534B81C29A116000719AC /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FCD04C1B75E216009AD6E3 /* UIImageView+WebCache.m */; };
 		452534B91C29A116000719AC /* CycleHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 45367D7F1BD8B6BC00039253 /* CycleHeader.m */; };
 		452534BA1C29A116000719AC /* BoxModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 450876361B8F656A006EFC1A /* BoxModel.m */; };
@@ -626,11 +640,7 @@
 		4544009B1C3906C00094696A /* Platform.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400851C3906C00094696A /* Platform.m */; };
 		4544009C1C3906C00094696A /* Platform.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400851C3906C00094696A /* Platform.m */; };
 		4544009D1C3906C00094696A /* Platform.m in Sources */ = {isa = PBXBuildFile; fileRef = 454400851C3906C00094696A /* Platform.m */; };
-		4545D08F1BEB45D400D21FB0 /* WMPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D08E1BEB45D400D21FB0 /* WMPageController.m */; };
-		4545D09A1BEB460B00D21FB0 /* WMFooldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0931BEB460B00D21FB0 /* WMFooldView.m */; };
-		4545D09B1BEB460B00D21FB0 /* WMMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0951BEB460B00D21FB0 /* WMMenuItem.m */; };
-		4545D09C1BEB460B00D21FB0 /* WMMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0971BEB460B00D21FB0 /* WMMenuView.m */; };
-		4545D09D1BEB460C00D21FB0 /* WMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0991BEB460B00D21FB0 /* WMProgressView.m */; };
+		4545D08F1BEB45D400D21FB0 /* WMPageController_bak.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D08E1BEB45D400D21FB0 /* WMPageController_bak.m */; };
 		4545D0A51BEB492900D21FB0 /* WMTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0A11BEB492900D21FB0 /* WMTableViewController.m */; };
 		4545D0AB1BEB49DD00D21FB0 /* WMImageViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0A81BEB49DD00D21FB0 /* WMImageViewCell.m */; };
 		4545D0AC1BEB49DD00D21FB0 /* WMLoopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0AA1BEB49DD00D21FB0 /* WMLoopView.m */; };
@@ -686,7 +696,6 @@
 		454B98991A54C76500A1CC7E /* NSTimer+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F8290E1B6B1A6D0044F6F0 /* NSTimer+Addition.m */; };
 		454B989A1A54C76500A1CC7E /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F09B551B86297B0065D873 /* ASIDataCompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		454B989B1A54C76500A1CC7E /* MJRefreshAutoGifFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F93B361B637311004526F5 /* MJRefreshAutoGifFooter.m */; };
-		454B989C1A54C76500A1CC7E /* WMMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0951BEB460B00D21FB0 /* WMMenuItem.m */; };
 		454B989D1A54C76500A1CC7E /* Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E812141B6790DC009F840D /* Cell.m */; };
 		454B989E1A54C76500A1CC7E /* FoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 453F93CE1BB4379100CA7700 /* FoldView.m */; };
 		454B989F1A54C76500A1CC7E /* LoadVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 4581153E1B7F1987006EEBBC /* LoadVideo.m */; };
@@ -727,7 +736,6 @@
 		454B98C21A54C76500A1CC7E /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4517CDB01B78C7ED00EFBB6A /* AFSecurityPolicy.m */; };
 		454B98C31A54C76500A1CC7E /* RoadShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E811FA1B6717D1009F840D /* RoadShowDetailViewController.m */; };
 		454B98C41A54C76500A1CC7E /* UIImage+Crop.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FE76CE1BD742AE002D4F04 /* UIImage+Crop.m */; };
-		454B98C51A54C76500A1CC7E /* WMMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0971BEB460B00D21FB0 /* WMMenuView.m */; };
 		454B98C61A54C76500A1CC7E /* RoadShowTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E812021B6748BE009F840D /* RoadShowTableViewCell.m */; };
 		454B98C71A54C76500A1CC7E /* CyclePriseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EAD71BD08DCB0041DCBD /* CyclePriseTableViewCell.m */; };
 		454B98C81A54C76500A1CC7E /* UserTraceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4523810F1BAFE21E00C1144A /* UserTraceViewController.m */; };
@@ -803,7 +811,6 @@
 		454B990E1A54C76500A1CC7E /* NewFinialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F90B121B709C67005E8D15 /* NewFinialViewController.m */; };
 		454B990F1A54C76500A1CC7E /* ModifyCompanyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45984A431BE8C159003D5F50 /* ModifyCompanyViewController.m */; };
 		454B99101A54C76500A1CC7E /* VoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FD86CC1B6A14A900823451 /* VoteViewController.m */; };
-		454B99111A54C76500A1CC7E /* WMFooldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0931BEB460B00D21FB0 /* WMFooldView.m */; };
 		454B99121A54C76500A1CC7E /* StartPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450876271B8F6414006EFC1A /* StartPageViewController.m */; };
 		454B99131A54C76500A1CC7E /* FinialSubmmitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F8294F1B6D38730044F6F0 /* FinialSubmmitViewController.m */; };
 		454B99141A54C76500A1CC7E /* MJRefreshComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F93B2D1B637311004526F5 /* MJRefreshComponent.m */; };
@@ -870,7 +877,7 @@
 		454B99511A54C76500A1CC7E /* SwipeableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D27B8B1BC631ED00ECD9D7 /* SwipeableCell.m */; };
 		454B99521A54C76500A1CC7E /* UserInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45326EFB1B7330180044F8C1 /* UserInfoTableViewCell.m */; };
 		454B99531A54C76500A1CC7E /* ASIFormDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F09B5B1B86297B0065D873 /* ASIFormDataRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		454B99541A54C76500A1CC7E /* WMPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D08E1BEB45D400D21FB0 /* WMPageController.m */; };
+		454B99541A54C76500A1CC7E /* WMPageController_bak.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D08E1BEB45D400D21FB0 /* WMPageController_bak.m */; };
 		454B99551A54C76500A1CC7E /* PECropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45495BB91B60DA02007A17FD /* PECropView.m */; };
 		454B99561A54C76500A1CC7E /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 45B435CE1BD1E87D0031B799 /* DAKeyboardControl.m */; };
 		454B99571A54C76500A1CC7E /* ActionDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EAD31BD08DCB0041DCBD /* ActionDetailViewController.m */; };
@@ -925,7 +932,6 @@
 		454B99881A54C76500A1CC7E /* FinialAuthTraceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A2ADB51B72823800751F78 /* FinialAuthTraceViewController.m */; };
 		454B99891A54C76500A1CC7E /* DialogUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F09B3E1B86297B0065D873 /* DialogUtil.m */; };
 		454B998A1A54C76500A1CC7E /* ReplyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D27B911BC66BF700ECD9D7 /* ReplyView.m */; };
-		454B998B1A54C76500A1CC7E /* WMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4545D0991BEB460B00D21FB0 /* WMProgressView.m */; };
 		454B998C1A54C76500A1CC7E /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FCD04C1B75E216009AD6E3 /* UIImageView+WebCache.m */; };
 		454B998D1A54C76500A1CC7E /* CycleHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 45367D7F1BD8B6BC00039253 /* CycleHeader.m */; };
 		454B998E1A54C76500A1CC7E /* BoxModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 450876361B8F656A006EFC1A /* BoxModel.m */; };
@@ -1365,6 +1371,19 @@
 		4511CC1B1BA2B6E300A9D00A /* moviePlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "moviePlay@2x.png"; sourceTree = "<group>"; };
 		4511CC301BA2C6B700A9D00A /* movieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = movieViewController.h; path = Controller/RoadShow/movieViewController.h; sourceTree = "<group>"; };
 		4511CC311BA2C6B700A9D00A /* movieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = movieViewController.m; path = Controller/RoadShow/movieViewController.m; sourceTree = "<group>"; };
+		4515380E1C3E422300C2F08F /* WMFooldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFooldView.h; sourceTree = "<group>"; };
+		4515380F1C3E422300C2F08F /* WMFooldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMFooldView.m; sourceTree = "<group>"; };
+		451538101C3E422300C2F08F /* WMMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMenuItem.h; sourceTree = "<group>"; };
+		451538111C3E422300C2F08F /* WMMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMenuItem.m; sourceTree = "<group>"; };
+		451538121C3E422300C2F08F /* WMMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMenuView.h; sourceTree = "<group>"; };
+		451538131C3E422300C2F08F /* WMMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMenuView.m; sourceTree = "<group>"; };
+		451538141C3E422300C2F08F /* WMProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMProgressView.h; sourceTree = "<group>"; };
+		451538151C3E422300C2F08F /* WMProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMProgressView.m; sourceTree = "<group>"; };
+		451538161C3E422300C2F08F /* WMScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMScrollView.h; sourceTree = "<group>"; };
+		451538171C3E422300C2F08F /* WMScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMScrollView.m; sourceTree = "<group>"; };
+		451538181C3E422300C2F08F /* WMPageConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPageConst.h; sourceTree = "<group>"; };
+		451538191C3E422300C2F08F /* WMPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPageController.h; sourceTree = "<group>"; };
+		4515381A1C3E422300C2F08F /* WMPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPageController.m; sourceTree = "<group>"; };
 		45158BA11BF96A920095CB91 /* FinalingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FinalingTableViewCell.h; path = Controller/Final/TableViewCell/FinalingTableViewCell.h; sourceTree = "<group>"; };
 		45158BA21BF96A920095CB91 /* FinalingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FinalingTableViewCell.m; path = Controller/Final/TableViewCell/FinalingTableViewCell.m; sourceTree = "<group>"; };
 		45158BA41BF97BF70095CB91 /* FinalPersonTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FinalPersonTableViewCell.h; sourceTree = "<group>"; };
@@ -1643,23 +1662,14 @@
 		454400831C3906C00094696A /* Platform+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Platform+CoreDataProperties.m"; path = "Data/Platform+CoreDataProperties.m"; sourceTree = "<group>"; };
 		454400841C3906C00094696A /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Platform.h; path = Data/Platform.h; sourceTree = "<group>"; };
 		454400851C3906C00094696A /* Platform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Platform.m; path = Data/Platform.m; sourceTree = "<group>"; };
-		4545D08C1BEB45D400D21FB0 /* WMPageConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPageConst.h; sourceTree = "<group>"; };
-		4545D08D1BEB45D400D21FB0 /* WMPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPageController.h; sourceTree = "<group>"; };
-		4545D08E1BEB45D400D21FB0 /* WMPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPageController.m; sourceTree = "<group>"; };
-		4545D0921BEB460B00D21FB0 /* WMFooldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMFooldView.h; sourceTree = "<group>"; };
-		4545D0931BEB460B00D21FB0 /* WMFooldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMFooldView.m; sourceTree = "<group>"; };
-		4545D0941BEB460B00D21FB0 /* WMMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMenuItem.h; sourceTree = "<group>"; };
-		4545D0951BEB460B00D21FB0 /* WMMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMenuItem.m; sourceTree = "<group>"; };
-		4545D0961BEB460B00D21FB0 /* WMMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMMenuView.h; sourceTree = "<group>"; };
-		4545D0971BEB460B00D21FB0 /* WMMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMMenuView.m; sourceTree = "<group>"; };
-		4545D0981BEB460B00D21FB0 /* WMProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMProgressView.h; sourceTree = "<group>"; };
-		4545D0991BEB460B00D21FB0 /* WMProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMProgressView.m; sourceTree = "<group>"; };
+		4545D08D1BEB45D400D21FB0 /* WMPageController_bak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMPageController_bak.h; sourceTree = "<group>"; };
+		4545D08E1BEB45D400D21FB0 /* WMPageController_bak.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMPageController_bak.m; sourceTree = "<group>"; };
 		4545D0A01BEB492900D21FB0 /* WMTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMTableViewController.h; sourceTree = "<group>"; };
 		4545D0A11BEB492900D21FB0 /* WMTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMTableViewController.m; sourceTree = "<group>"; };
-		4545D0A71BEB49DD00D21FB0 /* WMImageViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMImageViewCell.h; sourceTree = "<group>"; };
-		4545D0A81BEB49DD00D21FB0 /* WMImageViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMImageViewCell.m; sourceTree = "<group>"; };
-		4545D0A91BEB49DD00D21FB0 /* WMLoopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WMLoopView.h; sourceTree = "<group>"; };
-		4545D0AA1BEB49DD00D21FB0 /* WMLoopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WMLoopView.m; sourceTree = "<group>"; };
+		4545D0A71BEB49DD00D21FB0 /* WMImageViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WMImageViewCell.h; path = ../../WMImageViewCell.h; sourceTree = "<group>"; };
+		4545D0A81BEB49DD00D21FB0 /* WMImageViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WMImageViewCell.m; path = ../../WMImageViewCell.m; sourceTree = "<group>"; };
+		4545D0A91BEB49DD00D21FB0 /* WMLoopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WMLoopView.h; path = ../../WMLoopView.h; sourceTree = "<group>"; };
+		4545D0AA1BEB49DD00D21FB0 /* WMLoopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WMLoopView.m; path = ../../WMLoopView.m; sourceTree = "<group>"; };
 		45495BB11B60DA02007A17FD /* ColorMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorMatrix.h; sourceTree = "<group>"; };
 		45495BB21B60DA02007A17FD /* CustomImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomImagePickerController.h; sourceTree = "<group>"; };
 		45495BB31B60DA02007A17FD /* CustomImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomImagePickerController.m; sourceTree = "<group>"; };
@@ -2247,6 +2257,38 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		4515380C1C3E422300C2F08F /* WMPageController */ = {
+			isa = PBXGroup;
+			children = (
+				4515380D1C3E422300C2F08F /* WMMenuView */,
+				451538181C3E422300C2F08F /* WMPageConst.h */,
+				451538191C3E422300C2F08F /* WMPageController.h */,
+				4515381A1C3E422300C2F08F /* WMPageController.m */,
+			);
+			path = WMPageController;
+			sourceTree = "<group>";
+		};
+		4515380D1C3E422300C2F08F /* WMMenuView */ = {
+			isa = PBXGroup;
+			children = (
+				4515380E1C3E422300C2F08F /* WMFooldView.h */,
+				4515380F1C3E422300C2F08F /* WMFooldView.m */,
+				451538101C3E422300C2F08F /* WMMenuItem.h */,
+				451538111C3E422300C2F08F /* WMMenuItem.m */,
+				451538121C3E422300C2F08F /* WMMenuView.h */,
+				451538131C3E422300C2F08F /* WMMenuView.m */,
+				451538141C3E422300C2F08F /* WMProgressView.h */,
+				451538151C3E422300C2F08F /* WMProgressView.m */,
+				451538161C3E422300C2F08F /* WMScrollView.h */,
+				451538171C3E422300C2F08F /* WMScrollView.m */,
+				4545D0A71BEB49DD00D21FB0 /* WMImageViewCell.h */,
+				4545D0A81BEB49DD00D21FB0 /* WMImageViewCell.m */,
+				4545D0A91BEB49DD00D21FB0 /* WMLoopView.h */,
+				4545D0AA1BEB49DD00D21FB0 /* WMLoopView.m */,
+			);
+			path = WMMenuView;
+			sourceTree = "<group>";
+		};
 		4517CD611B78585E00EFBB6A /* AddressAutoView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2808,26 +2850,14 @@
 		45495C521B60EBA1007A17FD /* Final */ = {
 			isa = PBXGroup;
 			children = (
-				4545D0A71BEB49DD00D21FB0 /* WMImageViewCell.h */,
-				4545D0A81BEB49DD00D21FB0 /* WMImageViewCell.m */,
-				4545D0A91BEB49DD00D21FB0 /* WMLoopView.h */,
-				4545D0AA1BEB49DD00D21FB0 /* WMLoopView.m */,
-				4545D0921BEB460B00D21FB0 /* WMFooldView.h */,
-				4545D0931BEB460B00D21FB0 /* WMFooldView.m */,
-				4545D0941BEB460B00D21FB0 /* WMMenuItem.h */,
-				4545D0951BEB460B00D21FB0 /* WMMenuItem.m */,
-				4545D0961BEB460B00D21FB0 /* WMMenuView.h */,
-				4545D0971BEB460B00D21FB0 /* WMMenuView.m */,
-				4545D0981BEB460B00D21FB0 /* WMProgressView.h */,
-				4545D0991BEB460B00D21FB0 /* WMProgressView.m */,
-				4545D08C1BEB45D400D21FB0 /* WMPageConst.h */,
-				4545D08D1BEB45D400D21FB0 /* WMPageController.h */,
-				4545D08E1BEB45D400D21FB0 /* WMPageController.m */,
-				4545D0A01BEB492900D21FB0 /* WMTableViewController.h */,
-				4545D0A11BEB492900D21FB0 /* WMTableViewController.m */,
+				4515380C1C3E422300C2F08F /* WMPageController */,
+				4545D08D1BEB45D400D21FB0 /* WMPageController_bak.h */,
+				4545D08E1BEB45D400D21FB0 /* WMPageController_bak.m */,
 				458631F41B65C93D00F06688 /* TableViewCell */,
 				458631F11B65C6C500F06688 /* FinalViewController.h */,
 				458631F21B65C6C500F06688 /* FinalViewController.m */,
+				4545D0A01BEB492900D21FB0 /* WMTableViewController.h */,
+				4545D0A11BEB492900D21FB0 /* WMTableViewController.m */,
 				45F09A2F1B8629790065D873 /* class */,
 				45FD86CB1B6A14A900823451 /* VoteViewController.h */,
 				45FD86CC1B6A14A900823451 /* VoteViewController.m */,
@@ -4074,7 +4104,6 @@
 				452533C61C29A116000719AC /* ASIDataCompressor.m in Sources */,
 				452533C71C29A116000719AC /* MJRefreshAutoGifFooter.m in Sources */,
 				4544008B1C3906C00094696A /* Project.m in Sources */,
-				452533C81C29A116000719AC /* WMMenuItem.m in Sources */,
 				452533C91C29A116000719AC /* Cell.m in Sources */,
 				452533CA1C29A116000719AC /* FoldView.m in Sources */,
 				452533CB1C29A116000719AC /* LoadVideo.m in Sources */,
@@ -4117,7 +4146,7 @@
 				452533EE1C29A116000719AC /* AFSecurityPolicy.m in Sources */,
 				452533EF1C29A116000719AC /* RoadShowDetailViewController.m in Sources */,
 				452533F01C29A116000719AC /* UIImage+Crop.m in Sources */,
-				452533F11C29A116000719AC /* WMMenuView.m in Sources */,
+				451538231C3E422300C2F08F /* WMMenuView.m in Sources */,
 				452533F21C29A116000719AC /* RoadShowTableViewCell.m in Sources */,
 				452533F31C29A116000719AC /* CyclePriseTableViewCell.m in Sources */,
 				452533F41C29A116000719AC /* UserTraceViewController.m in Sources */,
@@ -4203,7 +4232,6 @@
 				4525343A1C29A116000719AC /* NewFinialViewController.m in Sources */,
 				4525343B1C29A116000719AC /* ModifyCompanyViewController.m in Sources */,
 				4525343C1C29A116000719AC /* VoteViewController.m in Sources */,
-				4525343D1C29A116000719AC /* WMFooldView.m in Sources */,
 				4525343E1C29A116000719AC /* StartPageViewController.m in Sources */,
 				4525343F1C29A116000719AC /* FinialSubmmitViewController.m in Sources */,
 				452534401C29A116000719AC /* MJRefreshComponent.m in Sources */,
@@ -4226,6 +4254,7 @@
 				452534501C29A116000719AC /* MasterViewController.m in Sources */,
 				452534511C29A116000719AC /* THProgressView.m in Sources */,
 				452534521C29A116000719AC /* BedgesView.m in Sources */,
+				4515381D1C3E422300C2F08F /* WMFooldView.m in Sources */,
 				452534531C29A116000719AC /* UserLookForViewController.m in Sources */,
 				452534541C29A116000719AC /* IndustoryTableViewCell.m in Sources */,
 				452534551C29A116000719AC /* WaterF.m in Sources */,
@@ -4270,12 +4299,14 @@
 				452534781C29A116000719AC /* RoadShowHomeHeaderView.m in Sources */,
 				452534791C29A116000719AC /* UIImage+SplitImageIntoTwoParts.m in Sources */,
 				4525347A1C29A116000719AC /* WeiboCell.m in Sources */,
+				451538291C3E422300C2F08F /* WMScrollView.m in Sources */,
 				4525347B1C29A116000719AC /* SDWebImageDownloader.m in Sources */,
 				4525347C1C29A116000719AC /* AFHTTPRequestOperation.m in Sources */,
 				4525347D1C29A116000719AC /* SwipeableCell.m in Sources */,
 				4525347E1C29A116000719AC /* UserInfoTableViewCell.m in Sources */,
 				4525347F1C29A116000719AC /* ASIFormDataRequest.m in Sources */,
-				452534801C29A116000719AC /* WMPageController.m in Sources */,
+				451538201C3E422300C2F08F /* WMMenuItem.m in Sources */,
+				452534801C29A116000719AC /* WMPageController_bak.m in Sources */,
 				452534811C29A116000719AC /* PECropView.m in Sources */,
 				45778FC41C3B620000FF8691 /* Pic.m in Sources */,
 				452534821C29A116000719AC /* DAKeyboardControl.m in Sources */,
@@ -4331,8 +4362,8 @@
 				452534B31C29A116000719AC /* ASIDataDecompressor.m in Sources */,
 				452534B41C29A116000719AC /* FinialAuthTraceViewController.m in Sources */,
 				452534B51C29A116000719AC /* DialogUtil.m in Sources */,
+				451538261C3E422300C2F08F /* WMProgressView.m in Sources */,
 				452534B61C29A116000719AC /* ReplyView.m in Sources */,
-				452534B71C29A116000719AC /* WMProgressView.m in Sources */,
 				452534B81C29A116000719AC /* UIImageView+WebCache.m in Sources */,
 				452534B91C29A116000719AC /* CycleHeader.m in Sources */,
 				452534BA1C29A116000719AC /* BoxModel.m in Sources */,
@@ -4359,6 +4390,7 @@
 				452534CD1C29A116000719AC /* SDWebImageDownloaderOperation.m in Sources */,
 				452534CE1C29A116000719AC /* UIView+MJExtension.m in Sources */,
 				452534CF1C29A116000719AC /* AFHTTPRequestOperationManager.m in Sources */,
+				4515382C1C3E422300C2F08F /* WMPageController.m in Sources */,
 				452534D01C29A116000719AC /* FinialPersonTableViewCell.m in Sources */,
 				45778FB81C3B620000FF8691 /* Cycle.m in Sources */,
 				452534D11C29A116000719AC /* AutoShowView.m in Sources */,
@@ -4410,7 +4442,6 @@
 				454B989A1A54C76500A1CC7E /* ASIDataCompressor.m in Sources */,
 				454B989B1A54C76500A1CC7E /* MJRefreshAutoGifFooter.m in Sources */,
 				4544008A1C3906C00094696A /* Project.m in Sources */,
-				454B989C1A54C76500A1CC7E /* WMMenuItem.m in Sources */,
 				454B989D1A54C76500A1CC7E /* Cell.m in Sources */,
 				454B989E1A54C76500A1CC7E /* FoldView.m in Sources */,
 				454B989F1A54C76500A1CC7E /* LoadVideo.m in Sources */,
@@ -4453,7 +4484,7 @@
 				454B98C21A54C76500A1CC7E /* AFSecurityPolicy.m in Sources */,
 				454B98C31A54C76500A1CC7E /* RoadShowDetailViewController.m in Sources */,
 				454B98C41A54C76500A1CC7E /* UIImage+Crop.m in Sources */,
-				454B98C51A54C76500A1CC7E /* WMMenuView.m in Sources */,
+				451538221C3E422300C2F08F /* WMMenuView.m in Sources */,
 				454B98C61A54C76500A1CC7E /* RoadShowTableViewCell.m in Sources */,
 				454B98C71A54C76500A1CC7E /* CyclePriseTableViewCell.m in Sources */,
 				454B98C81A54C76500A1CC7E /* UserTraceViewController.m in Sources */,
@@ -4539,7 +4570,6 @@
 				454B990E1A54C76500A1CC7E /* NewFinialViewController.m in Sources */,
 				454B990F1A54C76500A1CC7E /* ModifyCompanyViewController.m in Sources */,
 				454B99101A54C76500A1CC7E /* VoteViewController.m in Sources */,
-				454B99111A54C76500A1CC7E /* WMFooldView.m in Sources */,
 				454B99121A54C76500A1CC7E /* StartPageViewController.m in Sources */,
 				454B99131A54C76500A1CC7E /* FinialSubmmitViewController.m in Sources */,
 				454B99141A54C76500A1CC7E /* MJRefreshComponent.m in Sources */,
@@ -4562,6 +4592,7 @@
 				454B99241A54C76500A1CC7E /* MasterViewController.m in Sources */,
 				454B99251A54C76500A1CC7E /* THProgressView.m in Sources */,
 				454B99261A54C76500A1CC7E /* BedgesView.m in Sources */,
+				4515381C1C3E422300C2F08F /* WMFooldView.m in Sources */,
 				454B99271A54C76500A1CC7E /* UserLookForViewController.m in Sources */,
 				454B99281A54C76500A1CC7E /* IndustoryTableViewCell.m in Sources */,
 				454B99291A54C76500A1CC7E /* WaterF.m in Sources */,
@@ -4606,12 +4637,14 @@
 				454B994C1A54C76500A1CC7E /* RoadShowHomeHeaderView.m in Sources */,
 				454B994D1A54C76500A1CC7E /* UIImage+SplitImageIntoTwoParts.m in Sources */,
 				454B994E1A54C76500A1CC7E /* WeiboCell.m in Sources */,
+				451538281C3E422300C2F08F /* WMScrollView.m in Sources */,
 				454B994F1A54C76500A1CC7E /* SDWebImageDownloader.m in Sources */,
 				454B99501A54C76500A1CC7E /* AFHTTPRequestOperation.m in Sources */,
 				454B99511A54C76500A1CC7E /* SwipeableCell.m in Sources */,
 				454B99521A54C76500A1CC7E /* UserInfoTableViewCell.m in Sources */,
 				454B99531A54C76500A1CC7E /* ASIFormDataRequest.m in Sources */,
-				454B99541A54C76500A1CC7E /* WMPageController.m in Sources */,
+				4515381F1C3E422300C2F08F /* WMMenuItem.m in Sources */,
+				454B99541A54C76500A1CC7E /* WMPageController_bak.m in Sources */,
 				454B99551A54C76500A1CC7E /* PECropView.m in Sources */,
 				45778FC31C3B620000FF8691 /* Pic.m in Sources */,
 				454B99561A54C76500A1CC7E /* DAKeyboardControl.m in Sources */,
@@ -4667,8 +4700,8 @@
 				454B99871A54C76500A1CC7E /* ASIDataDecompressor.m in Sources */,
 				454B99881A54C76500A1CC7E /* FinialAuthTraceViewController.m in Sources */,
 				454B99891A54C76500A1CC7E /* DialogUtil.m in Sources */,
+				451538251C3E422300C2F08F /* WMProgressView.m in Sources */,
 				454B998A1A54C76500A1CC7E /* ReplyView.m in Sources */,
-				454B998B1A54C76500A1CC7E /* WMProgressView.m in Sources */,
 				454B998C1A54C76500A1CC7E /* UIImageView+WebCache.m in Sources */,
 				454B998D1A54C76500A1CC7E /* CycleHeader.m in Sources */,
 				454B998E1A54C76500A1CC7E /* BoxModel.m in Sources */,
@@ -4695,6 +4728,7 @@
 				454B99A11A54C76500A1CC7E /* SDWebImageDownloaderOperation.m in Sources */,
 				454B99A21A54C76500A1CC7E /* UIView+MJExtension.m in Sources */,
 				454B99A31A54C76500A1CC7E /* AFHTTPRequestOperationManager.m in Sources */,
+				4515382B1C3E422300C2F08F /* WMPageController.m in Sources */,
 				454B99A41A54C76500A1CC7E /* FinialPersonTableViewCell.m in Sources */,
 				45778FB71C3B620000FF8691 /* Cycle.m in Sources */,
 				454B99A51A54C76500A1CC7E /* AutoShowView.m in Sources */,
@@ -4746,7 +4780,6 @@
 				45F09C6E1B86297B0065D873 /* ASIDataCompressor.m in Sources */,
 				45F93B581B637311004526F5 /* MJRefreshAutoGifFooter.m in Sources */,
 				454400891C3906C00094696A /* Project.m in Sources */,
-				4545D09B1BEB460B00D21FB0 /* WMMenuItem.m in Sources */,
 				45E812151B6790DC009F840D /* Cell.m in Sources */,
 				453F93CF1BB4379100CA7700 /* FoldView.m in Sources */,
 				4581153F1B7F1987006EEBBC /* LoadVideo.m in Sources */,
@@ -4789,7 +4822,7 @@
 				4517CDBD1B78C7ED00EFBB6A /* AFSecurityPolicy.m in Sources */,
 				45E811FB1B6717D1009F840D /* RoadShowDetailViewController.m in Sources */,
 				45FE76CF1BD742AE002D4F04 /* UIImage+Crop.m in Sources */,
-				4545D09C1BEB460B00D21FB0 /* WMMenuView.m in Sources */,
+				451538211C3E422300C2F08F /* WMMenuView.m in Sources */,
 				45E812031B6748BE009F840D /* RoadShowTableViewCell.m in Sources */,
 				4543EAE01BD08DCB0041DCBD /* CyclePriseTableViewCell.m in Sources */,
 				452381111BAFE21E00C1144A /* UserTraceViewController.m in Sources */,
@@ -4875,7 +4908,6 @@
 				45F90B131B709C67005E8D15 /* NewFinialViewController.m in Sources */,
 				45984A441BE8C159003D5F50 /* ModifyCompanyViewController.m in Sources */,
 				45FD86CD1B6A14A900823451 /* VoteViewController.m in Sources */,
-				4545D09A1BEB460B00D21FB0 /* WMFooldView.m in Sources */,
 				450876281B8F6414006EFC1A /* StartPageViewController.m in Sources */,
 				45F829501B6D38730044F6F0 /* FinialSubmmitViewController.m in Sources */,
 				45F93B551B637311004526F5 /* MJRefreshComponent.m in Sources */,
@@ -4898,6 +4930,7 @@
 				45D27B8D1BC631ED00ECD9D7 /* MasterViewController.m in Sources */,
 				458115491B7F7539006EEBBC /* THProgressView.m in Sources */,
 				45F09C861B862ABA0065D873 /* BedgesView.m in Sources */,
+				4515381B1C3E422300C2F08F /* WMFooldView.m in Sources */,
 				4543EAEE1BD08DDE0041DCBD /* UserLookForViewController.m in Sources */,
 				45DED8931BA021D800B4D393 /* IndustoryTableViewCell.m in Sources */,
 				45ECCEFC1B61FED40013CA73 /* WaterF.m in Sources */,
@@ -4942,12 +4975,14 @@
 				4515BBDF1BE9D92700B4D402 /* RoadShowHomeHeaderView.m in Sources */,
 				45495BD31B60DA02007A17FD /* UIImage+SplitImageIntoTwoParts.m in Sources */,
 				450D7E6B1B913E1D001781C4 /* WeiboCell.m in Sources */,
+				451538271C3E422300C2F08F /* WMScrollView.m in Sources */,
 				45FCD0541B75E216009AD6E3 /* SDWebImageDownloader.m in Sources */,
 				4517CDB91B78C7ED00EFBB6A /* AFHTTPRequestOperation.m in Sources */,
 				45D27B8E1BC631ED00ECD9D7 /* SwipeableCell.m in Sources */,
 				45326EFC1B7330180044F8C1 /* UserInfoTableViewCell.m in Sources */,
 				45F09C711B86297B0065D873 /* ASIFormDataRequest.m in Sources */,
-				4545D08F1BEB45D400D21FB0 /* WMPageController.m in Sources */,
+				4515381E1C3E422300C2F08F /* WMMenuItem.m in Sources */,
+				4545D08F1BEB45D400D21FB0 /* WMPageController_bak.m in Sources */,
 				45495BCC1B60DA02007A17FD /* PECropView.m in Sources */,
 				45778FC21C3B620000FF8691 /* Pic.m in Sources */,
 				45B435CF1BD1E87D0031B799 /* DAKeyboardControl.m in Sources */,
@@ -5003,8 +5038,8 @@
 				45F09C6F1B86297B0065D873 /* ASIDataDecompressor.m in Sources */,
 				45A2ADB61B72823800751F78 /* FinialAuthTraceViewController.m in Sources */,
 				45F09C651B86297B0065D873 /* DialogUtil.m in Sources */,
+				451538241C3E422300C2F08F /* WMProgressView.m in Sources */,
 				45D27B921BC66BF700ECD9D7 /* ReplyView.m in Sources */,
-				4545D09D1BEB460C00D21FB0 /* WMProgressView.m in Sources */,
 				45FCD05D1B75E216009AD6E3 /* UIImageView+WebCache.m in Sources */,
 				45367D801BD8B6BC00039253 /* CycleHeader.m in Sources */,
 				450876371B8F656A006EFC1A /* BoxModel.m in Sources */,
@@ -5031,6 +5066,7 @@
 				45FCD0551B75E216009AD6E3 /* SDWebImageDownloaderOperation.m in Sources */,
 				45F93B651B637311004526F5 /* UIView+MJExtension.m in Sources */,
 				4517CDBA1B78C7ED00EFBB6A /* AFHTTPRequestOperationManager.m in Sources */,
+				4515382A1C3E422300C2F08F /* WMPageController.m in Sources */,
 				45F8294A1B6C64DB0044F6F0 /* FinialPersonTableViewCell.m in Sources */,
 				45778FB61C3B620000FF8691 /* Cycle.m in Sources */,
 				4517CD641B78586F00EFBB6A /* AutoShowView.m in Sources */,

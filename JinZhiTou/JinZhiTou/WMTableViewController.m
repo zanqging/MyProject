@@ -23,6 +23,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.navView removeFromSuperview];
+    
     self.tableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.view)-kBottomBarHeight-100)];
     self.tableView.backgroundColor = BackColor;
     self.tableView.delegate = self;
@@ -32,20 +34,86 @@
     self.tableView.separatorStyle =  UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.tableView];
     
+    self.loadingViewFrame = self.tableView.frame;
     [TDUtil tableView:self.tableView target:self refreshAction:@selector(refresh) loadAction:@selector(loadProject)];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(initWithParent:) name:WMControllerDidAddToSuperViewNotification object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showFinished:) name:WMControllerDidFullyDisplayedNotification object:nil];
 }
 
-
--(void)refresh{
-    if ([_delegate respondsToSelector:@selector(wmTableViewController:refresh:)]) {
-        [_delegate wmTableViewController:self refresh:nil];
+-(void)initWithParent:(NSNotification*)notification
+{
+    NSDictionary* dic = [notification valueForKey:@"userInfo"];
+    self.selectIndex = [[dic valueForKey:@"index"] intValue];
+    self.menuSelectIndex = [[dic valueForKey:@"menuIndex"] intValue];
+    
+    if (!self.dataArray) {
+        self.startLoading=YES;
+//        [self refresh];
     }
 }
+
+-(void)showFinished:(NSNotification*)notification
+{
+    NSDictionary* dic = [notification valueForKey:@"userInfo"];
+    self.selectIndex = [[dic valueForKey:@"index"] intValue];
+    self.menuSelectIndex = [[dic valueForKey:@"menuIndex"] intValue];
+    if (!self.dataArray) {
+        self.startLoading=NO;
+        [self refresh];
+    }
+}
+
+-(void)refresh
+{
+    self.currentPage =0;
+    if (self.menuSelectIndex==0) {
+        //网络请求
+        self.startLoading  =YES;
+        NSString* srverUrl = [NSString stringWithFormat:@"project/%d/%d/",self.selectIndex+1,self.currentPage];
+        [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+    }else{
+        self.startLoading = YES;
+        switch (self.selectIndex) {
+            case 2:
+                [self thinkTank];
+            default:
+                [self finialCommicuteList];
+                break;
+        }
+    }
+}
+
+-(void)thinkTank
+{
+    if (self.menuSelectIndex==1) {
+        //网络请求
+        self.startLoading  =YES;
+        NSString* srverUrl = [THINKTANK stringByAppendingFormat:@"%d/",self.currentPage];
+        [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+    }
+}
+
+
+-(void)finialCommicuteList
+{
+    if (self.menuSelectIndex==1) {
+        //网络请求
+        self.startLoading  =YES;
+        
+        if (self.selectIndex<2) {
+            NSString* srverUrl = [FINIAL_COMM stringByAppendingFormat:@"%d/%d/",self.selectIndex+1,self.currentPage];
+            [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+        }else{
+            [self thinkTank];
+        }
+    }
+}
+
+
 -(void)loadProject
 {
-    if ([_delegate respondsToSelector:@selector(wmTableViewController:loadMore:)]) {
-        [_delegate wmTableViewController:self loadMore:nil];
-    }
+    [self refresh];
 }
 
 //- (void)viewWillAppear:(BOOL)animated{
@@ -74,13 +142,13 @@
 //    if (self.menuType==1) {
 //        return 105;
 //    }else if (self.menuType==2) {
-//        if (self.type==0) {
+//        if (self.selectIndex==0) {
 //            return 105;
 //        }else{
 //            return 110;
 //        }
 //    }else{
-//        switch (self.type) {
+//        switch (self.selectIndex) {
 //            case 0:
 //                return 105;
 //                break;
@@ -104,20 +172,20 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.menuType!=2 && self.type!=3) {
-        if (self.type==2 &&self.menuType != 0) {
+    if (self.menuSelectIndex!=2 && self.selectIndex!=3) {
+        if (self.selectIndex==2 &&self.menuSelectIndex != 0) {
             if ([_delegate respondsToSelector:@selector(wmTableViewController:thinkTankDetailData:)]) {
                 [_delegate wmTableViewController:self thinkTankDetailData:self.dataArray[indexPath.row]];
             }
         }else{
-            if (self.menuType==0) {
+            if (self.menuSelectIndex==0) {
                 if ([_delegate respondsToSelector:@selector(wmTableViewController:tapIndexPath:data:)]) {
                     [_delegate wmTableViewController:self tapIndexPath:indexPath data:self.dataArray[indexPath.row]];
                 }
             }
         }
     }else{
-        if (self.menuType==0 && self.type==3) {
+        if (self.menuSelectIndex==0 && self.selectIndex==3) {
             if ([_delegate respondsToSelector:@selector(wmTableViewController:playMedia:data:)]) {
                 [_delegate wmTableViewController:self playMedia:YES data:self.dataArray[indexPath.row]];
             }
@@ -129,8 +197,8 @@
     NSInteger row = indexPath.row;
     static NSString *reuseIdetify = @"FinialListView";
     [self.tableView setContentSize:CGSizeMake(WIDTH(self.tableView), 105*self.dataArray.count+10)];
-    if (self.menuType==0) {
-        if (self.type==0) {
+    if (self.menuSelectIndex==0) {
+        if (self.selectIndex==0) {
             FinalContentTableViewCell *cellInstance = (FinalContentTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
             if (!cellInstance) {
                 float height = [self tableView:tableView heightForRowAtIndexPath:indexPath];
@@ -153,7 +221,7 @@
             cellInstance.selectionStyle=UITableViewCellSelectionStyleDefault;
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
-        }else if(self.type==1 || self.type==2){
+        }else if(self.selectIndex==1 || self.selectIndex==2){
             static NSString *reuseIdetify = @"FinialThinkView";
             FinalingTableViewCell *cellInstance = (FinalingTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
             if (!cellInstance) {
@@ -204,7 +272,7 @@
             return cellInstance;
         }
     }else{
-        if (self.type==0) {
+        if (self.selectIndex==0) {
             static NSString *reuseIdetify = @"FinialThinkView";
             FinalPersonTableViewCell *cellInstance = (FinalPersonTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
             if (!cellInstance) {
@@ -228,7 +296,7 @@
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
             
-        }else if(self.type==1){
+        }else if(self.selectIndex==1){
             static NSString *reuseIdetify = @"FinialThinkView";
             FinalCompanyTableViewCell *cellInstance = (FinalCompanyTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
             if (!cellInstance) {
@@ -295,6 +363,7 @@
 }
 - (void)dealloc {
     NSLog(@"%@ destroyed",[self class]);
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -302,5 +371,28 @@
     //取消tableViewCell选中状态
     NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
     if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
+}
+
+
+-(void)requestFinished:(ASIHTTPRequest *)request
+{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        int code = [[jsonDic valueForKey:@"code"] intValue];
+        if (code>=0) {
+            self.dataArray = [jsonDic valueForKey:@"data"];
+        }
+        [[DialogUtil sharedInstance]showDlg:[UIApplication sharedApplication].windows[0] textOnly:[jsonDic valueForKey:@"msg"]];
+        
+        self.startLoading  =NO;
+    }else{
+        self.isNetRequestError = YES;
+    }
+    [self.tableView.header endRefreshing];
+    [self.tableView.footer endRefreshing];
 }
 @end
