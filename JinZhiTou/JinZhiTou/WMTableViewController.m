@@ -287,11 +287,11 @@
     if (self.dataArray && self.dataArray.count>0) {
         
         [self.tableView setIsNone:NO];
-        [self.tableView reloadData];
     }else{
         [self.tableView setIsNone:YES];
         self.tableView.content = @"暂无相关数据";
     }
+    [self.tableView reloadData];
 }
 - (void)dealloc {
     NSLog(@"%@ destroyed",[self class]);

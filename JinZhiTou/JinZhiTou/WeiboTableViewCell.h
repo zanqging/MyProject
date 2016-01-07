@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Pic.h"
-#import "Share.h"
-#import "Cycle.h"
-#import "Likers.h"
-#import "Comment.h"
+#import "Pic+CoreDataProperties.h"
+#import "Share+CoreDataProperties.h"
+#import "Cycle+CoreDataProperties.h"
+#import "Likers+CoreDataProperties.h"
+#import "Comment+CoreDataProperties.h"
 #import "HttpUtils.h"
 #import "MWPhotoBrowser.h"
 #import "UIImageView+WebCache.h"

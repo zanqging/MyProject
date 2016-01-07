@@ -7,10 +7,10 @@
 //
 
 #import "ViewController.h"
-#import "Pic.h"
-#import "Cycle.h"
-#import "Likers.h"
-#import "Comment.h"
+#import "Pic+CoreDataProperties.h"
+#import "Cycle+CoreDataProperties.h"
+#import "Likers+CoreDataProperties.h"
+#import "Comment+CoreDataProperties.h"
 #import "MJRefresh.h"
 #import "CycleHeader.h"
 #import "UIImage+Crop.h"

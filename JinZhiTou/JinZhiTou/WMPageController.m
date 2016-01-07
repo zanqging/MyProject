@@ -34,10 +34,94 @@
 // 收到内存警告的次数
 @property (nonatomic, assign) int memoryWarningCount;
 @property (nonatomic,strong) movieViewController * moviePlayer;//视频播放控制器
-@property(retain,nonatomic)NSMutableDictionary* dicDataStore;
+@property(retain,nonatomic)NSMutableArray* financingData; //融资中缓存数据
+@property(retain,nonatomic)NSMutableArray* waitFinanceData; //待融资缓存数据
+@property(retain,nonatomic)NSMutableArray* financedData; //已融资缓存数据
+@property(retain,nonatomic)NSMutableArray* projectData; //预选项目缓存数据
+
+@property(retain,nonatomic)NSMutableArray* personData; //个人投资人缓存数据
+@property(retain,nonatomic)NSMutableArray* comData; //机构投资人缓存数据
+@property(retain,nonatomic)NSMutableArray* thinkTankData; //智囊团缓存数据
 @end
 
 @implementation WMPageController
+#pragma mark - Life Cycle
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    //设置背景颜色
+    self.view.backgroundColor=ColorTheme;
+    
+    //TabBarItem 设置
+    UIImage* image=IMAGENAMED(@"btn_tourongzi_selected");
+    image=[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    [self.tabBarItem setSelectedImage:image];
+    [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:AppColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
+    
+    //设置标题
+    [self.navView setTitle:@"金指投"];
+    NSArray* menuArray = @[@"项目库",@"投资人"];
+    self.navView.delegate  = self;
+    self.navView.menuArray  =[NSMutableArray arrayWithArray:menuArray];
+    self.navView.titleLable.textColor=WriteColor;
+    [self.navView.leftButton setImage:IMAGENAMED(@"shuruphone") forState:UIControlStateNormal];
+    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
+    [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
+    [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
+    
+    
+    NSArray *viewControllers = @[[WMTableViewController class]];
+    NSArray *titles = @[@"待融资",@"融资中", @"已融资", @"预选项目"];
+    
+    _viewControllerClasses = [NSArray arrayWithArray:viewControllers];
+    _titles = [NSArray arrayWithArray:titles];
+    
+    [self setup];
+    
+    self.itemMargin = 1;
+    self.menuHeight = 40;
+    self.pageAnimatable = YES;
+    self.titleSizeSelected = 16;
+    self.titleSizeNormal = 14;
+    self.menuBGColor = WriteColor;
+    self.progressColor  = AppColorTheme;
+    self.titleColorSelected = AppColorTheme;
+    self.titleColorNormal = FONT_COLOR_GRAY;
+    self.menuViewStyle = WMMenuViewStyleLine;
+    self.itemsWidths = @[@(70),@(70),@(70),@(70)]; // 这里可以设置不同的宽度
+    
+    
+    self.title = @"投融资";
+    
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    [self addScrollView];
+    
+    [self addViewControllerAtIndex:self.selectIndex];
+    self.currentViewController = self.displayVC[@(self.selectIndex)];
+    
+    [self setViewFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-110)];
+    self.loadingViewFrame = CGRectMake(0, POS_Y(self.navView)+self.menuHeight, WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-self.menuHeight-kBottomBarHeight);
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
+    
+    
+    
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+    
+    //加载数据
+    [self loadData];
+    
+    isRefresh =YES;
+    self.currentPage=0;
+}
+
+-(void)loadData
+{
+    [self updateNewMessage:nil];
+    [self refresh];
+}
+
 
 #pragma mark - Lazy Loading
 - (NSMutableDictionary *)posRecords {
@@ -90,18 +174,21 @@
 
 - (void)setSelectIndex:(int)selectIndex {
     _selectIndex = selectIndex;
-    switch (self.menuSelectIndex) {
-        case 0:
-            [self refresh];
-            break;
-        case 1:
-            [self finialCommicuteList];
-            break;
-        default:
-            [self refresh];
-            break;
+    if (isRefresh) {
+        self.isTransparent = NO;
+        switch (self.menuSelectIndex) {
+            case 0:
+                [self refresh];
+                break;
+            case 1:
+                [self finialCommicuteList];
+                break;
+            default:
+                [self refresh];
+                break;
+        }
     }
-    self.isTransparent = YES;
+    
     if (self.menuView) {
         [self.menuView selectItemAtIndex:selectIndex];
     }
@@ -366,81 +453,6 @@
     self.cachePolicy = WMPageControllerCachePolicyHigh;
 }
 
-#pragma mark - Life Cycle
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    //设置背景颜色
-    self.view.backgroundColor=ColorTheme;
-    
-    //TabBarItem 设置
-    UIImage* image=IMAGENAMED(@"btn_tourongzi_selected");
-    image=[image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    [self.tabBarItem setSelectedImage:image];
-    [self.tabBarItem setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:AppColorTheme,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
-    
-    //设置标题
-    [self.navView setTitle:@"金指投"];
-    NSArray* menuArray = @[@"项目库",@"投资人"];
-    self.navView.delegate  = self;
-    self.navView.menuArray  =[NSMutableArray arrayWithArray:menuArray];
-    self.navView.titleLable.textColor=WriteColor;
-    [self.navView.leftButton setImage:IMAGENAMED(@"shuruphone") forState:UIControlStateNormal];
-    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
-    [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
-    [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];
-    
-    
-    NSArray *viewControllers = @[[WMTableViewController class]];
-    NSArray *titles = @[@"待融资",@"融资中", @"已融资", @"预选项目"];
-    
-    _viewControllerClasses = [NSArray arrayWithArray:viewControllers];
-    _titles = [NSArray arrayWithArray:titles];
-    
-    [self setup];
-    
-    self.menuHeight = 40;
-    self.pageAnimatable = YES;
-    self.titleSizeSelected = 16;
-    self.menuBGColor = WriteColor;
-    self.progressColor  = AppColorTheme;
-    self.titleColorSelected = AppColorTheme;
-    self.menuViewStyle = WMMenuViewStyleLine;
-    self.titleColorNormal =[UIColor blackColor];
-    self.itemsWidths = @[@(70),@(70),@(70),@(70)]; // 这里可以设置不同的宽度
-    
-    
-    self.title = @"投融资";
-
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    [self addScrollView];
-    
-    [self addViewControllerAtIndex:self.selectIndex];
-    self.currentViewController = self.displayVC[@(self.selectIndex)];
-    
-    [self setViewFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-110)];
-    self.loadingViewFrame = CGRectMake(0, POS_Y(self.navView)+self.menuHeight, WIDTH(self.view), HEIGHT(self.view)-POS_Y(self.navView)-self.menuHeight-kBottomBarHeight);
-    
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
-    
-   
-    
-    [[NSNotificationCenter defaultCenter]removeObserver:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
-    
-    //加载数据
-    [self loadData];
-    
-    isRefresh =YES;
-    self.currentPage=0;
-}
-
--(void)loadData
-{
-     [self updateNewMessage:nil];
-    [self refresh];
-}
-
 /**
  *  屏幕旋转
  */
@@ -553,6 +565,15 @@
         self.startLoading  =YES;
         NSString* srverUrl = [NSString stringWithFormat:@"project/%d/%ld/",self.selectIndex+1,self.currentPage];
         [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];        
+    }else{
+        self.startLoading = YES;
+        switch (self.selectIndex) {
+            case 2:
+                [self thinkTank];
+            default:
+                [self finialCommicuteList];
+                break;
+        }
     }
 }
 
@@ -634,24 +655,27 @@
 #pragma NavViewDelegate
 -(void)navView:(id)navView tapIndex:(int)index
 {
-    NSLog(@"点击:%d",index);
-    self.menuSelectIndex = index;
-    self.selectIndex = 0;
-    switch (self.menuSelectIndex) {
-        case 0:
-            _titles  =@[@"待融资",@"融资中", @"已融资", @"预选项目"];
-            self.itemsWidths =  @[@(70),@(70),@(70),@(70)];
-            self.menuView.items = _titles;
-            [self resetMenuView];
-            break;
-        case 1:
-            _titles  =@[@"个人投资人",@"机构投资人",@"智囊团"];
-            self.itemsWidths = @[@(100),@(100),@(100)]; // 这里可以设置不同的宽度
-            self.menuView.items = _titles;
-            [self resetMenuView];
-            break;
-        default:
-            break;
+    if (self.menuSelectIndex!=index) {
+        NSLog(@"点击:%d",index);
+        isRefresh  =YES;
+        self.menuSelectIndex = index;
+        self.selectIndex = 0;
+        switch (self.menuSelectIndex) {
+            case 0:
+                _titles  =@[@"待融资",@"融资中", @"已融资", @"预选项目"];
+                self.itemsWidths =  @[@(70),@(70),@(70),@(70)];
+                self.menuView.items = _titles;
+                [self resetMenuView];
+                break;
+            case 1:
+                _titles  =@[@"个人投资人",@"机构投资人",@"智囊团"];
+                self.itemsWidths = @[@(100),@(100),@(100)]; // 这里可以设置不同的宽度
+                self.menuView.items = _titles;
+                [self resetMenuView];
+                break;
+            default:
+                break;
+        }
     }
 }
 #pragma mark - UIScrollView Delegate
@@ -681,21 +705,79 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     _selectIndex = (int)scrollView.contentOffset.x / _viewWidth;
-    self.currentPage=0;
-    switch (self.menuSelectIndex) {
-        case 0:
-            [self refresh];
-            break;
-        case 1:
-            [self finialCommicuteList];
-            break;
-        default:
-            break;
+    if (self.menuSelectIndex==0) {
+        isRefresh = NO;
+        switch (self.selectIndex) {
+            case 0:
+                if (!self.waitFinanceData || self.waitFinanceData.count==0) {
+                    isRefresh = YES;
+                }
+                break;
+            case 1:
+                if (!self.financingData || self.financingData.count==0) {
+                    isRefresh = YES;
+                }
+                break;
+            case 2:
+                if (!self.financedData || self.financedData.count==0) {
+                    isRefresh = YES;
+                }
+                break;
+            case 3:
+                if (!self.projectData || self.projectData.count==0) {
+                    isRefresh = YES;
+                }
+                break;
+                
+            default:
+                break;
+        }
+    }else{
+        switch (self.selectIndex) {
+            case 0:
+                if (!self.personData || self.personData.count==0) {
+                    isRefresh = YES;
+                }
+                break;
+            case 1:
+                if (!self.comData || self.comData.count==0) {
+                    isRefresh = YES;
+                }
+                break;
+            case 2:
+                if (!self.thinkTankData || self.thinkTankData.count==0) {
+                    isRefresh = YES;
+                }
+                break;
+            default:
+                break;
+        }
     }
-    isRefresh = YES;
-    self.currentPage=0;
-    self.isTransparent = YES;
-    self.currentViewController = self.displayVC[@(self.selectIndex)];
+    
+    if (isRefresh) {
+        self.currentPage=0;
+        if (self.menuSelectIndex==0) {
+            [self refresh];
+        }else{
+            switch (self.selectIndex) {
+                case 0:
+                    [self finialCommicuteList];
+                    break;
+                case 1:
+                    [self thinkTank];
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        
+        isRefresh = YES;
+        self.currentPage=0;
+        self.isTransparent = YES;
+    }
+    
+    
     [self postFullyDisplayedNotificationWithCurrentIndex:self.selectIndex];
 }
 
@@ -788,8 +870,55 @@
     NSInteger gap = (NSInteger)labs(index - currentIndex);
     if (_selectIndex != (int)index) {
 //        _selectIndex = (int)index;
+        isRefresh = NO;
+        if (self.menuSelectIndex==0) {
+            switch ((int)index) {
+                case 0:
+                    if (!self.waitFinanceData || self.waitFinanceData.count==0) {
+                        isRefresh = YES;
+                    }
+                    break;
+                case 1:
+                    if (!self.financingData || self.financingData.count==0) {
+                        isRefresh = YES;
+                    }
+                    break;
+                case 2:
+                    if (!self.financedData || self.financedData.count==0) {
+                        isRefresh = YES;
+                    }
+                    break;
+                case 3:
+                    if (!self.projectData || self.projectData.count==0) {
+                        isRefresh = YES;
+                    }
+                    break;
+                    
+                default:
+                    break;
+            }
+        }else{
+            switch ((int)index) {
+                case 0:
+                    if (!self.personData || self.personData.count==0) {
+                        isRefresh = YES;
+                    }
+                    break;
+                case 1:
+                    if (!self.comData || self.comData.count==0) {
+                        isRefresh = YES;
+                    }
+                    break;
+                case 2:
+                    if (!self.thinkTankData || self.thinkTankData.count==0) {
+                        isRefresh = YES;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
         self.currentPage=0;
-        isRefresh = YES;
         self.selectIndex = (int)index;
     }
     _animate = NO;
@@ -818,26 +947,136 @@
     return self.itemMargin;
 }
 
-
--(void)setDataDic:(NSMutableDictionary *)dataDic
+//项目库
+-(void)setProjectData:(NSMutableArray *)projectData
 {
-    [super setDataDic:dataDic];
-    
-    //做缓存数据
-    if (!self.dicDataStore) {
-        self.dicDataStore = [[NSMutableDictionary alloc]init];
+    if (projectData) {
+        self->_projectData = projectData;
     }
     
     if (isRefresh) {
-        [self.dicDataStore setValue:[NSString stringWithFormat:@"%d",self.selectIndex] forKey:[NSString stringWithFormat:@"%d",self.menuSelectIndex]];
-    }
-    NSLog(@"%@",self.dicDataStore);
-    
-    if (isRefresh) {
-        self.currentViewController.dataArray = [self.dataDic valueForKey:@"data"];
+        self.currentViewController.dataArray = self.projectData;
     }else{
         NSMutableArray* array = self.currentViewController.dataArray;
-        [array addObjectsFromArray:[self.dataDic valueForKey:@"data"]];
+        [array addObjectsFromArray:self.projectData];
+        self.currentViewController.dataArray  =array;
+    }
+    self.currentViewController.type = self.selectIndex;
+    self.currentViewController.menuType = self.menuSelectIndex;
+    if (!self.currentViewController.delegate) {
+        self.currentViewController.delegate  = self;
+    }
+}
+-(void)setWaitFinanceData:(NSMutableArray *)waitFinanceData
+{
+    if (waitFinanceData) {
+        self->_waitFinanceData = waitFinanceData;
+    }
+    
+    if (isRefresh) {
+        self.currentViewController.dataArray = self.waitFinanceData;
+    }else{
+        NSMutableArray* array = self.currentViewController.dataArray;
+        [array addObjectsFromArray:self.waitFinanceData];
+        self.currentViewController.dataArray  =array;
+    }
+    self.currentViewController.type = self.selectIndex;
+    self.currentViewController.menuType = self.menuSelectIndex;
+    if (!self.currentViewController.delegate) {
+        self.currentViewController.delegate  = self;
+    }
+}
+-(void)setFinancingData:(NSMutableArray *)financingData
+{
+    if (financingData) {
+        self->_financingData = financingData;
+    }
+    
+    if (isRefresh) {
+        self.currentViewController.dataArray = self.financingData;
+    }else{
+        NSMutableArray* array = self.currentViewController.dataArray;
+        [array addObjectsFromArray:self.financingData];
+        self.currentViewController.dataArray  =array;
+    }
+    self.currentViewController.type = self.selectIndex;
+    self.currentViewController.menuType = self.menuSelectIndex;
+    if (!self.currentViewController.delegate) {
+        self.currentViewController.delegate  = self;
+    }
+}
+
+-(void)setFinancedData:(NSMutableArray *)financedData
+{
+    if (financedData) {
+        self->_financedData = financedData;
+    }
+    
+    if (isRefresh) {
+        self.currentViewController.dataArray = self.financedData;
+    }else{
+        NSMutableArray* array = self.currentViewController.dataArray;
+        [array addObjectsFromArray:self.financedData];
+        self.currentViewController.dataArray  =array;
+    }
+    self.currentViewController.type = self.selectIndex;
+    self.currentViewController.menuType = self.menuSelectIndex;
+    if (!self.currentViewController.delegate) {
+        self.currentViewController.delegate  = self;
+    }
+}
+
+//投资人
+-(void)setPersonData:(NSMutableArray *)personData
+{
+    if (personData) {
+        self->_personData = personData;
+    }
+    
+    if (isRefresh) {
+        self.currentViewController.dataArray = self.personData;
+    }else{
+        NSMutableArray* array = self.currentViewController.dataArray;
+        [array addObjectsFromArray:self.personData];
+        self.currentViewController.dataArray  =array;
+    }
+    self.currentViewController.type = self.selectIndex;
+    self.currentViewController.menuType = self.menuSelectIndex;
+    if (!self.currentViewController.delegate) {
+        self.currentViewController.delegate  = self;
+    }
+}
+
+-(void)setComData:(NSMutableArray *)comData
+{
+    if (comData) {
+        self->_comData = comData;
+    }
+    
+    if (isRefresh) {
+        self.currentViewController.dataArray = self.comData;
+    }else{
+        NSMutableArray* array = self.currentViewController.dataArray;
+        [array addObjectsFromArray:self.comData];
+        self.currentViewController.dataArray  =array;
+    }
+    self.currentViewController.type = self.selectIndex;
+    self.currentViewController.menuType = self.menuSelectIndex;
+    if (!self.currentViewController.delegate) {
+        self.currentViewController.delegate  = self;
+    }
+}
+-(void)setThinkTankData:(NSMutableArray *)thinkTankData
+{
+    if (thinkTankData) {
+        self->_thinkTankData = thinkTankData;
+    }
+    
+    if (isRefresh) {
+        self.currentViewController.dataArray = self.thinkTankData;
+    }else{
+        NSMutableArray* array = self.currentViewController.dataArray;
+        [array addObjectsFromArray:self.thinkTankData];
         self.currentViewController.dataArray  =array;
     }
     self.currentViewController.type = self.selectIndex;
@@ -855,7 +1094,40 @@
         
     if(jsonDic!=nil)
     {
-        self.dataDic = jsonDic;
+        if (self.menuSelectIndex==0) {
+            switch (self.selectIndex) {
+                case 0:
+                    self.waitFinanceData = [jsonDic valueForKey:@"data"];
+                    break;
+                case 1:
+                    self.financingData = [jsonDic valueForKey:@"data"];
+                    break;
+                case 2:
+                    self.financedData = [jsonDic valueForKey:@"data"];
+                    break;
+                case 3:
+                    self.projectData = [jsonDic valueForKey:@"data"];
+                    break;
+                default:
+                    self.waitFinanceData = [jsonDic valueForKey:@"data"];
+                    break;
+            }
+        }else{
+            switch (self.selectIndex) {
+                case 0:
+                    self.personData = [jsonDic valueForKey:@"data"];
+                    break;
+                case 1:
+                    self.comData = [jsonDic valueForKey:@"data"];
+                    break;
+                case 2:
+                    self.thinkTankData = [jsonDic valueForKey:@"data"];
+                    break;
+                default:
+                    self.personData = [jsonDic valueForKey:@"data"];
+                    break;
+            }
+        }
         if (self.currentPage>0) {
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
         }

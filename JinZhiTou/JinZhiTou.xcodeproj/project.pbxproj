@@ -1085,6 +1085,21 @@
 		4565EF7E1C21BA64002B2369 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4565EF7C1C21BA64002B2369 /* libWeChatSDK.a */; };
 		456ED38F1BFC3C220067685A /* ResetPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 456ED38E1BFC3C220067685A /* ResetPasswordViewController.m */; };
 		456ED3921BFC91C90067685A /* empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 456ED3901BFC91C90067685A /* empty.png */; };
+		4572FE1F1C3D0B670059FE3F /* CycleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE1E1C3D0B670059FE3F /* CycleModel.m */; };
+		4572FE201C3D0B670059FE3F /* CycleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE1E1C3D0B670059FE3F /* CycleModel.m */; };
+		4572FE211C3D0B670059FE3F /* CycleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE1E1C3D0B670059FE3F /* CycleModel.m */; };
+		4572FE241C3D0B810059FE3F /* CommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE231C3D0B810059FE3F /* CommentModel.m */; };
+		4572FE251C3D0B810059FE3F /* CommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE231C3D0B810059FE3F /* CommentModel.m */; };
+		4572FE261C3D0B810059FE3F /* CommentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE231C3D0B810059FE3F /* CommentModel.m */; };
+		4572FE291C3D0C3C0059FE3F /* PicModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE281C3D0C3C0059FE3F /* PicModel.m */; };
+		4572FE2A1C3D0C3C0059FE3F /* PicModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE281C3D0C3C0059FE3F /* PicModel.m */; };
+		4572FE2B1C3D0C3C0059FE3F /* PicModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE281C3D0C3C0059FE3F /* PicModel.m */; };
+		4572FE2E1C3D0C520059FE3F /* LikersModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE2D1C3D0C520059FE3F /* LikersModel.m */; };
+		4572FE2F1C3D0C520059FE3F /* LikersModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE2D1C3D0C520059FE3F /* LikersModel.m */; };
+		4572FE301C3D0C520059FE3F /* LikersModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE2D1C3D0C520059FE3F /* LikersModel.m */; };
+		4572FE331C3D0CCA0059FE3F /* ShareModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE321C3D0CCA0059FE3F /* ShareModel.m */; };
+		4572FE341C3D0CCA0059FE3F /* ShareModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE321C3D0CCA0059FE3F /* ShareModel.m */; };
+		4572FE351C3D0CCA0059FE3F /* ShareModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4572FE321C3D0CCA0059FE3F /* ShareModel.m */; };
 		45735E161BF6B90B00CC8964 /* AnnounceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45735E151BF6B90B00CC8964 /* AnnounceView.m */; };
 		45778FAD1C3B620000FF8691 /* Likers+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778F9E1C3B620000FF8691 /* Likers+CoreDataProperties.m */; };
 		45778FAE1C3B620000FF8691 /* Likers+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778F9E1C3B620000FF8691 /* Likers+CoreDataProperties.m */; };
@@ -1732,6 +1747,16 @@
 		456ED38D1BFC3C220067685A /* ResetPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPasswordViewController.h; sourceTree = "<group>"; };
 		456ED38E1BFC3C220067685A /* ResetPasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResetPasswordViewController.m; sourceTree = "<group>"; };
 		456ED3901BFC91C90067685A /* empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty.png; sourceTree = "<group>"; };
+		4572FE1D1C3D0B670059FE3F /* CycleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CycleModel.h; path = Data/Model/CycleModel.h; sourceTree = "<group>"; };
+		4572FE1E1C3D0B670059FE3F /* CycleModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CycleModel.m; path = Data/Model/CycleModel.m; sourceTree = "<group>"; };
+		4572FE221C3D0B810059FE3F /* CommentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommentModel.h; path = Data/Model/CommentModel.h; sourceTree = "<group>"; };
+		4572FE231C3D0B810059FE3F /* CommentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CommentModel.m; path = Data/Model/CommentModel.m; sourceTree = "<group>"; };
+		4572FE271C3D0C3C0059FE3F /* PicModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PicModel.h; path = Data/Model/PicModel.h; sourceTree = "<group>"; };
+		4572FE281C3D0C3C0059FE3F /* PicModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PicModel.m; path = Data/Model/PicModel.m; sourceTree = "<group>"; };
+		4572FE2C1C3D0C520059FE3F /* LikersModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LikersModel.h; path = Data/Model/LikersModel.h; sourceTree = "<group>"; };
+		4572FE2D1C3D0C520059FE3F /* LikersModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LikersModel.m; path = Data/Model/LikersModel.m; sourceTree = "<group>"; };
+		4572FE311C3D0CCA0059FE3F /* ShareModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareModel.h; path = Data/Model/ShareModel.h; sourceTree = "<group>"; };
+		4572FE321C3D0CCA0059FE3F /* ShareModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareModel.m; path = Data/Model/ShareModel.m; sourceTree = "<group>"; };
 		45735E141BF6B90B00CC8964 /* AnnounceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnnounceView.h; path = View/announce/AnnounceView.h; sourceTree = "<group>"; };
 		45735E151BF6B90B00CC8964 /* AnnounceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnnounceView.m; path = View/announce/AnnounceView.m; sourceTree = "<group>"; };
 		45778F9D1C3B620000FF8691 /* Likers+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Likers+CoreDataProperties.h"; path = "Data/Likers+CoreDataProperties.h"; sourceTree = "<group>"; };
@@ -2552,6 +2577,7 @@
 		453F5A941C35228B009F9963 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				4572FE1C1C3D0B3C0059FE3F /* Model */,
 				4591F37A1A54D81C0079E1D0 /* DataManager.h */,
 				4591F37B1A54D81C0079E1D0 /* DataManager.m */,
 				453F5A8F1C3521E8009F9963 /* Jinzht.xcdatamodeld */,
@@ -2987,6 +3013,23 @@
 			children = (
 			);
 			name = FinialTableViewCell;
+			sourceTree = "<group>";
+		};
+		4572FE1C1C3D0B3C0059FE3F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4572FE1D1C3D0B670059FE3F /* CycleModel.h */,
+				4572FE1E1C3D0B670059FE3F /* CycleModel.m */,
+				4572FE221C3D0B810059FE3F /* CommentModel.h */,
+				4572FE231C3D0B810059FE3F /* CommentModel.m */,
+				4572FE271C3D0C3C0059FE3F /* PicModel.h */,
+				4572FE281C3D0C3C0059FE3F /* PicModel.m */,
+				4572FE2C1C3D0C520059FE3F /* LikersModel.h */,
+				4572FE2D1C3D0C520059FE3F /* LikersModel.m */,
+				4572FE311C3D0CCA0059FE3F /* ShareModel.h */,
+				4572FE321C3D0CCA0059FE3F /* ShareModel.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		45735E131BF6B8C400CC8964 /* announce */ = {
@@ -4099,6 +4142,7 @@
 				4544009A1C3906C00094696A /* Platform+CoreDataProperties.m in Sources */,
 				452534051C29A116000719AC /* AuthTraceTableViewCell.m in Sources */,
 				452534061C29A116000719AC /* CompanyFinial.m in Sources */,
+				4572FE301C3D0C520059FE3F /* LikersModel.m in Sources */,
 				452534071C29A116000719AC /* FinialPersonTableViewController.m in Sources */,
 				452534081C29A116000719AC /* TableViewCell.m in Sources */,
 				452534091C29A116000719AC /* ZHTableViewController.m in Sources */,
@@ -4109,6 +4153,7 @@
 				4525340D1C29A116000719AC /* SphereMenu.m in Sources */,
 				4525340E1C29A116000719AC /* RegisteViewController.m in Sources */,
 				45EAED261C3A7E0D00BEA468 /* NewFinance+CoreDataProperties.m in Sources */,
+				4572FE261C3D0B810059FE3F /* CommentModel.m in Sources */,
 				4525340F1C29A116000719AC /* MWGridViewController.m in Sources */,
 				452534101C29A116000719AC /* ALButton.m in Sources */,
 				452534111C29A116000719AC /* ChineseInclude.m in Sources */,
@@ -4173,6 +4218,7 @@
 				452534491C29A116000719AC /* IndustoryView.m in Sources */,
 				4525344A1C29A116000719AC /* MJRefreshConst.m in Sources */,
 				4525344B1C29A116000719AC /* ASIDownloadCache.m in Sources */,
+				4572FE351C3D0CCA0059FE3F /* ShareModel.m in Sources */,
 				4525344C1C29A116000719AC /* MZTimerLabel.m in Sources */,
 				4525344D1C29A116000719AC /* WaterFCell.m in Sources */,
 				4525344E1C29A116000719AC /* UserGenderTableViewCell.m in Sources */,
@@ -4186,6 +4232,7 @@
 				452534561C29A116000719AC /* UserCompanyTableViewCell.m in Sources */,
 				452534571C29A116000719AC /* INSViewController.m in Sources */,
 				45778FBE1C3B620000FF8691 /* Comment.m in Sources */,
+				4572FE2B1C3D0C3C0059FE3F /* PicModel.m in Sources */,
 				452534581C29A116000719AC /* SlideView.m in Sources */,
 				452534591C29A116000719AC /* QNConfiguration.m in Sources */,
 				4525345A1C29A116000719AC /* UserInfoSettingViewController.m in Sources */,
@@ -4200,6 +4247,7 @@
 				452534621C29A116000719AC /* AnnounceView.m in Sources */,
 				452534631C29A116000719AC /* WaterFallHeader.m in Sources */,
 				452534641C29A116000719AC /* FinalKindTableViewCell.m in Sources */,
+				4572FE211C3D0B670059FE3F /* CycleModel.m in Sources */,
 				452534651C29A116000719AC /* BannerViewController.m in Sources */,
 				452534661C29A116000719AC /* UIImage+MultiFormat.m in Sources */,
 				452534671C29A116000719AC /* QNUpToken.m in Sources */,
@@ -4430,6 +4478,7 @@
 				454400991C3906C00094696A /* Platform+CoreDataProperties.m in Sources */,
 				454B98D91A54C76500A1CC7E /* AuthTraceTableViewCell.m in Sources */,
 				454B98DA1A54C76500A1CC7E /* CompanyFinial.m in Sources */,
+				4572FE2F1C3D0C520059FE3F /* LikersModel.m in Sources */,
 				454B98DB1A54C76500A1CC7E /* FinialPersonTableViewController.m in Sources */,
 				454B98DC1A54C76500A1CC7E /* TableViewCell.m in Sources */,
 				454B98DD1A54C76500A1CC7E /* ZHTableViewController.m in Sources */,
@@ -4440,6 +4489,7 @@
 				454B98E11A54C76500A1CC7E /* SphereMenu.m in Sources */,
 				454B98E21A54C76500A1CC7E /* RegisteViewController.m in Sources */,
 				45EAED251C3A7E0D00BEA468 /* NewFinance+CoreDataProperties.m in Sources */,
+				4572FE251C3D0B810059FE3F /* CommentModel.m in Sources */,
 				454B98E31A54C76500A1CC7E /* MWGridViewController.m in Sources */,
 				454B98E41A54C76500A1CC7E /* ALButton.m in Sources */,
 				454B98E51A54C76500A1CC7E /* ChineseInclude.m in Sources */,
@@ -4504,6 +4554,7 @@
 				454B991D1A54C76500A1CC7E /* IndustoryView.m in Sources */,
 				454B991E1A54C76500A1CC7E /* MJRefreshConst.m in Sources */,
 				454B991F1A54C76500A1CC7E /* ASIDownloadCache.m in Sources */,
+				4572FE341C3D0CCA0059FE3F /* ShareModel.m in Sources */,
 				454B99201A54C76500A1CC7E /* MZTimerLabel.m in Sources */,
 				454B99211A54C76500A1CC7E /* WaterFCell.m in Sources */,
 				454B99221A54C76500A1CC7E /* UserGenderTableViewCell.m in Sources */,
@@ -4517,6 +4568,7 @@
 				454B992A1A54C76500A1CC7E /* UserCompanyTableViewCell.m in Sources */,
 				454B992B1A54C76500A1CC7E /* INSViewController.m in Sources */,
 				45778FBD1C3B620000FF8691 /* Comment.m in Sources */,
+				4572FE2A1C3D0C3C0059FE3F /* PicModel.m in Sources */,
 				454B992C1A54C76500A1CC7E /* SlideView.m in Sources */,
 				454B992D1A54C76500A1CC7E /* QNConfiguration.m in Sources */,
 				454B992E1A54C76500A1CC7E /* UserInfoSettingViewController.m in Sources */,
@@ -4531,6 +4583,7 @@
 				454B99361A54C76500A1CC7E /* AnnounceView.m in Sources */,
 				454B99371A54C76500A1CC7E /* WaterFallHeader.m in Sources */,
 				454B99381A54C76500A1CC7E /* FinalKindTableViewCell.m in Sources */,
+				4572FE201C3D0B670059FE3F /* CycleModel.m in Sources */,
 				454B99391A54C76500A1CC7E /* BannerViewController.m in Sources */,
 				454B993A1A54C76500A1CC7E /* UIImage+MultiFormat.m in Sources */,
 				454B993B1A54C76500A1CC7E /* QNUpToken.m in Sources */,
@@ -4761,6 +4814,7 @@
 				454400981C3906C00094696A /* Platform+CoreDataProperties.m in Sources */,
 				45A2ADB31B72811200751F78 /* AuthTraceTableViewCell.m in Sources */,
 				45A2AD9A1B7109F100751F78 /* CompanyFinial.m in Sources */,
+				4572FE2E1C3D0C520059FE3F /* LikersModel.m in Sources */,
 				45F829471B6B62470044F6F0 /* FinialPersonTableViewController.m in Sources */,
 				4517CD671B785AA000EFBB6A /* TableViewCell.m in Sources */,
 				45D49D931B82336F00EC529F /* ZHTableViewController.m in Sources */,
@@ -4771,6 +4825,7 @@
 				45631F7B1B5A3A7E009FA35D /* SphereMenu.m in Sources */,
 				459AC9471B6F4F050050E817 /* RegisteViewController.m in Sources */,
 				45EAED241C3A7E0D00BEA468 /* NewFinance+CoreDataProperties.m in Sources */,
+				4572FE241C3D0B810059FE3F /* CommentModel.m in Sources */,
 				4543EB081BD08E100041DCBD /* MWGridViewController.m in Sources */,
 				4511CC1D1BA2B6E300A9D00A /* ALButton.m in Sources */,
 				45495C131B60DA91007A17FD /* ChineseInclude.m in Sources */,
@@ -4835,6 +4890,7 @@
 				45DED8901BA021A000B4D393 /* IndustoryView.m in Sources */,
 				45F93B621B637311004526F5 /* MJRefreshConst.m in Sources */,
 				45F09C701B86297B0065D873 /* ASIDownloadCache.m in Sources */,
+				4572FE331C3D0CCA0059FE3F /* ShareModel.m in Sources */,
 				453E23DC1B7DB6040023BB00 /* MZTimerLabel.m in Sources */,
 				45ECCEFF1B61FED40013CA73 /* WaterFCell.m in Sources */,
 				453271791B7490000044F8C1 /* UserGenderTableViewCell.m in Sources */,
@@ -4848,6 +4904,7 @@
 				453271821B7490450044F8C1 /* UserCompanyTableViewCell.m in Sources */,
 				45E189DE1B79D2490082225E /* INSViewController.m in Sources */,
 				45778FBC1C3B620000FF8691 /* Comment.m in Sources */,
+				4572FE291C3D0C3C0059FE3F /* PicModel.m in Sources */,
 				4508762D1B8F644E006EFC1A /* SlideView.m in Sources */,
 				452609B31BDF0963006776B2 /* QNConfiguration.m in Sources */,
 				4532718E1B74A5360044F8C1 /* UserInfoSettingViewController.m in Sources */,
@@ -4862,6 +4919,7 @@
 				45735E161BF6B90B00CC8964 /* AnnounceView.m in Sources */,
 				45ECCEFE1B61FED40013CA73 /* WaterFallHeader.m in Sources */,
 				458631F71B65C98D00F06688 /* FinalKindTableViewCell.m in Sources */,
+				4572FE1F1C3D0B670059FE3F /* CycleModel.m in Sources */,
 				451ACAC01B7C81940045DD5E /* BannerViewController.m in Sources */,
 				45FCD05A1B75E216009AD6E3 /* UIImage+MultiFormat.m in Sources */,
 				452609B81BDF0963006776B2 /* QNUpToken.m in Sources */,
