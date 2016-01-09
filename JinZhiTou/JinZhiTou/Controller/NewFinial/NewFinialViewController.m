@@ -361,6 +361,7 @@
         if (self.isNetRequestError) {
 //            self.isNetRequestError = NO;
         }
+        self.startLoading = NO;
     }else{
         self.isNetRequestError = YES;
     }

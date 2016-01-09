@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "RootViewController.h"
 #import "WeiboTableViewCell.h"
-@interface ViewController : RootViewController<UITableViewDataSource,UITableViewDelegate>
+@interface ViewController_bak : RootViewController<UITableViewDataSource,UITableViewDelegate>
 @property (retain, nonatomic)UITableView *tableView;
 @property(retain,nonatomic)NSMutableArray* dataArray;
 @property(assign,nonatomic)BOOL isEndOfPageSize;

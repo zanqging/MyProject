@@ -6,7 +6,7 @@
 //  Copyright © 2015年 csz. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "ViewController_bak.h"
 #import "Pic+CoreDataProperties.h"
 #import "Cycle+CoreDataProperties.h"
 #import "Likers+CoreDataProperties.h"
@@ -24,7 +24,7 @@
 #import "UserBasicInfoViewController.h"
 #import "CustomImagePickerController.h"
 #define  TEXT_VIEW_HEIGHT  30
-@interface ViewController ()<WeiboTableViewCellDelegate,CustomImagePickerControllerDelegate,UITextViewDelegate>
+@interface ViewController_bak ()<WeiboTableViewCellDelegate,CustomImagePickerControllerDelegate,UITextViewDelegate>
 {
     BOOL isRefresh;
     float toolBarHeight;
@@ -42,7 +42,7 @@
 @property(retain,nonatomic)UIToolbar *toolBar;
 @end
 
-@implementation ViewController
+@implementation ViewController_bak
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -118,7 +118,7 @@
                                   29.0f);
     [self.toolBar addSubview:sendButton];
     
-    __block ViewController* blockSelf = self;
+    __block ViewController_bak* blockSelf = self;
     self.view.keyboardTriggerOffset = self.toolBar.bounds.size.height;
     [self.view addKeyboardPanningWithFrameBasedActionHandler:^(CGRect keyboardFrameInView, BOOL opening, BOOL closing) {
         CGRect toolBarFrame = blockSelf.toolBar.frame;
