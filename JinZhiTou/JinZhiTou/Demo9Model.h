@@ -26,9 +26,17 @@
 
 @interface Demo9Model : NSObject
 
+@property (nonatomic, copy) NSString *name;  //姓名
+@property (nonatomic, copy) NSString *dateTime;  //姓名
+@property (nonatomic, copy) NSString *address;//地址
+@property (nonatomic, copy) NSString *position;//位置
+@property (nonatomic, copy) NSString *content;//内容
 @property (nonatomic, copy) NSString *iconName;
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *content;
+@property (nonatomic, retain) NSDictionary* shareDic;
 @property (nonatomic, strong) NSArray *picNamesArray;
+@property (nonatomic, strong) NSArray *likersArray;
+@property (nonatomic, strong) NSArray *commentArray;
+@property (nonatomic, assign) float commentViewHeight;
+@property (nonatomic, assign) float commentHeaderViewHeight;
 
 @end

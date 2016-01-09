@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GlobalDefine.h"
 #import "UConstants.h"
+#import "UIImageView+WebCache.h"
 #import "Share+CoreDataProperties.h"
 #import "UIImageView+WebCache.h"
 #import "UIView+SDAutoLayout.h"
@@ -17,5 +18,5 @@
     UIImageView* imgView;
     UILabel* labelContent;
 }
-@property(retain,nonatomic)NSMutableDictionary* dic;
+@property(retain,nonatomic)NSDictionary* dic;
 @end

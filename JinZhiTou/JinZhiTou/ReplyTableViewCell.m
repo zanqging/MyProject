@@ -23,7 +23,7 @@
 
 
 #import "ReplyTableViewCell.h"
-
+#import "TDUtil.h"
 #import "UIView+SDAutoLayout.h"
 #import "UITableView+SDAutoTableViewCellHeight.h"
 
@@ -47,7 +47,6 @@
     _view1.textColor = [UIColor blackColor];
     _view1.font = [UIFont systemFontOfSize:13];
     _view1.numberOfLines=0;
-    _view1.text = @"徐力回复刘路:这个项目不错，可以考虑上市，先要把财务做规范!";
     
     [self.contentView addSubview:_view1];
     
@@ -68,5 +67,50 @@
 //    
 //    [self setupAutoHeightWithBottomView:_view1 bottomMargin:2];
 //}
+
+-(void)setDic:(NSDictionary *)dic
+{
+    if (dic) {
+        self->_dic = dic;
+        
+        //开始组装
+        NSString* name = [dic valueForKey:@"name"];
+        NSString* atName = [dic valueForKey:@"atname"];
+        NSString* suffix = @":";
+        NSString* content = [dic valueForKey:@"content"];
+        NSString* str = @"";
+        if (name) {
+            str =[str stringByAppendingString:name];
+        }
+        
+        if ([TDUtil isValidString:atName] ) {
+            str = [str stringByAppendingFormat:@"回复%@%@",atName,suffix];
+        }else{
+            str = [str stringByAppendingFormat:@"%@",suffix];
+        }
+        
+        str = [str stringByAppendingFormat:@" %@",content];
+        
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        
+        //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
+        
+        [paragraphStyle setLineSpacing:3];//调整行间距
+        //    [paragraphStyle setAlignment:NSTextAlignmentLeft];
+        [paragraphStyle setFirstLineHeadIndent:0];
+        [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:str];
+        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [str length])];
+        
+        [attributedString addAttribute:NSForegroundColorAttributeName value:ColorCompanyTheme range:NSMakeRange(0, [name length])];
+        
+        if ([TDUtil isValidString:atName]) {
+            [attributedString addAttribute:NSForegroundColorAttributeName value:ColorCompanyTheme range:NSMakeRange([name length]+2, [atName length])];
+        }
+        
+        _view1.attributedText = attributedString;//ios 6
+        [_view1 sizeToFit];
+    }
+}
 
 @end

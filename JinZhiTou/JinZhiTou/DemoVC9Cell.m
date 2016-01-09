@@ -23,8 +23,9 @@
  */
 
 #import "DemoVC9Cell.h"
-
+#import "TDUtil.h"
 #import "Demo9Model.h"
+#import "ShareContentView.h"
 #import "ReplyTableViewCell.h"
 #import "UIView+SDAutoLayout.h"
 #import <QuartzCore/QuartzCore.h>
@@ -36,8 +37,12 @@
 {
     UIImageView *_iconView;
     UILabel *_nameLable;
+    UILabel *_infoLable;
     UILabel *_contentLabel;
     SDWeiXinPhotoContainerView *_picContainerView;
+    
+    //分享内容
+    ShareContentView* _shareView;
     UILabel *_timeLabel;
     
     //删除按钮
@@ -49,14 +54,15 @@
     
     //点赞、评论列表
     UIView* _viewComment;
+    
+    //回复背景
+    UIImageView *messageBackView;
 }
 
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier commentViewHeight:(CGFloat)height commentHeaderViewHeight:(CGFloat)headerHeight
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.commentViewHeight = height;
-        self.commentHeaderViewHeight = headerHeight;
         [self setup];
     }
     return self;
@@ -65,8 +71,6 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.commentViewHeight=200;
-        self.commentHeaderViewHeight=20;
         [self setup];
     }
     return self;
@@ -80,10 +84,16 @@
     _nameLable.font = [UIFont systemFontOfSize:14];
     _nameLable.textColor = [UIColor colorWithRed:(54 / 255.0) green:(71 / 255.0) blue:(121 / 255.0) alpha:0.9];
     
+    _infoLable = [UILabel new];
+    _infoLable.font = [UIFont systemFontOfSize:14];
+    _infoLable.textColor = [UIColor colorWithRed:(54 / 255.0) green:(71 / 255.0) blue:(121 / 255.0) alpha:0.9];
+    
     _contentLabel = [UILabel new];
     _contentLabel.font = [UIFont systemFontOfSize:15];
     
     _picContainerView = [SDWeiXinPhotoContainerView new];
+    
+    _shareView = [[ShareContentView alloc]init];
     
     _timeLabel = [UILabel new];
     _timeLabel.font = [UIFont systemFontOfSize:13];
@@ -107,13 +117,40 @@
     _viewComment = [[UIView alloc]init];
     _viewComment.layer.cornerRadius=3;
     
+    //回复背景
+    UIImage* image = IMAGENAMED(@"message_reply");
+    image  =[image stretchableImageWithLeftCapWidth:image.size.width/2+10 topCapHeight:20];
+    messageBackView=[[UIImageView alloc]initWithImage:image];
+    [_viewComment addSubview:messageBackView];
     
-    NSArray *views = @[_iconView, _nameLable, _contentLabel, _picContainerView, _timeLabel,_btnDelete,_btnPrise,_btnComment,_viewComment];
+    
+    NSArray *views = @[_iconView, _nameLable,_infoLable, _contentLabel, _picContainerView, _timeLabel,_btnDelete,_btnPrise,_btnComment,_viewComment];
     
     [views enumerateObjectsUsingBlock:^(UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [self.contentView addSubview:obj];
     }];
     
+    
+    //
+    self.tableView = [[UITableView alloc]init];
+    self.tableView.bounces=NO;
+    self.tableView.delegate=self;
+    self.tableView.dataSource=self;
+    self.tableView.scrollEnabled =NO;
+    self.tableView.allowsSelection=YES;
+    self.tableView.delaysContentTouches=NO;
+    self.tableView.showsVerticalScrollIndicator=NO;
+    self.tableView.showsHorizontalScrollIndicator=NO;
+    self.tableView.backgroundColor=[UIColor clearColor];
+    self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
+    [_viewComment addSubview:self.tableView];
+}
+
+
+- (void)setModel:(Demo9Model *)model
+{
+    _model = model;
+    //自动布局
     UIView *contentView = self.contentView;
     CGFloat margin = 10;
     
@@ -129,18 +166,37 @@
     .heightIs(18);
     [_nameLable setSingleLineAutoResizeWithMaxWidth:200];
     
+    _infoLable.sd_layout
+    .leftSpaceToView(_iconView, margin)
+    .topSpaceToView(_nameLable,0)
+    .autoHeightRatio(0);
+    [_infoLable setSingleLineAutoResizeWithMaxWidth:200];
+    
     _contentLabel.sd_layout
-    .leftEqualToView(_nameLable)
-    .topSpaceToView(_nameLable, margin)
+    .leftEqualToView(_infoLable)
+    .topSpaceToView(_infoLable, margin)
     .rightSpaceToView(contentView, margin)
     .autoHeightRatio(0);
+    
+    UIView* view = _picContainerView;
+    if (model.shareDic) {
+        [self.contentView addSubview:_shareView];
+        view = _shareView;
+        _shareView.sd_layout
+        .leftEqualToView(_contentLabel)
+        .topSpaceToView(_contentLabel,10)
+        .rightSpaceToView(contentView, margin)
+        .heightIs(50);
+    }else{
+        [_shareView removeFromSuperview];
+    }
     
     _picContainerView.sd_layout
     .leftEqualToView(_contentLabel);
     
     _timeLabel.sd_layout
     .leftEqualToView(_contentLabel)
-    .topSpaceToView(_picContainerView, margin)
+    .topSpaceToView(view, margin)
     .heightIs(15)
     .autoHeightRatio(0);
     [_timeLabel setSingleLineAutoResizeWithMaxWidth:100];
@@ -168,74 +224,105 @@
     .leftEqualToView(_contentLabel)
     .rightSpaceToView(contentView,10)
     .topSpaceToView(_timeLabel,10)
-    .heightIs(200)
+    .heightIs(model.commentViewHeight)
     .widthIs(width);
+
     
-    //回复背景
-    UIImage* image = IMAGENAMED(@"message_reply");
-    image  =[image stretchableImageWithLeftCapWidth:image.size.width/2+10 topCapHeight:20];
-    UIImageView *imgView=[[UIImageView alloc]initWithImage:image];
+    messageBackView.sd_layout
+    .spaceToSuperView(UIEdgeInsetsMake(-10, 0, 0, 0));
     
-    CGRect rect = FRAME(_viewComment);
-    rect.origin.y-=10;
-    rect.size.height+=10;
-    [imgView setFrame:rect];
-    [_viewComment addSubview:imgView];
+    self.tableView.sd_layout
+    .spaceToSuperView(UIEdgeInsetsMake(0, 0, 0, 0));
     
-    self.tableView = [[UITableView alloc]initWithFrame:_viewComment.frame style:UITableViewStylePlain];
-    self.tableView.bounces=NO;
-    self.tableView.delegate=self;
-    self.tableView.dataSource=self;
-    self.tableView.scrollEnabled =NO;
-    self.tableView.allowsSelection=YES;
-    self.tableView.delaysContentTouches=NO;
-    self.tableView.showsVerticalScrollIndicator=NO;
-    self.tableView.showsHorizontalScrollIndicator=NO;
-    self.tableView.backgroundColor=[UIColor clearColor];
-    self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
-    [_viewComment addSubview:self.tableView];
+    [self setupAutoHeightWithBottomView:_viewComment bottomMargin:margin + 5];
     
-    UIView* priseView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 20)];
+    
+    [_iconView sd_setImageWithURL:[NSURL URLWithString:model.iconName] placeholderImage:IMAGENAMED(@"coremember")];
+    if (model.name) {
+        _nameLable.text = model.name;
+    }
+    
+    if (model.content) {
+        _contentLabel.text = model.content;
+    }
+    _picContainerView.picPathStringsArray = model.picNamesArray;
+    
+    NSString* str=@"";
+    if ([TDUtil isValidString:model.address]) {
+        str = [str stringByAppendingString:model.address];
+    }
+    if ([TDUtil isValidString:model.position]) {
+        str = [str stringByAppendingFormat:@" | %@",model.position];
+    }
+    
+    _infoLable.text = str;
+    
+    
+    CGFloat picContainerTopMargin = 0;
+    if (model.picNamesArray.count) {
+        picContainerTopMargin = 10;
+    }
+    
+    //分享
+    if (model.shareDic) {
+        _shareView.dic = model.shareDic;
+    }
+    _picContainerView.sd_layout.topSpaceToView(_contentLabel, picContainerTopMargin);
+    _timeLabel.text = model.dateTime;
+    [_btnDelete setTitle:@"全文" forState:UIControlStateNormal];
+    
+    
+    //适配评论区域
+    UIView* priseView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, model.commentHeaderViewHeight)];
     UILabel* label = [[UILabel alloc]initWithFrame:priseView.frame];
     label.numberOfLines=0;
+    label.lineBreakMode= NSLineBreakByClipping;
     label.textColor=ColorCompanyTheme;
     label.font =[UIFont fontWithName:@"Arial" size:13];
-    label.text = @"    徐力,徐力,徐力,徐力";
+    
     [priseView addSubview:label];
+    
+    if (model.likersArray && model.likersArray.count>0) {
+        NSDictionary* dic;
+        NSString* str=@"    ";
+        for (int i = 0; i<model.likersArray.count; i++) {
+            dic = model.likersArray[i];
+            if (i!=model.likersArray.count-1) {
+                str = [str stringByAppendingFormat:@"%@,",[dic valueForKey:@"name"]];
+            }else{
+                str = [str stringByAppendingFormat:@"%@",[dic valueForKey:@"name"]];
+            }
+        }
+        label.text = str;
+    }
+    label.sd_layout
+    .autoHeightRatio(0)
+    .spaceToSuperView(UIEdgeInsetsMake(0, 0,0, 0));
+    
+    UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(3, 3, 10, 10)];
+    imgview.image = IMAGENAMED(@"gossip_like_normal");
+    [priseView addSubview:imgview];
     
     
     UIView* lineView = [[UIView alloc]initWithFrame:CGRectMake(0, priseView.frame.size.height-1, priseView.frame.size.width, 1)];
     lineView.backgroundColor = [UIColor whiteColor];
     [priseView addSubview:lineView];
+    
+    lineView.sd_layout
+    .spaceToSuperView(UIEdgeInsetsMake(HEIGHT(priseView)-1, 0, 0, 0));
+    
     [self.tableView setTableHeaderView:priseView];
     
-    [self setupAutoHeightWithBottomView:_viewComment bottomMargin:margin + 5];
-    
-}
-
-
-- (void)setModel:(Demo9Model *)model
-{
-    _model = model;
-    
-    _iconView.image = [UIImage imageNamed:model.iconName];
-    _nameLable.text = model.name;
-    _contentLabel.text = model.content;
-    _picContainerView.picPathStringsArray = model.picNamesArray;
-    CGFloat picContainerTopMargin = 0;
-    if (model.picNamesArray.count) {
-        picContainerTopMargin = 10;
+    if (model.commentArray) {
+        self.dataArray = model.commentArray;
     }
-    _picContainerView.sd_layout.topSpaceToView(_contentLabel, picContainerTopMargin);
-    _timeLabel.text = @"1分钟前";
-    [_btnDelete setTitle:@"全文" forState:UIControlStateNormal];
 }
 
 
 #pragma UITableViewDataSource
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    return self.dataArray.count;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
@@ -252,6 +339,8 @@
         tableViewCell = [[ReplyTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:Identifier];
         tableViewCell.backgroundColor = [UIColor clearColor];
     }
+    NSDictionary* dic = self.dataArray[indexPath.row];
+    tableViewCell.dic = dic;
     tableViewCell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return tableViewCell;
@@ -288,4 +377,12 @@
     return [[self.tableView cellAutoHeightManager] cellHeightForIndexPath:indexPath model:nil keyPath:nil];
 }
 
+#pragma 数据
+-(void)setDataArray:(NSArray *)dataArray
+{
+    if (dataArray) {
+        self->_dataArray = dataArray;
+        [self.tableView reloadData];
+    }
+}
 @end

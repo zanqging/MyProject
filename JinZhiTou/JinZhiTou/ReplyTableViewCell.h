@@ -25,5 +25,5 @@
 #import <UIKit/UIKit.h>
 
 @interface ReplyTableViewCell : UITableViewCell
-
+@property (nonatomic, retain)NSDictionary* dic;
 @end

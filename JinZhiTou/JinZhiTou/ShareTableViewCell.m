@@ -61,7 +61,7 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.commentViewHeight = height;
         self.commentHeaderViewHeight = headerHeight;
-        [self setup];
+//        [self setup];
     }
     return self;
 }
@@ -71,7 +71,7 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.commentViewHeight=200;
         self.commentHeaderViewHeight=20;
-        [self setup];
+//        [self setup];
     }
     return self;
 }
@@ -124,14 +124,13 @@
     UIImage* image = IMAGENAMED(@"message_reply");
     image  =[image stretchableImageWithLeftCapWidth:image.size.width/2+10 topCapHeight:20];
     imgView=[[UIImageView alloc]initWithImage:image];
-    
-    CGRect rect = FRAME(_viewComment);
-    rect.origin.y-=10;
-    rect.size.height+=10;
-    [imgView setFrame:rect];
     [_viewComment addSubview:imgView];
     
-    self.tableView = [[UITableView alloc]initWithFrame:_viewComment.frame style:UITableViewStylePlain];
+    imgView.sd_layout
+    .spaceToSuperView(UIEdgeInsetsMake(-10, 0, 0, 0));
+    
+    
+    self.tableView = [[UITableView alloc]init];
     self.tableView.bounces=NO;
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
@@ -144,17 +143,35 @@
     self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
     [_viewComment addSubview:self.tableView];
     
+    self.tableView.sd_layout
+    .spaceToSuperView(UIEdgeInsetsMake(0, 0, 0, 0));
+    
     UIView* priseView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, self.commentHeaderViewHeight)];
     UILabel* label = [[UILabel alloc]initWithFrame:priseView.frame];
     label.numberOfLines=0;
+    label.lineBreakMode= NSLineBreakByClipping;
     label.textColor=ColorCompanyTheme;
     label.font =[UIFont fontWithName:@"Arial" size:13];
-    label.text = @"    徐力,徐力,徐力,徐力";
+    label.text = @"    徐力,徐力,徐力,徐力,徐力,徐力,徐力,徐力,徐力,徐力,徐力,徐力,徐力,徐力,徐力,徐力";
     [priseView addSubview:label];
+    
+    label.sd_layout
+    .autoHeightRatio(0)
+    .spaceToSuperView(UIEdgeInsetsMake(0, 0,0, 0));
+    
+    UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(3, 3, 10, 10)];
+    imgview.image = IMAGENAMED(@"gossip_like_normal");
+    [priseView addSubview:imgview];
+    
     
     UIView* lineView = [[UIView alloc]initWithFrame:CGRectMake(0, priseView.frame.size.height-1, priseView.frame.size.width, 1)];
     lineView.backgroundColor = [UIColor whiteColor];
     [priseView addSubview:lineView];
+    
+    lineView.sd_layout
+    .spaceToSuperView(UIEdgeInsetsMake(HEIGHT(priseView)-1, 0, 0, 0));
+    
+//  priseView.backgroundColor = ColorChicken;
     [self.tableView setTableHeaderView:priseView];
     
     [self setupAutoHeightWithBottomView:_viewComment bottomMargin:15];
@@ -225,10 +242,11 @@
     .widthIs(width);
 }
 
-
 - (void)setModel:(Demo9Model *)model
 {
     _model = model;
+    
+    [self setup];
     
     _iconView.image = [UIImage imageNamed:model.iconName];
     _nameLable.text = model.name;
@@ -259,7 +277,6 @@
         tableViewCell.backgroundColor = [UIColor clearColor];
     }
     tableViewCell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
     return tableViewCell;
 }
 

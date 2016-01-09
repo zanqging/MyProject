@@ -24,12 +24,14 @@
 #import <UIKit/UIKit.h>
 #import "GlobalDefine.h"
 #import "UConstants.h"
+#import "UIImageView+WebCache.h"
 #import "UITableView+SDAutoTableViewCellHeight.h"
 @class Demo9Model;
 
 @interface DemoVC9Cell : UITableViewCell<UITableViewDataSource,UITableViewDelegate>
 
 @property (nonatomic, strong) Demo9Model *model;
+@property (nonatomic, retain) NSArray* dataArray;
 @property(retain,nonatomic)UITableView* tableView;
 @property(assign,nonatomic)float commentViewHeight;//回复列表高度
 @property(assign,nonatomic)float commentHeaderViewHeight; //回复列表头部高度

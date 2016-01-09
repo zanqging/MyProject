@@ -20,7 +20,6 @@
 -(void)setup
 {
     imgView = [UIImageView new];
-    imgView.backgroundColor = GrayColor;
     labelContent = [UILabel new];
     labelContent.numberOfLines =2;
     labelContent.font = SYSTEMFONT(14);
@@ -49,5 +48,12 @@
     [self setupAutoHeightWithBottomView:imgView bottomMargin:5];
 }
 
-
+-(void)setDic:(NSDictionary *)dic
+{
+    if (dic) {
+        self->_dic  =dic;
+        [imgView sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"img"]] placeholderImage:IMAGENAMED(@"loading")];
+        labelContent.text =[dic valueForKey:@"title"];
+    }
+}
 @end

@@ -25,5 +25,10 @@
 #import "UITableView+SDAutoTableViewCellHeight.h"
 #import "RootViewController.h"
 @interface CycleViewController : RootViewController
+{
+    BOOL isRefresh;
+    int curentPage;
+}
 @property(retain,nonatomic)UITableView* tableView;
+@property(retain,nonatomic)NSMutableArray* dataArray;
 @end

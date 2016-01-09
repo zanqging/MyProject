@@ -23,9 +23,10 @@
  */
 
 #import "SDWeiXinPhotoContainerView.h"
-
+#import "UConstants.h"
+#import "GlobalDefine.h"
 #import "UIView+SDAutoLayout.h"
-
+#import "UIImageView+WebCache.h"
 #import "SDPhotoBrowser.h"
 
 @interface SDWeiXinPhotoContainerView () <SDPhotoBrowserDelegate>
@@ -64,7 +65,7 @@
         long columnIndex = idx % perRowItemCount;
         long rowIndex = idx / perRowItemCount;
         UIImageView *imageView = [UIImageView new];
-        imageView.image = [UIImage imageNamed:obj];
+        [imageView sd_setImageWithURL:[NSURL URLWithString:obj] placeholderImage:IMAGENAMED(@"loading")];
         imageView.frame = CGRectMake(columnIndex * (itemW + margin), rowIndex * (itemH + margin), itemW, itemH);
         [self addSubview:imageView];
         
@@ -107,13 +108,7 @@
 
 - (NSInteger)perRowItemCountForPicPathArray:(NSArray *)array
 {
-    if (array.count < 3) {
-        return array.count;
-    } else if (array.count <= 4) {
-        return 2;
-    } else {
-        return 3;
-    }
+    return 3;
 }
 
 

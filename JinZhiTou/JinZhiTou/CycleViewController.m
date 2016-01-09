@@ -22,7 +22,7 @@
  */
 
 #import "CycleViewController.h"
-
+#import "MJRefresh.h"
 #import "Demo9Model.h"
 #import "DemoVC9Cell.h"
 #import "DemoVC9HeaderView.h"
@@ -88,6 +88,18 @@
     self.tableView.tableHeaderView = headerView;
     
     [self.tableView registerClass:[DemoVC9Cell class] forCellReuseIdentifier:kDemoVC9CellId];
+    
+    //加载数据
+    [self loadData];
+}
+
+/**
+ *  加载数据
+ */
+-(void)loadData
+{
+    NSString* serverUrl = [CYCLE_CONTENT_LIST stringByAppendingFormat:@"%d/",curentPage];
+    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestData:)];
 }
 
 -(void)userInfoAction:(id)sender
@@ -149,6 +161,9 @@
         model.iconName = iconImageNamesArray[iconRandomIndex];
         model.name = namesArray[nameRandomIndex];
         model.content = textArray[contentRandomIndex];
+        model.commentViewHeight = 213+i*20;
+        model.commentHeaderViewHeight=33;
+        
         
         
         // 模拟“随机图片”
@@ -169,35 +184,26 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.modelsArray.count;
+    return self.dataArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString* Identifier = @"ShareTableViewCell";
-    if (indexPath.row%2==0) {
-        ShareTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:Identifier];
-        if (!cell) {
-            cell = [[ShareTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:Identifier commentViewHeight:200 commentHeaderViewHeight:20];
-        }
-        cell.model = self.modelsArray[indexPath.row];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        return cell;
-    }else{
-        DemoVC9Cell *cell = [tableView dequeueReusableCellWithIdentifier:kDemoVC9CellId];
-        if (!cell) {
-            cell =[[DemoVC9Cell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kDemoVC9CellId commentViewHeight:200 commentHeaderViewHeight:20];
-        }
-        cell.model = self.modelsArray[indexPath.row];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        return cell;
+    DemoVC9Cell *cell = [tableView dequeueReusableCellWithIdentifier:kDemoVC9CellId];
+    if (!cell) {
+        cell =[[DemoVC9Cell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kDemoVC9CellId commentViewHeight:213 commentHeaderViewHeight:33];
     }
+    
+    cell.model = self.dataArray[indexPath.row];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // >>>>>>>>>>>>>>>>>>>>> * cell自适应 * >>>>>>>>>>>>>>>>>>>>>>>>
     CGFloat h = [self cellHeightForIndexPath:indexPath cellContentViewWidth:[UIScreen mainScreen].bounds.size.width];
+    NSLog(@"%ld-->%f",indexPath.row,h);
     return h;
 }
 
@@ -219,4 +225,93 @@
     return [[self.tableView cellAutoHeightManager] cellHeightForIndexPath:indexPath model:nil keyPath:nil];
 }
 
+
+#pragma 设置数据
+-(void)setDataArray:(NSMutableArray *)dataArray
+{
+    if (dataArray && dataArray.count>0) {
+        self->_dataArray = dataArray;
+        [self.tableView reloadData];
+    }
+}
+
+
+#pragma ASIHttpRequest
+#pragma ASIHttpRequest
+-(void)requestData:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* code = [dic valueForKey:@"code"];
+        if ([code integerValue]==0  || [code integerValue]==2) {
+            NSArray* tempArray = [dic valueForKey:@"data"];
+            NSMutableArray* modelArray=[NSMutableArray new];
+            NSDictionary* dic;
+            for (int i=0; i<tempArray.count; i++) {
+                dic = [tempArray objectAtIndex:i];
+                
+                Demo9Model *model = [Demo9Model new];
+                model.name = [dic valueForKey:@"name"];
+                model.address = [dic valueForKey:@"addr"];
+                model.iconName = [dic valueForKey:@"photo"];
+                model.content = [dic valueForKey:@"content"];
+                model.position = [dic valueForKey:@"position"];
+                 model.dateTime = [dic valueForKey:@"datetime"];
+                model.commentViewHeight = 213+i*20;
+                model.commentHeaderViewHeight=33;
+                
+                //分享
+                NSDictionary* dicShare =[dic valueForKey:@"share"];
+                if (dicShare) {
+                    model.shareDic=dicShare;
+                }
+                
+                //图片
+                NSArray* array = [dic valueForKey:@"pic"];
+                if (array && array.count>0) {
+                    model.picNamesArray =array;
+                }
+                
+                //评论列表
+                array = [dic valueForKey:@"comment"];
+                if (array && array.count>0) {
+                    model.commentArray =array;
+                }
+                
+                //评论列表
+                array = [dic valueForKey:@"like"];
+                if (array && array.count>0) {
+                    model.likersArray =array;
+                }
+                
+                [modelArray addObject:model];
+            }
+            self.dataArray = modelArray;
+            
+            
+            //保存数据
+            if (isRefresh) {
+                [self.tableView.header endRefreshing];
+            }else{
+                [self.tableView.footer endRefreshing];
+            }
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
+            //            self.startLoading = NO;
+            //移除重新加载数据监听
+            [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
+        }else if([code intValue]==-1){
+            //添加重新加载数据监听
+            [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"reloadData" object:nil];
+            //通知系统重新登录
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"login" object:nil];
+        }else{
+            self.isNetRequestError = YES;
+        }
+    }else{
+        self.isNetRequestError = YES;
+    }
+}
 @end
