@@ -174,7 +174,7 @@
     
     _contentLabel.sd_layout
     .leftEqualToView(_infoLable)
-    .topSpaceToView(_infoLable, margin)
+    .topSpaceToView(_infoLable, 0)
     .rightSpaceToView(contentView, margin)
     .autoHeightRatio(0);
     
@@ -219,23 +219,33 @@
     .widthIs(30)
     .autoHeightRatio(0.5);
     
-    float width = WIDTH(self.contentView)-70;
-    _viewComment.sd_layout
-    .leftEqualToView(_contentLabel)
-    .rightSpaceToView(contentView,10)
-    .topSpaceToView(_timeLabel,10)
-    .heightIs(model.commentViewHeight)
-    .widthIs(width);
 
-    
-    messageBackView.sd_layout
-    .spaceToSuperView(UIEdgeInsetsMake(-10, 0, 0, 0));
+    if (model.commentViewHeight!=0.0) {
+        float width = WIDTH(self.contentView)-70;
+        _viewComment.sd_layout
+        .leftEqualToView(_contentLabel)
+        .rightSpaceToView(contentView,10)
+        .topSpaceToView(_timeLabel,10)
+        .heightIs(model.commentViewHeight)
+        .widthIs(width);
+        
+        messageBackView.sd_layout
+        .spaceToSuperView(UIEdgeInsetsMake(-10, 0, 0, 0));
+    }else{
+        float width = WIDTH(self.contentView)-70;
+        _viewComment.sd_layout
+        .leftEqualToView(_contentLabel)
+        .rightSpaceToView(contentView,10)
+        .topSpaceToView(_timeLabel,10)
+        .heightIs(0)
+        .widthIs(width);
+        
+        messageBackView.sd_layout
+        .spaceToSuperView(UIEdgeInsetsMake(0, 0, 0, 0));
+    }
     
     self.tableView.sd_layout
     .spaceToSuperView(UIEdgeInsetsMake(0, 0, 0, 0));
-    
-    [self setupAutoHeightWithBottomView:_viewComment bottomMargin:margin + 5];
-    
     
     [_iconView sd_setImageWithURL:[NSURL URLWithString:model.iconName] placeholderImage:IMAGENAMED(@"coremember")];
     if (model.name) {
@@ -255,7 +265,9 @@
         str = [str stringByAppendingFormat:@" | %@",model.position];
     }
     
-    _infoLable.text = str;
+    if ([TDUtil isValidString:str]) {
+        _infoLable.text = str;
+    }
     
     
     CGFloat picContainerTopMargin = 0;
@@ -272,17 +284,24 @@
     [_btnDelete setTitle:@"全文" forState:UIControlStateNormal];
     
     
-    //适配评论区域
-    UIView* priseView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, model.commentHeaderViewHeight)];
-    UILabel* label = [[UILabel alloc]initWithFrame:priseView.frame];
-    label.numberOfLines=0;
-    label.lineBreakMode= NSLineBreakByClipping;
-    label.textColor=ColorCompanyTheme;
-    label.font =[UIFont fontWithName:@"Arial" size:13];
-    
-    [priseView addSubview:label];
-    
     if (model.likersArray && model.likersArray.count>0) {
+        
+        //适配评论区域
+        UIView* priseView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, model.commentHeaderViewHeight)];
+        UILabel* label = [[UILabel alloc]initWithFrame:priseView.frame];
+        label.numberOfLines=0;
+        label.lineBreakMode= NSLineBreakByClipping;
+        label.textColor=ColorCompanyTheme;
+        label.font =[UIFont fontWithName:@"Arial" size:13];
+        
+        [priseView addSubview:label];
+        
+        
+        label.sd_layout
+        .autoHeightRatio(0)
+        .spaceToSuperView(UIEdgeInsetsMake(0, 0,0, 0));
+        
+        
         NSDictionary* dic;
         NSString* str=@"    ";
         for (int i = 0; i<model.likersArray.count; i++) {
@@ -294,28 +313,39 @@
             }
         }
         label.text = str;
+        
+        UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(3, 3, 10, 10)];
+        imgview.image = IMAGENAMED(@"gossip_like_normal");
+        [priseView addSubview:imgview];
+        
+        UIView* lineView = [[UIView alloc]initWithFrame:CGRectMake(0, priseView.frame.size.height-1, priseView.frame.size.width, 1)];
+        lineView.backgroundColor = [UIColor whiteColor];
+        [priseView addSubview:lineView];
+        
+        lineView.sd_layout
+        .spaceToSuperView(UIEdgeInsetsMake(HEIGHT(priseView)-1, 0, 0, 0));
+        
+        
+        [self.tableView setTableHeaderView:priseView];
     }
-    label.sd_layout
-    .autoHeightRatio(0)
-    .spaceToSuperView(UIEdgeInsetsMake(0, 0,0, 0));
-    
-    UIImageView * imgview = [[UIImageView alloc]initWithFrame:CGRectMake(3, 3, 10, 10)];
-    imgview.image = IMAGENAMED(@"gossip_like_normal");
-    [priseView addSubview:imgview];
-    
-    
-    UIView* lineView = [[UIView alloc]initWithFrame:CGRectMake(0, priseView.frame.size.height-1, priseView.frame.size.width, 1)];
-    lineView.backgroundColor = [UIColor whiteColor];
-    [priseView addSubview:lineView];
-    
-    lineView.sd_layout
-    .spaceToSuperView(UIEdgeInsetsMake(HEIGHT(priseView)-1, 0, 0, 0));
-    
-    [self.tableView setTableHeaderView:priseView];
     
     if (model.commentArray) {
         self.dataArray = model.commentArray;
+        
+        float height=0;
+        for (int i=0; i<self.dataArray.count; i++) {
+//            NSDictionary* dic = self.dataArray[i];
+            NSIndexPath* indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            float width = self.tableView.frame.size.width-40;
+            CGFloat h = [self cellHeightForIndexPath:indexPath cellContentViewWidth:width];
+            height+=h;
+//            NSLog(@"高度:%f-->%@",height,[dic valueForKey:@"content"]);
+            
+        }
+        NSLog(@"高度:%f-->%f",model.commentViewHeight,height);
     }
+    
+    [self setupAutoHeightWithBottomView:_viewComment bottomMargin:25];
 }
 
 
@@ -343,6 +373,7 @@
     tableViewCell.dic = dic;
     tableViewCell.selectionStyle = UITableViewCellSelectionStyleNone;
     
+    [self layoutSubviews];
     return tableViewCell;
 }
 
@@ -354,7 +385,8 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // >>>>>>>>>>>>>>>>>>>>> * cell自适应 * >>>>>>>>>>>>>>>>>>>>>>>>
-    CGFloat h = [self cellHeightForIndexPath:indexPath cellContentViewWidth:[UIScreen mainScreen].bounds.size.width];
+    float width = self.tableView.frame.size.width-40;
+    CGFloat h = [self cellHeightForIndexPath:indexPath cellContentViewWidth:width];
     return h;
 }
 

@@ -47,6 +47,7 @@
     _view1.textColor = [UIColor blackColor];
     _view1.font = [UIFont systemFontOfSize:13];
     _view1.numberOfLines=0;
+    _view1.lineBreakMode = NSLineBreakByWordWrapping;
     
     [self.contentView addSubview:_view1];
     
@@ -95,7 +96,7 @@
         
         //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
         
-        [paragraphStyle setLineSpacing:3];//调整行间距
+        [paragraphStyle setLineSpacing:0];//调整行间距
         //    [paragraphStyle setAlignment:NSTextAlignmentLeft];
         [paragraphStyle setFirstLineHeadIndent:0];
         [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
@@ -109,7 +110,6 @@
         }
         
         _view1.attributedText = attributedString;//ios 6
-        [_view1 sizeToFit];
     }
 }
 

@@ -98,9 +98,34 @@
  */
 -(void)loadData
 {
+    self.startLoading = YES;
     NSString* serverUrl = [CYCLE_CONTENT_LIST stringByAppendingFormat:@"%d/",curentPage];
     [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestData:)];
 }
+
+-(void)refreshProject
+{
+    //加载动画
+    isRefresh =YES;
+    curentPage = 0;
+    [self loadData];
+    self.startLoading=NO;
+}
+
+-(void)loadProject
+{
+    //加载动画
+    isRefresh =NO;
+    if (!isEndOfPageSize) {
+        curentPage++;
+        [self loadData];
+        self.startLoading=NO;
+    }else{
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"已加载全部"];
+        isRefresh =NO;
+    }
+}
+
 
 -(void)userInfoAction:(id)sender
 {
@@ -203,7 +228,7 @@
 {
     // >>>>>>>>>>>>>>>>>>>>> * cell自适应 * >>>>>>>>>>>>>>>>>>>>>>>>
     CGFloat h = [self cellHeightForIndexPath:indexPath cellContentViewWidth:[UIScreen mainScreen].bounds.size.width];
-    NSLog(@"%ld-->%f",indexPath.row,h);
+//    NSLog(@"%ld-->%f",indexPath.row,h);
     return h;
 }
 
@@ -237,7 +262,6 @@
 
 
 #pragma ASIHttpRequest
-#pragma ASIHttpRequest
 -(void)requestData:(ASIHTTPRequest*)request
 {
     NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
@@ -259,9 +283,7 @@
                 model.iconName = [dic valueForKey:@"photo"];
                 model.content = [dic valueForKey:@"content"];
                 model.position = [dic valueForKey:@"position"];
-                 model.dateTime = [dic valueForKey:@"datetime"];
-                model.commentViewHeight = 213+i*20;
-                model.commentHeaderViewHeight=33;
+                model.dateTime = [dic valueForKey:@"datetime"];
                 
                 //分享
                 NSDictionary* dicShare =[dic valueForKey:@"share"];
@@ -279,17 +301,100 @@
                 array = [dic valueForKey:@"comment"];
                 if (array && array.count>0) {
                     model.commentArray =array;
+                    float height=0;
+                    NSDictionary* dicTemp;
+                    for(int i = 0;i<array.count;i++){
+                        dicTemp = array[i];
+                        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view)-110, 0)];
+                        label.numberOfLines=0;
+                        label.lineBreakMode = NSLineBreakByClipping;
+                        
+                        //开始组装
+                        NSString* name = [dicTemp valueForKey:@"name"];
+                        NSString* atName = [dicTemp valueForKey:@"atname"];
+                        NSString* suffix = @":";
+                        NSString* content = [dicTemp valueForKey:@"content"];
+                        NSString* str = @"";
+                        if (name) {
+                            str =[str stringByAppendingString:name];
+                        }
+                        
+                        if ([TDUtil isValidString:atName] ) {
+                            str = [str stringByAppendingFormat:@"回复%@%@",atName,suffix];
+                        }else{
+                            str = [str stringByAppendingFormat:@"%@",suffix];
+                        }
+                        
+                        str = [str stringByAppendingFormat:@" %@",content];
+                        
+                        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+                        
+                        //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
+                        
+                        [paragraphStyle setLineSpacing:5];//调整行间距
+                        //    [paragraphStyle setAlignment:NSTextAlignmentLeft];
+                        [paragraphStyle setFirstLineHeadIndent:0];
+                        [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
+                        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:str];
+                        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [str length])];
+                        
+                        [attributedString addAttribute:NSForegroundColorAttributeName value:ColorCompanyTheme range:NSMakeRange(0, [name length])];
+                        
+                        if ([TDUtil isValidString:atName]) {
+                            [attributedString addAttribute:NSForegroundColorAttributeName value:ColorCompanyTheme range:NSMakeRange([name length]+2, [atName length])];
+                        }
+                        
+                        label.attributedText = attributedString;//ios 6
+                        [label sizeToFit];
+                        
+                        if (HEIGHT(label)<30 && i==0) {
+                            height+=40;
+                        }else{
+                            height+=HEIGHT(label);
+                        }
+                        
+                    }
+                    model.commentViewHeight = height;
                 }
+                
                 
                 //评论列表
                 array = [dic valueForKey:@"like"];
                 if (array && array.count>0) {
                     model.likersArray =array;
+                    NSString* str=@"    ";
+                    NSDictionary* dicTemp;
+                    for (int i = 0; i<array.count; i++) {
+                        dicTemp = array[i];
+                        if (i!=array.count-1) {
+                            str = [str stringByAppendingFormat:@"%@,",[dicTemp valueForKey:@"name"]];
+                        }else{
+                            str = [str stringByAppendingFormat:@"%@",[dicTemp valueForKey:@"name"]];
+                        }
+                    }
+                    
+                    
+                    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView)-110, 0)];
+                    label.numberOfLines=0;
+                    label.lineBreakMode = NSLineBreakByWordWrapping;
+                    [TDUtil setLabelMutableText:label content:str lineSpacing:0 headIndent:0];
+                    
+                    float height = HEIGHT(label);
+                    model.commentHeaderViewHeight=height;
                 }
-                
                 [modelArray addObject:model];
             }
-            self.dataArray = modelArray;
+            
+            if (isRefresh) {
+                self.dataArray = modelArray;
+            }else{
+                if (self.dataArray) {
+                    [self.dataArray addObjectsFromArray:modelArray];
+                    [self.tableView reloadData];
+                }else{
+                    self.dataArray = modelArray;
+                }
+            }
             
             
             //保存数据
@@ -298,10 +403,16 @@
             }else{
                 [self.tableView.footer endRefreshing];
             }
+            if ([code integerValue]==2) {
+                [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"已加载全部数据"];
+            }
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
             //            self.startLoading = NO;
             //移除重新加载数据监听
             [[NSNotificationCenter defaultCenter]removeObserver:self name:@"reloadData" object:nil];
+            
+            //关闭加载动画
+            self.startLoading = NO;
         }else if([code intValue]==-1){
             //添加重新加载数据监听
             [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"reloadData" object:nil];
@@ -313,5 +424,10 @@
     }else{
         self.isNetRequestError = YES;
     }
+}
+
+-(void)requestFailed:(ASIFormDataRequest*)request
+{
+    self.isNetRequestError = YES;
 }
 @end

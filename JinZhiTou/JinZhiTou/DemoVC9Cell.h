@@ -33,8 +33,6 @@
 @property (nonatomic, strong) Demo9Model *model;
 @property (nonatomic, retain) NSArray* dataArray;
 @property(retain,nonatomic)UITableView* tableView;
-@property(assign,nonatomic)float commentViewHeight;//回复列表高度
-@property(assign,nonatomic)float commentHeaderViewHeight; //回复列表头部高度
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier commentViewHeight:(CGFloat)height commentHeaderViewHeight:(CGFloat)headerHeight;
 

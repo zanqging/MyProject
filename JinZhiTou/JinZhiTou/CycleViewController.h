@@ -27,6 +27,7 @@
 @interface CycleViewController : RootViewController
 {
     BOOL isRefresh;
+    BOOL isEndOfPageSize;
     int curentPage;
 }
 @property(retain,nonatomic)UITableView* tableView;
