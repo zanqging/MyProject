@@ -24,6 +24,7 @@
 
 #import "DemoVC9Cell.h"
 #import "TDUtil.h"
+#import "HttpUtils.h"
 #import "Demo9Model.h"
 #import "ShareContentView.h"
 #import "ReplyTableViewCell.h"
@@ -57,6 +58,12 @@
     
     //回复背景
     UIImageView *messageBackView;
+    
+    HttpUtils* httpUtils;
+    
+    NSIndexPath* currentSelectedCellIndex;
+    
+    int currentTag;
 }
 
 
@@ -96,23 +103,25 @@
     _shareView = [[ShareContentView alloc]init];
     
     _timeLabel = [UILabel new];
-    _timeLabel.font = [UIFont systemFontOfSize:13];
+    _timeLabel.font = [UIFont systemFontOfSize:10];
     _timeLabel.textColor = [UIColor lightGrayColor];
     
     _btnDelete = [[UIButton alloc]init];
     [_btnDelete setTitle:@"删除" forState:UIControlStateNormal];
-    [_btnDelete.titleLabel setFont:[UIFont fontWithName:@"Arial" size:13]];
+    [_btnDelete.titleLabel setFont:[UIFont fontWithName:@"Arial" size:11]];
     [_btnDelete setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     
     _btnPrise = [[UIButton alloc]init];
     [_btnPrise.titleLabel setFont:[UIFont fontWithName:@"Arial" size:13]];
     [_btnPrise setImage:IMAGENAMED(@"gossip_like_normal") forState:UIControlStateNormal];
     [_btnPrise setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_btnPrise addTarget:self action:@selector(priseAction:) forControlEvents:UIControlEventTouchUpInside];
     
     _btnComment = [[UIButton alloc]init];
     [_btnComment setImage:IMAGENAMED(@"gossip_comment") forState:UIControlStateNormal];
     [_btnComment.titleLabel setFont:[UIFont fontWithName:@"Arial" size:13]];
     [_btnComment setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [_btnComment addTarget:self action:@selector(commentAction:) forControlEvents:UIControlEventTouchUpInside];
     
     _viewComment = [[UIView alloc]init];
     _viewComment.layer.cornerRadius=3;
@@ -197,13 +206,13 @@
     _timeLabel.sd_layout
     .leftEqualToView(_contentLabel)
     .topSpaceToView(view, margin)
-    .heightIs(15)
+    .heightIs(12)
     .autoHeightRatio(0);
     [_timeLabel setSingleLineAutoResizeWithMaxWidth:100];
     
     _btnDelete.sd_layout
     .leftSpaceToView(_timeLabel,5)
-    .topSpaceToView(_timeLabel,-7)
+    .topSpaceToView(_timeLabel,-5)
     .widthIs(30)
     .autoHeightRatio(0);
     
@@ -220,13 +229,13 @@
     .autoHeightRatio(0.5);
     
 
-    if (model.commentViewHeight!=0.0) {
+    if (model.commentViewHeight!=0.0 || model.commentHeaderViewHeight!=0.0) {
         float width = WIDTH(self.contentView)-70;
         _viewComment.sd_layout
         .leftEqualToView(_contentLabel)
         .rightSpaceToView(contentView,10)
         .topSpaceToView(_timeLabel,10)
-        .heightIs(model.commentViewHeight)
+        .heightIs(model.commentViewHeight+model.commentHeaderViewHeight)
         .widthIs(width);
         
         messageBackView.sd_layout
@@ -342,12 +351,29 @@
 //            NSLog(@"高度:%f-->%@",height,[dic valueForKey:@"content"]);
             
         }
-        NSLog(@"高度:%f-->%f",model.commentViewHeight,height);
+//        NSLog(@"高度:%f-->%f",model.commentViewHeight,height);
     }
     
-    [self setupAutoHeightWithBottomView:_viewComment bottomMargin:25];
+    [self setupAutoHeightWithBottomView:_viewComment bottomMargin:10];
 }
 
+-(void)priseAction:(id)sender
+{
+    if (!httpUtils) {
+        httpUtils = [[HttpUtils alloc]init];
+    }
+    NSInteger id = self.model.id;
+    
+    NSString* serverUrl = [CYCLE_CONTENT_PRISE stringByAppendingFormat:@"%ld/%d/",id,self.model.isLike];
+    [httpUtils getDataFromAPIWithOps:serverUrl  type:0 delegate:self sel:@selector(requestPriseFinished:) method:@"GET"];
+}
+
+-(void)commentAction:(id)sender
+{
+    if ([_delegate respondsToSelector:@selector(weiboTableViewCell:contentId:atId:isSelf:)]) {
+        [_delegate weiboTableViewCell:self contentId:[NSString stringWithFormat:@"%ld",self.model.id] atId:nil isSelf:NO];
+    }
+}
 
 #pragma UITableViewDataSource
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -373,19 +399,30 @@
     tableViewCell.dic = dic;
     tableViewCell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    [self layoutSubviews];
     return tableViewCell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    NSDictionary* dic =self.dataArray[indexPath.row];
+    currentSelectedCellIndex = indexPath;
+    if(![[dic valueForKey:@"flag"] boolValue]){
+        if ([_delegate respondsToSelector:@selector(weiboTableViewCell:contentId:atId:isSelf:)]) {
+            [_delegate weiboTableViewCell:self contentId:[NSString stringWithFormat:@"%ld",self.model.id] atId:[dic valueForKey:@"id"] isSelf:NO];
+        }
+    }else{
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"删除" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除", nil];
+        alertView.tag  = [[dic valueForKey:@"id"] integerValue];
+        alertView.delegate = self;
+        [alertView show];
+        currentTag = 0;
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // >>>>>>>>>>>>>>>>>>>>> * cell自适应 * >>>>>>>>>>>>>>>>>>>>>>>>
-    float width = self.tableView.frame.size.width-40;
+    float width = self.tableView.frame.size.width;
     CGFloat h = [self cellHeightForIndexPath:indexPath cellContentViewWidth:width];
     return h;
 }
@@ -409,12 +446,95 @@
     return [[self.tableView cellAutoHeightManager] cellHeightForIndexPath:indexPath model:nil keyPath:nil];
 }
 
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex==1) {
+        if (currentTag==0) {
+            if (!httpUtils) {
+                httpUtils = [[HttpUtils alloc]init];
+            }
+            NSString* serverUrl = [CYCLE_CONTENT_REPLY_DELETE stringByAppendingFormat:@"%ld/",alertView.tag];
+            [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestDeleteReplyFinished:)];
+        }else{
+            if (!httpUtils) {
+                httpUtils = [[HttpUtils alloc]init];
+            }
+            NSString* serverUrl = [CYCLE_CONTENT_DELETE stringByAppendingFormat:@"%ld/",self.model.id];
+            [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestDeleteFinished:)];
+        }
+        
+    }
+}
+
+
 #pragma 数据
 -(void)setDataArray:(NSArray *)dataArray
 {
     if (dataArray) {
         self->_dataArray = dataArray;
         [self.tableView reloadData];
+    }
+}
+
+-(void)requestDeleteFinished:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"status"];
+        if ([status integerValue]==0) {
+            if ([_delegate respondsToSelector:@selector(weiboTableViewCell:deleteDic:)]) {
+                [_delegate weiboTableViewCell:self deleteDic:self.model];
+            }
+        }
+    }
+}
+
+
+#pragma ASIHttpRequest
+-(void)requestPriseFinished:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"code"];
+        if ([status integerValue]>=0) {
+            BOOL flag = !self.model.isLike;
+            NSString* flagStr = flag==true?@"True":@"False";
+            self.model.isLike = [NSNumber numberWithBool:[flagStr boolValue]];
+            if ([_delegate respondsToSelector:@selector(weiboTableViewCell:priseDic:msg:)]) {
+                [_delegate weiboTableViewCell:self  priseDic:[dic valueForKey:@"data"] msg:[dic valueForKey:@"msg"]];
+            }
+        }
+        
+    }
+}
+
+-(void)requestDeleteReplyFinished:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"code"];
+        if ([status integerValue]==0) {
+            NSDictionary* tempDic =self.dataArray[currentSelectedCellIndex.row];
+            if ([self.dataArray containsObject:tempDic]) {
+                NSMutableArray* array  =[NSMutableArray arrayWithArray:self.dataArray];
+                [array removeObject:tempDic];
+                self.dataArray = array;
+                self.model.commentArray = self.dataArray;
+                if ([_delegate respondsToSelector:@selector(weiboTableViewCell:refresh:)]) {
+                    [_delegate weiboTableViewCell:self refresh:YES];
+                }
+            }
+        }
     }
 }
 @end

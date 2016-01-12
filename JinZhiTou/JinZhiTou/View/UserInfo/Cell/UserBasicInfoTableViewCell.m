@@ -15,14 +15,16 @@
 {
     if (self = [super initWithFrame:frame]) {
         
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, frame.size.height/2-15, 100, 30)];
+        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, 100, HEIGHT(self)-10)];
         self.titleLabel.textColor =BlackColor;
-        self.titleLabel.font = SYSTEMBOLDFONT(17);
+        self.titleLabel.font = SYSTEMFONT(16);
         self.titleLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:self.titleLabel];
         
         self.rightLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.titleLabel)+5, Y(self.titleLabel), 160, HEIGHT(self.titleLabel))];
         self.rightLabel.textAlignment = NSTextAlignmentRight;
+        self.rightLabel.font = SYSTEMFONT(14);
+        self.rightLabel.textColor  =FONT_COLOR_GRAY;
         [self addSubview:self.rightLabel];
         
     }
@@ -46,7 +48,8 @@
     self->_isShowImg = isShowImg;
     if (self.isShowImg) {
         [self.rightLabel removeFromSuperview];
-        self.rightImgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)-90, HEIGHT(self)/2 -5, 50, 50)];
+        self.titleLabel.frame = CGRectMake(20,  10, 100, HEIGHT(self.contentView));
+        self.rightImgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)-90, 5, 50, 50)];
         self.rightImgView.contentMode = UIViewContentModeScaleAspectFill;
         self.rightImgView.layer.cornerRadius = 25;
         self.rightImgView.layer.masksToBounds = YES;

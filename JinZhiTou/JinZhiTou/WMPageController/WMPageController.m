@@ -10,9 +10,11 @@
 #import "WMPageConst.h"
 #import "INSViewController.h"
 #import "WMTableViewController.h"
+#import "ThinkTankViewController.h"
+#import "RoadShowDetailViewController.h"
 
 static CGFloat kWMMarginToNavigationItem = 6.0;
-@interface WMPageController ()<navViewDelegate> {
+@interface WMPageController ()<navViewDelegate,WMtableViewCellDelegate> {
     CGFloat _viewHeight, _viewWidth, _viewX, _viewY, _targetX, _superviewHeight;
     BOOL    _animate, _hasInited, _shouldNotScroll;
 }
@@ -330,6 +332,7 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
             }
         }
     }
+    
 }
 
 - (void)removeSuperfluousViewControllersIfNeeded {
@@ -354,6 +357,10 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
 // 添加子控制器
 - (void)addViewControllerAtIndex:(int)index {
     UIViewController *viewController = [self initializeViewControllerAtIndex:index];
+    if ([viewController isKindOfClass:WMTableViewController.class]) {
+        ((WMTableViewController*)viewController).delegate = self;
+    }
+    
     if (self.values.count == self.childControllersCount && self.keys.count == self.childControllersCount) {
         [viewController setValue:self.values[index] forKey:self.keys[index]];
     }
@@ -536,8 +543,8 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
     self.pageAnimatable = YES;
     self.titleSizeSelected = 16;
     self.titleSizeNormal = 14;
-    self.rememberLocation = YES;
-    self.otherGestureRecognizerSimultaneously=YES;
+//    self.rememberLocation = YES;
+//    self.otherGestureRecognizerSimultaneously=YES;
     self.menuBGColor = WriteColor;
     self.progressColor  = AppColorTheme;
     self.titleColorSelected = AppColorTheme;
@@ -764,6 +771,8 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
                 _viewControllerClasses = [NSArray arrayWithArray:viewControllers];
                 NSParameterAssert(viewControllers.count == _titles.count);
                 self.itemsWidths=@[@(70),@(70),@(70),@(70)];
+                self.navView.rightButton.alpha= 1 ;
+                self.navView.rightTouchView.userInteractionEnabled = YES;
                 break;
             case 1:
                 _titles = @[@"个人投资人",@"机构投资人",@"智囊团"];
@@ -775,6 +784,8 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
                 _viewControllerClasses = [NSArray arrayWithArray:viewControllers];
                 NSParameterAssert(viewControllers.count == _titles.count);
                 self.itemsWidths=@[@(100),@(100),@(100)];
+                self.navView.rightButton.alpha = 0;
+                self.navView.rightTouchView.userInteractionEnabled = NO;
                 break;
             default:
                 _titles = @[@"待融资",@"融资中",@"已融资",@"预选项目"];
@@ -786,11 +797,56 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
                 _viewControllerClasses = [NSArray arrayWithArray:viewControllers];
                 NSParameterAssert(viewControllers.count == _titles.count);
                 self.itemsWidths=@[@(70),@(70),@(70),@(70)];
+                self.navView.rightButton.alpha=1;
+                self.navView.rightTouchView.userInteractionEnabled = YES;
                 break;
         }
         
         [self reloadData];
         [self postFullyDisplayedNotificationWithCurrentIndex:0];
     }
+}
+
+
+
+#pragma WMTableViewController
+- (void)wmTableViewController:(id)wmTableViewController tapIndexPath:(NSIndexPath *)indexPath data:(NSDictionary *)dic
+{
+    RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
+    
+    Project* project = [[Project alloc]init];
+    project = [[Project alloc]init];
+    project.imgUrl = [dic valueForKey:@"img"];
+    project.tag = [dic valueForKey:@"tag"];
+    project.company = [dic valueForKey:@"company"];
+    project.projectId = [[dic valueForKey:@"id"] integerValue];
+    project.invest = [NSString stringWithFormat:@"%@",[dic valueForKey:@"invest"]];
+    project.planfinance = [NSString stringWithFormat:@"%@",[dic valueForKey:@"planfinance"]];
+    
+    controller.project = project;
+    controller.type=1;
+    controller.title = self.navView.title;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+-(void)wmTableViewController:(id)wmTableViewController thinkTankDetailData:(NSDictionary *)dic
+{
+    ThinkTankViewController* controller = [[ThinkTankViewController alloc]init];
+    controller.dic = dic;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+-(void)wmTableViewController:(id)wmTableViewController refresh:(id)sender
+{
+    
+}
+
+-(void)wmTableViewController:(id)wmTableViewController loadMore:(id)sender
+{
+    
+}
+-(void)wmTableViewController:(id)wmTableViewController playMedia:(BOOL)playMedia data:(NSDictionary *)dic
+{
+//    [self playMedia:[dic valueForKey:@"vcr"]];
 }
 @end

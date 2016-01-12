@@ -55,10 +55,8 @@
     .topSpaceToView(self.contentView,2)
     .leftSpaceToView(self.contentView, 10)
     .rightSpaceToView(self.contentView,10)
-//    .widthIs(self.contentView.frame.size.width-20)
+    .bottomSpaceToView(self.contentView,2)
     .autoHeightRatio(0);
-    
-    [self setupAutoHeightWithBottomView:_view1 bottomMargin:2];
 }
 
 //- (void)setModel:(DemoVC5Model *)model
@@ -76,7 +74,7 @@
         
         //开始组装
         NSString* name = [dic valueForKey:@"name"];
-        NSString* atName = [dic valueForKey:@"atname"];
+        NSString* atName = [dic valueForKey:@"at_name"];
         NSString* suffix = @":";
         NSString* content = [dic valueForKey:@"content"];
         NSString* str = @"";
@@ -110,6 +108,17 @@
         }
         
         _view1.attributedText = attributedString;//ios 6
+//        [_view1 sizeToFit];
+        
+//        _view1.sd_layout
+//        .topSpaceToView(self.contentView,2)
+//        .leftSpaceToView(self.contentView, 10)
+//        .rightSpaceToView(self.contentView,10)
+//        .bottomSpaceToView(self.contentView,2)
+//        .autoHeightRatio(0);
+        
+//        [self setupAutoHeightWithBottomView:_view1 bottomMargin:12];
+        [self setupAutoHeightWithBottomView:_view1 bottomMargin:2];
     }
 }
 

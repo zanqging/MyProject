@@ -25,22 +25,40 @@
 #import "MJRefresh.h"
 #import "Demo9Model.h"
 #import "DemoVC9Cell.h"
+#import "CycleHeader.h"
+#import "DAKeyboardControl.h"
 #import "DemoVC9HeaderView.h"
 #import "ShareTableViewCell.h"
+#import "PECropViewController.h"
 #import "UIView+SDAutoLayout.h"
 #import "PublishViewController.h"
+#import "UserLookForViewController.h"
+#import "ActionDetailViewController.h"
+#import "CustomImagePickerController.h"
 #import "UITableView+SDAutoTableViewCellHeight.h"
 
 #define kDemoVC9CellId @"demovc9cell"
+#define  TEXT_VIEW_HEIGHT  30
+@interface CycleViewController ()<UITableViewDataSource,UITableViewDelegate,WeiboTableViewCellDelegate,UITextViewDelegate,CustomImagePickerControllerDelegate>
 
-@interface CycleViewController ()<UITableViewDataSource,UITableViewDelegate>
-
+@property(retain,nonatomic)UIToolbar *toolBar;
 @property (nonatomic, strong) NSMutableArray *modelsArray;
+@property (nonatomic, strong) CustomImagePickerController* customPicker;
 
 @end
 
 @implementation CycleViewController
 {
+    CycleHeader* headerView;
+    float toolBarHeight;
+    
+    UIButton *sendButton;
+    UITextView *textView;
+    NSInteger currentPage;
+    NSString* replyContent;
+    NSString* conId,* atConId;
+    
+    DemoVC9Cell* currentSelectedCell;
 }
 
 - (void)viewDidLoad
@@ -80,19 +98,84 @@
     
     [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     
-    [self creatModelsWithCount:10];
+    //头部
+    headerView = [[CycleHeader alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 200)];
+    headerView.headerBackView.userInteractionEnabled = YES;
+    headerView.headerView.userInteractionEnabled  =YES;
+    [headerView.headerView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(UserInfoSetting:)]];
+    [headerView.headerBackView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(takePhoto:)]];
+    [self.tableView setTableHeaderView:headerView];
     
-    
-    DemoVC9HeaderView *headerView = [DemoVC9HeaderView new];
-    headerView.frame = CGRectMake(0, 0, 0, 260);
-    self.tableView.tableHeaderView = headerView;
+//    DemoVC9HeaderView *headerView = [DemoVC9HeaderView new];
+//    headerView.frame = CGRectMake(0, 0, 0, 260);
+//    self.tableView.tableHeaderView = headerView;
     
     [self.tableView registerClass:[DemoVC9Cell class] forCellReuseIdentifier:kDemoVC9CellId];
+    
+    self.toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0.0f,
+                                                               self.view.bounds.size.height,
+                                                               self.view.bounds.size.width,
+                                                               40.0f)];
+    self.toolBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+    [self.view addSubview:self.toolBar];
+    
+    textView = [[UITextView alloc] initWithFrame:CGRectMake(10.0f,
+                                                            6.0f,
+                                                            self.toolBar.bounds.size.width - 20.0f - 68.0f,
+                                                            TEXT_VIEW_HEIGHT)];
+    textView.returnKeyType =UIReturnKeyDone;
+    textView.layer.cornerRadius = 5;
+    textView.layer.borderWidth = 1;
+    textView.font = SYSTEMFONT(16);
+    textView.delegate  =self;
+    textView.layer.borderColor = FONT_COLOR_GRAY.CGColor;
+    textView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    [self.toolBar addSubview:textView];
+    
+    sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [sendButton setTitle:@"回复" forState:UIControlStateNormal];
+    [sendButton addTarget:self action:@selector(commentAction:) forControlEvents:UIControlEventTouchUpInside];
+    sendButton.frame = CGRectMake(self.toolBar.bounds.size.width - 68.0f,
+                                  6.0f,
+                                  58.0f,
+                                  29.0f);
+    [self.toolBar addSubview:sendButton];
+    
+    __block CycleViewController* blockSelf = self;
+    self.view.keyboardTriggerOffset = self.toolBar.bounds.size.height;
+    [self.view addKeyboardPanningWithFrameBasedActionHandler:^(CGRect keyboardFrameInView, BOOL opening, BOOL closing) {
+        CGRect toolBarFrame = blockSelf.toolBar.frame;
+        toolBarFrame.origin.y = keyboardFrameInView.origin.y - toolBarFrame.size.height;
+        blockSelf.toolBar.frame = toolBarFrame;
+    } constraintBasedActionHandler:nil];
+    
+    
+    //添加监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"reloadData" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContent:) name:@"publish" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContentNotification:) name:@"publishContent" object:nil];
     
     //加载数据
     [self loadData];
 }
 
+/**
+ *  消息提示
+ *
+ *  @param dic 通知数据
+ */
+-(void)updateNewMessage:(NSDictionary*)dic
+{
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    NSInteger newMessageCount = [[dataStore valueForKey:@"NewMessageCount"] integerValue];
+    NSInteger systemMessageCount = [[dataStore valueForKey:@"SystemMessageCount"] integerValue];
+    if (newMessageCount+systemMessageCount>0) {
+        [self.navView setIsHasNewMessage:YES];
+    }
+    
+}
 /**
  *  加载数据
  */
@@ -127,9 +210,104 @@
 }
 
 
+-(void)refresh
+{
+    [super refresh];
+    
+    [self loadData];
+}
+
+-(void)publishContentNotification:(NSDictionary*)dic
+{
+    NSDictionary* dataDic = [[dic valueForKey:@"userInfo"] valueForKey:@"data"];
+    if (dataDic) {
+        NSString* content = [dataDic valueForKey:@"content"];
+        NSMutableArray* postArray =[dataDic valueForKey:@"files"];
+        
+        //组织数据
+        NSMutableDictionary* dic = [[NSMutableDictionary alloc]init];
+        NSUserDefaults* dataDefault =[NSUserDefaults standardUserDefaults];
+        
+        //重构数组,
+        //用户id
+        [dic setValue:@"YES" forKey:@"flag"];
+        [dic setValue:postArray forKey:@"pic"];
+        [dic setValue:@"刚刚" forKey:@"datetime"];
+        [dic setValue:content forKey:@"content"];
+        [dic setValue:[dataDefault valueForKey:@"userId"] forKey:@"uid"];
+        //        [dic setValue:[dataDefault valueForKey:@"city"] forKey:@"city"];
+        [dic setValue:[dataDefault valueForKey:@"name"] forKey:@"name"];
+        [dic setValue:[dataDefault valueForKey:@"photo"] forKey:@"photo"];
+        [dic setValue:[dataDefault valueForKey:@"STATIC_USER_TYPE"] forKey:@"position"];
+        
+        [self.dataArray insertObject:dic atIndex:0];
+        [self.tableView reloadData];
+        
+        //1.获得全局的并发队列
+        dispatch_queue_t queue =  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        //2.添加任务到队列中，就可以执行任务
+        //异步函数：具备开启新线程的能力
+        dispatch_async(queue, ^{
+            [self savePhoto:dataDic];
+        });
+        
+        //[self performSelector:@selector(publishContent:) withObject:dataDic afterDelay:2];
+    }
+}
+
+-(void)savePhoto:(NSDictionary*)dic
+{
+    NSMutableArray* uploadFiles =[NSMutableArray new];
+    NSMutableArray* postArray =[dic valueForKey:@"files"];
+    int i=0;
+    for (UIView* v in postArray) {
+        UIImage* image = (UIImage*)v;
+        BOOL flag = [TDUtil saveContent:image fileName:[NSString stringWithFormat:@"file%d",i]];
+        if (flag) {
+            [uploadFiles addObject:[NSString stringWithFormat:@"file%d",i]];
+            i++;
+        }
+    }
+    
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"publish" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:uploadFiles,@"uploadFiles",[dic valueForKey:@"content" ],@"content", nil]];
+}
+
+-(void)UserInfoSetting:(id)sender
+{
+    UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    UIViewController* controller = [storyBoard instantiateViewControllerWithIdentifier:@"ModifyUserInfoViewController"];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 -(void)userInfoAction:(id)sender
 {
     [[NSNotificationCenter defaultCenter]postNotificationName:@"userInfo" object:nil];
+}
+
+-(void)publishContent:(NSDictionary*)dic
+{
+    NSMutableArray* uploadFiles =[[dic valueForKey:@"userInfo"] valueForKey:@"uploadFiles"];
+    NSString* content = [[dic valueForKey:@"userInfo"] valueForKey:@"content"];
+    [self.httpUtil getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:[NSDictionary dictionaryWithObject:content forKey:@"content"] files:uploadFiles postName:@"file" type:0 delegate:self sel:@selector(requestPublishContent:)];
+    
+    self.startLoading  =YES;
+    self.isTransparent = YES;
+}
+
+-(BOOL)commentAction:(id)sender
+{
+    NSString* content = textView.text;
+    if ([content isEqualToString:@""] || [content isEqualToString:replyContent]) {
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入回复内容"];
+        [textView resignFirstResponder];
+        return false;
+    }
+    
+    [textView resignFirstResponder];
+    
+    NSString* serverUrl = [CYCLE_CONTENT_REPLY stringByAppendingFormat:@"%@/",conId];
+    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:[NSDictionary dictionaryWithObjectsAndKeys:content,@"content",atConId,@"at", nil] type:0 delegate:self sel:@selector(requestReply:)];
+    return true;
 }
 
 -(void)publishAction:(id)sender
@@ -140,73 +318,6 @@
     [self.navigationController presentViewController:controller animated:YES completion:nil];
 }
 
-- (void)creatModelsWithCount:(NSInteger)count
-{
-    if (!_modelsArray) {
-        _modelsArray = [NSMutableArray new];
-    }
-    
-    NSArray *iconImageNamesArray = @[@"icon0.jpg",
-                                     @"icon1.jpg",
-                                     @"icon2.jpg",
-                                     @"icon3.jpg",
-                                     @"icon4.jpg",
-                                     ];
-    
-    NSArray *namesArray = @[@"GSD_iOS",
-                            @"风口上的猪",
-                            @"当今世界网名都不好起了",
-                            @"我叫郭德纲",
-                            @"Hello Kitty"];
-    
-    NSArray *textArray = @[@"当你的 app 没有提供 3x 的 LaunchImage 时，系统默认进入兼容模式，大屏幕一切按照 320 宽度渲染，屏幕宽度返回 320；然后等比例拉伸到大屏。这种情况下对界面不会产生任何影响，等于把小屏完全拉伸。",
-                           @"然后等比例拉伸到大屏。这种情况下对界面不会产生任何影响，等于把小屏完全拉伸。",
-                           @"当你的 app 没有提供 3x 的 LaunchImage 时",
-                           @"但是建议不要长期处于这种模式下，否则在大屏上会显得字大，内容少，容易遭到用户投诉。",
-                           @"屏幕宽度返回 320；然后等比例拉伸到大屏。这种情况下对界面不会产生任何影响，等于把小屏完全拉伸。但是建议不要长期处于这种模式下。"
-                           ];
-    
-    NSArray *picImageNamesArray = @[ @"pic0.jpg",
-                                     @"pic1.jpg",
-                                     @"pic2.jpg",
-                                     @"pic3.jpg",
-                                     @"pic4.jpg",
-                                     @"pic5.jpg",
-                                     @"pic6.jpg",
-                                     @"pic7.jpg",
-                                     @"pic8.jpg"
-                                     ];
-    
-    for (int i = 0; i < count; i++) {
-        int iconRandomIndex = arc4random_uniform(5);
-        int nameRandomIndex = arc4random_uniform(5);
-        int contentRandomIndex = arc4random_uniform(5);
-        
-        Demo9Model *model = [Demo9Model new];
-        model.iconName = iconImageNamesArray[iconRandomIndex];
-        model.name = namesArray[nameRandomIndex];
-        model.content = textArray[contentRandomIndex];
-        model.commentViewHeight = 213+i*20;
-        model.commentHeaderViewHeight=33;
-        
-        
-        
-        // 模拟“随机图片”
-        int random = arc4random_uniform(10);
-        
-        NSMutableArray *temp = [NSMutableArray new];
-        for (int i = 0; i < random; i++) {
-            int randomIndex = arc4random_uniform(9);
-            [temp addObject:picImageNamesArray[randomIndex]];
-        }
-        if (temp.count) {
-            model.picNamesArray = [temp copy];
-        }
-        
-        [self.modelsArray addObject:model];
-    }
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.dataArray.count;
@@ -215,9 +326,10 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DemoVC9Cell *cell = [tableView dequeueReusableCellWithIdentifier:kDemoVC9CellId];
-    if (!cell) {
-        cell =[[DemoVC9Cell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kDemoVC9CellId commentViewHeight:213 commentHeaderViewHeight:33];
-    }
+//    if (!cell) {
+    cell =[[DemoVC9Cell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kDemoVC9CellId];
+//    }
+    cell.delegate = self;
     
     cell.model = self.dataArray[indexPath.row];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -250,6 +362,301 @@
     return [[self.tableView cellAutoHeightManager] cellHeightForIndexPath:indexPath model:nil keyPath:nil];
 }
 
+#pragma UploadPic
+//*********************************************************照相机功能*****************************************************//
+
+
+//照相功能
+
+-(void)takePhoto:(NSDictionary*)dic
+{
+    [self showPicker];
+}
+
+- (void)showPicker
+{
+    CustomImagePickerController* picker = [[CustomImagePickerController alloc] init];
+    
+    //创建返回按钮
+    UIButton* btn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, NUMBERFORTY, NUMBERTHIRTY)];
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc]initWithCustomView:btn];
+    [leftButton setStyle:UIBarButtonItemStylePlain];
+    //创建设置按钮
+    btn=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, NUMBERFORTY, NUMBERTHIRTY)];
+    btn.tintColor=WriteColor;
+    btn.titleLabel.textColor=WriteColor;
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc]initWithCustomView:btn];
+    
+    picker.navigationItem.leftBarButtonItem=leftButton;
+    picker.navigationItem.rightBarButtonItem=rightButton;
+    
+    if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
+        [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
+    }else{
+        [picker setIsSingle:YES];
+        [picker setSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+    }
+    picker.modalPresentationStyle = UIModalPresentationCurrentContext;
+    [picker setCustomDelegate:self];
+    self.customPicker=picker;
+    [self presentViewController:self.customPicker animated:YES completion:nil];
+}
+
+- (void)cameraPhoto:(UIImage *)imageCamera  //选择完图片
+{
+    [self openEditor:imageCamera];
+}
+
+- (void)openEditor:(UIImage*)imageCamera
+{
+    PECropViewController *controller = [[PECropViewController alloc] init];
+    controller.delegate = self;
+    controller.image = imageCamera;
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    
+    [self presentViewController:navigationController animated:YES completion:NULL];
+}
+
+- (void)cropViewController:(PECropViewController *)controller didFinishCroppingImage:(UIImage *)croppedImage
+{
+    [controller dismissViewControllerAnimated:YES completion:NULL];
+    //保存图片
+    [TDUtil saveCameraPicture:croppedImage fileName:USER_STATIC_CYCLE_BG];
+    
+    //    [[NSNotificationCenter defaultCenter]postNotificationName:@"changeUserPic" object:nil userInfo:[NSDictionary dictionaryWithObject:croppedImage forKey:@"img"]];
+    //修改头部背景
+    [headerView.headerBackView setImage:croppedImage];
+    
+    //开始上传
+    [self uploadUserPic:0];
+}
+
+
+-(void)cropViewControllerDidCancel:(PECropViewController *)controller
+{
+    [controller dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+//取消照相
+-(void)cancelCamera
+{
+    
+}
+
+
+//上传身份证
+-(void)uploadUserPic:(NSInteger)id
+{
+    [self.httpUtil getDataFromAPIWithOps:CYCLE_CONTENT_BACKGROUND_UPLOAD postParam:nil file:STATIC_USER_BACKGROUND_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUploadHeaderImg:)];
+}
+
+
+#pragma WeiboTableViewCellDelegate
+-(void)weiboTableViewCell:(id)weiboTableViewCell userId:(NSString*)userId isSelf:(BOOL)isSelf
+{
+    UserLookForViewController* controller = [[UserLookForViewController alloc]init];
+    controller.userId = userId;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+-(void)weiboTableViewCell:(id)weiboTableViewCell contentId:(NSString *)contentId atId:(NSString *)atId isSelf:(BOOL)isSelf
+{
+    atConId  =atId;
+    conId  =contentId;
+    currentSelectedCell = weiboTableViewCell;
+    
+    if (atConId) {
+        //获取被@对象名称
+        NSString* name = @"";
+        for (int i = 0 ; i<currentSelectedCell.dataArray.count; i++) {
+            NSDictionary* dic  = currentSelectedCell.dataArray[i];
+            if ([[dic valueForKey:@"id"] integerValue]==[atId integerValue]) {
+                name = [dic valueForKey:@"name"];
+            }
+        }
+        
+        textView.text= [NSString stringWithFormat:@"回复%@:",name];
+        replyContent = textView.text;
+        textView.textColor = LightGrayColor;
+    }else{
+        replyContent = @"";
+        textView.text  = replyContent;
+    }
+    [textView becomeFirstResponder];
+}
+
+-(void)weiboTableViewCell:(id)weiboTableViewCell deleteDic:(id)cycle
+{
+    if ([self.dataArray containsObject:cycle]) {
+        [self.dataArray removeObject:cycle];
+        [self.tableView reloadData];
+    }
+}
+
+-(void)weiboTableViewCell:(id)weiboTableViewCell priseDic:(NSDictionary *)dic msg:(NSString *)msg
+{
+    NSIndexPath* indexPath = [self.tableView indexPathForCell:weiboTableViewCell];
+    if (dic) {
+        if ([[dic valueForKey:@"is_like"] boolValue]) {
+            Demo9Model* model = self.dataArray[indexPath.row];
+            NSMutableArray* array = [NSMutableArray arrayWithArray:model.likersArray];
+            [array insertObject:dic atIndex:0];
+            model.likersArray = array;
+            model.commentHeaderViewHeight = [self getCommentHeaderViewHeight:array];
+            self.dataArray[indexPath.row] = model;
+        }else{
+            Demo9Model* model = self.dataArray[indexPath.row];
+            NSMutableArray* array = [NSMutableArray arrayWithArray:model.likersArray];
+            for (int i= 0 ;i<array.count;i++) {
+                NSDictionary* d = array[i];
+                if ([[d valueForKey:@"uid"]integerValue]==[[dic valueForKey:@"uid"] integerValue]) {
+                    [array removeObject:d];
+                }
+            }
+            //设置为没有点赞
+            model.isLike = NO;
+            model.likersArray = array;
+            model.commentHeaderViewHeight = [self getCommentHeaderViewHeight:array];
+            self.dataArray[indexPath.row] = model;
+        }
+        [self.tableView reloadData];
+    }
+    [[DialogUtil sharedInstance]showDlg:self.view textOnly:msg];
+    
+}
+-(void)weiboTableViewCell:(id)weiboTableViewCell refresh:(BOOL)refresh
+{
+    Demo9Model* model =((DemoVC9Cell*)weiboTableViewCell).model;
+    NSIndexPath* inPath = [self.tableView indexPathForCell:weiboTableViewCell];
+    Demo9Model* modelInstance = [self.dataArray objectAtIndex:inPath.row];
+    modelInstance.commentArray = model.commentArray;
+    modelInstance.commentViewHeight = [self getCommentViewHeight:modelInstance.commentArray];
+    
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:inPath] withRowAnimation:UITableViewRowAnimationFade];
+    
+    [self.tableView reloadData];
+    
+}
+
+-(void)weiboTableViewCell:(id)weiboTableViewCell didSelectedContent:(BOOL)isSelected
+{
+    NSIndexPath* indexPath =[self.tableView indexPathForCell:weiboTableViewCell];
+    //    NSDictionary* dic = self.dataArray[indexPath.row];
+    //    //内容
+    //    NSString* content = [dic valueForKey:@"content"];
+    //    NSInteger picsCount = [[dic valueForKey:@"pics"] count];
+    //
+    //
+    //    int number = [TDUtil convertToInt:content] / 17;
+    //    if (number==0) {
+    //        if ([content length]>0) {
+    //            number++;
+    //        }
+    //    }
+    //
+    //    CGFloat height = number*25;
+    //    if(picsCount>0 && picsCount<=3){
+    //        height +=70;
+    //    }else{
+    //        if (picsCount%3!=0) {
+    //            height += (picsCount/3+1)*80;
+    //        }else{
+    //            height += (picsCount/3)*80;
+    //        }
+    //    }
+    //
+    //
+    //    height+=160;
+    
+    ActionDetailViewController* controller = [[ActionDetailViewController alloc]init];
+    controller.dic = self.dataArray[indexPath.row];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+
+-(void)weiboTableViewCell:(id)weiboTableViewCell didSelectedShareContentUrl:(NSURL *)urlStr
+{
+//    Cycle* cycle =((WeiboTableViewCell*)weiboTableViewCell).cycle;
+    //    BannerViewController* controller =[[BannerViewController alloc]init];
+    //    controller.titleStr=@"咨询详情";
+    //    controller.dic = [dic valueForKey:@"share"];
+    //    controller.title=@"圈子";
+    //    controller.type=3;
+    //    controller.url =[NSURL URLWithString:[[dic valueForKey:@"share"] valueForKey:@"url"]];
+    //    [self.navigationController pushViewController:controller animated:YES];
+}
+
+
+
+//*********************************************************照相机功能结束*****************************************************//
+
+-(BOOL)textViewShouldBeginEditing:(UITextView *)tv
+{
+    return YES;
+}
+
+-(void)textViewDidBeginEditing:(UITextView *)tv
+{
+    
+}
+
+-(void)textViewDidEndEditing:(UITextView *)tv
+{
+    if ([tv.text isEqualToString:@""]) {
+        tv.text=replyContent;
+        tv.textColor  =LightGrayColor;
+    }
+}
+
+
+-(void)textViewDidChange:(UITextView *)tv
+{
+    if (!atConId) {
+        tv.textColor  =FONT_COLOR_BLACK;
+    }
+    if ([tv.text containsString:replyContent]) {
+        tv.text=@"";
+        tv.textColor  =FONT_COLOR_BLACK;
+    }else if ([tv.text isEqualToString:@""]){
+        tv.text=replyContent;
+        tv.textColor  =LightGrayColor;
+    }
+    
+    CGFloat height = textView.contentSize.height;
+    if (toolBarHeight != height) {
+        if (toolBarHeight!=0) {
+            CGRect toolBarFrame = self.toolBar.frame;
+            toolBarFrame.origin.y -=(height-toolBarHeight);
+            toolBarFrame.size.height+=(height-toolBarHeight);
+            
+            [self.toolBar setFrame:toolBarFrame];
+            
+            sendButton.frame = CGRectMake(self.toolBar.bounds.size.width - 68.0f,
+                                          HEIGHT(self.toolBar)/2-15,
+                                          58.0f,
+                                          29.0f);
+            
+        }
+        toolBarHeight=height;
+    }
+}
+
+-(void)textViewDidChangeSelection:(UITextView *)tv
+{
+    //    NSLog(@"-----%@",tv.text);
+}
+
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    if ([text isEqualToString:@"\n"]){ //判断输入的字是否是回车，即按下return
+        //在这里做你响应return键的代码
+        [self commentAction:nil];
+        return NO; //这里返回NO，就代表return键值失效，即页面上按下return，不会出现换行，如果为yes，则输入页面会换行
+    }
+    return YES;
+}
+
 
 #pragma 设置数据
 -(void)setDataArray:(NSMutableArray *)dataArray
@@ -278,6 +685,9 @@
                 dic = [tempArray objectAtIndex:i];
                 
                 Demo9Model *model = [Demo9Model new];
+                model.id = [[dic valueForKey:@"id"] integerValue];
+                model.uid = [[dic valueForKey:@"uid"] integerValue];
+                model.isLike = [[dic valueForKey:@"is_like"] boolValue];
                 model.name = [dic valueForKey:@"name"];
                 model.address = [dic valueForKey:@"addr"];
                 model.iconName = [dic valueForKey:@"photo"];
@@ -299,89 +709,15 @@
                 
                 //评论列表
                 array = [dic valueForKey:@"comment"];
-                if (array && array.count>0) {
-                    model.commentArray =array;
-                    float height=0;
-                    NSDictionary* dicTemp;
-                    for(int i = 0;i<array.count;i++){
-                        dicTemp = array[i];
-                        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view)-110, 0)];
-                        label.numberOfLines=0;
-                        label.lineBreakMode = NSLineBreakByClipping;
-                        
-                        //开始组装
-                        NSString* name = [dicTemp valueForKey:@"name"];
-                        NSString* atName = [dicTemp valueForKey:@"atname"];
-                        NSString* suffix = @":";
-                        NSString* content = [dicTemp valueForKey:@"content"];
-                        NSString* str = @"";
-                        if (name) {
-                            str =[str stringByAppendingString:name];
-                        }
-                        
-                        if ([TDUtil isValidString:atName] ) {
-                            str = [str stringByAppendingFormat:@"回复%@%@",atName,suffix];
-                        }else{
-                            str = [str stringByAppendingFormat:@"%@",suffix];
-                        }
-                        
-                        str = [str stringByAppendingFormat:@" %@",content];
-                        
-                        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-                        
-                        //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
-                        
-                        [paragraphStyle setLineSpacing:5];//调整行间距
-                        //    [paragraphStyle setAlignment:NSTextAlignmentLeft];
-                        [paragraphStyle setFirstLineHeadIndent:0];
-                        [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
-                        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:str];
-                        [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [str length])];
-                        
-                        [attributedString addAttribute:NSForegroundColorAttributeName value:ColorCompanyTheme range:NSMakeRange(0, [name length])];
-                        
-                        if ([TDUtil isValidString:atName]) {
-                            [attributedString addAttribute:NSForegroundColorAttributeName value:ColorCompanyTheme range:NSMakeRange([name length]+2, [atName length])];
-                        }
-                        
-                        label.attributedText = attributedString;//ios 6
-                        [label sizeToFit];
-                        
-                        if (HEIGHT(label)<30 && i==0) {
-                            height+=40;
-                        }else{
-                            height+=HEIGHT(label);
-                        }
-                        
-                    }
-                    model.commentViewHeight = height;
-                }
+                model.commentArray = array;
+                model.commentViewHeight = [self getCommentViewHeight:array];
                 
-                
-                //评论列表
+                //点赞列表
                 array = [dic valueForKey:@"like"];
-                if (array && array.count>0) {
-                    model.likersArray =array;
-                    NSString* str=@"    ";
-                    NSDictionary* dicTemp;
-                    for (int i = 0; i<array.count; i++) {
-                        dicTemp = array[i];
-                        if (i!=array.count-1) {
-                            str = [str stringByAppendingFormat:@"%@,",[dicTemp valueForKey:@"name"]];
-                        }else{
-                            str = [str stringByAppendingFormat:@"%@",[dicTemp valueForKey:@"name"]];
-                        }
-                    }
-                    
-                    
-                    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView)-110, 0)];
-                    label.numberOfLines=0;
-                    label.lineBreakMode = NSLineBreakByWordWrapping;
-                    [TDUtil setLabelMutableText:label content:str lineSpacing:0 headIndent:0];
-                    
-                    float height = HEIGHT(label);
-                    model.commentHeaderViewHeight=height;
-                }
+                model.likersArray = array;
+                model.commentHeaderViewHeight=[self getCommentHeaderViewHeight:array];
+                
+                
                 [modelArray addObject:model];
             }
             
@@ -426,8 +762,177 @@
     }
 }
 
+-(CGFloat)getCommentViewHeight:(NSArray*)array
+{
+    if (array && array.count>0) {
+        float height=0;
+        NSDictionary* dicTemp;
+        for(int i = 0;i<array.count;i++){
+            dicTemp = array[i];
+            UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 0)];
+            label.numberOfLines=0;
+            label.lineBreakMode = NSLineBreakByClipping;
+            
+            //开始组装
+            NSString* name = [dicTemp valueForKey:@"name"];
+            NSString* atName = [dicTemp valueForKey:@"atname"];
+            NSString* suffix = @":";
+            NSString* content = [dicTemp valueForKey:@"content"];
+            NSString* str = @"";
+            if (name) {
+                str =[str stringByAppendingString:name];
+            }
+            
+            if ([TDUtil isValidString:atName] ) {
+                str = [str stringByAppendingFormat:@"回复%@%@",atName,suffix];
+            }else{
+                str = [str stringByAppendingFormat:@"%@",suffix];
+            }
+            
+            str = [str stringByAppendingFormat:@" %@",content];
+            
+            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+            
+            //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
+            
+            [paragraphStyle setLineSpacing:5];//调整行间距
+            //    [paragraphStyle setAlignment:NSTextAlignmentLeft];
+            [paragraphStyle setFirstLineHeadIndent:0];
+            [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
+            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:str];
+            [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [str length])];
+            
+            [attributedString addAttribute:NSForegroundColorAttributeName value:ColorCompanyTheme range:NSMakeRange(0, [name length])];
+            
+            if ([TDUtil isValidString:atName]) {
+                [attributedString addAttribute:NSForegroundColorAttributeName value:ColorCompanyTheme range:NSMakeRange([name length]+2, [atName length])];
+            }
+            
+            label.attributedText = attributedString;//ios 6
+            [label sizeToFit];
+            
+            if (HEIGHT(label)<30 && i==0) {
+                height+=40;
+            }else{
+                height+=HEIGHT(label);
+            }
+            
+        }
+        return height;
+    }
+    return 0;
+}
+
+-(CGFloat)getCommentHeaderViewHeight:(NSArray*)array
+{
+    if (array && array.count>0) {
+        NSString* str=@"    ";
+        NSDictionary* dicTemp;
+        for (int i = 0; i<array.count; i++) {
+            dicTemp = array[i];
+            if (i!=array.count-1) {
+                str = [str stringByAppendingFormat:@"%@,",[dicTemp valueForKey:@"name"]];
+            }else{
+                str = [str stringByAppendingFormat:@"%@",[dicTemp valueForKey:@"name"]];
+            }
+        }
+        
+        
+        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 0)];
+        label.numberOfLines=0;
+        label.lineBreakMode = NSLineBreakByWordWrapping;
+        [TDUtil setLabelMutableText:label content:str lineSpacing:0 headIndent:0];
+        
+        float height = HEIGHT(label);
+        
+        return height;
+    }
+    return 0;
+}
+
+
+/**
+ *  上传照片
+ *
+ *  @param request 返回上传结果
+ */
+-(void)requestUploadHeaderImg:(ASIHTTPRequest *)request{
+    NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary* jsonDic = [jsonString JSONValue];
+    
+    if(jsonDic!=nil)
+    {
+        NSString* code = [jsonDic valueForKey:@"code"];
+        if ([code intValue] == 0) {
+            headerView.headerBackView.image  =[TDUtil loadContent:STATIC_USER_BACKGROUND_PIC];
+        }
+        
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
+    }
+}
+
+-(void)requestReply:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* status = [dic valueForKey:@"code"];
+        if ([status integerValue] ==0) {
+            textView.text = @"";
+            toolBarHeight =0;
+            [textView resignFirstResponder];
+            [self.toolBar setFrame:CGRectMake(0.0f,
+                                              self.view.bounds.size.height,
+                                              self.view.bounds.size.width,
+                                              40.0f)];
+            
+            sendButton.frame = CGRectMake(self.toolBar.bounds.size.width - 68.0f,
+                                          HEIGHT(self.toolBar)/2-15,
+                                          58.0f,
+                                          29.0f);
+            //currentSelectedCell.dic = [dic valueForKey:@"data"];
+            NSIndexPath* indexPath = [self.tableView indexPathForCell:currentSelectedCell];
+            Demo9Model* model = self.dataArray[indexPath.row];
+            NSMutableArray* array =[NSMutableArray arrayWithArray:model.commentArray];
+            NSDictionary* dicTemp = [dic valueForKey:@"data"];
+            [array insertObject:dicTemp atIndex:0];
+            
+            model.commentArray = array;
+            model.commentViewHeight = [self getCommentViewHeight:array];
+            self.dataArray[indexPath.row] = model;
+            [self.tableView reloadData];
+        }
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
+    }
+}
+
+-(void)requestPublishContent:(ASIHTTPRequest*)request
+{
+    NSString* jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
+    
+    NSLog(@"返回:%@",jsonString);
+    NSMutableDictionary * dic =[jsonString JSONValue];
+    if (dic!=nil) {
+        NSString* code = [dic valueForKey:@"code"];
+        if ([code integerValue] == 0) {
+            NSDictionary* dataDic = [dic valueForKey:@"data"];
+            [self.dataArray replaceObjectAtIndex:0 withObject:dataDic];
+            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+        }
+        
+        self.startLoading = NO;
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
+    }
+}
+
+
 -(void)requestFailed:(ASIFormDataRequest*)request
 {
+    [self.tableView.header endRefreshing];
+    [self.tableView.footer endRefreshing];
     self.isNetRequestError = YES;
 }
 @end

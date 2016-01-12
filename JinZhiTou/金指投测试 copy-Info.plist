@@ -23,8 +23,14 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>tencent1104722649</string>
+			<string>tencent</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>tencent1104722649</string>
+			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
@@ -34,6 +40,26 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>wx33aa0167f6a81dac</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>tencentApiIdentifier</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>tencent1104722649.tencent</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>mqqapi</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>QQ0003640E</string>
 			</array>
 		</dict>
 	</array>

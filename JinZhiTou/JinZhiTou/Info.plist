@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>zh_CN</string>
 	<key>CFBundleDisplayName</key>
@@ -23,8 +25,14 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>tencent1104722649</string>
+			<string>tencent</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>tencent1104722649</string>
+			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
@@ -41,7 +49,33 @@
 	<string>2.1.7</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>wechat</string>
+		<string>weixin</string>
 		<string>jinzht</string>
+		<string>mqqapi</string>
+		<string>mqq</string>
+		<string>mqqOpensdkSSoLogin</string>
+		<string>mqqconnect</string>
+		<string>mqqopensdkdataline</string>
+		<string>mqqopensdkgrouptribeshare</string>
+		<string>mqqopensdkfriend</string>
+		<string>mqqopensdkapi</string>
+		<string>mqqopensdkapiV2</string>
+		<string>mqqopensdkapiV3</string>
+		<string>mqzoneopensdk</string>
+		<string>wtloginmqq</string>
+		<string>wtloginmqq2</string>
+		<string>mqqwpa</string>
+		<string>mqzone</string>
+		<string>mqzonev2</string>
+		<string>mqzoneshare</string>
+		<string>wtloginqzone</string>
+		<string>mqzonewx</string>
+		<string>mqzoneopensdkapiV2</string>
+		<string>mqzoneopensdkapi19</string>
+		<string>mqzoneopensdkapi</string>
+		<string>mqqbrowser</string>
+		<string>mttbrowser</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

@@ -21,7 +21,7 @@
         self.imgView.layer.cornerRadius = 3;
         self.imgView.layer.masksToBounds = YES;
         self.imgView.image = IMAGENAMED(@"loading");
-        self.imgView.contentMode = UIViewContentModeScaleAspectFit;
+        self.imgView.contentMode = UIViewContentModeScaleToFill;
         [view addSubview:self.imgView];
         [self addSubview:view];
         //名称

@@ -7,6 +7,7 @@
 //
 
 #import "NavView.h"
+#import "TDUtil.h"
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #define leftButtonRect CGRectMake(25,0,100,frame.size.height)
@@ -210,23 +211,36 @@
     if (self.menuArray && self.menuArray.count>0) {
         [self.titleLable removeFromSuperview];
         UILabel* label;
-        float pos_x = 50;
-        float width = (WIDTH(self)-100)/self.menuArray.count;
+        label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 0, HEIGHT(self))];
+        [TDUtil setLabelMutableText:label content:self.menuArray[0] lineSpacing:0 headIndent:0];
+        
+        float width = WIDTH(label)+20;
+        int index = -1;
+        int tapIndex = -1;
         for (int i = 0; i<self.menuArray.count; i++) {
-            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, 0, width, HEIGHT(self))];
+            label = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH(self)/2+width*index+tapIndex*5, HEIGHT(self)/4, width, HEIGHT(self)/2)];
             label.textColor = WriteColor;
             if (self.currentSelectedIndex ==i) {
                 label.font = SYSTEMBOLDFONT(18);
+                label.layer.cornerRadius=2;
+                label.layer.borderColor = WriteColor.CGColor;
+                label.layer.borderWidth=1;
             }else{
                 label.font  =SYSTEMFONT(16);
+                label.layer.cornerRadius=0;
+                label.layer.borderColor = ClearColor.CGColor;
+                label.layer.borderWidth=0;
             }
             label.tag = i+1000;
             label.text = self.menuArray[i];
+//            [TDUtil setLabelMutableText:label content:self.menuArray[i] lineSpacing:0 headIndent:0];
             label.userInteractionEnabled  = YES;
             [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)]];
             label.textAlignment  =NSTextAlignmentCenter;
             [self addSubview:label];
-            pos_x+=width;
+            
+            index =0;
+            tapIndex = 1;
         }
     }
 }
@@ -236,10 +250,16 @@
     for (int i = 0; i<self.menuArray.count; i++) {
         UILabel* label = [self viewWithTag:i+1000];
         label.font  = SYSTEMFONT(16);
+        label.layer.cornerRadius=0;
+        label.layer.borderColor = ClearColor.CGColor;
+        label.layer.borderWidth=0;
     }
     
     UILabel* label = (UILabel*)sender.view;
     label.font  = SYSTEMBOLDFONT(18);
+    label.layer.cornerRadius=2;
+    label.layer.borderColor = WriteColor.CGColor;
+    label.layer.borderWidth=1;
     
     if ([_delegate respondsToSelector:@selector(navView:tapIndex:)]) {
         [_delegate navView:self tapIndex:(int)(label.tag-1000)];

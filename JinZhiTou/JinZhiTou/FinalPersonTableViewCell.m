@@ -19,7 +19,7 @@
         //项目图片
         self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 130,HEIGHT(view)-10)];
         self.imgView.image = IMAGENAMED(@"loading");
-        self.imgView.contentMode = UIViewContentModeScaleAspectFit;
+        self.imgView.contentMode = UIViewContentModeScaleToFill;
 //        self.imgView.layer.cornerRadius = 3;
         self.imgView.layer.masksToBounds = YES;
         [view addSubview:self.imgView];

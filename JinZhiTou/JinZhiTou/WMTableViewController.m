@@ -16,7 +16,9 @@
 #import "FinalPersonTableViewCell.h"
 #import "FinalContentTableViewCell.h"
 @interface WMTableViewController ()<UITableViewDataSource,UITableViewDelegate>
-
+{
+    BOOL isRefresh;
+}
 @end
 
 @implementation WMTableViewController
@@ -39,6 +41,8 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(initWithParent:) name:WMControllerDidAddToSuperViewNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showFinished:) name:WMControllerDidFullyDisplayedNotification object:nil];
+    
+    isRefresh = YES;
 }
 
 -(void)initWithParent:(NSNotification*)notification
@@ -67,13 +71,18 @@
 -(void)refresh
 {
     self.currentPage =0;
+    isRefresh = YES;
     if (self.menuSelectIndex==0) {
         //网络请求
-        self.startLoading  =YES;
+        if (!self.dataArray) {
+            self.startLoading  =YES;
+        }
         NSString* srverUrl = [NSString stringWithFormat:@"project/%d/%d/",self.selectIndex+1,self.currentPage];
         [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
     }else{
-        self.startLoading = YES;
+        if (!self.dataArray) {
+            self.startLoading  =YES;
+        }
         switch (self.selectIndex) {
             case 2:
                 [self thinkTank];
@@ -88,7 +97,9 @@
 {
     if (self.menuSelectIndex==1) {
         //网络请求
-        self.startLoading  =YES;
+        if (!self.dataArray) {
+            self.startLoading  =YES;
+        }
         NSString* srverUrl = [THINKTANK stringByAppendingFormat:@"%d/",self.currentPage];
         [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
     }
@@ -99,7 +110,9 @@
 {
     if (self.menuSelectIndex==1) {
         //网络请求
-        self.startLoading  =YES;
+        if (!self.dataArray) {
+            self.startLoading  =YES;
+        }
         
         if (self.selectIndex<2) {
             NSString* srverUrl = [FINIAL_COMM stringByAppendingFormat:@"%d/%d/",self.selectIndex+1,self.currentPage];
@@ -113,7 +126,27 @@
 
 -(void)loadProject
 {
-    [self refresh];
+    self.currentPage++;
+    isRefresh = NO;
+    if (self.menuSelectIndex==0) {
+        //网络请求
+        if (!self.dataArray) {
+            self.startLoading  =YES;
+        }
+        NSString* srverUrl = [NSString stringWithFormat:@"project/%d/%d/",self.selectIndex+1,self.currentPage];
+        [self.httpUtil getDataFromAPIWithOps:srverUrl  type:0 delegate:self sel:@selector(requestFinished:) method:@"GET"];
+    }else{
+        if (!self.dataArray) {
+            self.startLoading  =YES;
+        }
+        switch (self.selectIndex) {
+            case 2:
+                [self thinkTank];
+            default:
+                [self finialCommicuteList];
+                break;
+        }
+    }
 }
 
 //- (void)viewWillAppear:(BOOL)animated{
@@ -172,24 +205,27 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.menuSelectIndex!=2 && self.selectIndex!=3) {
-        if (self.selectIndex==2 &&self.menuSelectIndex != 0) {
-            if ([_delegate respondsToSelector:@selector(wmTableViewController:thinkTankDetailData:)]) {
-                [_delegate wmTableViewController:self thinkTankDetailData:self.dataArray[indexPath.row]];
-            }
-        }else{
-            if (self.menuSelectIndex==0) {
+    if (self.menuSelectIndex==0) {
+        NSLog(@"%d-->%d-->%@",self.menuSelectIndex,self.selectIndex,_delegate);
+        //待融资、融资中、已融资
+        if (self.menuSelectIndex==0) {
+            if (self.selectIndex!=3) {
                 if ([_delegate respondsToSelector:@selector(wmTableViewController:tapIndexPath:data:)]) {
                     [_delegate wmTableViewController:self tapIndexPath:indexPath data:self.dataArray[indexPath.row]];
                 }
             }
+        }else{
+//            if ([_delegate respondsToSelector:@selector(wmTableViewController:thinkTankDetailData:)]) {
+//                [_delegate wmTableViewController:self thinkTankDetailData:self.dataArray[indexPath.row]];
+//            }
         }
+        
     }else{
-        if (self.menuSelectIndex==0 && self.selectIndex==3) {
-            if ([_delegate respondsToSelector:@selector(wmTableViewController:playMedia:data:)]) {
-                [_delegate wmTableViewController:self playMedia:YES data:self.dataArray[indexPath.row]];
-            }
-        }
+//        if (self.menuSelectIndex==0 && self.selectIndex==3) {
+//            if ([_delegate respondsToSelector:@selector(wmTableViewController:playMedia:data:)]) {
+//                [_delegate wmTableViewController:self playMedia:YES data:self.dataArray[indexPath.row]];
+//            }
+//        }
     }
     
 }
@@ -384,8 +420,18 @@
     {
         int code = [[jsonDic valueForKey:@"code"] intValue];
         if (code>=0) {
-            self.dataArray = [jsonDic valueForKey:@"data"];
-        }
+            if (isRefresh) {
+                self.dataArray = [jsonDic valueForKey:@"data"];
+            }else{
+                if (!self.dataArray) {
+                    self.dataArray = [jsonDic valueForKey:@"data"];
+                }else{
+                    NSMutableArray* array = self.dataArray;
+                    [array addObjectsFromArray:[jsonDic valueForKey:@"data"]];
+                    self.dataArray = array;
+                }
+            }
+                    }
         [[DialogUtil sharedInstance]showDlg:[UIApplication sharedApplication].windows[0] textOnly:[jsonDic valueForKey:@"msg"]];
         
         self.startLoading  =NO;

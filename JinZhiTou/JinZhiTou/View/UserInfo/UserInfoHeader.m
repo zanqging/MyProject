@@ -45,6 +45,7 @@
         lable.tag = 10002;
         lable.font = SYSTEMFONT(16);
         lable.textColor = WriteColor;
+        lable.userInteractionEnabled = YES;
         [lable addGestureRecognizer:recognizer];
         [self addSubview:lable];
         

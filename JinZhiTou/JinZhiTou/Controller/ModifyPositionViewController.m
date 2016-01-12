@@ -39,7 +39,7 @@
     //==============================滚动视图区域开始==============================//
     
     //==============================滚动视图内容区域开始==============================//
-    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, 40, 50, 40)];
+    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, 30, 50, 40)];
     label.font = SYSTEMFONT(16);
     
     [TDUtil setLabelMutableText:label content:@"职位名称" lineSpacing:0 headIndent:0];
@@ -47,7 +47,7 @@
     
     NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
     //输入姓名
-    textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label)-20, WIDTH(self.view)-POS_X(label)-60, 40)];
+    textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label)-10, WIDTH(self.view)-POS_X(label)-150, 40)];
     textField.font = SYSTEMFONT(16);
     textField.placeholder = @"请输入职位";
     textField.text  =[data valueForKey:USER_STATIC_POSITION];
@@ -60,7 +60,7 @@
     [scrollView addSubview:textField];
 
     
-    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(textField), POS_Y(textField)+5, WIDTH(textField), 1)];
+    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(textField), POS_Y(textField)-10, WIDTH(textField), 1)];
     imgView.backgroundColor = BACKGROUND_LIGHT_GRAY_COLOR;
     [scrollView addSubview:imgView];
     //==============================滚动视图内容区域开始==============================//

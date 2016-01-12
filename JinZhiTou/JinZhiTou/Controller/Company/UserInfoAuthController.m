@@ -76,6 +76,7 @@
     
     UIImageView* imgView =[[UIImageView alloc]initWithFrame:CGRectMake(20, 10, WIDTH(view)-40, HEIGHT(view)-20)];
     [imgView setImage:[TDUtil loadContent:STATIC_USER_DEFAULT_ID_PIC]];
+    imgView.tag=50001;
     imgView.contentMode = UIViewContentModeScaleToFill;
     imgView.layer.cornerRadius = 5;
     imgView.layer.masksToBounds = YES;
@@ -369,7 +370,13 @@
     NSMutableDictionary* dic = [jsonString JSONValue];
     
     if (dic!=nil) {
-        NSString* code =[dic valueForKey:@"code"];
+//        NSString* code =[dic valueForKey:@"code"];
+        NSDictionary* tempDic = [dic valueForKey:@"data"];
+        
+        UIImageView* imgView = [[scrollView viewWithTag:30001] viewWithTag:50001];
+        [imgView sd_setImageWithURL:[NSURL URLWithString:[tempDic valueForKey:@"idpic"]] placeholderImage:IMAGENAMED(@"loading")];
+        
+        self.startLoading = NO;
     }
 }
 -(void)requestUserInfo:(ASIHTTPRequest*)request

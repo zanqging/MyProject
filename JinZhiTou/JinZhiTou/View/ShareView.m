@@ -221,7 +221,7 @@
     TencentOAuth *auth = [[TencentOAuth alloc] initWithAppId:@"1104722649"
                                                  andDelegate:self];
     NSLog(@"%@",auth);
-    
+//
     //分享跳转URL
     NSString *urlStr;
     urlStr =[dataDic valueForKey:@"url"];
@@ -240,6 +240,23 @@
     //将内容分享到qq
     QQApiSendResultCode sent = [QQApiInterface sendReq:req];
     [self handleSendResult:sent];
+    
+//    //分享跳转URL
+//    NSString *url = @"http://xxx.xxx.xxx/";
+//    //分享图预览图URL地址
+//    NSString *previewImageUrl = @"preImageUrl.png";
+//    QQApiNewsObject *newsObj = [QQApiNewsObject
+//                                objectWithURL :[NSURL URLWithString:@"http://www.baidu.com"]
+//                                title: @"title"
+//                                description :@"description"
+//                                previewImageURL:[NSURL URLWithString:previewImageUrl]];
+//    SendMessageToQQReq *req = [SendMessageToQQReq reqWithContent:newsObj];
+//    //将内容分享到qq
+//    QQApiSendResultCode sent = [QQApiInterface sendReq:req];
+//    //将内容分享到qzone
+////    QQApiSendResultCode sent = [QQApiInterface SendReqToQZone:req];
+//    
+//    [self handleSendResult:sent];
 }
 
 
@@ -249,7 +266,7 @@
     {
         case EQQAPIAPPNOTREGISTED:
         {
-            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"Error" message:@"App未注册" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
+            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"Error" message:@"App未注册" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
             [msgbox show];
             
             break;
@@ -258,27 +275,34 @@
         case EQQAPIMESSAGECONTENTNULL:
         case EQQAPIMESSAGETYPEINVALID:
         {
-            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"Error" message:@"发送参数错误" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
+            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"发送参数错误" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
             [msgbox show];
             
             break;
         }
         case EQQAPIQQNOTINSTALLED:
         {
-            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"Error" message:@"未安装手Q" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
+            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"未安装手Q" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
             [msgbox show];
             
             break;
         }
         case EQQAPIQQNOTSUPPORTAPI:
         {
-            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"Error" message:@"API接口不支持" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
+            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"API接口不支持" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
             [msgbox show];
             break;
         }
         case EQQAPISENDFAILD:
         {
-            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"Error" message:@"发送失败" delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
+            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"发送失败" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
+            [msgbox show];
+            
+            break;
+        }
+        case EQQAPISENDSUCESS:
+        {
+            UIAlertView *msgbox = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"分享取消" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil];
             [msgbox show];
             
             break;

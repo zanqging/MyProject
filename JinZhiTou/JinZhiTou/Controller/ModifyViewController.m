@@ -49,14 +49,15 @@
     //==============================滚动视图开始==============================//
     
     //==============================滚动视图内容设置开始==============================//
-    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, 20, 50, 40)];
-    label.text = @"姓名";
+    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, 30, 50, 40)];
+    [TDUtil setLabelMutableText:label content:@"姓名" lineSpacing:0 headIndent:0];
     label.font = SYSTEMFONT(16);
     [scrollView addSubview:label];
     NSUserDefaults* data = [NSUserDefaults standardUserDefaults];
     //输入姓名
-    textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), WIDTH(self.view)-POS_X(label)-60, 40)];
+    textField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label)-10, WIDTH(self.view)-POS_X(label)-90, 40)];
     textField.font = SYSTEMFONT(16);
+    textField.placeholder = @"请输入昵称";
     textField.text = [data valueForKey:USER_STATIC_NICKNAME];
     textField.returnKeyType = UIReturnKeyDone;
     textField.borderStyle =UITextBorderStyleNone;
@@ -68,7 +69,7 @@
     //==============================滚动视图内容开始==============================//
 
     
-    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(textField), POS_Y(textField)+5, WIDTH(textField), 1)];
+    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(textField), POS_Y(textField)-10, WIDTH(textField), 1)];
     imgView.backgroundColor = BACKGROUND_LIGHT_GRAY_COLOR;
     [scrollView addSubview:imgView];
     

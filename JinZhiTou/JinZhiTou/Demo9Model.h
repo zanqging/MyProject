@@ -26,6 +26,9 @@
 
 @interface Demo9Model : NSObject
 
+@property (nonatomic, assign) bool isLike; //是否点赞
+@property (nonatomic, assign) NSInteger id;  //id
+@property (nonatomic, assign) NSInteger uid;  //uid
 @property (nonatomic, copy) NSString *name;  //姓名
 @property (nonatomic, copy) NSString *dateTime;  //姓名
 @property (nonatomic, copy) NSString *address;//地址

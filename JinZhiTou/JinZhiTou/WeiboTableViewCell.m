@@ -99,7 +99,6 @@
         NSString* serverUrl = [CYCLE_CONTENT_PRISE stringByAppendingFormat:@"%@/%@/",self.cycle.id,self.cycle.is_like];
         [httpUtils getDataFromAPIWithOps:serverUrl  type:0 delegate:self sel:@selector(requestPriseFinished:) method:@"GET"];
     }
-    
 }
 
 -(void)shareAction:(id)sender
