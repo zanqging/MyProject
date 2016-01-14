@@ -11,6 +11,8 @@
 #import "RootViewController.h"
 #import "UITableViewCustomView.h"
 @protocol WMtableViewCellDelegate <NSObject>
+-(void)wmTableViewController:(id)wmTableViewController comFincance:(NSDictionary*)dic;
+-(void)wmTableViewController:(id)wmTableViewController personalFincance:(NSDictionary*)dic;
 -(void)wmTableViewController:(id)wmTableViewController thinkTankDetailData:(NSDictionary*)dic;
 -(void)wmTableViewController:(id)wmTableViewController tapIndexPath:(NSIndexPath*)indexPath data:(NSDictionary*)dic;
 -(void)wmTableViewController:(id)wmTableViewController playMedia:(BOOL)playMedia data:(NSDictionary*)dic;

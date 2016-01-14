@@ -70,7 +70,7 @@
    [self.view addSubview:self.tableView];
     
     //头部
-    headerView = [[RoadShowHomeHeaderView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), HEIGHT(self.view)*0.5-18)];
+    headerView = [[RoadShowHomeHeaderView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), HEIGHT(self.view)*0.5-10)];
     headerView.delegate = self;
    [self.tableView setTableHeaderView:headerView];
    [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];

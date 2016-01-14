@@ -11,6 +11,8 @@
 #import "INSViewController.h"
 #import "WMTableViewController.h"
 #import "ThinkTankViewController.h"
+#import "ComFinanceViewController.h"
+#import "PersonalFinanceViewController.h"
 #import "RoadShowDetailViewController.h"
 
 static CGFloat kWMMarginToNavigationItem = 6.0;
@@ -836,6 +838,19 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
+-(void)wmTableViewController:(id)wmTableViewController personalFincance:(NSDictionary *)dic
+{
+    PersonalFinanceViewController* controller = [[PersonalFinanceViewController alloc]init];
+    controller.dic = dic;
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+-(void)wmTableViewController:(id)wmTableViewController comFincance:(NSDictionary *)dic
+{
+    ComFinanceViewController* controller = [[ComFinanceViewController alloc]init];
+    controller.dic = dic;
+    [self.navigationController pushViewController:controller animated:YES];
+}
 -(void)wmTableViewController:(id)wmTableViewController refresh:(id)sender
 {
     

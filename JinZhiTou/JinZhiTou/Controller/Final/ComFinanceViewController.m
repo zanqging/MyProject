@@ -6,36 +6,37 @@
 //  Copyright (c) 2015年 金指投. All rights reserved.
 //
 
-#import "ThinkTankViewController.h"
+#import "ComFinanceViewController.h"
 #import "FoldInfoView.h"
+#import "CaseFoldInfoView.h"
 #import "NSString+SBJSON.h"
 #import "UIView+SDAutoLayout.h"
 #import "UIImageView+WebCache.h"
+#import "ComFinanceFoldInfoView.h"
 #import <MediaPlayer/MediaPlayer.h>
-@interface ThinkTankViewController ()<UIScrollViewDelegate,ASIHTTPRequestDelegate>
+@interface ComFinanceViewController ()<UIScrollViewDelegate,ASIHTTPRequestDelegate>
 {
-    FoldInfoView* _infoFoldView1;
+    ComFinanceFoldInfoView* _infoFoldView1;
     FoldInfoView* _infoFoldView2;
-    FoldInfoView* _infoFoldView3;
-    FoldInfoView* _infoFoldView4;
+    CaseFoldInfoView* _infoFoldView3;
     NSDictionary* dataDic;
     UIScrollView* scrollView;
 }
 @property (nonatomic,strong) MPMoviePlayerViewController * moviePlayer;//视频播放控制器
 @end
 
-@implementation ThinkTankViewController
+@implementation ComFinanceViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
     //设置标题
     self.navView.imageView.alpha=1;
-    [self.navView setTitle:@"智囊团详情"];
+    [self.navView setTitle:@"机构详情"];
     self.navView.titleLable.textColor=WriteColor;
     
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [self.navView.leftButton setTitle:@"智囊团" forState:UIControlStateNormal];
+    [self.navView.leftButton setTitle:@"投资人" forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
     //滚动视图
@@ -47,59 +48,15 @@
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.contentSize = CGSizeMake(WIDTH(self.view), HEIGHT(self.view)+10);
     [self.view addSubview:scrollView];
-    
-    //头部
-    UIView* view = [[UIView alloc]init];
-    view.tag = 10001;
-    view.backgroundColor  = WriteColor;
-    view.userInteractionEnabled = YES;
-    [scrollView addSubview:view];
-    
-    view.sd_layout
-    .topEqualToView(scrollView)
-    .leftEqualToView(self.view)
-    .rightEqualToView(self.view)
-    .heightIs(170);
-    
-    //背景
-    UIImageView* imgView = [[UIImageView alloc]init];
-    imgView.backgroundColor = BlackColor;
-    [imgView setContentMode:UIViewContentModeScaleAspectFit];
-    [imgView sd_setImageWithURL:[self.dic valueForKey:@"photo"] placeholderImage:IMAGENAMED(@"coremember") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
-        [imgView setContentMode:UIViewContentModeScaleToFill];
-    }];
-    
-    [view addSubview:imgView];
-    
-    imgView.sd_layout
-    .spaceToSuperView(UIEdgeInsetsMake(0, 0, 0, 0));
-    
-    //头像
-    imgView = [[UIImageView alloc]init];
-    imgView.layer.masksToBounds = YES;
-    imgView.backgroundColor = BlackColor;
-    [imgView setContentMode:UIViewContentModeScaleAspectFit];
-    [imgView sd_setImageWithURL:[self.dic valueForKey:@"photo"] placeholderImage:IMAGENAMED(@"coremember") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
-        [imgView setContentMode:UIViewContentModeScaleToFill];
-    }];
-    
-    [view addSubview:imgView];
-    
-    imgView.sd_layout
-    .widthEqualToHeight(80)
-    .spaceToSuperView(UIEdgeInsetsMake(HEIGHT(view)/2-40, WIDTH(self.view)/2-40, HEIGHT(view)/2-40, 0));
-    imgView.sd_cornerRadiusFromWidthRatio = [NSNumber numberWithDouble:0.5];
 
-    _infoFoldView1 = [[FoldInfoView alloc] init];
+    _infoFoldView1 = [[ComFinanceFoldInfoView alloc] init];
     [scrollView addSubview:_infoFoldView1];
     
-    
     _infoFoldView1.sd_layout
-    .topSpaceToView(view,10)
+    .topSpaceToView(scrollView,10)
     .leftSpaceToView(scrollView,10)
     .rightSpaceToView(scrollView,10)
     .heightIs(80);
-    
     
     _infoFoldView2 = [[FoldInfoView alloc] init];
     [scrollView addSubview:_infoFoldView2];
@@ -110,30 +67,19 @@
     .rightEqualToView(_infoFoldView1)
     .heightIs(80);
     
-    _infoFoldView3 = [[FoldInfoView alloc] init];
+    _infoFoldView3 = [[CaseFoldInfoView alloc] init];
     [scrollView addSubview:_infoFoldView3];
     
     _infoFoldView3.sd_layout
     .topSpaceToView(_infoFoldView2,10)
     .leftEqualToView(_infoFoldView2)
     .rightEqualToView(_infoFoldView2)
-    .heightIs(200);
-    
-    _infoFoldView4 = [[FoldInfoView alloc] init];
-    [scrollView addSubview:_infoFoldView4];
-    
-    _infoFoldView4.sd_layout
-    .topSpaceToView(_infoFoldView3,10)
-    .leftEqualToView(_infoFoldView3)
-    .rightEqualToView(_infoFoldView3)
-    .heightIs(250);
+    .heightIs(130);
     
     scrollView.sd_layout
     .spaceToSuperView(UIEdgeInsetsMake(POS_Y(self.navView), 0, 0, 0));
     
-    [scrollView setupAutoContentSizeWithBottomView:_infoFoldView4 bottomMargin:10];
-    
-    
+    [scrollView setupAutoContentSizeWithBottomView:_infoFoldView3 bottomMargin:10];
     
     
 //    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, POS_Y(view)-40, 90, 40)];
@@ -174,7 +120,7 @@
 -(void)loadThinkTankDetail
 {
     
-    NSString* url = [THINK_DETAIL stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
+    NSString* url = [COMDETAIL stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
     [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestThinkTankDetail:)];
 }
 
@@ -259,37 +205,21 @@
         if ([code intValue] == 0 || [code intValue] == -1) {
             dataDic = [jsonDic valueForKey:@"data"];
             
-            NSString* url = [dataDic valueForKey:@"video"];
-            if ([TDUtil isValidString:url]) {
-                //播放按钮
-                CGRect frame =CGRectMake(10, 10, WIDTH(scrollView)-20, 150);
-                UIImageView* imgPlay = [[UIImageView alloc]initWithFrame:CGRectMake(frame.size.width/2-10, frame.size.height/2-10, 40, 40)];
-                imgPlay.image = IMAGENAMED(@"bofang");
-                imgPlay.contentMode = UIViewContentModeScaleAspectFill;
-                UIView* view = [scrollView viewWithTag:10001];
-                [view addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playMedia:)]];
-                [view addSubview:imgPlay];
-            }
-            
             NSMutableDictionary* dic = [NSMutableDictionary new];
-            [dic setValue:@"身份" forKey:@"title"];
-            [dic setValue:[self.dic valueForKey:@"position"] forKey:@"content"];
+            [dic setValue:[self.dic valueForKey:@"name"] forKey:@"name"];
+            [dic setValue:[self.dic valueForKey:@"addr"] forKey:@"addr"];
+            [dic setValue:[self.dic valueForKey:@"logo"] forKey:@"logo"];
+            [dic setValue:[dataDic valueForKey:@"homepage"] forKey:@"homepage"];
+            [dic setValue:[dataDic valueForKey:@"foundingtime"] forKey:@"foundingtime"];
+            [dic setValue:[dataDic valueForKey:@"fundsize"] forKey:@"fundsize"];
             _infoFoldView1.dic = dic;
             
             dic = [NSMutableDictionary new];
-            [dic setValue:@"寄语" forKey:@"title"];
-            [dic setValue:[dataDic valueForKey:@"signature"] forKey:@"content"];
+            [dic setValue:@"机构介绍" forKey:@"title"];
+            [dic setValue:[dataDic valueForKey:@"profile"] forKey:@"content"];
             _infoFoldView2.dic = dic;
             
-            dic = [NSMutableDictionary new];
-            [dic setValue:@"个人介绍" forKey:@"title"];
-            [dic setValue:[dataDic valueForKey:@"experience"] forKey:@"content"];
-            _infoFoldView3.dic = dic;
-            
-            dic = [NSMutableDictionary new];
-            [dic setValue:@"投辅案例" forKey:@"title"];
-            [dic setValue:[dataDic valueForKey:@"cases"] forKey:@"content"];
-            _infoFoldView4.dic = dic;
+            _infoFoldView3.dataArray = [dataDic valueForKey:@"investcase"];
             
 //            _infoFoldView4.sd_layout
 //            .topSpaceToView(_infoFoldView3,10)

@@ -31,7 +31,6 @@
 #import "UIView+SDAutoLayout.h"
 #import <QuartzCore/QuartzCore.h>
 #import "SDWeiXinPhotoContainerView.h"
-#import "UITableView+SDAutoTableViewCellHeight.h"
 
 
 @implementation DemoVC9Cell
@@ -354,6 +353,7 @@
 //        NSLog(@"高度:%f-->%f",model.commentViewHeight,height);
     }
     
+//    [_viewComment setupAutoHeightWithBottomView:self.tableView bottomMargin:2]
     [self setupAutoHeightWithBottomView:_viewComment bottomMargin:10];
 }
 

@@ -164,8 +164,8 @@
 
 //服务器域名地址
 //#define SERVICE_URL @"http://115.28.110.243/phone4/"//服务器域名地址
-#define SERVICE_URL @"http://www.jinzht.com/phone4/"//服务器域名地址
-//#define SERVICE_URL @"http://www.jinzht.com:8000/phone/"//服务器域名地址
+//#define SERVICE_URL @"http://www.jinzht.com/phone4/"//服务器域名地址
+#define SERVICE_URL @"http://www.jinzht.com:8000/phone/"//服务器域名地址
 //服务器域名地址
 //#define SERVICE_URL @"http://www.jinzht.com/phone/"//服务器域名地址
 //#define SERVICE_URL @"http://192.168.31.236:8080/weini/"
@@ -297,6 +297,10 @@
 #define TEAM_DETAIL @"memberdetail/"
 //智囊团详情
 #define THINK_DETAIL @"thinktankdetail/"
+//个人投资人
+#define AUTHDETAIL @"authdetail/"
+//机构投资人
+#define COMDETAIL @"institutedetail/"
 //微信分享
 #define WEBCAT_SHARE @"shareInfoMation?userId=%@&menuId=%@"
 //更新版本

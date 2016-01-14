@@ -6,13 +6,13 @@
 //  Copyright (c) 2015年 金指投. All rights reserved.
 //
 
-#import "ThinkTankViewController.h"
+#import "PersonalFinanceViewController.h"
 #import "FoldInfoView.h"
 #import "NSString+SBJSON.h"
 #import "UIView+SDAutoLayout.h"
 #import "UIImageView+WebCache.h"
 #import <MediaPlayer/MediaPlayer.h>
-@interface ThinkTankViewController ()<UIScrollViewDelegate,ASIHTTPRequestDelegate>
+@interface PersonalFinanceViewController ()<UIScrollViewDelegate,ASIHTTPRequestDelegate>
 {
     FoldInfoView* _infoFoldView1;
     FoldInfoView* _infoFoldView2;
@@ -24,18 +24,18 @@
 @property (nonatomic,strong) MPMoviePlayerViewController * moviePlayer;//视频播放控制器
 @end
 
-@implementation ThinkTankViewController
+@implementation PersonalFinanceViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
     //设置标题
     self.navView.imageView.alpha=1;
-    [self.navView setTitle:@"智囊团详情"];
+    [self.navView setTitle:@"个人投资人详情"];
     self.navView.titleLable.textColor=WriteColor;
     
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [self.navView.leftButton setTitle:@"智囊团" forState:UIControlStateNormal];
+    [self.navView.leftButton setTitle:@"投资人" forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
     //滚动视图
@@ -174,7 +174,7 @@
 -(void)loadThinkTankDetail
 {
     
-    NSString* url = [THINK_DETAIL stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
+    NSString* url = [AUTHDETAIL stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
     [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestThinkTankDetail:)];
 }
 
@@ -272,8 +272,8 @@
             }
             
             NSMutableDictionary* dic = [NSMutableDictionary new];
-            [dic setValue:@"身份" forKey:@"title"];
-            [dic setValue:[self.dic valueForKey:@"position"] forKey:@"content"];
+            [dic setValue:@"个人介绍" forKey:@"title"];
+            [dic setValue:[dataDic valueForKey:@"profile"] forKey:@"content"];
             _infoFoldView1.dic = dic;
             
             dic = [NSMutableDictionary new];
@@ -282,13 +282,13 @@
             _infoFoldView2.dic = dic;
             
             dic = [NSMutableDictionary new];
-            [dic setValue:@"个人介绍" forKey:@"title"];
-            [dic setValue:[dataDic valueForKey:@"experience"] forKey:@"content"];
+            [dic setValue:@"投资规划" forKey:@"title"];
+            [dic setValue:[dataDic valueForKey:@"investplan"] forKey:@"content"];
             _infoFoldView3.dic = dic;
             
             dic = [NSMutableDictionary new];
-            [dic setValue:@"投辅案例" forKey:@"title"];
-            [dic setValue:[dataDic valueForKey:@"cases"] forKey:@"content"];
+            [dic setValue:@"投资案例" forKey:@"title"];
+            [dic setValue:[dataDic valueForKey:@"investcase"] forKey:@"content"];
             _infoFoldView4.dic = dic;
             
 //            _infoFoldView4.sd_layout

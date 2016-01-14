@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "RootViewController.h"
-@interface ThinkTankViewController : RootViewController
+@interface ComFinanceViewController : RootViewController
 @property(retain,nonatomic)NSDictionary* dic;
 @end

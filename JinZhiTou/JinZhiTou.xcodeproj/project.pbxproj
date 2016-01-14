@@ -57,6 +57,16 @@
 		4515BBDF1BE9D92700B4D402 /* RoadShowHomeHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4515BBDE1BE9D92700B4D402 /* RoadShowHomeHeaderView.m */; };
 		4515BBE21BE9FBE400B4D402 /* LoadingViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4515BBE11BE9FBE400B4D402 /* LoadingViewDelegate.m */; };
 		4515BBE51BEA199900B4D402 /* RoadShowHomeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4515BBE41BEA199900B4D402 /* RoadShowHomeTableViewCell.m */; };
+		45161DDD1C45F6EE00AC115A /* FoldInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45161DDC1C45F6EE00AC115A /* FoldInfoView.m */; };
+		45161DDE1C45F6EE00AC115A /* FoldInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45161DDC1C45F6EE00AC115A /* FoldInfoView.m */; };
+		45161DE11C461F0700AC115A /* ComFinanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45161DE01C461F0700AC115A /* ComFinanceViewController.m */; };
+		45161DE21C461F0700AC115A /* ComFinanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45161DE01C461F0700AC115A /* ComFinanceViewController.m */; };
+		45161DE51C461F1400AC115A /* PersonalFinanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45161DE41C461F1400AC115A /* PersonalFinanceViewController.m */; };
+		45161DE61C461F1400AC115A /* PersonalFinanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45161DE41C461F1400AC115A /* PersonalFinanceViewController.m */; };
+		45161DE91C462BA300AC115A /* ComFinanceFoldInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45161DE81C462BA200AC115A /* ComFinanceFoldInfoView.m */; };
+		45161DEA1C462BA300AC115A /* ComFinanceFoldInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45161DE81C462BA200AC115A /* ComFinanceFoldInfoView.m */; };
+		45161DED1C462C8800AC115A /* CaseFoldInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45161DEC1C462C8800AC115A /* CaseFoldInfoView.m */; };
+		45161DEE1C462C8800AC115A /* CaseFoldInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45161DEC1C462C8800AC115A /* CaseFoldInfoView.m */; };
 		4517CD641B78586F00EFBB6A /* AutoShowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4517CD631B78586F00EFBB6A /* AutoShowView.m */; };
 		4517CD671B785AA000EFBB6A /* TableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4517CD661B785AA000EFBB6A /* TableViewCell.m */; };
 		4517CDB91B78C7ED00EFBB6A /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4517CDA71B78C7ED00EFBB6A /* AFHTTPRequestOperation.m */; };
@@ -704,6 +714,8 @@
 		45631F7B1B5A3A7E009FA35D /* SphereMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 45631F7A1B5A3A7E009FA35D /* SphereMenu.m */; };
 		45631F7F1B5A48CE009FA35D /* DataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 45631F7E1B5A48CE009FA35D /* DataModel.m */; };
 		45631F821B5A4AAB009FA35D /* SphereMenuItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45631F811B5A4AAB009FA35D /* SphereMenuItemView.m */; };
+		4564352C1C46602300311CD8 /* CompanyCaseItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4564352B1C46602300311CD8 /* CompanyCaseItemView.m */; };
+		4564352D1C46602300311CD8 /* CompanyCaseItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4564352B1C46602300311CD8 /* CompanyCaseItemView.m */; };
 		4565A2051B9D41CF00FA040A /* TypeShow.m in Sources */ = {isa = PBXBuildFile; fileRef = 4565A2041B9D41CF00FA040A /* TypeShow.m */; };
 		4565A2081B9D5A3E00FA040A /* NewFinialTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4565A2071B9D5A3D00FA040A /* NewFinialTableViewCell.m */; };
 		4565C2D71C0D74B700BF80D0 /* login.png in Resources */ = {isa = PBXBuildFile; fileRef = 4565C2D61C0D74B700BF80D0 /* login.png */; };
@@ -988,6 +1000,16 @@
 		4515BBE11BE9FBE400B4D402 /* LoadingViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingViewDelegate.m; sourceTree = "<group>"; };
 		4515BBE31BEA199900B4D402 /* RoadShowHomeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoadShowHomeTableViewCell.h; path = View/RoadShow/RoadShowHomeTableViewCell.h; sourceTree = "<group>"; };
 		4515BBE41BEA199900B4D402 /* RoadShowHomeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RoadShowHomeTableViewCell.m; path = View/RoadShow/RoadShowHomeTableViewCell.m; sourceTree = "<group>"; };
+		45161DDB1C45F6EE00AC115A /* FoldInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FoldInfoView.h; path = View/Final/FoldInfoView.h; sourceTree = "<group>"; };
+		45161DDC1C45F6EE00AC115A /* FoldInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FoldInfoView.m; path = View/Final/FoldInfoView.m; sourceTree = "<group>"; };
+		45161DDF1C461F0700AC115A /* ComFinanceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComFinanceViewController.h; path = Controller/Final/ComFinanceViewController.h; sourceTree = "<group>"; };
+		45161DE01C461F0700AC115A /* ComFinanceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComFinanceViewController.m; path = Controller/Final/ComFinanceViewController.m; sourceTree = "<group>"; };
+		45161DE31C461F1400AC115A /* PersonalFinanceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PersonalFinanceViewController.h; path = Controller/Final/PersonalFinanceViewController.h; sourceTree = "<group>"; };
+		45161DE41C461F1400AC115A /* PersonalFinanceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PersonalFinanceViewController.m; path = Controller/Final/PersonalFinanceViewController.m; sourceTree = "<group>"; };
+		45161DE71C462BA200AC115A /* ComFinanceFoldInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComFinanceFoldInfoView.h; path = View/Final/ComFinanceFoldInfoView.h; sourceTree = "<group>"; };
+		45161DE81C462BA200AC115A /* ComFinanceFoldInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComFinanceFoldInfoView.m; path = View/Final/ComFinanceFoldInfoView.m; sourceTree = "<group>"; };
+		45161DEB1C462C8800AC115A /* CaseFoldInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CaseFoldInfoView.h; path = View/Final/CaseFoldInfoView.h; sourceTree = "<group>"; };
+		45161DEC1C462C8800AC115A /* CaseFoldInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CaseFoldInfoView.m; path = View/Final/CaseFoldInfoView.m; sourceTree = "<group>"; };
 		4517CD621B78586F00EFBB6A /* AutoShowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoShowView.h; sourceTree = "<group>"; };
 		4517CD631B78586F00EFBB6A /* AutoShowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoShowView.m; sourceTree = "<group>"; };
 		4517CD651B785AA000EFBB6A /* TableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewCell.h; sourceTree = "<group>"; };
@@ -1353,6 +1375,8 @@
 		45631F811B5A4AAB009FA35D /* SphereMenuItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SphereMenuItemView.m; path = JinZhiTou/View/Main/SphereMenu/SphereMenuItemView.m; sourceTree = SOURCE_ROOT; };
 		45631F851B5A4B99009FA35D /* GlobalDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalDefine.h; sourceTree = "<group>"; };
 		45631F861B5A4C4A009FA35D /* UConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UConstants.h; sourceTree = "<group>"; };
+		4564352A1C46602300311CD8 /* CompanyCaseItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompanyCaseItemView.h; sourceTree = "<group>"; };
+		4564352B1C46602300311CD8 /* CompanyCaseItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompanyCaseItemView.m; sourceTree = "<group>"; };
 		4565A2031B9D41CF00FA040A /* TypeShow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TypeShow.h; path = View/TypeShow.h; sourceTree = "<group>"; };
 		4565A2041B9D41CF00FA040A /* TypeShow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TypeShow.m; path = View/TypeShow.m; sourceTree = "<group>"; };
 		4565A2061B9D5A3D00FA040A /* NewFinialTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewFinialTableViewCell.h; path = View/UserInfo/Cell/NewFinialTableViewCell.h; sourceTree = "<group>"; };
@@ -2519,6 +2543,10 @@
 				453E23D31B7DA3570023BB00 /* UITableViewCustomView.m */,
 				453E23E01B7E2CA30023BB00 /* FinialSuccessViewController.h */,
 				453E23E11B7E2CA30023BB00 /* FinialSuccessViewController.m */,
+				45161DDF1C461F0700AC115A /* ComFinanceViewController.h */,
+				45161DE01C461F0700AC115A /* ComFinanceViewController.m */,
+				45161DE31C461F1400AC115A /* PersonalFinanceViewController.h */,
+				45161DE41C461F1400AC115A /* PersonalFinanceViewController.m */,
 				4581155A1B80150C006EEBBC /* ThinkTankViewController.h */,
 				4581155B1B80150C006EEBBC /* ThinkTankViewController.m */,
 			);
@@ -3288,7 +3316,15 @@
 				45A2AD9C1B710A9900751F78 /* SwitchSelect.m */,
 				45A2AD9E1B71A08B00751F78 /* PhotoAdd.h */,
 				45A2AD9F1B71A08B00751F78 /* PhotoAdd.m */,
+				4564352A1C46602300311CD8 /* CompanyCaseItemView.h */,
+				4564352B1C46602300311CD8 /* CompanyCaseItemView.m */,
 				45A2ADA81B71FFF900751F78 /* FinialKind.h */,
+				45161DE71C462BA200AC115A /* ComFinanceFoldInfoView.h */,
+				45161DE81C462BA200AC115A /* ComFinanceFoldInfoView.m */,
+				45161DEB1C462C8800AC115A /* CaseFoldInfoView.h */,
+				45161DEC1C462C8800AC115A /* CaseFoldInfoView.m */,
+				45161DDB1C45F6EE00AC115A /* FoldInfoView.h */,
+				45161DDC1C45F6EE00AC115A /* FoldInfoView.m */,
 				45A2ADA91B71FFF900751F78 /* FinialKind.m */,
 				4565A2031B9D41CF00FA040A /* TypeShow.h */,
 				4565A2041B9D41CF00FA040A /* TypeShow.m */,
@@ -3619,6 +3655,7 @@
 				454288261C448FE000513DC0 /* CompanyViewController.m in Sources */,
 				454288271C448FE000513DC0 /* DACircularProgressView.m in Sources */,
 				454288281C448FE000513DC0 /* SDWebImageManager.m in Sources */,
+				45161DE21C461F0700AC115A /* ComFinanceViewController.m in Sources */,
 				454288291C448FE000513DC0 /* SBJsonBase.m in Sources */,
 				4542882A1C448FE000513DC0 /* PEResizeControl.m in Sources */,
 				4542882B1C448FE000513DC0 /* UserBasicInfoViewController.m in Sources */,
@@ -3676,6 +3713,7 @@
 				4542885F1C448FE000513DC0 /* UserInfoViewController.m in Sources */,
 				454288601C448FE000513DC0 /* FinialApplyViewController.m in Sources */,
 				454288611C448FE000513DC0 /* PECropRectView.m in Sources */,
+				45161DE61C461F1400AC115A /* PersonalFinanceViewController.m in Sources */,
 				454288621C448FE000513DC0 /* MMDrawerBarButtonItem.m in Sources */,
 				454288631C448FE000513DC0 /* UIImage+Resize.m in Sources */,
 				454288641C448FE000513DC0 /* DetailViewController.m in Sources */,
@@ -3826,6 +3864,7 @@
 				454288F51C448FE000513DC0 /* WeiboTableViewCell.m in Sources */,
 				454288F61C448FE000513DC0 /* JastorRuntimeHelper.m in Sources */,
 				454288F71C448FE000513DC0 /* AboutMeViewController.m in Sources */,
+				45161DDE1C45F6EE00AC115A /* FoldInfoView.m in Sources */,
 				454288F81C448FE000513DC0 /* QNFileRecorder.m in Sources */,
 				454288F91C448FE000513DC0 /* UserPasswordTableViewCell.m in Sources */,
 				454288FA1C448FE000513DC0 /* Jastor.m in Sources */,
@@ -3876,6 +3915,8 @@
 				454289271C448FE000513DC0 /* ShareTableViewCell.m in Sources */,
 				454289281C448FE000513DC0 /* SearchTableViewHeader.m in Sources */,
 				454289291C448FE000513DC0 /* WMTableViewController.m in Sources */,
+				45161DEA1C462BA300AC115A /* ComFinanceFoldInfoView.m in Sources */,
+				45161DEE1C462C8800AC115A /* CaseFoldInfoView.m in Sources */,
 				4542892A1C448FE000513DC0 /* PersonalFinial.m in Sources */,
 				4542892B1C448FE000513DC0 /* RoadShowHomeTableViewCell.m in Sources */,
 				4542892C1C448FE000513DC0 /* SphereMenuItemView.m in Sources */,
@@ -3943,6 +3984,7 @@
 				4542896A1C448FE000513DC0 /* FinialPersonTableViewCell.m in Sources */,
 				4542896B1C448FE000513DC0 /* Cycle.m in Sources */,
 				4542896C1C448FE000513DC0 /* AutoShowView.m in Sources */,
+				4564352D1C46602300311CD8 /* CompanyCaseItemView.m in Sources */,
 				4542896D1C448FE000513DC0 /* DataManager.m in Sources */,
 				4542896E1C448FE000513DC0 /* MWPhoto.m in Sources */,
 				4542896F1C448FE000513DC0 /* RootViewController.m in Sources */,
@@ -3970,6 +4012,7 @@
 				45A2AD911B70FD4D00751F78 /* CompanyViewController.m in Sources */,
 				4543EB141BD08E320041DCBD /* DACircularProgressView.m in Sources */,
 				45FCD0561B75E216009AD6E3 /* SDWebImageManager.m in Sources */,
+				45161DE11C461F0700AC115A /* ComFinanceViewController.m in Sources */,
 				45FCD02A1B75E15A009AD6E3 /* SBJsonBase.m in Sources */,
 				45495BCE1B60DA02007A17FD /* PEResizeControl.m in Sources */,
 				453271701B748E3A0044F8C1 /* UserBasicInfoViewController.m in Sources */,
@@ -4027,6 +4070,7 @@
 				45326EF41B7326110044F8C1 /* UserInfoViewController.m in Sources */,
 				45A2ADA71B71FEEB00751F78 /* FinialApplyViewController.m in Sources */,
 				45495BCB1B60DA02007A17FD /* PECropRectView.m in Sources */,
+				45161DE51C461F1400AC115A /* PersonalFinanceViewController.m in Sources */,
 				450140081B943024000F8A97 /* MMDrawerBarButtonItem.m in Sources */,
 				45495BD11B60DA02007A17FD /* UIImage+Resize.m in Sources */,
 				45D27B8C1BC631ED00ECD9D7 /* DetailViewController.m in Sources */,
@@ -4177,6 +4221,7 @@
 				4543EAEF1BD08DDE0041DCBD /* WeiboTableViewCell.m in Sources */,
 				45F09B821B86297B0065D873 /* JastorRuntimeHelper.m in Sources */,
 				45326F061B73A8500044F8C1 /* AboutMeViewController.m in Sources */,
+				45161DDD1C45F6EE00AC115A /* FoldInfoView.m in Sources */,
 				452609B21BDF0963006776B2 /* QNFileRecorder.m in Sources */,
 				4532718B1B74908C0044F8C1 /* UserPasswordTableViewCell.m in Sources */,
 				45F09B811B86297B0065D873 /* Jastor.m in Sources */,
@@ -4227,6 +4272,8 @@
 				45423AA81C3F8C7000A72857 /* ShareTableViewCell.m in Sources */,
 				454BF2E61B8EAC8600F1FEE5 /* SearchTableViewHeader.m in Sources */,
 				4545D0A51BEB492900D21FB0 /* WMTableViewController.m in Sources */,
+				45161DE91C462BA300AC115A /* ComFinanceFoldInfoView.m in Sources */,
+				45161DED1C462C8800AC115A /* CaseFoldInfoView.m in Sources */,
 				45A2AD971B7109D100751F78 /* PersonalFinial.m in Sources */,
 				4515BBE51BEA199900B4D402 /* RoadShowHomeTableViewCell.m in Sources */,
 				45631F821B5A4AAB009FA35D /* SphereMenuItemView.m in Sources */,
@@ -4294,6 +4341,7 @@
 				45F8294A1B6C64DB0044F6F0 /* FinialPersonTableViewCell.m in Sources */,
 				45778FB61C3B620000FF8691 /* Cycle.m in Sources */,
 				4517CD641B78586F00EFBB6A /* AutoShowView.m in Sources */,
+				4564352C1C46602300311CD8 /* CompanyCaseItemView.m in Sources */,
 				4591F37C1A54D81C0079E1D0 /* DataManager.m in Sources */,
 				4543EB091BD08E100041DCBD /* MWPhoto.m in Sources */,
 				45CF4EC01BE863210098C1F6 /* RootViewController.m in Sources */,
@@ -4457,8 +4505,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Lu Liu (WKWLHQSAU5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Lu Liu (WKWLHQSAU5)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_NS_ASSERTIONS = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4474,7 +4522,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "a9391c1b-28ad-49cf-bfb3-1d54322510d8";
+				PROVISIONING_PROFILE = "4d968a7d-7d21-4423-864d-7dc311070046";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -4485,8 +4533,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Lu Liu (WKWLHQSAU5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Lu Liu (WKWLHQSAU5)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4501,7 +4549,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "a9391c1b-28ad-49cf-bfb3-1d54322510d8";
+				PROVISIONING_PROFILE = "4d968a7d-7d21-4423-864d-7dc311070046";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

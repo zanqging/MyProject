@@ -177,10 +177,8 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(!self.webViewController){
-        self.webViewController =[[BannerViewController alloc]init];
-        self.webViewController.title = self.navView.title;
-    }
+    self.webViewController =[[BannerViewController alloc]init];
+    self.webViewController.title = self.navView.title;
     NSDictionary* dic  = self.dataCreateArray[indexPath.row];
     NSURL* url = [NSURL URLWithString:[dic valueForKey:@"url"]];
     self.webViewController.type = 3;

@@ -236,27 +236,27 @@
 
 
 - (void)reachabilityChanged:(NSNotification *)note {
-    Reachability* curReach = [note object];
-    NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
-    NetworkStatus status = [curReach currentReachabilityStatus];
-    
-    if (status == NotReachable) {
-NSString* title = @"金指投温馨提示";
-NSString* content = @"当前网络状况不佳，请检测网络连接!";
-#ifdef IOS8_SDK_AVAILABLE
-        UIAlertController* controller =[UIAlertController alertControllerWithTitle:title message:content preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* actionSure = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
-        [controller addAction:actionSure];
-        [self.iNav presentViewController:controller animated:YES completion:nil];
-#else
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                        message:content
-                                                       delegate:nil
-                                              cancelButtonTitle:@"确定" otherButtonTitles:nil];
-        [alert show];
-#endif
-
-    }
+//    Reachability* curReach = [note object];
+//    NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
+//    NetworkStatus status = [curReach currentReachabilityStatus];
+//    
+//    if (status == NotReachable) {
+//NSString* title = @"金指投温馨提示";
+//NSString* content = @"当前网络状况不佳，请检测网络连接!";
+//#ifdef IOS8_SDK_AVAILABLE
+//        UIAlertController* controller =[UIAlertController alertControllerWithTitle:title message:content preferredStyle:UIAlertControllerStyleAlert];
+//        UIAlertAction* actionSure = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:nil];
+//        [controller addAction:actionSure];
+//        [self.iNav presentViewController:controller animated:YES completion:nil];
+//#else
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+//                                                        message:content
+//                                                       delegate:nil
+//                                              cancelButtonTitle:@"确定" otherButtonTitles:nil];
+//        [alert show];
+//#endif
+//
+//    }
     
 }
 

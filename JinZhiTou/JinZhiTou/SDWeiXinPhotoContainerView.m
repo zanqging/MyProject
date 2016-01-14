@@ -64,7 +64,11 @@
         long columnIndex = idx % perRowItemCount;
         long rowIndex = idx / perRowItemCount;
         UIImageView *imageView = [UIImageView new];
-        [imageView sd_setImageWithURL:[NSURL URLWithString:obj] placeholderImage:IMAGENAMED(@"loading")];
+        if ([obj isKindOfClass:UIImage.class]) {
+            [imageView setImage:(UIImage*)obj];
+        }else{
+            [imageView sd_setImageWithURL:[NSURL URLWithString:obj] placeholderImage:IMAGENAMED(@"loading")];
+        }
         imageView.frame = CGRectMake(columnIndex * (itemW + margin), rowIndex * (itemH + margin), itemW, itemH);
         [self addSubview:imageView];
         
@@ -116,8 +120,12 @@
 - (NSURL *)photoBrowser:(SDPhotoBrowser *)browser highQualityImageURLForIndex:(NSInteger)index
 {
     NSString *imageName = self.picPathStringsArray[index];
-    NSURL *url = [[NSBundle mainBundle] URLForResource:imageName withExtension:nil];
-    return url;
+    if (![imageName isKindOfClass:UIImage.class]) {
+        NSURL *url = [[NSBundle mainBundle] URLForResource:imageName withExtension:nil];
+        return url;
+    }else{
+        return nil;
+    }
 }
 
 - (UIImage *)photoBrowser:(SDPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index

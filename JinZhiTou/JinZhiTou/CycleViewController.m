@@ -181,7 +181,7 @@
  */
 -(void)loadData
 {
-    self.startLoading = YES;
+//    self.startLoading = YES;
     NSString* serverUrl = [CYCLE_CONTENT_LIST stringByAppendingFormat:@"%d/",curentPage];
     [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestData:)];
 }
@@ -230,17 +230,32 @@
         
         //重构数组,
         //用户id
-        [dic setValue:@"YES" forKey:@"flag"];
-        [dic setValue:postArray forKey:@"pic"];
-        [dic setValue:@"刚刚" forKey:@"datetime"];
-        [dic setValue:content forKey:@"content"];
-        [dic setValue:[dataDefault valueForKey:@"userId"] forKey:@"uid"];
-        //        [dic setValue:[dataDefault valueForKey:@"city"] forKey:@"city"];
-        [dic setValue:[dataDefault valueForKey:@"name"] forKey:@"name"];
-        [dic setValue:[dataDefault valueForKey:@"photo"] forKey:@"photo"];
-        [dic setValue:[dataDefault valueForKey:@"STATIC_USER_TYPE"] forKey:@"position"];
+//        [dic setValue:@"YES" forKey:@"flag"];
+//        [dic setValue:postArray forKey:@"pic"];
+//        [dic setValue:@"刚刚" forKey:@"datetime"];
+//        [dic setValue:content forKey:@"content"];
+//        [dic setValue:[dataDefault valueForKey:@"userId"] forKey:@"uid"];
+//        //        [dic setValue:[dataDefault valueForKey:@"city"] forKey:@"city"];
+//        [dic setValue:[dataDefault valueForKey:@"name"] forKey:@"name"];
+//        [dic setValue:[dataDefault valueForKey:@"photo"] forKey:@"photo"];
+//        [dic setValue:[dataDefault valueForKey:@"STATIC_USER_TYPE"] forKey:@"position"];
         
-        [self.dataArray insertObject:dic atIndex:0];
+        Demo9Model* model = [[Demo9Model alloc]init];
+        
+//        NSMutableArray* arr = [[NSMutableArray alloc]init];
+//        for (int i = 0; i<postArray.count; i++) {
+//            [arr addObject:[NSString stringWithFormat:@"file%d",i]];
+//        }
+        model.picNamesArray = postArray;
+        model.dateTime  = @"刚刚";
+        model.content = content;
+        model.uid = [[dataDefault valueForKey:@"userId"] integerValue];
+        model.name = [dataDefault valueForKey:@"name"];
+        model.iconName = [dataDefault valueForKey:@"photo"];
+        model.position = [dataDefault valueForKey:@"STATIC_USER_TYPE"];
+        
+        
+        [self.dataArray insertObject:model atIndex:0];
         [self.tableView reloadData];
         
         //1.获得全局的并发队列
@@ -290,8 +305,8 @@
     NSString* content = [[dic valueForKey:@"userInfo"] valueForKey:@"content"];
     [self.httpUtil getDataFromAPIWithOps:CYCLE_CONTENT_PUBLISH postParam:[NSDictionary dictionaryWithObject:content forKey:@"content"] files:uploadFiles postName:@"file" type:0 delegate:self sel:@selector(requestPublishContent:)];
     
-    self.startLoading  =YES;
-    self.isTransparent = YES;
+//    self.startLoading  =YES;
+//    self.isTransparent = YES;
 }
 
 -(BOOL)commentAction:(id)sender
@@ -812,9 +827,9 @@
             [label sizeToFit];
             
             if (HEIGHT(label)<30 && i==0) {
-                height+=40;
+                height+=20;
             }else{
-                height+=HEIGHT(label);
+                height+=HEIGHT(label)-5;
             }
             
         }
@@ -919,7 +934,42 @@
         NSString* code = [dic valueForKey:@"code"];
         if ([code integerValue] == 0) {
             NSDictionary* dataDic = [dic valueForKey:@"data"];
-            [self.dataArray replaceObjectAtIndex:0 withObject:dataDic];
+            
+            
+            Demo9Model *model = [Demo9Model new];
+            model.id = [[dataDic valueForKey:@"id"] integerValue];
+            model.uid = [[dataDic valueForKey:@"uid"] integerValue];
+            model.isLike = [[dataDic valueForKey:@"is_like"] boolValue];
+            model.name = [dataDic valueForKey:@"name"];
+            model.address = [dataDic valueForKey:@"addr"];
+            model.iconName = [dataDic valueForKey:@"photo"];
+            model.content = [dataDic valueForKey:@"content"];
+            model.position = [dataDic valueForKey:@"position"];
+            model.dateTime = [dataDic valueForKey:@"datetime"];
+            
+            //分享
+            NSDictionary* dicShare =[dataDic valueForKey:@"share"];
+            if (dicShare) {
+                model.shareDic=dicShare;
+            }
+            
+            //图片
+            NSArray* array = [dataDic valueForKey:@"pic"];
+            if (array && array.count>0) {
+                model.picNamesArray =array;
+            }
+            
+            //评论列表
+            array = [dataDic valueForKey:@"comment"];
+            model.commentArray = array;
+            model.commentViewHeight = [self getCommentViewHeight:array];
+            
+            //点赞列表
+            array = [dataDic valueForKey:@"like"];
+            model.likersArray = array;
+            model.commentHeaderViewHeight=[self getCommentHeaderViewHeight:array];
+            
+            [self.dataArray replaceObjectAtIndex:0 withObject:model];
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
         }
         

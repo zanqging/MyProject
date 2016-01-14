@@ -38,19 +38,44 @@
         self.mainScorllView.backgroundColor = [[UIColor purpleColor] colorWithAlphaComponent:0.1];
         [view addSubview:self.mainScorllView];
         
+        UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(view), WIDTH(self)/3,40)];
+        imgView.image = IMAGENAMED(@"notice");
+        [self addSubview:imgView];
+        
         //新手指南
-        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(self.mainScorllView)+5, WIDTH(self.mainScorllView)/2, 30)];
+        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(imgView), WIDTH(imgView), 30)];
         label.tag=1001;
         label.font=SYSTEMFONT(14);
         label.userInteractionEnabled = YES;
-        label.textColor  =ColorCompanyTheme;
+        label.textColor  =FONT_COLOR_BLACK;
         label.backgroundColor  =WriteColor;
         label.userInteractionEnabled = YES;
         label.textAlignment =NSTextAlignmentCenter;
         [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(notificationAction:)]];
         [self addSubview:label];
-        UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label)+5, Y(label)+2, 25, 25)];
-        imgView.image = IMAGENAMED(@"notice");
+        
+        
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(imgView)+1, Y(imgView), WIDTH(imgView), HEIGHT(imgView))];
+        imgView.image = IMAGENAMED(@"credit");
+        [self addSubview:imgView];
+        
+        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+1, Y(label), WIDTH(label), HEIGHT(label))];
+        label.tag=1002;
+        label.text = @"融资播报";
+        label.font=SYSTEMFONT(14);
+        //        label.layer.cornerRadius = 5;
+        //        label.layer.masksToBounds= YES;
+        label.textColor  =FONT_COLOR_GRAY;
+        label.backgroundColor  =WriteColor;
+        label.userInteractionEnabled  =YES;
+        [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(creditSearchAction:)]];
+        label.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:label];
+        
+        
+        
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(imgView)+1, Y(imgView), WIDTH(imgView), HEIGHT(imgView))];
+        imgView.image = IMAGENAMED(@"credit");
         [self addSubview:imgView];
         
         label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+1, Y(label), WIDTH(label), HEIGHT(label))];
@@ -66,32 +91,38 @@
         label.textAlignment = NSTextAlignmentCenter;
         [self addSubview:label];
         
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label)+10, Y(imgView)+5, 20, 20)];
-        imgView.image = IMAGENAMED(@"credit");
-        [self addSubview:imgView];
+        
+        
         
         //精选项目
-        view = [[UIView alloc]initWithFrame:CGRectMake(0, HEIGHT(self)-30, WIDTH(self), 30)];
+        view = [[UIView alloc]initWithFrame:CGRectMake(0, HEIGHT(self)-50, WIDTH(self), 50)];
         view.backgroundColor = WriteColor;
         [self addSubview:view];
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(label), HEIGHT(view))];
-        label.text = @"   精选项目";
+        label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self)/2-0.5, 30)];
+        label.text = @"精选项目";
         label.font=SYSTEMFONT(16);
+        label.textAlignment  =NSTextAlignmentCenter;
         label.textColor  =FONT_COLOR_GRAY;
         [view addSubview:label];
+        
         //图标
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), 0, WIDTH(label)-15, HEIGHT(view))];
-        label.text = @"客服热线电话";
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label)+WIDTH(self)/4-10, POS_Y(label)-5, 20, 20)];
+        imgView.image = IMAGENAMED(@"tel");
+        [view addSubview:imgView];
+        
+        
+        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+0.5, 0, WIDTH(label), HEIGHT(label))];
+        label.text = @"客服电话";
         label.font=SYSTEMBOLDFONT(16);
         label.userInteractionEnabled  =YES;
-        label.textAlignment = NSTextAlignmentRight;
+        label.textAlignment = NSTextAlignmentCenter;
         [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(callService:)]];
         label.textColor  =AppColorTheme;
         [view addSubview:label];
         
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label)+10, Y(label)+5, 20, 20)];
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label)+WIDTH(self)/4-10, Y(imgView), 20, 20)];
         imgView.image = IMAGENAMED(@"tel");
         [view addSubview:imgView];
         
@@ -195,42 +226,42 @@
         }        
     }
     
-    //平台展示信息
-    //平台信息
-    UILabel* label =[self viewWithTag:1002];
-    
-    Platform* platForm = [[Platform alloc]init];
-    array = [platForm  selectData:100 andOffset:0];
-    if (array && array.count>0) {
-        //移除缓存数据
-        Platform* platform;
-        float pos_x = 0,pos_y=POS_Y(label)+3;
-        for (int i=0;i<array.count;i++) {
-            platform = [array objectAtIndex:i];
-            
-            //成果融资额度
-            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 25)];
-            label.textAlignment = NSTextAlignmentCenter;
-            label.textColor = ColorTheme2;
-            label.backgroundColor  =WriteColor;
-            label.text = [NSString stringWithFormat:@"%@",platform.value];
-            [self addSubview:label];
-            
-            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2, 25)];
-            label.font = SYSTEMFONT(14);
-            label.textColor = FONT_COLOR_GRAY;
-            label.backgroundColor  =WriteColor;
-            label.textAlignment = NSTextAlignmentCenter;
-            label.text = [NSString stringWithFormat:@"%@",platform.key];
-            [self addSubview:label];
-            if ((i+1)%2==0) {
-                pos_x=0;
-                pos_y+=51;
-            }else{
-                pos_x=WIDTH(self)/2+1;
-            }
-        }
-    }
+//    //平台展示信息
+//    //平台信息
+//    UILabel* label =[self viewWithTag:1002];
+//    
+//    Platform* platForm = [[Platform alloc]init];
+//    array = [platForm  selectData:100 andOffset:0];
+//    if (array && array.count>0) {
+//        //移除缓存数据
+//        Platform* platform;
+//        float pos_x = 0,pos_y=POS_Y(label)+3;
+//        for (int i=0;i<array.count;i++) {
+//            platform = [array objectAtIndex:i];
+//            
+//            //成果融资额度
+//            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 25)];
+//            label.textAlignment = NSTextAlignmentCenter;
+//            label.textColor = ColorTheme2;
+//            label.backgroundColor  =WriteColor;
+//            label.text = [NSString stringWithFormat:@"%@",platform.value];
+//            [self addSubview:label];
+//            
+//            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2, 25)];
+//            label.font = SYSTEMFONT(14);
+//            label.textColor = FONT_COLOR_GRAY;
+//            label.backgroundColor  =WriteColor;
+//            label.textAlignment = NSTextAlignmentCenter;
+//            label.text = [NSString stringWithFormat:@"%@",platform.key];
+//            [self addSubview:label];
+//            if ((i+1)%2==0) {
+//                pos_x=0;
+//                pos_y+=51;
+//            }else{
+//                pos_x=WIDTH(self)/2+1;
+//            }
+//        }
+//    }
     
     
 }
@@ -392,50 +423,50 @@
             label.text = [NSString stringWithFormat:@"%@",announcement];
         }
         
-        //平台信息
-        label =[self viewWithTag:1002];
-        
-        NSMutableArray* array =[self.dataDic valueForKey:@"platform"];
-        
-        //移除缓存数据
-        Platform* platFormModel = [[Platform alloc]init];
-        [platFormModel deleteData];
-        
-        NSMutableArray * platArray = [[NSMutableArray alloc]init];
-        NSDictionary* dic;
-//        float pos_x = 0,pos_y=POS_Y(label)+3;
-        for (int i=0;i<array.count;i++) {
-            Platform *pm = [[Platform alloc]init];
-            dic = [array objectAtIndex:i];
-            pm.key = [dic valueForKey:@"key"];
-            pm.value = [dic valueForKey:@"value"];
-            [platArray addObject:pm];
-            
-//            //成果融资额度
-//            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 25)];
-//            label.textAlignment = NSTextAlignmentCenter;
-//            label.textColor = ColorTheme2;
-//            label.backgroundColor  =WriteColor;
-//            label.text = [NSString stringWithFormat:@"%@",plat.value];
-//            [self addSubview:label];
+//        //平台信息
+//        label =[self viewWithTag:1002];
+//        
+//        NSMutableArray* array =[self.dataDic valueForKey:@"platform"];
+//        
+//        //移除缓存数据
+//        Platform* platFormModel = [[Platform alloc]init];
+//        [platFormModel deleteData];
+//        
+//        NSMutableArray * platArray = [[NSMutableArray alloc]init];
+//        NSDictionary* dic;
+////        float pos_x = 0,pos_y=POS_Y(label)+3;
+//        for (int i=0;i<array.count;i++) {
+//            Platform *pm = [[Platform alloc]init];
+//            dic = [array objectAtIndex:i];
+//            pm.key = [dic valueForKey:@"key"];
+//            pm.value = [dic valueForKey:@"value"];
+//            [platArray addObject:pm];
 //            
-//            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2, 25)];
-//            label.font = SYSTEMFONT(14);
-//            label.textColor = FONT_COLOR_GRAY;
-//            label.backgroundColor  =WriteColor;
-//            label.textAlignment = NSTextAlignmentCenter;
-//            label.text = [NSString stringWithFormat:@"%@",plat.key];
-//            [self addSubview:label];
-//            if ((i+1)%2==0) {
-//                pos_x=0;
-//                pos_y+=51;
-//            }else{
-//                pos_x=WIDTH(self)/2+1;
-//            }
-        }
-        
-//        platFormModel = [[Platform alloc]init];
-        [platFormModel insertCoreData:platArray];
+////            //成果融资额度
+////            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 25)];
+////            label.textAlignment = NSTextAlignmentCenter;
+////            label.textColor = ColorTheme2;
+////            label.backgroundColor  =WriteColor;
+////            label.text = [NSString stringWithFormat:@"%@",plat.value];
+////            [self addSubview:label];
+////            
+////            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2, 25)];
+////            label.font = SYSTEMFONT(14);
+////            label.textColor = FONT_COLOR_GRAY;
+////            label.backgroundColor  =WriteColor;
+////            label.textAlignment = NSTextAlignmentCenter;
+////            label.text = [NSString stringWithFormat:@"%@",plat.key];
+////            [self addSubview:label];
+////            if ((i+1)%2==0) {
+////                pos_x=0;
+////                pos_y+=51;
+////            }else{
+////                pos_x=WIDTH(self)/2+1;
+////            }
+//        }
+//        
+////        platFormModel = [[Platform alloc]init];
+//        [platFormModel insertCoreData:platArray];
     }
 }
 
@@ -496,6 +527,7 @@
             [self addSubview:callWebview];
         }
     }
+    
     [LoadingUtil close:loadingView];
 }
 
