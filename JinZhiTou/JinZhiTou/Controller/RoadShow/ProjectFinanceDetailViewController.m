@@ -264,7 +264,7 @@
     
     if(jsonDic!=nil)
     {
-        NSString* status = [jsonDic valueForKey:@"status"];
+        NSString* status = [jsonDic valueForKey:@"code"];
         if ([status intValue] == 0 || [status intValue] == -1) {
             
         }

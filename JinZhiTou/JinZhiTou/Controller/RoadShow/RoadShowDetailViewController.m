@@ -33,6 +33,7 @@
     bool isPriseSelected;
     bool isCollectSelected;
     
+    ShareView* shareView;
     RoadShowHeader* header;
     RoadShowFooter* footer ;
     MenuPopView* menuPopView;
@@ -69,9 +70,10 @@
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doShare)]];
     
     scrollView =[[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-50)];
+    scrollView.showsHorizontalScrollIndicator = NO;
+    scrollView.showsVerticalScrollIndicator = NO;
     scrollView.backgroundColor = BackColor;
     [self.view addSubview:scrollView];
-    
     
     self.view.backgroundColor = ColorTheme;
     
@@ -167,9 +169,10 @@
 
 -(void)doShare
 {
-    ShareView* shareView =[[ShareView alloc]initWithFrame:self.view.frame];
+    shareView =[[ShareView alloc]initWithFrame:self.view.frame];
     shareView.type = 0;
-//    shareView.dic = self.dic;
+    shareView.projectId = [[self.dataDic valueForKey:@"id"] integerValue];
+    shareView.dic = self.dic;
     [self.view addSubview:shareView];
 }
 
@@ -179,6 +182,7 @@
     VoteViewController* controller =(VoteViewController *)[board instantiateViewControllerWithIdentifier:@"Vote"];
     [self.navigationController pushViewController:controller animated:YES];
 }
+
 
 /**
  *  屏幕旋转
@@ -540,7 +544,7 @@
         NSString* code = [jsonDic valueForKey:@"code"];
         if ([code intValue] == 0 || [code intValue] == 2) {
             dataDic = [jsonDic valueForKey:@"data"];
-            
+            self.dic = [NSMutableDictionary dictionaryWithDictionary:dataDic];
             NSDictionary* stageDic = [dataDic valueForKey:@"stage"];
             int index;
             if ([[stageDic valueForKey:@"flag"] intValue]!=1) {
@@ -551,9 +555,9 @@
             self.type =[[stageDic valueForKey:@"flag"] intValue];
             float height;
             if (index!=0) {
-                height = 430;
+                height = 375;
             }else{
-                height = 300;
+                height = 220;
             }
             header = [[RoadShowHeader alloc]initWithFrame:CGRectMake(0,0, WIDTH(self.view), height)];
             header.delegate = self;
@@ -577,22 +581,28 @@
             [header setCollecteNum:[[dataDic valueForKey:@"collect"] integerValue]];
             
             if ([[stageDic valueForKey:@"flag"] intValue]!=1) {
-                //融资中或者融资结束
-                header.investAmout = [[dataDic valueForKey:@"invest"] stringValue];
-                header.amout = [[dataDic valueForKey:@"planfinance"] stringValue];
+               
             }
+            
+            //融资中或者融资结束
+            header.investAmout = [[dataDic valueForKey:@"planfinance"] stringValue];
+            header.amout = [[dataDic valueForKey:@"invest"] stringValue];
             
             //状态
             NSString* mediaUrl = [dataDic valueForKey:@"video"];
             
             NSDictionary* dicStage = [stageDic valueForKey:@"start"];
-            
+            header.startDic = [stageDic valueForKey:@"start"];
+            header.endDic = [stageDic valueForKey:@"end"];
             header.leftName = [dicStage valueForKey:@"name"];
             header.industry = [dicStage valueForKey:@"datetime"];
             
             dicStage = [stageDic valueForKey:@"end"];
             header.rightName = [dicStage valueForKey:@"name"];
             header.showTime = [dicStage valueForKey:@"datetime"];
+            
+            header.daysLeave = [[stageDic valueForKey:@"daysLeave"] integerValue];
+            header.maxDays = [[stageDic valueForKey:@"daysTotal"] floatValue];
            
             
             bottomView.type = self.type;
@@ -627,10 +637,14 @@
             [scrollView addSubview:header];
             
             
+            UIView * v = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(header), WIDTH(self.view), 10)];
+            v.backgroundColor = WriteColor;
+            [scrollView addSubview:v];
             
-            companyIntroduceView = [[FoldView alloc]initWithFrame:CGRectMake(0, POS_Y(header)+1, WIDTH(self.view), 150)];
+            companyIntroduceView = [[FoldView alloc]initWithFrame:CGRectMake(0, POS_Y(header)+10, WIDTH(self.view), 150)];
             companyIntroduceView.imageView.image = IMAGENAMED(@"img1");
             companyIntroduceView.labelTitle.text = @"公司简介";
+            companyIntroduceView.isStart  = YES;
             [scrollView addSubview:companyIntroduceView];
         
             
@@ -640,12 +654,10 @@
             [scrollView addSubview:mainbussinesView];
             
             bussinessModelView = [[FoldView alloc]initWithFrame:CGRectMake(0, POS_Y(mainbussinesView)+1, WIDTH(self.view), 150)];
-            
+            bussinessModelView.isEnd  = YES;
             bussinessModelView.labelTitle.text = @"商业模式";
             bussinessModelView.imageView.image = IMAGENAMED(@"img4");
             [scrollView addSubview:bussinessModelView];
-            
-            
             
             NSString* event = [dataDic valueForKey:@"event"];
             if ([TDUtil isValidString:event]) {

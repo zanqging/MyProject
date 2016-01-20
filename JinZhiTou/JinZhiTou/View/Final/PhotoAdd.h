@@ -14,5 +14,6 @@
 }
 @property(assign,nonatomic)int index;
 @property(retain,nonatomic)UIImage* image;
+@property(retain,nonatomic)UIImage* placeImage;
 @property(retain,nonatomic)NSString* title;
 @end

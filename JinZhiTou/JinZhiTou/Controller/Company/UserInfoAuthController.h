@@ -17,4 +17,5 @@
 @property(retain,nonatomic)NSMutableArray* industoryList;
 @property(retain,nonatomic)NSMutableArray* companyDataArray;
 @property(retain,nonatomic)CustomImagePickerController* customPicker;
+@property(retain, nonatomic)NSMutableArray * photos;
 @end

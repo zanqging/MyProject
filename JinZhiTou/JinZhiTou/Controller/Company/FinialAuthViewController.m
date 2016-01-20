@@ -17,13 +17,12 @@
 #import "UserInfoAuthController.h"
 #import "UserInfoAuthController.h"
 #import "FinialProctoTableViewCell.h"
+#import "PersonalFinanceAuthViewController.h"
 
 @interface FinialAuthViewController ()<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,CustomImagePickerControllerDelegate,UITextFieldDelegate>
 {
     
-    BOOL isUploadID;
     BOOL isCheck;
-    
     UITextField* nameTextField;
     UITextField* positionTextField;
     UITextField* companyTextField;
@@ -32,7 +31,7 @@
     NSDictionary* foundationSizeSelected;
     
     NSMutableArray* array;
-    NSInteger currentPhotoTag;
+    NSInteger currentPhotoTag; //当前上传图片索引，1:身份证，2:头像
     UIScrollView* scrollViewPerson;
     
     NSMutableArray* heightsArray;
@@ -88,43 +87,45 @@
     scrollViewPerson.delegate=self;
     scrollViewPerson.bounces = NO;
     scrollViewPerson.backgroundColor=BackColor;
-    float height =0;
-    if (self.type==0) {
-        height = HEIGHT(scrollViewPerson)+370;
-    }else{
-        height=HEIGHT(scrollViewPerson)+420;
-    }
-    scrollViewPerson.contentSize = CGSizeMake(WIDTH(scrollViewPerson),height);
+    scrollViewPerson.showsVerticalScrollIndicator = NO;
+    scrollViewPerson.showsHorizontalScrollIndicator = NO;
     [self.view addSubview:scrollViewPerson];
     
     
-    PhotoAdd* IDPhotoAddView = [[PhotoAdd alloc]initWithFrame:CGRectMake(10, 10, WIDTH(scrollViewPerson)-20, 150)];
+    PhotoAdd* IDPhotoAddView = [[PhotoAdd alloc]initWithFrame:CGRectMake(0, 10, WIDTH(scrollViewPerson), 150)];
     IDPhotoAddView.tag = 20003;
-    IDPhotoAddView.title = @"上传身份证";
+    IDPhotoAddView.title = @"点击上传身份证（仅用于认证使用）";
+    IDPhotoAddView.placeImage = IMAGENAMED(@"shangchuan");
     [scrollViewPerson addSubview:IDPhotoAddView];
     UIView* view;
     UILabel* label;
-    if (self.type!=0) {
+    if (self.type==0) {
+        PhotoAdd* PICPhotoAddView = [[PhotoAdd alloc]initWithFrame:CGRectMake(X(IDPhotoAddView), POS_Y(IDPhotoAddView)+10, WIDTH(IDPhotoAddView), HEIGHT(IDPhotoAddView))];
+        PICPhotoAddView.tag = 20004;
+        PICPhotoAddView.placeImage = IMAGENAMED(@"touxiangshangchuan");
+        PICPhotoAddView.title = @"点击上传头像（仅用于认证使用）";
+        [scrollViewPerson addSubview:PICPhotoAddView];
+        
         //填写信息
-        view = [[UIView alloc]initWithFrame:CGRectMake(10, POS_Y(IDPhotoAddView)+10, WIDTH(self.view)-20, 100)];
+        view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(PICPhotoAddView)+10, WIDTH(self.view), 100)];
         view.tag = 30001;
         view.layer.cornerRadius=5;
         view.backgroundColor  =WriteColor;
         [scrollViewPerson addSubview:view];
         
         //姓名
-        label = [[UILabel alloc]initWithFrame:CGRectMake(10, 20, WIDTH(scrollViewPerson)*1/4, 30)];
+        label = [[UILabel alloc]initWithFrame:CGRectMake(0, 10, WIDTH(scrollViewPerson)*1/4, 30)];
         label.textAlignment = NSTextAlignmentRight;
-        label.text = @"机构名称";
+        label.text = @"个人介绍";
         label.font = SYSTEMFONT(16);
         [view addSubview:label];
         
         //输入姓名
-        nameTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(scrollViewPerson)*2/3-20, 30)];
+        nameTextField = [[UITextField alloc]initWithFrame:CGRectMake(X(label)+15, POS_Y(label), WIDTH(view)-30, 30)];
         nameTextField.font  =SYSTEMFONT(16);
         nameTextField.tag = 500001;
         nameTextField.delegate = self;
-        nameTextField.placeholder = @"请输入机构名称";
+        nameTextField.placeholder = @"请简单介绍自己";
         nameTextField.returnKeyType = UIReturnKeyDone;
         nameTextField.layer.borderColor =ColorTheme.CGColor;
         nameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -132,57 +133,44 @@
         nameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         [view addSubview:nameTextField];
         
-        UIImageView* lineView =[[UIImageView alloc]initWithFrame:CGRectMake(X(view), POS_Y(nameTextField), WIDTH(view), 1)];
+        UIImageView* lineView =[[UIImageView alloc]initWithFrame:CGRectMake(X(nameTextField), POS_Y(nameTextField), WIDTH(view)-30, 1)];
         lineView.backgroundColor  =BackColor;
         [view addSubview:lineView];
-        
-        //职位
-        label = [[UILabel alloc]initWithFrame:CGRectMake(10, POS_Y(label)+10, WIDTH(label), 30)];
-        label.textAlignment = NSTextAlignmentRight;
-        label.text = @"法人姓名";
-        label.font = SYSTEMFONT(16);
-        [view addSubview:label];
-        
-        //输入职位
-        positionTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), WIDTH(nameTextField), 30)];
-        positionTextField.tag = 500002;
-        positionTextField.delegate = self;
-        positionTextField.font  =SYSTEMFONT(16);
-        positionTextField.placeholder = @"请输入机构法人姓名";
-        positionTextField.returnKeyType = UIReturnKeyDone;
-        positionTextField.layer.borderColor =ColorTheme.CGColor;
-        positionTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-        positionTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-        positionTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-        [view addSubview:positionTextField];
-        
-        lineView =[[UIImageView alloc]initWithFrame:CGRectMake(X(view), POS_Y(positionTextField), WIDTH(view), 1)];
-        lineView.backgroundColor  =BackColor;
-        [view addSubview:lineView];
-        
+    }
+    
+    float pos_y = 0;
+    if (self.type!=0) {
+        pos_y = POS_Y(IDPhotoAddView)+10;
         //header
-        view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(view)+10, WIDTH(scrollViewPerson), 30)];
+        view = [[UIView alloc]initWithFrame:CGRectMake(0, pos_y, WIDTH(scrollViewPerson), 30)];
         view.tag =30002;
         //头部
         label = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, WIDTH(scrollViewPerson)-40, 20)];
         label.text = @"符合以下条件之一的机构投资者，可多选";
         label.font  =SYSTEMFONT(14);
+        view.backgroundColor = WriteColor;
         [view addSubview:label];
+        
         [scrollViewPerson addSubview:view];
     }else{
+        UIView * v = [scrollViewPerson viewWithTag:20004];
+        pos_y = POS_Y(v)+10;
+        
+        pos_y = POS_Y(view)+10;
         //header
-        view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(IDPhotoAddView)+10, WIDTH(scrollViewPerson), 30)];
+        view = [[UIView alloc]initWithFrame:CGRectMake(0, pos_y, WIDTH(scrollViewPerson), 30)];
         view.tag =30002;
         //头部
         label = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, WIDTH(scrollViewPerson)-40, 20)];
         label.text = @"符合以下条件之一的自然人投资者，可多选";
         label.font  =SYSTEMFONT(14);
+        view.backgroundColor = WriteColor;
         [view addSubview:label];
+        
         [scrollViewPerson addSubview:view];
     }
-    
     //tableView
-    CGRect rect=CGRectMake(0, POS_Y(view)+10, WIDTH(scrollViewPerson),264);
+    CGRect rect=CGRectMake(0, POS_Y(view), WIDTH(scrollViewPerson),420);
     self.tableView=[[UITableView alloc]initWithFrame:rect style:UITableViewStylePlain];
     self.tableView.bounces=NO;
     self.tableView.delegate=self;
@@ -190,12 +178,85 @@
     self.tableView.scrollEnabled  =NO;
     self.tableView.allowsSelection=YES;
     self.tableView.delaysContentTouches=NO;
+    self.tableView.backgroundColor=WriteColor;
     self.tableView.showsVerticalScrollIndicator=NO;
     self.tableView.showsHorizontalScrollIndicator=NO;
-    self.tableView.backgroundColor=[UIColor clearColor];
-    self.tableView.separatorStyle=UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
     
     [scrollViewPerson addSubview:self.tableView];
+    
+    view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 30)];
+    label = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, WIDTH(view)-40, HEIGHT(view)-5)];
+    label.numberOfLines = 2;
+    label.font = SYSTEMFONT(10);
+    label.textColor = FONT_COLOR_GRAY;
+    label.lineBreakMode  =NSLineBreakByWordWrapping;
+    
+    [TDUtil setLabelMutableText:label content:@"备注：以上内容请参考《私募股权基金监督管理暂行办法（征求意见稿）》合格投资人规定" lineSpacing:3 headIndent:0];
+    [view addSubview:label];
+    
+    self.tableView.tableFooterView = view;
+    
+    view = [[UIView alloc]initWithFrame:CGRectMake(10, 0, WIDTH(self.tableView)-20, HEIGHT(self.tableView))];
+    view.layer.borderWidth = 1;
+    view.layer.cornerRadius = 2;
+    view.userInteractionEnabled = YES;
+    view.backgroundColor = ClearColor;
+    view.layer.borderColor  = FONT_COLOR_GRAY.CGColor;
+    
+    [self.tableView addSubview:view];
+    [self.tableView sendSubviewToBack:view];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(40, POS_Y(self.tableView)+20, WIDTH(scrollViewPerson)-40, 0)];
+    label.font = SYSTEMFONT(12);
+    label.textColor  = BlackColor;
+    label.userInteractionEnabled = YES;
+    [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(check:)]];
+    label.textAlignment = NSTextAlignmentLeft;
+    NSString* content =@"我已经认真阅读并同意";
+    
+    [TDUtil setLabelMutableText:label content:content lineSpacing:0 headIndent:0];
+    [scrollViewPerson addSubview:label];
+    [label setFrame:CGRectMake(X(label), Y(label), WIDTH(label), 40)];
+    
+    
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+5, POS_Y(self.tableView)+20, WIDTH(scrollViewPerson)-40, 0)];
+    label.font = SYSTEMFONT(12);
+    label.userInteractionEnabled = YES;
+    label.textColor = [UIColor blueColor];
+    [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];
+    label.textAlignment = NSTextAlignmentLeft;
+    content =@"《投资风险提示书》";
+    [TDUtil setLabelMutableText:label content:content lineSpacing:0 headIndent:0];
+    
+    [label setFrame:CGRectMake(X(label), Y(label), WIDTH(label), 40)];
+    
+    [scrollViewPerson addSubview:label];
+    
+    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(20, Y(label)+10, 15, 15)];
+    imgView.image = IMAGENAMED(@"queren");
+    imgView.tag  =700001;
+    imgView.userInteractionEnabled = YES;
+    [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(check:)]];
+    [scrollViewPerson addSubview:imgView];
+    
+    
+    NSString * title = @"提交资料";
+    if (self.type==0) {
+        title = @"下一步";
+    }
+    
+    
+    UIButton* btnAction =[[UIButton alloc]initWithFrame:CGRectMake(60, POS_Y(label)+20, WIDTH(scrollViewPerson)-120, 35)];
+    btnAction.layer.cornerRadius =5;
+    btnAction.backgroundColor = AppColorTheme;
+    [btnAction setTitle:title forState:UIControlStateNormal];
+    [btnAction addTarget:self action:@selector(commitData) forControlEvents:UIControlEventTouchUpInside];
+    [scrollViewPerson addSubview:btnAction];
+    
+    [scrollViewPerson setupAutoContentSizeWithBottomView:btnAction bottomMargin:100];
+
 }
 
 -(void)protocolAction:(id)sender
@@ -236,33 +297,6 @@
 }
 -(BOOL)commitData
 {
-//    if (!isUploadID) {
-//        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请先上传身份证" ];
-//        return NO;
-//    }
-    NSString* userName;
-    NSString* company;
-    
-    userName = nameTextField.text;
-    company = positionTextField.text;
-    
-    if (self.type == 1) {
-        if (![TDUtil isValidString:userName]) {
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入姓名" ];
-            return NO;
-        }
-        
-        
-        
-        if (![TDUtil isValidString:company]) {
-            
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入公司" ];
-            return NO;
-        }
-    }
-    
-    
-    
     if (!array || array.count<=0) {
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请选择投资人类型" ];
         return NO;
@@ -284,30 +318,14 @@
         
     }
     
-    
-//    NSDictionary* dic =[[NSMutableDictionary alloc]init];
-//    [dic setValue:userName forKey:@"name"];
-//    [dic setValue:userType forKey:@"position"];
-//    [dic setValue:str forKey:@"qualification"];
-//    [dic setValue:company forKey:@"company"];
-//    [httpUtils getDataFromAPIWithOps:AUTHENTICATE postParam:dic type:0 delegate:self sel:@selector(requestAuthenicate:)];
-    
     NSMutableDictionary* dataDic = [[NSMutableDictionary alloc]init];
     [dataDic setValue:str forKey:@"qualification"];
-    if (self.type==1) {
-        [dataDic setValue:userName forKey:@"legalperson"];
-        [dataDic setValue:company forKey:@"institute"];
-    }
     
-//    [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
-    
-//    [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic file:STATIC_USER_DEFAULT_ID_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUserInfo:)];
-    
-    [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic file:STATIC_USER_DEFAULT_ID_PIC postName:@"file" type:0 delegate:self sel:@selector(requestUserInfo:)];
-//    NSMutableArray* arr = [NSMutableArray arrayWithObjects:STATIC_USER_DEFAULT_ID_PIC, nil];
-//     [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic files:arr postName:@"file" type:0 delegate:self sel:@selector(requestUserInfo:)];
+    [dataDic setValue:nameTextField.text forKey:@"profile"];
+    [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:dataDic files:[NSDictionary dictionaryWithObjectsAndKeys:STATIC_USER_DEFAULT_ID_PIC,@"idpic",STATIC_USER_AUTH_ID_PIC,@"img", nil] type:0 delegate:self sel:@selector(requestUserInfo:)];
     self.startLoading = YES;
     self.isTransparent  =YES;
+    
     return YES;
 }
 
@@ -324,30 +342,37 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     //声明静态字符串对象，用来标记重用单元格
     NSString* TableDataIdentifier=@"FinialProctoTableViewCell";
+    
     //用TableDataIdentifier标记重用单元格
     FinialProctoTableViewCell* Cell=(FinialProctoTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
+    
     //如果单元格未创建，则需要新建
     if (Cell==nil) {
-        CGRect frame=self.view.frame;
+        CGRect frame=self.tableView.frame;
         frame.size.height=60;
         Cell=[[FinialProctoTableViewCell alloc]initWithFrame:frame];
     }
     NSInteger row = indexPath.row;
     row++;
-    
     NSString* str = [NSString stringWithFormat:@"renzheng%ld 1",(long)row];
     NSDictionary* dic =[self.dataArray objectAtIndex:row-1];
     
     //填充行的详细内容
     [Cell setImageWithName:str setText:[dic valueForKey:@"value"]];
-    Cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     //设置是否已经选择
     if ([array containsObject:dic]) {
         Cell.isSelected = YES;
     }
-    return Cell;
     
+    //设置Cell背景颜色
+    Cell.backgroundColor = ClearColor;
+    
+    //设置Cell样式
+    Cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    
+    return Cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -364,89 +389,76 @@
         Cell.isSelected = YES;
     }
 }
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSInteger row =indexPath.row;
-    if (self.dataArray.count>0) {
-        NSDictionary* dic =[self.dataArray objectAtIndex:row];
-        
-        NSString* str = [dic valueForKey:@"value"];
-        if(str){
-            UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(50, 10, WIDTH(self.view)-100, 50)];
-            label.numberOfLines = 0 ;
-            label.font = SYSTEMFONT(14);
-            label.textColor =FONT_COLOR_GRAY;
-            label.lineBreakMode = NSLineBreakByWordWrapping;
-            
-            [TDUtil setLabelMutableText:label content:str lineSpacing:3 headIndent:0];
-            
-            heightsArray[row] =[NSString stringWithFormat:@"%f", POS_Y(label)+10];
-            
-            if (row==self.dataArray.count-1) {
-                float height;
-                for (int i = 0 ; i<self.dataArray.count;i++) {
-                    height += [heightsArray[i] floatValue];
-                }
-                
-                CGRect frame =self.tableView.frame;
-                frame.size.height = height;
-                [self.tableView setFrame:frame];
-                UIView* view =[scrollViewPerson viewWithTag:30003];
-                if (!view) {
-                    //footer
-                    UIView* view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(self.tableView)+10, WIDTH(scrollViewPerson), 50)];
-                    view.tag =30003;
-                    //头部
-                    label = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, WIDTH(scrollViewPerson)-40, 40)];
-                    label.text = @"备注：以上内容请参考《私募股权基金监督管理暂行办法（试行）》合格投资人规定";
-                    label.numberOfLines = 0;
-                    label.font  =SYSTEMFONT(14);
-                    label.lineBreakMode  =NSLineBreakByWordWrapping;
-                    [view addSubview:label];
-                    
-                    [scrollViewPerson addSubview:view];
-                    
-                    
-                    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(40, POS_Y(view)+7, WIDTH(scrollViewPerson)-40, 20)];
-                    label.font = SYSTEMFONT(12);
-                    label.userInteractionEnabled = YES;
-                    [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];
-                    label.textAlignment = NSTextAlignmentLeft;
-                    NSString* content =@"我已经认真阅读并同意 《投资风险提示书》";
-                    
-                    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-                    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(10, [content length]-10)];
-                    
-                    label.attributedText = attributedString;//ios 6
-                    [scrollViewPerson addSubview:label];
-                    
-                    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(20, POS_Y(view)+10, 15, 15)];
-                    imgView.image = IMAGENAMED(@"queren");
-                    imgView.tag  =700001;
-                    imgView.userInteractionEnabled = YES;
-                    [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(check:)]];
-                    [scrollViewPerson addSubview:imgView];
-                    
-                    
-                    
-                    UIButton* btnAction =[[UIButton alloc]initWithFrame:CGRectMake(60, POS_Y(label)+20, WIDTH(scrollViewPerson)-120, 35)];
-                    btnAction.layer.cornerRadius =5;
-                    btnAction.backgroundColor = AppColorTheme;
-                    [btnAction setTitle:@"提交资料" forState:UIControlStateNormal];
-                    [btnAction addTarget:self action:@selector(commitData) forControlEvents:UIControlEventTouchUpInside];
-                    [scrollViewPerson addSubview:btnAction];
-                }
-            }
-            return POS_Y(label)+10;
-        }else{
-            return 0;
-        }
-        
-    }
-    
-    
-    return 0;
-}
+//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    NSInteger row =indexPath.row;
+//    if (self.dataArray.count>0) {
+//        NSDictionary* dic =[self.dataArray objectAtIndex:row];
+//        
+//        NSString* str = [dic valueForKey:@"value"];
+//        if(str){
+//            UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(50, 10, WIDTH(self.view)-100, 50)];
+//            label.numberOfLines = 0 ;
+//            label.font = SYSTEMFONT(14);
+//            label.textColor =FONT_COLOR_GRAY;
+//            label.lineBreakMode = NSLineBreakByWordWrapping;
+//            
+//            [TDUtil setLabelMutableText:label content:str lineSpacing:3 headIndent:0];
+//            
+//            heightsArray[row] =[NSString stringWithFormat:@"%f", POS_Y(label)+10];
+//            
+//            if (row==self.dataArray.count-1) {
+//                float height;
+//                for (int i = 0 ; i<self.dataArray.count;i++) {
+//                    height += [heightsArray[i] floatValue];
+//                }
+//                
+//                CGRect frame =self.tableView.frame;
+//                frame.size.height = height+50;
+//                [self.tableView setFrame:frame];
+//                UIView* view =[scrollViewPerson viewWithTag:30003];
+//                if (!view) {
+//                    
+//                    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(40, POS_Y(self.tableView)+20, WIDTH(scrollViewPerson)-40, 20)];
+//                    label.font = SYSTEMFONT(12);
+//                    label.userInteractionEnabled = YES;
+//                    [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];
+//                    label.textAlignment = NSTextAlignmentLeft;
+//                    NSString* content =@"我已经认真阅读并同意 《投资风险提示书》";
+//                    
+//                    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+//                    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(10, [content length]-10)];
+//                    
+//                    label.attributedText = attributedString;//ios 6
+//                    [scrollViewPerson addSubview:label];
+//                    
+//                    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(20, Y(label)+5, 15, 15)];
+//                    imgView.image = IMAGENAMED(@"queren");
+//                    imgView.tag  =700001;
+//                    imgView.userInteractionEnabled = YES;
+//                    [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(check:)]];
+//                    [scrollViewPerson addSubview:imgView];
+//                    
+//                    
+//                    
+//                    UIButton* btnAction =[[UIButton alloc]initWithFrame:CGRectMake(60, POS_Y(label)+20, WIDTH(scrollViewPerson)-120, 35)];
+//                    btnAction.layer.cornerRadius =5;
+//                    btnAction.backgroundColor = AppColorTheme;
+//                    [btnAction setTitle:@"提交资料" forState:UIControlStateNormal];
+//                    [btnAction addTarget:self action:@selector(commitData) forControlEvents:UIControlEventTouchUpInside];
+//                    [scrollViewPerson addSubview:btnAction];
+//                }
+//            }
+//            return POS_Y(label)+10;
+//        }else{
+//            return 0;
+//        }
+//        
+//    }
+//    
+//    
+//    return 0;
+//}
 -(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -470,6 +482,33 @@
     
 }
 
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // >>>>>>>>>>>>>>>>>>>>> * cell自适应 * >>>>>>>>>>>>>>>>>>>>>>>>
+    float width = self.tableView.frame.size.width;
+    CGFloat h = [self cellHeightForIndexPath:indexPath cellContentViewWidth:width];
+    return h;
+}
+
+
+- (CGFloat)cellHeightForIndexPath:(NSIndexPath *)indexPath cellContentViewWidth:(CGFloat)width
+{
+    
+    if (!self.tableView.cellAutoHeightManager) {
+        self.tableView.cellAutoHeightManager = [[SDCellAutoHeightManager alloc] init];
+    }
+    if (self.tableView.cellAutoHeightManager.contentViewWidth != width) {
+        self.tableView.cellAutoHeightManager.contentViewWidth = width;
+        [self.tableView.cellAutoHeightManager clearHeightCache];
+    }
+    UITableViewCell *cell = [self.tableView.dataSource tableView:self.tableView cellForRowAtIndexPath:indexPath];
+    self.tableView.cellAutoHeightManager.modelCell = cell;
+    if (cell.contentView.width != width) {
+        cell.contentView.width = width;
+    }
+    return [[self.tableView cellAutoHeightManager] cellHeightForIndexPath:indexPath model:nil keyPath:nil];
+}
+
 
 
 -(void)setDataArray:(NSMutableArray *)dataArray
@@ -478,6 +517,16 @@
     [self.tableView reloadData];
 }
 
+/**
+ *  刷新、重新加载数据
+ */
+-(void)refresh
+{
+    [super refresh];
+    
+    //重新加载数据
+    [self loadData];
+}
 //*********************************************************照相机功能*****************************************************//
 
 
@@ -539,13 +588,15 @@
 {
     [controller dismissViewControllerAnimated:YES completion:NULL];
     PhotoAdd* photoView ;
-    if (selectedIndex==0) {
+    if (currentPhotoTag==20003) {
         //保存头像
        [TDUtil saveCameraPicture:croppedImage fileName:STATIC_USER_DEFAULT_ID_PIC];
+    }else{
+        [TDUtil saveCameraPicture:croppedImage fileName:STATIC_USER_AUTH_ID_PIC];
         
-       photoView =(PhotoAdd*)[scrollViewPerson viewWithTag:currentPhotoTag];
     }
     
+    photoView =(PhotoAdd*)[scrollViewPerson viewWithTag:currentPhotoTag];
     photoView.image = croppedImage;
 }
 
@@ -582,6 +633,10 @@
                 self.startLoading = NO;
             }
             
+            self.isNetRequestError  =YES;
+        }else{
+            //出错，网络请求出错
+            self.isNetRequestError  =YES;
         }
     }
 }
@@ -596,19 +651,23 @@
     if (dic!=nil) {
         NSString* code =[dic valueForKey:@"code"];
         if ([code integerValue]==0) {
-            //进度查看
-            double delayInSeconds = 1.0;
-            //__block RoadShowDetailViewController* bself = self;
-            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                UserInfoAuthController* controller = [[UserInfoAuthController alloc]init];
-                controller.type=1;
+            if (self.type != 0) {
+                //进度查看
+                double delayInSeconds = 1.0;
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                    UserInfoAuthController* controller = [[UserInfoAuthController alloc]init];
+                    controller.type=1;
+                    [self.navigationController pushViewController:controller animated:YES];
+                    [self removeFromParentViewController];
+                });
+                
+                NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+                [dataStore setValue:@"None" forKey:@"auth"];
+            }else{
+                PersonalFinanceAuthViewController * controller = [[PersonalFinanceAuthViewController alloc]init];
                 [self.navigationController pushViewController:controller animated:YES];
-                [self removeFromParentViewController];
-            });
-            
-            NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
-            [dataStore setValue:@"None" forKey:@"auth"];
+            }
             
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
         }else{
@@ -622,8 +681,8 @@
 {
     NSString* jsonString =[TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);
-    self.startLoading = NO;
-    [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"网络请求错误，请重新提交!"];
+    self.isNetRequestError = YES;
+    [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"网络请求错误，请检查网络连接!"];
 }
 //*********************************************************网络请求结束*****************************************************//
 
@@ -632,7 +691,7 @@
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
     if (selectedIndex ==0) {
-        [scrollViewPerson setContentOffset:CGPointMake(0, 150) animated:YES];
+        [scrollViewPerson setContentOffset:CGPointMake(0, 200) animated:YES];
     }
     
     

@@ -64,6 +64,11 @@
     return self;
 }
 
+-(void)setDic:(NSMutableDictionary *)dic
+{
+    self->_dic = dic;
+    
+}
 -(void)addShareItem:(NSDictionary*)dic
 {
     NSMutableArray* array=[[NSMutableArray alloc]init];

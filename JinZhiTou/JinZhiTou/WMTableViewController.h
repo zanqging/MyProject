@@ -14,7 +14,7 @@
 -(void)wmTableViewController:(id)wmTableViewController comFincance:(NSDictionary*)dic;
 -(void)wmTableViewController:(id)wmTableViewController personalFincance:(NSDictionary*)dic;
 -(void)wmTableViewController:(id)wmTableViewController thinkTankDetailData:(NSDictionary*)dic;
--(void)wmTableViewController:(id)wmTableViewController tapIndexPath:(NSIndexPath*)indexPath data:(NSDictionary*)dic;
+-(void)wmTableViewController:(id)wmTableViewController tapIndexPath:(NSIndexPath*)indexPath atSelectedIndex:(int)selectedIndex data:(NSDictionary*)dic;
 -(void)wmTableViewController:(id)wmTableViewController playMedia:(BOOL)playMedia data:(NSDictionary*)dic;
 -(void)wmTableViewController:(id)wmTableViewController refresh:(id)sender;
 -(void)wmTableViewController:(id)wmTableViewController loadMore:(id)sender;

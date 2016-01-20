@@ -119,7 +119,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
-    return 150;
+    return 100;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -141,7 +141,7 @@
     __block ThinkTankTableViewCell* cell = cellInstance;
     [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
         if (image) {
-            cell.imgView.contentMode = UIViewContentModeScaleAspectFill;
+            cell.imgView.contentMode = UIViewContentModeScaleToFill;
         }
     }];
     cellInstance.title = [dic valueForKey:@"name"];

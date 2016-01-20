@@ -21,12 +21,15 @@
 #import "GlobalDefine.h"
 #import "NSString+SBJSON.h"
 #import <MessageUI/MessageUI.h>
+#import "SlidePageController.h"
 #import "PECropViewController.h"
 #import "AboutUsViewController.h"
 #import "UserInfoAuthController.h"
 #import "FinialAuthViewController.h"
 #import "UserFinialViewController.h"
 #import "UserTraceViewController.h"
+#import "ReplyMessageViewController.h"
+#import "UserInfoAuthSlideController.h"
 #import "UserInfoSettingViewController.h"
 @interface HomeTabBarViewController ()<SphereMenuDelegate,MFMessageComposeViewControllerDelegate,ASIHTTPRequestDelegate,UIAlertViewDelegate>
 {
@@ -65,13 +68,13 @@
     
     
     model=[[DataModel alloc]init];
-    [model setDesc1:@"上传项目"];
-    [model setDesc2:@"woyaoluyan"];
+    [model setDesc1:@"个人中心"];
+    [model setDesc2:@"gerenzhongxin"];
     [dataArray addObject:model];
     
     model=[[DataModel alloc]init];
-    [model setDesc1:@"我要分享"];
-    [model setDesc2:@"woyaofenxiang"];
+    [model setDesc1:@"上传项目"];
+    [model setDesc2:@"woyaoluyan"];
     [dataArray addObject:model];
     
 //    model=[[DataModel alloc]init];
@@ -180,9 +183,7 @@
 -(void)alert:(NSNotification*)dic
 {
     
-    if (!dialogView) {
-        dialogView =[TDUtil shareInstanceDialogView:self.view];
-    }
+    dialogView =[TDUtil shareInstanceDialogView:self.view];
     
     NSDictionary* dictionary =[dic  valueForKey:@"userInfo"];
     
@@ -256,6 +257,12 @@
 -(void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item{
     
 }
+
+/**
+ *  快捷入口事件处理
+ *
+ *  @param index 当前选中索引
+ */
 - (void)sphereDidSelected:(int)index
 {
     NSLog(@"sphere %d selected", index);
@@ -269,13 +276,11 @@
                 [self AuthApplyAction];
                 break;
             case 1001:
-                [self RoadShowAction];
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"userInfo" object:nil];
                 break;
             case 1002:
-                [self ShareAction];
-                break;
-            case 1003:
-                [self ActionArriveAction];
+//                [self ShareAction];  //分享
+                [self RoadShowAction];
                 break;
             default:
                 [self AuthApplyAction];
@@ -399,9 +404,9 @@
     }
     UIViewController* controller;
     if(index ==1){
-        UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        controller = [storyBoard instantiateViewControllerWithIdentifier:@"SystemMessage"];
-        
+//        UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+//        controller = [storyBoard instantiateViewControllerWithIdentifier:@"SystemMessage"];
+        controller = [self p_defaultController];
     }else if (index ==5){
         controller = [[AboutUsViewController alloc]init];
     }else{
@@ -418,6 +423,34 @@
         }
        
     }
+}
+
+- (SlidePageController *)p_defaultController {
+    NSMutableArray *viewControllers = [[NSMutableArray alloc] init];
+    NSMutableArray *titles = [[NSMutableArray alloc] init];
+    
+    [viewControllers addObject:UserInfoAuthSlideController.class];
+    [viewControllers addObject:ReplyMessageViewController.class];
+    
+    [titles addObject:@"认证信息"];
+    [titles addObject:@"消息回复"];
+    
+    SlidePageController *pageVC = [[SlidePageController alloc] initWithViewControllerClasses:viewControllers andTheirTitles:titles];
+    pageVC.bounces = NO;
+    pageVC.menuHeight = 50;
+    pageVC.menuItemWidth = WIDTH(self.view)/2;
+    pageVC.pageAnimatable = YES;
+    pageVC.postNotification = YES;
+    pageVC.leftTitle = @"个人中心";
+    pageVC.titleString  = @"与我相关";
+    pageVC.menuBGColor = WriteColor;
+    pageVC.progressColor  = AppColorTheme;
+    pageVC.titleColorSelected = AppColorTheme;
+    pageVC.titleColorNormal = FONT_COLOR_GRAY;
+    pageVC.menuViewStyle = WMMenuViewStyleLine;
+    pageVC.otherGestureRecognizerSimultaneously = YES;
+    pageVC.navView.leftButton.titleLabel.text  = @"个人中心";
+    return pageVC;
 }
 
 -(void)checkUpdate
@@ -770,8 +803,9 @@
             NSString* auth = (NSString*)[data valueForKey:@"auth"];
             
             if ([auth isKindOfClass:NSNull.class]) {
-                 controller.type=1;
-                [self.navigationController pushViewController:controller animated:YES];
+//                 controller.type=1;
+//                [self.navigationController pushViewController:controller animated:YES];
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您的认证申请提交成功！工作人员会在两个工作日内进行审核，若提交信息有误，请修改信息或联系客服",@"msg",@"取消",@"cancel",@"修改",@"sure",@"6",@"type",self,@"vController", nil]];
             }else{
                 if ([auth isKindOfClass:NSString.class]) {
                     if ([auth isEqualToString:@""]) {
@@ -780,12 +814,15 @@
                 }else{
                     if ([auth boolValue]) {
                         controller.type=0;
+                        [self.navigationController pushViewController:controller animated:YES];
                     }else if(![auth boolValue]){
                         controller.type=2;
+                        [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"抱歉，您的认证申请被驳回，如有疑问请联系客服，我们会第一时间处理",@"msg",@"",@"cancel",@"确定",@"sure",@"4",@"type",self,@"vController", nil]];
+                        
                     }else{
                         [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil userInfo:[NSDictionary dictionaryWithObject:self forKey:@"viewController"]];
                     }
-                    [self.navigationController pushViewController:controller animated:YES];
+                    
                 }
             }
             //关闭加载视图
@@ -813,6 +850,7 @@
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
+    [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请求失败，请检查网络!"];
     [LoadingUtil close:loadingView];
 }
 

@@ -45,10 +45,6 @@
     
      [self loadUrl];
     
-    //添加监听
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(shareNews:) name:@"shareNews" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContent:) name:@"shareNewContent" object:nil];
-    
 }
 
 -(void)back:(id)sender
@@ -158,6 +154,18 @@
         }
         
     }
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(shareNews:) name:@"shareNews" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContent:) name:@"shareNewContent" object:nil];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    //添加监听
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"shareNews" object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"shareNewContent" object:nil];
 }
 -(void)dealloc
 {

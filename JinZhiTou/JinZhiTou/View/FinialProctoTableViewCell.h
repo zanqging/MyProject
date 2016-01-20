@@ -7,14 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "UIView+SDAutoLayout.h"
 @interface FinialProctoTableViewCell : UITableViewCell
 {
-    UIImageView* imgView;
-    UILabel* label;
+    UILabel* label;  //内容
+    UIImageView* imgView; //标题
 }
-@property(retain,nonatomic)NSString* unSelectedImageName;
-@property(retain,nonatomic)NSString* selectedImageName;
 @property(assign,nonatomic)BOOL isSelected;
+@property(retain,nonatomic)NSString* selectedImageName;
+@property(retain,nonatomic)NSString* unSelectedImageName;
 -(void)setImageWithName:(NSString*)name setText:(NSString*)text;
 @end

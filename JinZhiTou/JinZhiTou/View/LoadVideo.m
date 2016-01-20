@@ -35,9 +35,9 @@
     if (!isLoaded) {
         if (!self.thumailView) {
             //视频提示图
-            self.thumailView = [[UIImageView alloc ]initWithFrame:CGRectMake(WIDTH(self)/2-25, 40, 50, 50)];
+            self.thumailView = [[UIImageView alloc ]initWithFrame:CGRectMake(0, 0, WIDTH(self), HEIGHT(self))];
             self.thumailView.contentMode = UIViewContentModeScaleAspectFill;
-            self.thumailView.image = IMAGENAMED(@"radio");
+            self.thumailView.image = IMAGENAMED(@"video");
             
             self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(self.thumailView)+5, WIDTH(self), 25)];
             self.titleLabel.font = SYSTEMFONT(12);

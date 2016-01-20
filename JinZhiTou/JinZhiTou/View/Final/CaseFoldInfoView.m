@@ -25,9 +25,11 @@
         
         _label = [UILabel new];
         _lineView = [UIView new];
+        _iconImgView = [UIImageView new];
         
         [self addSubview:_label];
         [self addSubview:_lineView];
+        [self addSubview:_iconImgView];
         
         //初始化控件
         _scrollView = [UIScrollView new];
@@ -42,25 +44,26 @@
         _label.font = SYSTEMFONT(18);
         _label.textColor  =ColorCompanyTheme;
         
+        _iconImgView.image = IMAGENAMED(@"case");
+        
+        _iconImgView.sd_layout
+        .leftSpaceToView(self, 20)
+        .topSpaceToView(self, 10)
+        .heightEqualToWidth(15);
+        
         _label.sd_layout
-        .leftSpaceToView(self,20)
+        .leftSpaceToView(_iconImgView,5)
         .topSpaceToView(self,10)
         .heightIs(20);
         
         _lineView.sd_layout
-        .leftEqualToView(_label)
+        .leftEqualToView(_iconImgView)
         .topSpaceToView(_label,0)
         .rightSpaceToView(self,20)
         .heightIs(1);
         
         [_label setSingleLineAutoResizeWithMaxWidth:200];
         
-        
-        _scrollView.sd_layout
-        .leftSpaceToView(self,0)
-        .rightSpaceToView(self,0)
-        .topSpaceToView(_lineView,0)
-        .heightIs(90);
     }
     
     return self;
@@ -72,14 +75,34 @@
         self->_dataArray = dataArray;
         
         CompanyCaseItemView* itemView;
-        for (int i = 0; i<dataArray.count; i++) {
-            itemView = [[CompanyCaseItemView alloc]initWithFrame:CGRectMake(0, 0, 120, 90) ];
+        float pos_x = 5;
+        float width = (WIDTH(self)-10)/3;
+        for (int i = 0; i<self.dataArray.count; i++) {
+            itemView = [[CompanyCaseItemView alloc]initWithFrame:CGRectMake(pos_x, 0, width, 90) ];
             [_scrollView addSubview:itemView];
             itemView.dic  =self.dataArray[i];
+            pos_x += width+5;
         }
         
-        [self layoutSubviews];
+        _scrollView.sd_layout
+        .leftSpaceToView(self,0)
+        .rightSpaceToView(self,0)
+        .topSpaceToView(_lineView,0);
         
+        [self setupAutoHeightWithBottomView:_scrollView bottomMargin:10];
+        
+        if (self.dataArray && self.dataArray.count > 0) {
+            _scrollView.sd_layout
+            .heightIs(90);
+        }else{
+            _scrollView.sd_layout
+            .autoHeightRatio(0);
+        }
+        
+        [_scrollView setupAutoContentSizeWithRightView:itemView rightMargin:10];
+        
+        [self layoutSubviews];   
     }
 }
+
 @end

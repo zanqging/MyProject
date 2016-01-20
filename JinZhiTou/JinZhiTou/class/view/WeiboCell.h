@@ -36,6 +36,7 @@
     
     int replyCount;
 }
+@property(retain, nonatomic) NSString * atName;
 @property(retain,nonatomic)NSString* topicId;
 @property(retain,nonatomic)NSString* content;
 @property(retain,nonatomic)NSString* titleStr;

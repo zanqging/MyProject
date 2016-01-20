@@ -39,7 +39,7 @@
 
 @end
 
-@interface DemoVC9Cell : UITableViewCell<UITableViewDataSource,UITableViewDelegate>
+@interface DemoVC9Cell : UITableViewCell<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, strong) Demo9Model *model;
 @property (nonatomic, retain) NSArray* dataArray;

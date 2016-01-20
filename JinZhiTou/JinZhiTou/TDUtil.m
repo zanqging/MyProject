@@ -531,8 +531,10 @@
     filePath=[filePath stringByAppendingFormat:@"/image/%@",fileName];
     if (![fileManager fileExistsAtPath:filePath]) {
         //文件不存在
+        NSLog(@"%@文件不存在",filePath);
     }else{
         //文件已存在
+//        NSLog(@"%@文件存在",filePath);
     }
     return filePath;
 }

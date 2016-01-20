@@ -37,6 +37,7 @@
 }
 @property (retain, nonatomic)  UITableView *tableView;
 
+@property (retain, nonatomic)  Cycle* cycle;
 @property(retain,nonatomic)NSString* topId;
 @property (retain, nonatomic)  UIView *funView;
 @property (retain, nonatomic)  UIView *priseView; //点赞区域
@@ -55,13 +56,16 @@
 @property (retain, nonatomic)  UIView *imgContentView;
 @property (retain, nonatomic)  UIButton *expandButton;
 @property (retain, nonatomic)  UIButton *deleteButton;
-@property (retain, nonatomic)  Cycle* cycle;
 @property (retain, nonatomic)  UIImageView *headerImgView;
+
+
 //---------------分享功能--------------//
 @property (retain, nonatomic)  UIView *shareView; //点赞区域
-@property (retain, nonatomic)  UIImageView *shareImgView;
 @property (retain, nonatomic)  UILabel *shareLabel;
+@property (retain, nonatomic)  UIImageView *shareImgView;
 //---------------分享功能--------------//
+
+
 @property(retain,nonatomic)id  <WeiboTableViewCellDelegate>delegate;
 
 

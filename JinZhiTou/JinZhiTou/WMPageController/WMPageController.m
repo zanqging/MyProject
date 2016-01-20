@@ -12,8 +12,9 @@
 #import "WMTableViewController.h"
 #import "ThinkTankViewController.h"
 #import "ComFinanceViewController.h"
-#import "PersonalFinanceViewController.h"
 #import "RoadShowDetailViewController.h"
+#import "PersonalFinanceViewController.h"
+#import "PreProjectDetailViewController.h"
 
 static CGFloat kWMMarginToNavigationItem = 6.0;
 @interface WMPageController ()<navViewDelegate,WMtableViewCellDelegate> {
@@ -565,6 +566,27 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
     self.currentViewController = self.displayVC[@(self.selectIndex)];
     
     [self addMenuView];
+    
+    //添加监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
+    
+    [self updateNewMessage:nil];
+}
+
+/**
+ *  消息提示
+ *
+ *  @param dic 通知数据
+ */
+-(void)updateNewMessage:(NSDictionary*)dic
+{
+    NSUserDefaults* dataStore = [NSUserDefaults standardUserDefaults];
+    NSInteger newMessageCount = [[dataStore valueForKey:@"NewMessageCount"] integerValue];
+    NSInteger systemMessageCount = [[dataStore valueForKey:@"SystemMessageCount"] integerValue];
+    if (newMessageCount+systemMessageCount>0) {
+        [self.navView setIsHasNewMessage:YES];
+    }
+    
 }
 
 -(void)userInfoAction:(id)sender
@@ -812,23 +834,39 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
 
 
 #pragma WMTableViewController
-- (void)wmTableViewController:(id)wmTableViewController tapIndexPath:(NSIndexPath *)indexPath data:(NSDictionary *)dic
+- (void)wmTableViewController:(id)wmTableViewController tapIndexPath:(NSIndexPath *)indexPath atSelectedIndex:(int)selectedIndex data:(NSDictionary *)dic
 {
-    RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
+    if (selectedIndex!=3) {
+        RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
+        
+        Project* project = [[Project alloc]init];
+        project = [[Project alloc]init];
+        project.imgUrl = [dic valueForKey:@"img"];
+        project.tag = [dic valueForKey:@"tag"];
+        project.company = [dic valueForKey:@"company"];
+        project.projectId = [[dic valueForKey:@"id"] integerValue];
+        project.invest = [NSString stringWithFormat:@"%@",[dic valueForKey:@"invest"]];
+        project.planfinance = [NSString stringWithFormat:@"%@",[dic valueForKey:@"planfinance"]];
+        
+        controller.project = project;
+        controller.type=1;
+        controller.title = self.navView.title;
+        [self.navigationController pushViewController:controller animated:YES];
+    }else{
+        //预选项目
+        PreProjectDetailViewController* controller = [[PreProjectDetailViewController alloc]init];
+        
+        Project* project = [[Project alloc]init];
+        project = [[Project alloc]init];
+        project.imgUrl = [dic valueForKey:@"img"];
+        project.projectId = [[dic valueForKey:@"id"] integerValue];
+        
+        controller.project = project;
+        controller.type=0;
+        controller.title = self.navView.title;
+        [self.navigationController pushViewController:controller animated:YES];
+    }
     
-    Project* project = [[Project alloc]init];
-    project = [[Project alloc]init];
-    project.imgUrl = [dic valueForKey:@"img"];
-    project.tag = [dic valueForKey:@"tag"];
-    project.company = [dic valueForKey:@"company"];
-    project.projectId = [[dic valueForKey:@"id"] integerValue];
-    project.invest = [NSString stringWithFormat:@"%@",[dic valueForKey:@"invest"]];
-    project.planfinance = [NSString stringWithFormat:@"%@",[dic valueForKey:@"planfinance"]];
-    
-    controller.project = project;
-    controller.type=1;
-    controller.title = self.navView.title;
-    [self.navigationController pushViewController:controller animated:YES];
 }
 
 -(void)wmTableViewController:(id)wmTableViewController thinkTankDetailData:(NSDictionary *)dic

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "RootViewController.h"
+#import "UIView+SDAutoLayout.h"
+#import "UITableView+SDAutoTableViewCellHeight.h"
 #import "CustomImagePickerController.h"
 @interface FinialAuthViewController : RootViewController
 {

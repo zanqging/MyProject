@@ -13,8 +13,9 @@
 {
     UILabel * _label;
     UIView * _lineView;
+    UIImageView * _iconImgView;
     UIScrollView * _scrollView;
 }
 
-@property (retain,nonatomic) NSMutableArray* dataArray;
+@property (retain, nonatomic) NSMutableArray* dataArray;
 @end

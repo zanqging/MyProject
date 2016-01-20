@@ -3,16 +3,16 @@
     {
       "orientation" : "portrait",
       "idiom" : "iphone",
+      "filename" : "启动页.png",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
-      "filename" : "启动页面 640x960.png",
       "scale" : "2x"
     },
     {
       "extent" : "full-screen",
       "idiom" : "iphone",
       "subtype" : "retina4",
-      "filename" : "lanuch640x1136.png",
+      "filename" : "启动页@3x.png",
       "minimum-system-version" : "7.0",
       "orientation" : "portrait",
       "scale" : "2x"

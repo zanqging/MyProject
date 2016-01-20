@@ -88,6 +88,10 @@
 {
     self->_titleStr = titleStr;
     if (self.titleStr) {
+        NSString * content = self.titleStr;
+        if (self.atName) {
+            content = [content stringByAppendingFormat:@"回复%@",self.atName];
+        }
         NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
         
         //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
@@ -95,8 +99,10 @@
         [paragraphStyle setLineSpacing:10.f];//调整行间距
         [paragraphStyle setAlignment:NSTextAlignmentJustified];
         [paragraphStyle setHeadIndent:-50];
-        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:titleStr];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
         [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [titleStr length])];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:AppColorTheme range:NSMakeRange(0, self.titleStr.length)];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:AppColorTheme range:NSMakeRange(self.titleStr.length+2, self.atName.length)];
         
         self.title.attributedText = attributedString;//ios 6
         [self.title sizeToFit];

@@ -53,14 +53,14 @@
     //==============================滚动时图区域开始==============================//
     scrollView = [[UIScrollView alloc]initWithFrame:frame];
     scrollView.backgroundColor = ClearColor;
-    
+    [scrollView setContentSize:CGSizeMake(WIDTH(self.view), HEIGHT(self.view)+220)];
     [self.view addSubview:scrollView];
     //==============================滚动时图区域开始==============================//
     
     //==============================滚动时图子视图添加开始==============================//
     
     //手机号码输入框
-    self.phoneTextField = [[UITextField alloc]initWithFrame:CGRectMake(30,HEIGHT(self.view)/2-100, WIDTH(self.view)-60, 45)];
+    self.phoneTextField = [[UITextField alloc]initWithFrame:CGRectMake(30,80, WIDTH(self.view)-60, 45)];
     
     //设置属性
     self.phoneTextField.tag=1004;
@@ -69,14 +69,13 @@
     self.phoneTextField.textColor =WriteColor;
     self.phoneTextField.placeholder = @"请输入手机号码";
     self.phoneTextField.returnKeyType = UIReturnKeyDone;
-    self.phoneTextField.backgroundColor =RGBACOLOR(203, 203, 203, 0.4);
+    self.phoneTextField.backgroundColor = RGBACOLOR(203, 203, 203, 0.4);
 //    self.phoneTextField.layer.borderColor =RGBACOLOR(203, 203, 203, 0.3).CGColor;
     self.phoneTextField.keyboardType = UIKeyboardTypeDecimalPad;
-    self.phoneTextField.layer.cornerRadius=HEIGHT(self.phoneTextField)/2;
+    self.phoneTextField.layer.cornerRadius = 2;
     self.phoneTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.phoneTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.phoneTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-//    self.phoneTextField.layer.borderWidth =1;
     
     //设置输入框左侧图标
     [TDUtil setTextFieldLeftPadding:self.phoneTextField forImage:@"shuruphone"];
@@ -89,7 +88,6 @@
     
     //设置属性
     self.passwordTextField.delegate=self;
-//    self.passwordTextField.layer.borderWidth =1;
     self.passwordTextField.secureTextEntry=YES;
     self.passwordTextField.secureTextEntry = YES;
     self.passwordTextField.font = SYSTEMFONT(16);
@@ -100,7 +98,7 @@
     self.passwordTextField.backgroundColor  =self.phoneTextField.backgroundColor;
     self.passwordTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.passwordTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.passwordTextField.layer.cornerRadius=HEIGHT(self.passwordTextField)/2;
+    self.passwordTextField.layer.cornerRadius = 2;
     self.passwordTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     
     //设置输入框左侧图标
@@ -109,15 +107,14 @@
     //密码输入框添加至滚动视图
     [scrollView addSubview:self.passwordTextField];
     
-    
     //登录按钮
-    self.loginButton = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(self.passwordTextField)+40, WIDTH(scrollView) - 60, 40)];
+    self.loginButton = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(self.passwordTextField)+30, WIDTH(scrollView) - 60, 40)];
     
     //设置登录按钮属性
     [self.loginButton.layer setBorderWidth:1];
     [self.loginButton setBackgroundColor:AppColorTheme];
-    [self.loginButton setTitle:@"登录" forState:UIControlStateNormal];
-    [self.loginButton.layer setCornerRadius:HEIGHT(self.loginButton)/2];
+    [self.loginButton setTitle:@"登 录" forState:UIControlStateNormal];
+    [self.loginButton.layer setCornerRadius:2];
     [self.loginButton setTitleColor:WriteColor forState:UIControlStateNormal];
     [self.loginButton.layer setBorderColor:AppColorTheme.CGColor];
     [self.loginButton addTarget:self action:@selector(doAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -160,14 +157,14 @@
     //==============================滚动时图子视图添加开始==============================//
     
     //==============================微信登录开始==============================//
-    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, POS_Y(btnActionLeft)+50, WIDTH(self.view)/2-50, 1)];
-    imgView.backgroundColor  =WriteColor;
+    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, HEIGHT(self.view)-100, WIDTH(self.view)/2-50, 1)];
+    imgView.backgroundColor  =[TDUtil colorWithHexString:@"b4bdc8"];;
     [scrollView addSubview:imgView];
     imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)-WIDTH(imgView)-10, Y(imgView), WIDTH(imgView), HEIGHT(imgView))];
-    imgView.backgroundColor  =WriteColor;
+    imgView.backgroundColor  =[TDUtil colorWithHexString:@"b4bdc8"];
     [scrollView addSubview:imgView];
     
-    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2-20, Y(imgView)-40, 40, 40)];
+    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2-20, Y(imgView)-50, 40, 40)];
     imgView.image =IMAGENAMED(@"WeChatLogo");
     imgView.layer.cornerRadius = 5;
     imgView.layer.masksToBounds=YES;
@@ -181,12 +178,30 @@
     label.font  =SYSTEMFONT(14);
     label.textAlignment = NSTextAlignmentCenter;
     [scrollView addSubview:label];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(0, HEIGHT(self.view)-30, WIDTH(self.view), 21)];
+    label.textColor = WriteColor;
+    label.text = @"金指投";
+    label.font  =SYSTEMFONT(14);
+    label.textAlignment = NSTextAlignmentCenter;
+    [scrollView addSubview:label];
     //==============================微信登录结束==============================//
     
     //监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getAccess_token:) name:@"WeChatBind" object:nil];
+    
+    //加载本地默认数据
+    [self loadDefaultData];
 }
 
+-(void)loadDefaultData
+{
+    NSUserDefaults * data = [NSUserDefaults standardUserDefaults];
+    NSString * phoneNumber = [data valueForKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
+    if (phoneNumber) {
+        self.phoneTextField.text = phoneNumber;
+    }
+}
 /**
  *  微信登录
  *
@@ -444,7 +459,7 @@
 #pragma UITextFieldDelegate
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    [scrollView setContentOffset:CGPointMake(0, 90) animated:YES];
+
 }
 
 - (void)resignKeyboard
@@ -459,7 +474,6 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
     [textField resignFirstResponder];
 }
 

@@ -23,7 +23,7 @@
         [self addSubview:imageView];
         
         recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(upload:)];
-        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/2-HEIGHT(self)/6, HEIGHT(self)/2-HEIGHT(self)/6, HEIGHT(self)/3, HEIGHT(self)/3)];
+        imageView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/4, 10, WIDTH(self)/2-20, WIDTH(self)/4+20)];
         imageView.tag = 10002;
         imageView.backgroundColor = ClearColor;
         imageView.image = IMAGENAMED(@"shangchuan");
@@ -32,7 +32,7 @@
         [self addSubview:imageView];
         
         recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(upload:)];
-        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, HEIGHT(self)*3/4-10, WIDTH(self), HEIGHT(self)/4)];
+        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, HEIGHT(self)*3/4, WIDTH(self), HEIGHT(self)/4)];
         label.tag  = 10003;
         label.font = SYSTEMFONT(16);
         label.textColor = BACKGROUND_LIGHT_GRAY_COLOR;
@@ -69,6 +69,19 @@
         if (label) {
             label.text = self.title;
         }
+    }
+}
+
+-(void)setPlaceImage:(UIImage *)placeImage
+{
+    self->_placeImage = placeImage;
+    UIImageView* imageView=(UIImageView*)[self viewWithTag:10002];
+    if (imageView) {
+        imageView.image = self.placeImage;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        
+        CGSize size = self.placeImage.size;
+        [imageView setFrame:CGRectMake(WIDTH(self)/2-size.width/2, 10, size.width, size.height)];
     }
 }
 

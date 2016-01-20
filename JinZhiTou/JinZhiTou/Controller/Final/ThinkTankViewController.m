@@ -74,25 +74,10 @@
     imgView.sd_layout
     .spaceToSuperView(UIEdgeInsetsMake(0, 0, 0, 0));
     
-    //头像
-    imgView = [[UIImageView alloc]init];
-    imgView.layer.masksToBounds = YES;
-    imgView.backgroundColor = BlackColor;
-    [imgView setContentMode:UIViewContentModeScaleAspectFit];
-    [imgView sd_setImageWithURL:[self.dic valueForKey:@"photo"] placeholderImage:IMAGENAMED(@"coremember") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
-        [imgView setContentMode:UIViewContentModeScaleToFill];
-    }];
     
-    [view addSubview:imgView];
-    
-    imgView.sd_layout
-    .widthEqualToHeight(80)
-    .spaceToSuperView(UIEdgeInsetsMake(HEIGHT(view)/2-40, WIDTH(self.view)/2-40, HEIGHT(view)/2-40, 0));
-    imgView.sd_cornerRadiusFromWidthRatio = [NSNumber numberWithDouble:0.5];
-
+    //身份
     _infoFoldView1 = [[FoldInfoView alloc] init];
     [scrollView addSubview:_infoFoldView1];
-    
     
     _infoFoldView1.sd_layout
     .topSpaceToView(view,10)
@@ -100,7 +85,7 @@
     .rightSpaceToView(scrollView,10)
     .heightIs(80);
     
-    
+    //寄语
     _infoFoldView2 = [[FoldInfoView alloc] init];
     [scrollView addSubview:_infoFoldView2];
     
@@ -110,6 +95,7 @@
     .rightEqualToView(_infoFoldView1)
     .heightIs(80);
     
+    //个人介绍
     _infoFoldView3 = [[FoldInfoView alloc] init];
     [scrollView addSubview:_infoFoldView3];
     
@@ -119,6 +105,7 @@
     .rightEqualToView(_infoFoldView2)
     .heightIs(200);
     
+    //投辅案例
     _infoFoldView4 = [[FoldInfoView alloc] init];
     [scrollView addSubview:_infoFoldView4];
     
@@ -176,6 +163,9 @@
     
     NSString* url = [THINK_DETAIL stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
     [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestThinkTankDetail:)];
+    
+    //开始执行加载动画
+    self.startLoading = YES;
 }
 
 
@@ -245,7 +235,13 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-
+-(void)refresh
+{
+    [super refresh];
+    
+    //重新加载数据
+    [self loadThinkTankDetail];
+}
 #pragma ASIHttpRequester
 -(void)requestThinkTankDetail:(ASIHTTPRequest *)request
 {
@@ -274,21 +270,25 @@
             NSMutableDictionary* dic = [NSMutableDictionary new];
             [dic setValue:@"身份" forKey:@"title"];
             [dic setValue:[self.dic valueForKey:@"position"] forKey:@"content"];
+            [dic setValue:@"plan" forKey:@"img"];
             _infoFoldView1.dic = dic;
             
             dic = [NSMutableDictionary new];
             [dic setValue:@"寄语" forKey:@"title"];
             [dic setValue:[dataDic valueForKey:@"signature"] forKey:@"content"];
+            [dic setValue:@"comment" forKey:@"img"];
             _infoFoldView2.dic = dic;
             
             dic = [NSMutableDictionary new];
             [dic setValue:@"个人介绍" forKey:@"title"];
             [dic setValue:[dataDic valueForKey:@"experience"] forKey:@"content"];
+            [dic setValue:@"introduce" forKey:@"img"];
             _infoFoldView3.dic = dic;
             
             dic = [NSMutableDictionary new];
             [dic setValue:@"投辅案例" forKey:@"title"];
             [dic setValue:[dataDic valueForKey:@"cases"] forKey:@"content"];
+            [dic setValue:@"case" forKey:@"img"];
             _infoFoldView4.dic = dic;
             
 //            _infoFoldView4.sd_layout
@@ -296,13 +296,20 @@
 //            .leftEqualToView(_infoFoldView3)
 //            .rightEqualToView(_infoFoldView3)
 //            .heightIs(500);
+            
+            self.startLoading = NO;
+        }else{
+            self.isNetRequestError  = YES;
         }
+    }else{
+        self.isNetRequestError = YES;
     }
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);
+    self.isNetRequestError = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated

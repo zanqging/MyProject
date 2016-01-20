@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>SBUsesNetwork</key>
-	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>zh_CN</string>
 	<key>CFBundleDisplayName</key>
@@ -46,7 +44,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2.1.9</string>
+	<string>2.1.14</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -94,6 +92,8 @@
 	<string>您是否愿意授权金指投获取地理位置信息访问</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>您是否愿意授权金指投访问相册</string>
+	<key>SBUsesNetwork</key>
+	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>youyuan.ttf</string>

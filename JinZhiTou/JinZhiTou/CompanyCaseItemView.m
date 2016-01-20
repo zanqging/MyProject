@@ -15,15 +15,15 @@
     if(self = [super initWithFrame:frame])
     {
         
-        _imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/4, 7, WIDTH(self)/2, WIDTH(self)/2)];
-        _label = [[UILabel alloc]initWithFrame:CGRectMake(10, HEIGHT(self)-20, WIDTH(self)-20,20)];
+        _imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self)/4-5, 7, WIDTH(self)/2+10, WIDTH(self)/2+10)];
+        _label = [[UILabel alloc]initWithFrame:CGRectMake(0, HEIGHT(self)-20, WIDTH(self),20)];
         
         [self addSubview:_imgView];
         [self addSubview:_label];
         
         _label.font = SYSTEMFONT(12);
         
-        _imgView.layer.cornerRadius = WIDTH(self)/4;
+        _imgView.layer.cornerRadius = WIDTH(self)/4+5;
         _imgView.layer.masksToBounds = YES;
         _imgView.contentMode = UIViewContentModeScaleToFill;
         

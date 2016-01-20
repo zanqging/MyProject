@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "HttpUtils.h"
+//#import "WMLoopView.h"
 #import "LoadingUtil.h"
 #import "LoadingView.h"
 #import "CycleScrollView.h"
@@ -19,6 +20,7 @@
 @interface RoadShowHomeHeaderView : UIView
 {
     HttpUtils* httpUtil;
+//    WMLoopView* loopView;
     LoadingView* loadingView;
 }
 @property(retain,nonatomic)id <RoadShowHomeDelegate> delegate;

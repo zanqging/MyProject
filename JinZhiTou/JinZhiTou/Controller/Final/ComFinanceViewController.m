@@ -81,37 +81,7 @@
     
     [scrollView setupAutoContentSizeWithBottomView:_infoFoldView3 bottomMargin:10];
     
-    
-//    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, POS_Y(view)-40, 90, 40)];
-//    label.font = SYSTEMFONT(16);
-//    label.text = [self.dic valueForKey:@"name"];
-//    
-//    [view addSubview:label];
-//    
-//    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), 150, 40)];
-//    label.text = [self.dic valueForKey:@"company"];
-//    label.textColor = ColorTheme;
-//    label.font  = SYSTEMFONT(16);
-//    [view addSubview:label];
-//    
-//    view = [[UIView alloc]initWithFrame:CGRectMake(X(view), POS_Y(view)+10, WIDTH(view), scrollView.contentSize.height)];
-//    view.tag = 10002;
-//    view.backgroundColor = WriteColor;
-//    [scrollView addSubview:view];
-//    
-//    
-//    imgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, 40, WIDTH(view)/2-70, 1)];
-//    imgView.backgroundColor = ColorCompanyTheme;
-//    imgView.tag =1001;
-//    [view addSubview:imgView];
-//    
-//    
-//    NSArray *views = @[];
-//    
-//    [views enumerateObjectsUsingBlock:^(UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//        [scrollView addSubview:obj];
-//    }];
-    
+
     [self loadThinkTankDetail];
     
      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -122,6 +92,9 @@
     
     NSString* url = [COMDETAIL stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
     [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestThinkTankDetail:)];
+    
+    //开始显示加载动画
+    self.startLoading = YES;
 }
 
 
@@ -186,6 +159,16 @@
     }
 }
 
+/**
+ *  重写刷新
+ */
+-(void)refresh
+{
+    [super refresh];
+    
+    //重新加载数据
+    [self loadThinkTankDetail];
+}
 -(void)back:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -212,11 +195,13 @@
             [dic setValue:[dataDic valueForKey:@"homepage"] forKey:@"homepage"];
             [dic setValue:[dataDic valueForKey:@"foundingtime"] forKey:@"foundingtime"];
             [dic setValue:[dataDic valueForKey:@"fundsize"] forKey:@"fundsize"];
+            [dic setValue:@"plan" forKey:@"img"];
             _infoFoldView1.dic = dic;
             
             dic = [NSMutableDictionary new];
             [dic setValue:@"机构介绍" forKey:@"title"];
             [dic setValue:[dataDic valueForKey:@"profile"] forKey:@"content"];
+            [dic setValue:@"introduce" forKey:@"img"];
             _infoFoldView2.dic = dic;
             
             _infoFoldView3.dataArray = [dataDic valueForKey:@"investcase"];
@@ -226,13 +211,20 @@
 //            .leftEqualToView(_infoFoldView3)
 //            .rightEqualToView(_infoFoldView3)
 //            .heightIs(500);
+            
+            self.startLoading = NO;
+        }else{
+            self.startLoading = YES;
         }
+    }else{
+        self.startLoading = YES;
     }
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);
+    self.isNetRequestError = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated

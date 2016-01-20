@@ -101,13 +101,19 @@
     
     _shareView = [[ShareContentView alloc]init];
     
+    //加入监听事件
+    _shareView.userInteractionEnabled = YES;
+    [_shareView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(shareContent:)]];
+    
     _timeLabel = [UILabel new];
     _timeLabel.font = [UIFont systemFontOfSize:10];
     _timeLabel.textColor = [UIColor lightGrayColor];
     
+    
     _btnDelete = [[UIButton alloc]init];
     [_btnDelete setTitle:@"删除" forState:UIControlStateNormal];
     [_btnDelete.titleLabel setFont:[UIFont fontWithName:@"Arial" size:11]];
+    [_btnDelete addTarget:self action:@selector(deleteAction:) forControlEvents:UIControlEventTouchUpInside];
     [_btnDelete setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     
     _btnPrise = [[UIButton alloc]init];
@@ -211,9 +217,9 @@
     
     _btnDelete.sd_layout
     .leftSpaceToView(_timeLabel,5)
-    .topSpaceToView(_timeLabel,-5)
+    .topSpaceToView(_timeLabel,-15)
     .widthIs(30)
-    .autoHeightRatio(0);
+    .heightIs(20);
     
     _btnComment.sd_layout
     .rightEqualToView(_contentLabel)
@@ -289,7 +295,15 @@
     }
     _picContainerView.sd_layout.topSpaceToView(_contentLabel, picContainerTopMargin);
     _timeLabel.text = model.dateTime;
-    [_btnDelete setTitle:@"全文" forState:UIControlStateNormal];
+    
+    //处理删除按钮
+    if (!model.flag) {
+        [_btnDelete setAlpha:0];
+        [_btnDelete setEnabled:NO];
+    }else{
+        [_btnDelete setAlpha:1];
+        [_btnDelete setEnabled:YES];
+    }
     
     
     if (model.likersArray && model.likersArray.count>0) {
@@ -357,6 +371,12 @@
     [self setupAutoHeightWithBottomView:_viewComment bottomMargin:10];
 }
 
+
+/**
+ *  点赞
+ *
+ *  @param sender 触发实例
+ */
 -(void)priseAction:(id)sender
 {
     if (!httpUtils) {
@@ -368,11 +388,40 @@
     [httpUtils getDataFromAPIWithOps:serverUrl  type:0 delegate:self sel:@selector(requestPriseFinished:) method:@"GET"];
 }
 
+
+/**
+ *  评论
+ *
+ *  @param sender 触发实例
+ */
 -(void)commentAction:(id)sender
 {
     if ([_delegate respondsToSelector:@selector(weiboTableViewCell:contentId:atId:isSelf:)]) {
         [_delegate weiboTableViewCell:self contentId:[NSString stringWithFormat:@"%ld",self.model.id] atId:nil isSelf:NO];
     }
+}
+
+/**
+ *  分享新三板点击
+ *
+ *  @param sender 触发实例
+ */
+-(void)shareContent:(id)sender
+{
+    if ([_delegate respondsToSelector:@selector(weiboTableViewCell:didSelectedShareContentUrl:)]) {
+        //分享链接
+        NSURL * url = [NSURL URLWithString:[self.model.shareDic valueForKey:@"url"]];
+        [_delegate weiboTableViewCell:self didSelectedShareContentUrl:url];
+    }
+}
+
+-(void)deleteAction:(id)sender
+{
+    UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"金指投温馨提示" message:@"是否确认删除内容?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除", nil];
+    [alertView show];
+    
+    //设置为删除内容
+    currentTag = 1;
 }
 
 #pragma UITableViewDataSource
@@ -446,7 +495,7 @@
     return [[self.tableView cellAutoHeightManager] cellHeightForIndexPath:indexPath model:nil keyPath:nil];
 }
 
-
+#pragma UIAlertViewDelegate
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex==1) {
@@ -462,8 +511,11 @@
             }
             NSString* serverUrl = [CYCLE_CONTENT_DELETE stringByAppendingFormat:@"%ld/",self.model.id];
             [httpUtils getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestDeleteFinished:)];
+            
+            if ([_delegate respondsToSelector:@selector(weiboTableViewCell:deleteDic:)]) {
+                [_delegate weiboTableViewCell:self deleteDic:self.model];
+            }
         }
-        
     }
 }
 
@@ -484,11 +536,11 @@
     NSLog(@"返回:%@",jsonString);
     NSMutableDictionary * dic =[jsonString JSONValue];
     if (dic!=nil) {
-        NSString* status = [dic valueForKey:@"status"];
+        NSString* status = [dic valueForKey:@"code"];
         if ([status integerValue]==0) {
-            if ([_delegate respondsToSelector:@selector(weiboTableViewCell:deleteDic:)]) {
-                [_delegate weiboTableViewCell:self deleteDic:self.model];
-            }
+//            if ([_delegate respondsToSelector:@selector(weiboTableViewCell:deleteDic:)]) {
+//                [_delegate weiboTableViewCell:self deleteDic:self.model];
+//            }
         }
     }
 }
@@ -537,4 +589,7 @@
         }
     }
 }
+
+
+
 @end

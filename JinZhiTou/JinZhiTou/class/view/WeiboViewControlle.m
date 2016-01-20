@@ -171,6 +171,7 @@
     
 
     cell.topicId = [dic valueForKey:@"id"];
+    cell.atName = [dic valueForKey:@"at_name"];
     cell.titleStr = [dic valueForKey:@"name"];
     cell.isInvestor = [[dic valueForKey:@"investor"] boolValue];
     [cell.logo sd_setImageWithURL:[dic valueForKey:@"photo"] placeholderImage:IMAGENAMED(@"coremember")];
@@ -225,6 +226,10 @@
     }
 }
 
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 10;
+}
 -(void)setDataArray:(NSMutableArray *)dataArray
 {
     self->_dataArray = dataArray;

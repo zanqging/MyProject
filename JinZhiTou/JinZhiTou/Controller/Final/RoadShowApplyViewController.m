@@ -10,6 +10,7 @@
 #import "QiniuSDK.h"
 #import "LoadVideo.h"
 #import "FinialKind.h"
+#import "UIView+SDAutoLayout.h"
 #import "PrivacyViewController.h"
 #import "CompanyViewController.h"
 #import <QuartzCore/QuartzCore.h>
@@ -126,36 +127,48 @@
     scrollView.tag =40001;
     scrollView.delegate=self;
     scrollView.bounces = NO;
-    scrollView.backgroundColor=BackColor;
+    scrollView.backgroundColor=WriteColor;
     [self.view addSubview:scrollView];
     
-    UIImageView* imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 60, WIDTH(scrollView), 170)];
+    UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(scrollView), 50)];
+    label.backgroundColor = WriteColor;
+    label.text = @"商业计划书";
+    label.font = SYSTEMFONT(23);
+    label.textAlignment = NSTextAlignmentCenter;
+    [scrollView addSubview:label];
+    
+    UIView * v = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(label), WIDTH(scrollView), 1)];
+    v.backgroundColor = FONT_COLOR_GRAY;
+    [scrollView addSubview:v];
+    
+    
+    UIImageView* imageView = [[UIImageView alloc]initWithFrame:CGRectMake(20, POS_Y(v)+80, WIDTH(scrollView)-40, 270)];
     imageView.image=IMAGENAMED(@"luyan");
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     [scrollView addSubview:imageView];
     
-    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, POS_Y(imageView)+70, WIDTH(scrollView)-40, 40)];
-    label.alpha = 0.5;
-    label.numberOfLines =0;
-    label.font = SYSTEMFONT(14);
-    label.lineBreakMode = NSLineBreakByWordWrapping;
-    [scrollView addSubview:label];
+    imageView = [[UIImageView alloc]initWithFrame:CGRectMake(20, POS_Y(imageView)+100, WIDTH(scrollView)-40, 70)];
+    imageView.image=IMAGENAMED(@"upload_emial");
+    [scrollView addSubview:imageView];
     
-    NSString* content =@"备注：请您准备好资料，发送至邮箱 kf@jinzht.com 工作人员第一时间联系您!";
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(16, 14)];
+    v = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(imageView)+10, WIDTH(scrollView), 3)];
+    v.backgroundColor = FONT_COLOR_GRAY;
+    [scrollView addSubview:v];
+ 
     
-    label.attributedText = attributedString;//ios 6
-    
-    loadingVideView = [[LoadVideo alloc]initWithFrame:CGRectMake(20, POS_Y(label)+10, WIDTH(scrollView)-40, 170)];
+    loadingVideView = [[LoadVideo alloc]initWithFrame:CGRectMake(20, POS_Y(v)+10, WIDTH(scrollView)-40, 170)];
     loadingVideView.isLoaded = NO;
     loadingVideView.isComplete = NO;
     loadingVideView.uploadStart = NO;
     [loadingVideView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(uploadVideo:)]];
     [scrollView addSubview:loadingVideView];
     
+    v = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(loadingVideView)+10, WIDTH(scrollView), 3)];
+    v.backgroundColor = FONT_COLOR_GRAY;
+    [scrollView addSubview:v];
+//
     //填写信息
-    UIView* view = [[UIView alloc]initWithFrame:CGRectMake(20, POS_Y(loadingVideView)+10, WIDTH(self.view)-40, 150)];
+    UIView* view = [[UIView alloc]initWithFrame:CGRectMake(20, POS_Y(v)+10, WIDTH(self.view)-40, 150)];
     view.tag = 30001;
     view.backgroundColor  =WriteColor;
     [scrollView addSubview:view];
@@ -168,7 +181,7 @@
     [view addSubview:label];
     
     //输入公司信息
-    userCompanyTextField = [[UITextField alloc]initWithFrame:CGRectMake(POS_X(label)+10, Y(label), 195, 30)];
+    userCompanyTextField = [[UITextField alloc]initWithFrame:CGRectMake(X(label), POS_Y(label), 195, 30)];
     userCompanyTextField.placeholder = @"请输入公司名称";
     userCompanyTextField.font  =SYSTEMFONT(16);
     userCompanyTextField.tag = 10001;
@@ -195,29 +208,42 @@
     textView.textColor = FONT_COLOR_GRAY;
     [view addSubview:textView];
     
-    view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(view)+10, WIDTH(self.view), 400)];
+    view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(view)+10, WIDTH(self.view), 200)];
     view.tag = 30003;
     view.backgroundColor  =WriteColor;
     [scrollView addSubview:view];
-
-    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(20, 25, 20, 20)];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(35,20, 100, 20)];
+    label.font = SYSTEMFONT(14);
+    label.textColor = FONT_COLOR_BLACK;
+    label.userInteractionEnabled = YES;
+    label.textAlignment = NSTextAlignmentLeft;
+    NSString* content =@"我已经认真阅读并同意";
+    [TDUtil setLabelMutableText:label content:content lineSpacing:0 headIndent:0];
+    [label  addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(check:)]];
+    [view addSubview:label];
+    
+    [label setFrame:CGRectMake(X(label), Y(label), WIDTH(label), 40)];
+    
+    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label),Y(label), WIDTH(scrollView), 20)];
+    label.font = SYSTEMFONT(14);
+    label.textColor = AppColorTheme;
+    label.userInteractionEnabled = YES;
+    label.textAlignment = NSTextAlignmentLeft;
+    content =@"《项目发起协议》";
+    [TDUtil setLabelMutableText:label content:content lineSpacing:0 headIndent:0];
+    [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];
+    [view addSubview:label];
+    
+    [label setFrame:CGRectMake(X(label), Y(label), WIDTH(label), 40)];
+    
+    
+    UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(20, 33, 15, 15)];
+    imgView.tag = 3001;
     imgView.userInteractionEnabled = YES;
     imgView.image = IMAGENAMED(@"queren");
     [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(check:)]];
     [view addSubview:imgView];
-    
-    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10,Y(imgView), WIDTH(scrollView)-POS_X(imgView)-10, 20)];
-    label.font = SYSTEMFONT(14);
-    label.userInteractionEnabled = YES;
-    label.textAlignment = NSTextAlignmentLeft;
-    content =@"我已经认真阅读并同意《项目发起协议》";
-    
-    attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(10, 8)];
-    
-    label.attributedText = attributedString;//ios 6
-    [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(protocolAction:)]];
-    [view addSubview:label];
     
     
     
@@ -227,15 +253,23 @@
     [btnAction setTitle:@"提交资料" forState:UIControlStateNormal];
     [btnAction addTarget:self action:@selector(commitRoadShow) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btnAction];
-    
-    scrollView.contentSize = CGSizeMake(WIDTH(scrollView), POS_Y(view));
-    
-    isCheck = YES;
+//
+//    scrollView.contentSize = CGSizeMake(WIDTH(scrollView), POS_Y(btnAction)+30);
+    [scrollView setupAutoContentSizeWithBottomView:view bottomMargin:20];
+//
+//    isCheck = YES;
 }
 
 -(void)check:(id)sender
 {
-    UIImageView* imgView = (UIImageView*)[sender view];
+    UIView * view = [sender view];
+    UIImageView* imgView;
+    if ([view isKindOfClass:UIImageView.class]) {
+        imgView = (UIImageView*)[sender view];
+    }else{
+        view = [scrollView viewWithTag:30003];
+        imgView = (UIImageView*)[view viewWithTag:3001];
+    }
     
     NSString* fileName =@"";
     if (isCheck) {
@@ -448,7 +482,7 @@
 #pragma UITextFieldDelegate
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    [scrollView setContentOffset:CGPointMake(0, 500) animated:YES];
+    [scrollView setContentOffset:CGPointMake(0, 800) animated:YES];
 //    if (textField.tag ==10001) {
 ////        autoShowView.isHidden = NO;
 //        [scrollView setContentOffset:CGPointMake(0, 500) animated:YES];
@@ -466,11 +500,13 @@
 
 -(void)textFieldDidEndEditing:(UITextField *)textField
 {
+    [scrollView setContentOffset:CGPointMake(0, scrollView.contentSize.height-HEIGHT(self.view)) animated:YES];
     [textField resignFirstResponder];
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    [scrollView setContentOffset:CGPointMake(0, scrollView.contentSize.height-HEIGHT(self.view)) animated:YES];
     [textField resignFirstResponder];
     return YES;
 }

@@ -16,18 +16,19 @@
 {
     if(self = [super initWithFrame:frame]){
         self.backgroundColor =WriteColor;
-        self.labelTitle = [[UILabel alloc]initWithFrame:CGRectMake(10, 30, WIDTH(self)/4, 20)];
+        
+        self.imageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 0, 30, 30)];
+        [self addSubview:self.imageView];
+        
+        self.labelTitle = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imageView)+5, Y(self.imageView)+5, WIDTH(self)/4, 20)];
         [self.labelTitle setText:@"公司名称"];
         [self addSubview:self.labelTitle];
         
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.labelTitle)+10, 0, 1, HEIGHT(self))];
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.imageView)-15, 10, 1, HEIGHT(self))];
         imgView.backgroundColor = ColorCompanyTheme;
         [self addSubview:imgView];
         
-        self.imageView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(imgView)-15, 20, 30, 30)];
-        [self addSubview:self.imageView];
-        
-        self.labelContent = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+25, 10, WIDTH(self)-POS_X(imgView)-30, HEIGHT(self)-40)];
+        self.labelContent = [[UILabel alloc]initWithFrame:CGRectMake(X(self.labelTitle), POS_Y(self.labelTitle), WIDTH(self)-POS_X(imgView)-60, HEIGHT(self)-40)];
         self.labelContent.numberOfLines=4;
         self.labelContent.font  =SYSTEMFONT(14);
         self.labelContent.textColor = FONT_COLOR_GRAY;
@@ -104,13 +105,24 @@
             frame.size.height = HEIGHT(self)-10;
             [self.labelContent setFrame:frame];
         }else{
-            [self setFrame:CGRectMake(X(self), Y(self), WIDTH(self), POS_Y(self.labelContent)+30)];
+            [self setFrame:CGRectMake(X(self), Y(self), WIDTH(self), POS_Y(self.labelContent)+20)];
         }
-        [self.expandImgView setFrame:CGRectMake(WIDTH(self)-50,HEIGHT(self)-15, 10, 10)];
+        [self.expandImgView setFrame:CGRectMake(WIDTH(self)-30,POS_Y(self.labelContent)+5, 10, 10)];
         
        
         
-        [imgView setFrame:CGRectMake(POS_X(self.labelTitle)+10, 0, 1, HEIGHT(self))];
+        float pos_y = 0;
+        float height = HEIGHT(self);
+        if (self.isStart) {
+            pos_y = POS_Y(self.imageView);
+        }
+        
+        
+        if (self.isEnd) {
+            height = POS_Y(self.imageView);
+        }
+        
+        [imgView setFrame:CGRectMake(X(self.imageView)+15, pos_y, 1,height)];
         
         UIView* v;
         CGRect frame;

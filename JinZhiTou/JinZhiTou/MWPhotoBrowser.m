@@ -1552,6 +1552,9 @@ static void * MWVideoPlayerObservation = &MWVideoPlayerObservation;
         } else  {
             [self dismissViewControllerAnimated:YES completion:nil];
         }
+    }else{
+        [self dismissViewControllerAnimated:YES completion:nil];
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 

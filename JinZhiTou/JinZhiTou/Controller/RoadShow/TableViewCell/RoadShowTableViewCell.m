@@ -20,7 +20,7 @@
         [self.contentView addSubview:self.titleLabel];
         
         
-        self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.titleLabel)+10, 0, 1, frame.size.height)];
+        self.imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.titleLabel)+10, 10, 1, frame.size.height)];
         self.imgView.backgroundColor = ColorCompanyTheme;
         [self.contentView addSubview:self.imgView];
         

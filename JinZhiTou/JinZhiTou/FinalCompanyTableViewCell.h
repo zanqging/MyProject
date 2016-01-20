@@ -10,7 +10,8 @@
 
 @interface FinalCompanyTableViewCell : UITableViewCell
 @property(retain,nonatomic)NSString* title;
-//@property (retain, nonatomic)UILabel *titleLabel;
+@property (retain, nonatomic)UILabel *titleLabel;
+@property (retain, nonatomic)UILabel *subTitleLabel;
 @property (retain, nonatomic)UILabel *contentLabel;
 @property (retain,nonatomic) UIImageView *imgView;
 @end

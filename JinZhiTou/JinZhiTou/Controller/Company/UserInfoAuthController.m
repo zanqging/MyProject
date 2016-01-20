@@ -8,10 +8,11 @@
 
 #import "UserInfoAuthController.h"
 #import "ZHPickView.h"
+#import "MWPhotoBrowser.h"
 #import "UIImageView+WebCache.h"
 #import <QuartzCore/QuartzCore.h>
-
-@interface UserInfoAuthController ()<UIScrollViewDelegate,UITextFieldDelegate,ZHPickViewDelegate>
+#import "SDWeiXinPhotoContainerView.h"
+@interface UserInfoAuthController ()<UIScrollViewDelegate,UITextFieldDelegate,ZHPickViewDelegate,MWPhotoBrowserDelegate>
 {
     UITextField* IDTextField;
     UIScrollView* scrollView;
@@ -43,14 +44,15 @@
 
 -(void)back:(id)sender
 {
-    [self.navigationController popViewControllerAnimated:YES];
+//    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)loadData
 {
     self.startLoading  =YES;
-    [self.httpUtil getDataFromAPIWithOps:@"auth/" postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
+    [self.httpUtil getDataFromAPIWithOps:USERINFO postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
 }
 
 -(void)addPersonalView
@@ -80,6 +82,8 @@
     imgView.contentMode = UIViewContentModeScaleToFill;
     imgView.layer.cornerRadius = 5;
     imgView.layer.masksToBounds = YES;
+    imgView.userInteractionEnabled = YES;
+    [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(lookPhotoDetail:)]];
     [view addSubview:imgView];
     UILabel* label;
     
@@ -251,7 +255,7 @@
     label = [[UILabel alloc]initWithFrame:CGRectMake(0, HEIGHT(self.view)-50, WIDTH(self.view), 50)];
     label.font = SYSTEMFONT(12);
     label.text=@"最终解释权归金指投所有";
-    label.textColor = LightGrayColor;
+    label.textColor = FONT_COLOR_GRAY;
     label.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:label];
 }
@@ -333,6 +337,48 @@
     [self.httpUtil getDataFromAPIWithOps:@"userinfo/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
     return YES;
 }
+     
+#pragma lookPhotoDetail
+ -(void)lookPhotoDetail:(UITapGestureRecognizer*)recognizer
+ {
+     UIImageView * imgView = (UIImageView*)recognizer.view;
+     // Create array of MWPhoto objects
+     self.photos = [NSMutableArray new];
+     [self.photos addObject:[MWPhoto photoWithImage:imgView.image]];
+     
+     
+     // Create browser (must be done each time photo browser is
+     // displayed. Photo browser objects cannot be re-used)
+     MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
+     
+     // Set options
+     browser.displayActionButton = YES; // Show action button to allow sharing, copying, etc (defaults to YES)
+     browser.displayNavArrows = NO; // Whether to display left and right nav arrows on toolbar (defaults to NO)
+     browser.displaySelectionButtons = NO; // Whether selection buttons are shown on each image (defaults to NO)
+     browser.zoomPhotosToFill = YES; // Images that almost fill the screen will be initially zoomed to fill (defaults to YES)
+     browser.alwaysShowControls = NO; // Allows to control whether the bars and controls are always visible or whether they fade away to show the photo full (defaults to NO)
+     browser.enableGrid = YES; // Whether to allow the viewing of all the photo thumbnails on a grid (defaults to YES)
+     browser.startOnGrid = NO; // Whether to start on the grid of thumbnails instead of the first photo (defaults to NO)
+     
+     // Optionally set the current visible photo before displaying
+     [browser setCurrentPhotoIndex:1];
+     
+     // Present
+     [self.navigationController pushViewController:browser animated:YES];
+     
+     // Manipulate
+     [browser showNextPhotoAnimated:YES];
+     [browser showPreviousPhotoAnimated:YES];
+     [browser setCurrentPhotoIndex:10];
+ }
+
+#pragma MWPhotoBrowser
+- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser{
+    return self.photos.count;
+}
+- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index{
+    return self.photos[index];
+}
 
 -(void)setDataArray:(NSMutableArray *)dataArray
 {
@@ -360,6 +406,12 @@
         }
     }
 }
+
+-(void)refresh
+{
+    [self loadData];
+}
+
 
 //*********************************************************网络请求开始*****************************************************//
 -(void)requestFinished:(ASIHTTPRequest*)request

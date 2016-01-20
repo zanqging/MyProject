@@ -44,25 +44,19 @@
 {
     [super viewDidLoad];
     [self.navigationController.navigationBar setHidden:YES];
-    //设置标题
-    self.navView.imageView.alpha=1;
-    [self.navView setTitle:@"消息回复"];
-    self.navView.titleLable.textColor=WriteColor;
+    [self.navView removeFromSuperview];
+    self.navView = nil;
     
-    [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
-    [self.navView.leftButton setTitle:@"与我相关" forState:UIControlStateNormal];
-    [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
-    
-    
-    [self.tableView setFrame:CGRectMake(0, POS_Y(self.navView)+20, WIDTH(self.tableView), HEIGHT(self.view)-POS_Y(self.navView)-40)];
+    self.tableView = [[UITableViewCustomView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.view)-100)];
      [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
     [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.backgroundColor = BackColor;
+    [self.view addSubview:self.tableView];
     //1
     self.cellsCurrentlyEditing = [NSMutableArray array];
-    
+    self.loadingViewFrame = self.tableView.frame;
     rowCount = 0;
     [self refreshProject];
 }

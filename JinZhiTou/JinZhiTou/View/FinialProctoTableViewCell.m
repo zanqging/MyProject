@@ -14,19 +14,35 @@
 -(id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(20, 10, 20, 20)];
-        imgView.contentMode = UIViewContentModeScaleAspectFill;
-        [self addSubview:imgView];
+        //1.初始化控件
+        label = [[UILabel alloc]init];
+        imgView = [[UIImageView alloc]init];
         
-        label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+10, 10, WIDTH(self)-POS_X(imgView)-60, 50)];
+        //2.添加到父视图
+        [self.contentView addSubview:label];
+        [self.contentView addSubview:imgView];
+        
+        //3.设置属性
+        imgView.contentMode = UIViewContentModeScaleAspectFill;
+        
         label.numberOfLines = 0 ;
         label.font = SYSTEMFONT(14);
         label.textColor =FONT_COLOR_GRAY;
         label.lineBreakMode = NSLineBreakByWordWrapping;
         
+        //4.设置自适应
+        imgView.sd_layout
+        .widthIs(20)
+        .leftSpaceToView(self.contentView, 20)
+        .topSpaceToView(self.contentView, 15);
         
+        label.sd_layout
+        .topSpaceToView(imgView, -20)
+        .leftSpaceToView(imgView, 5)
+        .rightSpaceToView(self.contentView, 20)
+        .autoHeightRatio(0);
         
-        [self addSubview:label];
+        [self setupAutoHeightWithBottomView:label bottomMargin:10];
     }
     return self;
 }
@@ -40,7 +56,8 @@
     }
     
     if (text) {
-        [TDUtil setLabelMutableText:label content:text lineSpacing:3 headIndent:0];
+//        [TDUtil setLabelMutableText:label content:text lineSpacing:3 headIndent:0];
+        label.text = text;
     }
     
 }
@@ -50,11 +67,11 @@
 {
     self->_isSelected = isSelected;
     if (self.isSelected) {
-        self.backgroundColor = CELL_SELECTED_COLOR;
+//        self.backgroundColor = CELL_SELECTED_COLOR;
         label.textColor = ColorTheme2;
         imgView.image = IMAGENAMED(self.selectedImageName);
     }else{
-        self.backgroundColor = WriteColor;
+//        self.backgroundColor = WriteColor;
         label.textColor = FONT_COLOR_GRAY;
         imgView.image = IMAGENAMED(self.unSelectedImageName);
     }

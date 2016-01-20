@@ -33,7 +33,7 @@
     self.view.backgroundColor=ColorTheme;
     //设置属性
     self.navView.imageView.alpha=1;
-    [self.navView setTitle:@"找回密码"];
+    [self.navView setTitle:@""];
     self.navView.titleLable.textColor=WriteColor;
     
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
@@ -64,7 +64,7 @@
     self.phoneTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.4);
     self.phoneTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.phoneTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.phoneTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
+    self.phoneTextField.layer.cornerRadius = 2;
     self.phoneTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     
     [scrollView addSubview:self.phoneTextField];
@@ -75,16 +75,16 @@
     self.codeTextField = [[UITextField alloc]initWithFrame:CGRectMake(X( self.phoneTextField), POS_Y(self.phoneTextField)+10, WIDTH(self.phoneTextField), HEIGHT(self.phoneTextField))];
     self.codeTextField.tag=1005;
     self.codeTextField.delegate=self;
+    self.codeTextField.clearButtonMode = UITextFieldViewModeNever;
     self.codeTextField.font = SYSTEMFONT(16);
     self.codeTextField.textColor = WriteColor;
     self.codeTextField.placeholder = @"请输入验证码";
     self.codeTextField.returnKeyType = UIReturnKeyDone;
     self.codeTextField.borderStyle =UITextBorderStyleNone;
     self.codeTextField.keyboardType = UIKeyboardTypeDecimalPad;
-    self.codeTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.2);
+    self.codeTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.4);
     self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.codeTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.codeTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
+    self.codeTextField.layer.cornerRadius = 2;
     self.codeTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [scrollView addSubview:self.codeTextField];
     //设置输入框左侧图标
@@ -94,8 +94,8 @@
     self.codeButton.layer.borderWidth = 1;
     self.codeButton.layer.cornerRadius = 5;
     [self.codeButton.titleLabel setFont:SYSTEMFONT(13)];
-    [self.codeButton setBackgroundColor:RGBACOLOR(214, 48, 48, 1)];
-    self.codeButton.layer.borderColor = RGBACOLOR(214, 48, 48, 1).CGColor;
+    [self.codeButton setBackgroundColor:ColorCompanyTheme];
+    self.codeButton.layer.borderColor = ColorCompanyTheme.CGColor;
     [self.codeButton setTitle:@"获取验证码" forState:UIControlStateNormal];
     [self.codeButton setTitleColor:WriteColor forState:UIControlStateNormal];
     [self.codeButton addTarget:self action:@selector(sendCode:) forControlEvents:UIControlEventTouchUpInside];
@@ -136,10 +136,10 @@
     self.passTextField.placeholder = @"请输入密码";
     self.passTextField.returnKeyType = UIReturnKeyDone;
     self.passTextField.borderStyle =UITextBorderStyleNone;
-    self.passTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.2);
+    self.passTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.4);
     self.passTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.passTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.passTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
+    self.passTextField.layer.cornerRadius = 2;
     self.passTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [scrollView addSubview:self.passTextField];
     
@@ -156,9 +156,9 @@
     self.passRepeatTextField.placeholder = @"请重复密码";
     self.passRepeatTextField.returnKeyType = UIReturnKeyDone;
     self.passRepeatTextField.borderStyle =UITextBorderStyleNone;
-    self.passRepeatTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.2);
+    self.passRepeatTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.4);
     self.passRepeatTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.passRepeatTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
+    self.passRepeatTextField.layer.cornerRadius = 2;
     self.passRepeatTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.passRepeatTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [scrollView addSubview:self.passRepeatTextField];
@@ -167,9 +167,9 @@
     [TDUtil setTextFieldLeftPadding:self.passRepeatTextField forImage:@"mima"];
     
     
-    self.regietButton = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(self.passRepeatTextField)+30, WIDTH(self.view)-60, 40)];
+    self.regietButton = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(self.passRepeatTextField)+60, WIDTH(self.view)-60, 40)];
     self.regietButton.layer.cornerRadius = 5;
-    [self.regietButton setTitle:@"提交" forState:UIControlStateNormal];
+    [self.regietButton setTitle:@"找回密码" forState:UIControlStateNormal];
     [self.regietButton addTarget:self action:@selector(doAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.regietButton setTitleColor:WriteColor forState:UIControlStateNormal];
     [self.regietButton setBackgroundColor:AppColorTheme];

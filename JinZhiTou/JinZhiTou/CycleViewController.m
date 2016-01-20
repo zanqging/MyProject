@@ -29,6 +29,7 @@
 #import "DAKeyboardControl.h"
 #import "DemoVC9HeaderView.h"
 #import "ShareTableViewCell.h"
+#import "BannerViewController.h"
 #import "PECropViewController.h"
 #import "UIView+SDAutoLayout.h"
 #import "PublishViewController.h"
@@ -159,6 +160,9 @@
     
     //加载数据
     [self loadData];
+    
+    [self updateNewMessage:nil];
+    
 }
 
 /**
@@ -181,7 +185,9 @@
  */
 -(void)loadData
 {
-//    self.startLoading = YES;
+    if (!self.dataArray) {
+        self.startLoading = YES;
+    }
     NSString* serverUrl = [CYCLE_CONTENT_LIST stringByAppendingFormat:@"%d/",curentPage];
     [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:@selector(requestData:)];
 }
@@ -225,7 +231,7 @@
         NSMutableArray* postArray =[dataDic valueForKey:@"files"];
         
         //组织数据
-        NSMutableDictionary* dic = [[NSMutableDictionary alloc]init];
+//        NSMutableDictionary* dic = [[NSMutableDictionary alloc]init];
         NSUserDefaults* dataDefault =[NSUserDefaults standardUserDefaults];
         
         //重构数组,
@@ -247,6 +253,7 @@
 //            [arr addObject:[NSString stringWithFormat:@"file%d",i]];
 //        }
         model.picNamesArray = postArray;
+        model.flag = true;
         model.dateTime  = @"刚刚";
         model.content = content;
         model.uid = [[dataDefault valueForKey:@"userId"] integerValue];
@@ -593,14 +600,14 @@
 
 -(void)weiboTableViewCell:(id)weiboTableViewCell didSelectedShareContentUrl:(NSURL *)urlStr
 {
-//    Cycle* cycle =((WeiboTableViewCell*)weiboTableViewCell).cycle;
-    //    BannerViewController* controller =[[BannerViewController alloc]init];
-    //    controller.titleStr=@"咨询详情";
-    //    controller.dic = [dic valueForKey:@"share"];
-    //    controller.title=@"圈子";
-    //    controller.type=3;
-    //    controller.url =[NSURL URLWithString:[[dic valueForKey:@"share"] valueForKey:@"url"]];
-    //    [self.navigationController pushViewController:controller animated:YES];
+    Demo9Model * model = ((DemoVC9Cell*)weiboTableViewCell).model;
+    BannerViewController* controller =[[BannerViewController alloc]init];
+    controller.type=3;
+    controller.url =urlStr;
+    controller.title=@"圈子";
+    controller.titleStr=@"咨询详情";
+    controller.dic = model.shareDic;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 
@@ -700,15 +707,17 @@
                 dic = [tempArray objectAtIndex:i];
                 
                 Demo9Model *model = [Demo9Model new];
-                model.id = [[dic valueForKey:@"id"] integerValue];
-                model.uid = [[dic valueForKey:@"uid"] integerValue];
-                model.isLike = [[dic valueForKey:@"is_like"] boolValue];
                 model.name = [dic valueForKey:@"name"];
                 model.address = [dic valueForKey:@"addr"];
                 model.iconName = [dic valueForKey:@"photo"];
                 model.content = [dic valueForKey:@"content"];
                 model.position = [dic valueForKey:@"position"];
                 model.dateTime = [dic valueForKey:@"datetime"];
+                model.id = [[dic valueForKey:@"id"] integerValue];
+                model.flag = [[dic valueForKey:@"flag"] boolValue];
+                model.uid = [[dic valueForKey:@"uid"] integerValue];
+                model.isLike = [[dic valueForKey:@"is_like"] boolValue];
+                
                 
                 //分享
                 NSDictionary* dicShare =[dic valueForKey:@"share"];

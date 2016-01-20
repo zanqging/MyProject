@@ -93,11 +93,13 @@
 
 #define IMAGENAMED(NAME)        [UIImage imageNamed:NAME]
 
+#define DICVFK(DIC,KEY)        [(DIC) valueForKey:(KEY)]
+
 // 字体大小(常规/粗体)
 #define BOLDSYSTEMFONT(FONTSIZE)[UIFont boldSystemFontOfSize:FONTSIZE]
 //#define SYSTEMFONT(FONTSIZE)    [UIFont systemFontOfSize:FONTSIZE]
 
-#define SYSTEMFONT(FONTSIZE)    [UIFont fontWithName:@"Arial" size:(FONTSIZE)]
+#define SYSTEMFONT(FONTSIZE)    [UIFont systemFontOfSize:(FONTSIZE)]
 #define SYSTEMBOLDFONT(FONTSIZE)    [UIFont fontWithName:@"Helvetica-Bold" size:(FONTSIZE)]
 #define FONT(NAME, FONTSIZE)    [UIFont fontWithName:(NAME) size:(FONTSIZE)]
 

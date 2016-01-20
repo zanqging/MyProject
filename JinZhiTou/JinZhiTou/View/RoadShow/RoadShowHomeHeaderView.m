@@ -38,12 +38,18 @@
         self.mainScorllView.backgroundColor = [[UIColor purpleColor] colorWithAlphaComponent:0.1];
         [view addSubview:self.mainScorllView];
         
-        UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, POS_Y(view), WIDTH(self)/3,40)];
-        imgView.image = IMAGENAMED(@"notice");
-        [self addSubview:imgView];
+        view = [[UIView alloc]initWithFrame:CGRectMake(0, POS_Y(view), WIDTH(self)/3,40)];
+        view.backgroundColor = WriteColor;
+        [view addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(notificationAction:)]];
+        [self addSubview:view];
+        
+        UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2-15,10,30,30)];
+        imgView.image = IMAGENAMED(@"platform_notice");
+        imgView.contentMode = UIViewContentModeScaleAspectFill;
+        [view addSubview:imgView];
         
         //新手指南
-        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(imgView), WIDTH(imgView), 30)];
+        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(view), WIDTH(view), 30)];
         label.tag=1001;
         label.font=SYSTEMFONT(14);
         label.userInteractionEnabled = YES;
@@ -55,9 +61,16 @@
         [self addSubview:label];
         
         
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(imgView)+1, Y(imgView), WIDTH(imgView), HEIGHT(imgView))];
-        imgView.image = IMAGENAMED(@"credit");
-        [self addSubview:imgView];
+        view = [[UIView alloc]initWithFrame:CGRectMake(POS_X(view)+1, Y(view), WIDTH(self)/3,HEIGHT(view))];
+        view.backgroundColor = WriteColor;
+        [view addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(creditSearchAction:)]];
+        [self addSubview:view];
+        
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2-15,10,WIDTH(imgView),HEIGHT(imgView))];
+        imgView.image = IMAGENAMED(@"annocumment");
+        imgView.contentMode = UIViewContentModeScaleAspectFill;
+        [view addSubview:imgView];
+        
         
         label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+1, Y(label), WIDTH(label), HEIGHT(label))];
         label.tag=1002;
@@ -72,11 +85,15 @@
         label.textAlignment = NSTextAlignmentCenter;
         [self addSubview:label];
         
+        view = [[UIView alloc]initWithFrame:CGRectMake(POS_X(view)+1, Y(view), WIDTH(self)/3,HEIGHT(view))];
+        view.backgroundColor = WriteColor;
+        [view addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(creditSearchAction:)]];
+        [self addSubview:view];
         
-        
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(imgView)+1, Y(imgView), WIDTH(imgView), HEIGHT(imgView))];
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2-15,10,WIDTH(imgView),HEIGHT(imgView))];
         imgView.image = IMAGENAMED(@"credit");
-        [self addSubview:imgView];
+        imgView.contentMode = UIViewContentModeScaleAspectFill;
+        [view addSubview:imgView];
         
         label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+1, Y(label), WIDTH(label), HEIGHT(label))];
         label.tag=1002;
@@ -108,8 +125,8 @@
         
         //图标
         
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label)+WIDTH(self)/4-10, POS_Y(label)-5, 20, 20)];
-        imgView.image = IMAGENAMED(@"tel");
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label)+WIDTH(self)/4-10, POS_Y(label), 15, 15)];
+        imgView.image = IMAGENAMED(@"project");
         [view addSubview:imgView];
         
         
@@ -122,7 +139,7 @@
         label.textColor  =AppColorTheme;
         [view addSubview:label];
         
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label)+WIDTH(self)/4-10, Y(imgView), 20, 20)];
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(label)+WIDTH(self)/4-10, Y(imgView), 15, 15)];
         imgView.image = IMAGENAMED(@"tel");
         [view addSubview:imgView];
         
@@ -140,6 +157,24 @@
     //获取离线数据
     self.bannerArray = [banner selectData:100 andOffset:0];
     
+    [self resetBannerData];
+    //新手指南
+    Announcement* cement = [[Announcement alloc]init];
+    NSArray* array = [cement selectData:100 andOffset:0];
+    if(array && array.count>0){
+        Announcement* ce = array[0];
+        //公告
+        UILabel* label = [self viewWithTag:1001];
+        if ([TDUtil isValidString:ce.title]) {
+            label.text = [NSString stringWithFormat:@"%@",ce.title];
+        }
+    }
+}
+
+-(void)resetBannerData
+{
+    //将数据保存至本地数据库
+    //        [banner selectData:10 andOffset:0];
     if (self.bannerArray && self.bannerArray.count>0) {
         //适配数据
         self.viewsArray = [NSMutableArray new];
@@ -148,9 +183,9 @@
         //NSMutableArray* bannerArray = [[NSMutableArray alloc]init];
         for (int  i =0; i<self.bannerArray.count; i++) {
             //<!-- 将banner数据缓存 -->
-            banner = (Banner*)self.bannerArray[i];
+            Banner * banner = (Banner*)self.bannerArray[i];
             //<!-- 将banner数据缓存 -->
-        
+            
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self), HEIGHT(self.mainScorllView))];
             imageView.backgroundColor = WriteColor;
             imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -158,19 +193,16 @@
             
             [self.viewsArray addObject:imageView];
             
-            //            NSURL* url =[NSURL URLWithString:[dataArray[i] valueForKey:@"img"]];
             NSURL * url = [NSURL URLWithString:banner.imgUrl];
-            //            __block RoadShowHomeHeaderView* blockSelf =self;
+            
             [imageView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                 imageView.contentMode = UIViewContentModeScaleAspectFill;
                 imageView.layer.masksToBounds = NO;
-                [self.viewsArray replaceObjectAtIndex:i withObject:imageView];
+                if (i<self.bannerArray.count) {
+                    [self.viewsArray replaceObjectAtIndex:i withObject:imageView];
+                }
             }];
         }
-        
-        //将数据保存至本地数据库
-//        [banner selectData:10 andOffset:0];
-        
         __block RoadShowHomeHeaderView *instance = self;
         self.mainScorllView.fetchContentViewAtIndex = ^UIView *(NSInteger pageIndex){
             if (instance.viewsArray && instance.viewsArray.count>0) {
@@ -184,89 +216,36 @@
         };
         
         self.mainScorllView.TapActionBlock = ^(NSInteger pageIndex){
-            //            NSString* projectId =[dataArray[pageIndex] valueForKey:@"project"];
-            Banner *bannerInstance = instance.bannerArray[pageIndex];
-            NSString* projectId = bannerInstance.project;
-            NSLog(@"imgUrl:%@,url:%@,project:%@",banner.imgUrl,banner.url,banner.project);
-            if (![TDUtil isValidString:projectId]) {
-                //                NSString* urlStr =[dataArray[pageIndex] valueForKey:@"url"];
-                NSString* urlStr = banner.url;
-                if (urlStr && ![urlStr isEqualToString:@""]) {
-                    BannerViewController* controller =[[BannerViewController alloc]init];
-                    controller.titleStr = @"金指投";
-                    controller.title = @"首页";
-                    controller.url =[NSURL URLWithString:urlStr];
+            if (pageIndex <= instance.bannerArray.count) {
+                Banner *bannerInstance = instance.bannerArray[pageIndex];
+                NSString* projectId = bannerInstance.project;
+                if (![TDUtil isValidString:projectId]) {
+                    //                NSString* urlStr =[dataArray[pageIndex] valueForKey:@"url"];
+                    NSString* urlStr = bannerInstance.url;
+                    if (urlStr && ![urlStr isEqualToString:@""]) {
+                        BannerViewController* controller =[[BannerViewController alloc]init];
+                        controller.titleStr = @"金指投";
+                        controller.title = @"首页";
+                        controller.url =[NSURL URLWithString:urlStr];
+                        if ([instance.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+                            [instance.delegate roadShowHome:instance controller:controller type:0];
+                        }
+                    }
+                }else{
+                    RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
+                    Project* project = [[Project alloc]init];
+                    project.projectId  =[projectId integerValue];
+                    controller.project = project;
+                    controller.title =@"项目";
                     if ([instance.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
                         [instance.delegate roadShowHome:instance controller:controller type:0];
                     }
                 }
-            }else{
-                RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
-                Project* project = [[Project alloc]init];
-                project.projectId  =[projectId integerValue];
-                controller.project = project;
-                controller.title =@"项目";
-                if ([instance.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
-                    [instance.delegate roadShowHome:instance controller:controller type:0];
-                }
+                
             }
         };
     }
-    
-    
-    //新手指南
-    Announcement* cement = [[Announcement alloc]init];
-    NSArray* array = [cement selectData:100 andOffset:0];
-    if(array && array.count>0){
-        Announcement* ce = array[0];
-        //公告
-        UILabel* label = [self viewWithTag:1001];
-        if ([TDUtil isValidString:ce.title]) {
-            label.text = [NSString stringWithFormat:@"%@",ce.title];
-        }        
-    }
-    
-//    //平台展示信息
-//    //平台信息
-//    UILabel* label =[self viewWithTag:1002];
-//    
-//    Platform* platForm = [[Platform alloc]init];
-//    array = [platForm  selectData:100 andOffset:0];
-//    if (array && array.count>0) {
-//        //移除缓存数据
-//        Platform* platform;
-//        float pos_x = 0,pos_y=POS_Y(label)+3;
-//        for (int i=0;i<array.count;i++) {
-//            platform = [array objectAtIndex:i];
-//            
-//            //成果融资额度
-//            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 25)];
-//            label.textAlignment = NSTextAlignmentCenter;
-//            label.textColor = ColorTheme2;
-//            label.backgroundColor  =WriteColor;
-//            label.text = [NSString stringWithFormat:@"%@",platform.value];
-//            [self addSubview:label];
-//            
-//            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2, 25)];
-//            label.font = SYSTEMFONT(14);
-//            label.textColor = FONT_COLOR_GRAY;
-//            label.backgroundColor  =WriteColor;
-//            label.textAlignment = NSTextAlignmentCenter;
-//            label.text = [NSString stringWithFormat:@"%@",platform.key];
-//            [self addSubview:label];
-//            if ((i+1)%2==0) {
-//                pos_x=0;
-//                pos_y+=51;
-//            }else{
-//                pos_x=WIDTH(self)/2+1;
-//            }
-//        }
-//    }
-    
-    
 }
-
-
 -(void)callService:(id)sender
 {
     if (!httpUtil) {
@@ -310,6 +289,8 @@
             //<!-- 将banner数据缓存 -->
         }
         self.bannerArray = bannerArray;
+        [self resetBannerData];
+        
         bannerModel = [[Banner alloc]init];
         //将数据保存至本地数据库
         [bannerModel insertCoreData:bannerArray];
@@ -404,7 +385,7 @@
         ////            }
         //        };
         
-
+        
         Announcement* cement =[[Announcement alloc]init];
         //移除旧数据
         [cement deleteData];
@@ -423,50 +404,50 @@
             label.text = [NSString stringWithFormat:@"%@",announcement];
         }
         
-//        //平台信息
-//        label =[self viewWithTag:1002];
-//        
-//        NSMutableArray* array =[self.dataDic valueForKey:@"platform"];
-//        
-//        //移除缓存数据
-//        Platform* platFormModel = [[Platform alloc]init];
-//        [platFormModel deleteData];
-//        
-//        NSMutableArray * platArray = [[NSMutableArray alloc]init];
-//        NSDictionary* dic;
-////        float pos_x = 0,pos_y=POS_Y(label)+3;
-//        for (int i=0;i<array.count;i++) {
-//            Platform *pm = [[Platform alloc]init];
-//            dic = [array objectAtIndex:i];
-//            pm.key = [dic valueForKey:@"key"];
-//            pm.value = [dic valueForKey:@"value"];
-//            [platArray addObject:pm];
-//            
-////            //成果融资额度
-////            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 25)];
-////            label.textAlignment = NSTextAlignmentCenter;
-////            label.textColor = ColorTheme2;
-////            label.backgroundColor  =WriteColor;
-////            label.text = [NSString stringWithFormat:@"%@",plat.value];
-////            [self addSubview:label];
-////            
-////            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2, 25)];
-////            label.font = SYSTEMFONT(14);
-////            label.textColor = FONT_COLOR_GRAY;
-////            label.backgroundColor  =WriteColor;
-////            label.textAlignment = NSTextAlignmentCenter;
-////            label.text = [NSString stringWithFormat:@"%@",plat.key];
-////            [self addSubview:label];
-////            if ((i+1)%2==0) {
-////                pos_x=0;
-////                pos_y+=51;
-////            }else{
-////                pos_x=WIDTH(self)/2+1;
-////            }
-//        }
-//        
-////        platFormModel = [[Platform alloc]init];
-//        [platFormModel insertCoreData:platArray];
+        //        //平台信息
+        //        label =[self viewWithTag:1002];
+        //
+        //        NSMutableArray* array =[self.dataDic valueForKey:@"platform"];
+        //
+        //        //移除缓存数据
+        //        Platform* platFormModel = [[Platform alloc]init];
+        //        [platFormModel deleteData];
+        //
+        //        NSMutableArray * platArray = [[NSMutableArray alloc]init];
+        //        NSDictionary* dic;
+        ////        float pos_x = 0,pos_y=POS_Y(label)+3;
+        //        for (int i=0;i<array.count;i++) {
+        //            Platform *pm = [[Platform alloc]init];
+        //            dic = [array objectAtIndex:i];
+        //            pm.key = [dic valueForKey:@"key"];
+        //            pm.value = [dic valueForKey:@"value"];
+        //            [platArray addObject:pm];
+        //
+        ////            //成果融资额度
+        ////            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, pos_y, WIDTH(self)/2, 25)];
+        ////            label.textAlignment = NSTextAlignmentCenter;
+        ////            label.textColor = ColorTheme2;
+        ////            label.backgroundColor  =WriteColor;
+        ////            label.text = [NSString stringWithFormat:@"%@",plat.value];
+        ////            [self addSubview:label];
+        ////
+        ////            label = [[UILabel alloc]initWithFrame:CGRectMake(pos_x, POS_Y(label)-3, WIDTH(self)/2, 25)];
+        ////            label.font = SYSTEMFONT(14);
+        ////            label.textColor = FONT_COLOR_GRAY;
+        ////            label.backgroundColor  =WriteColor;
+        ////            label.textAlignment = NSTextAlignmentCenter;
+        ////            label.text = [NSString stringWithFormat:@"%@",plat.key];
+        ////            [self addSubview:label];
+        ////            if ((i+1)%2==0) {
+        ////                pos_x=0;
+        ////                pos_y+=51;
+        ////            }else{
+        ////                pos_x=WIDTH(self)/2+1;
+        ////            }
+        //        }
+        //
+        ////        platFormModel = [[Platform alloc]init];
+        //        [platFormModel insertCoreData:platArray];
     }
 }
 
@@ -502,7 +483,7 @@
             [_delegate roadShowHome:self controller:controller type:0];
         }
     }
-        
+    
     
 }
 

@@ -14,7 +14,7 @@
 @property(assign,nonatomic)BOOL isBackHome;
 @property(retain,nonatomic)NSString* navTitle;
 @property (nonatomic,assign)BOOL isEndOfPageSize;
-@property(retain,nonatomic)NSMutableArray* dataCreateArray;
+@property(retain,nonatomic)NSMutableArray* dataArray;
 @property(nonatomic,retain)BannerViewController* webViewController;
 @property (strong, nonatomic)UITableViewCustomView *tableView;
 

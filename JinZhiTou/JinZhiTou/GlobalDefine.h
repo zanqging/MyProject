@@ -103,11 +103,11 @@
 
 
 //主题色
-#define AppColorTheme  [UIColor colorWithRed:0xe9/256. green:0x48/256. blue:0x19/256. alpha:1]
+#define AppColorTheme  [UIColor colorWithRed:0xff/256. green:0x6d/256. blue:0x00/256. alpha:1]
 #define AppGrayColorTheme  [UIColor colorWithRed:0x72/256. green:0x72/256. blue:0x72/256. alpha:1]
 //#define ColorTheme  [UIColor colorWithRed:0xcb/256. green:0x02/256. blue:0x02/256. alpha:1]
 //#define ColorTheme  [UIColor colorWithRed:46.0/255. green:45.0/256. blue:51.0/255. alpha:1]
-#define ColorTheme  [UIColor colorWithRed:81.0/255. green:81.0/256. blue:81.0/255. alpha:1]
+#define ColorTheme  [UIColor colorWithRed:0x3d/256. green:0x3d/256. blue:0x3d/256. alpha:1]
 
 #define ColorFontBlueTheme  [UIColor colorWithRed:0.0/255 green:0.0/255 blue:204/55 alpha:1]
 #define ColorCompanyTheme  [UIColor colorWithRed:0xd4/256. green:0xa2/256. blue:0x25/256. alpha:1]
@@ -177,6 +177,8 @@
 #define BANNER_LIST @"banner/"
 //微路演项目列表
 #define PROJECT_LIST @"project/"
+//预选项目详情
+#define PRE_PROJECT_DETAIL @"uploaddetail/"
 //项目详情
 #define PROJECT_DETAIL @"projectdetail/"
 //融资计划
@@ -211,6 +213,10 @@
 #define COLLECTE @"collect/"
 //点赞
 #define PRISE @"like/"
+//预选项目收藏
+#define UPLOAD_COLLECTE @"uploadcollect/"
+//预选项目点赞
+#define UPLOAD_PRISE @"uploadlike/"
 //投票
 #define VOTE  @"vote/"
 //认证协议
@@ -502,6 +508,8 @@
 #define STATIC_USER_DEFAULT_PIC @"userDefaultPic"
 //身份证号
 #define STATIC_USER_DEFAULT_ID_PIC @"userDefaultIDPic"
+//认证头像
+#define STATIC_USER_AUTH_ID_PIC @"userDefaultAuthIDPic"
 //用户头像
 #define STATIC_USER_BACKGROUND_PIC @"userDefaultBackgroundPic"
 //用户性别

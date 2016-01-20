@@ -11,6 +11,8 @@
 {
      UIImageView* imgView;
 }
+@property(assign,nonatomic)BOOL isStart;
+@property(assign,nonatomic)BOOL isEnd;
 @property(assign,nonatomic)BOOL isLimit;
 @property(assign,nonatomic)BOOL isExpand;
 

@@ -14,12 +14,11 @@
     NSString* str;
 }
 @synthesize isRequestSuccessed;
-@synthesize requestInstance;
 
 - (id)init {
     if (self=[super init]) {
-//        self.requestInstance=[[ASIFormDataRequest alloc]init];
-//        [self.requestInstance setTimeOutSeconds:0];
+        self.requestInstance=[[ASIFormDataRequest alloc]init];
+        [self.requestInstance setTimeOutSeconds:10];
     }
     return self;
 }
@@ -52,16 +51,74 @@
     [self.requestInstance setFile:filePath withFileName:fileName andContentType:@"jpg" forKey:@"file"];
     
     if (delegate) {
-        requestInstance.delegate=delegate;
+        self.requestInstance.delegate=delegate;
     }else{
-        requestInstance.delegate=self;
+        self.requestInstance.delegate=self;
     }
     
     if (sel) {
-        [requestInstance setDidFinishSelector:sel];
+        [self.requestInstance setDidFinishSelector:sel];
     }
     if (type==1) {
-        [requestInstance startSynchronous];
+        [self.requestInstance startSynchronous];
+    }else{
+        [self.requestInstance startAsynchronous];
+        //        [requestInstance startSynchronous];
+    }
+}
+
+//使用字典上传图片
+- (void)getDataFromAPIWithOps:(NSString*)urlStr
+                    postParam:(NSDictionary*)postDic
+                        files:(NSDictionary*) filesDic
+                         type:(NSInteger)type
+                     delegate:(id)delegate
+                          sel:(SEL)sel {
+    
+    str=urlStr;
+    //设置请求标志
+    self.isRequestSuccessed=@"NO";
+    NSURL* url = [NSURL URLWithString:[SERVICE_URL stringByAppendingString:urlStr]];
+    NSLog(@"上传文件:%@",url);
+    self.requestInstance=[ASIFormDataRequest requestWithURL:url];
+    [self.requestInstance setTimeOutSeconds:5];
+    if (postDic!=nil) {
+        for (int i=0; i<postDic.count; i++) {
+            NSString* key=[[postDic allKeys] objectAtIndex:i];
+            NSString* value=[postDic valueForKey:key];
+            [self.requestInstance setPostValue:value forKey:key];
+        }
+        [self.requestInstance setRequestMethod:@"POST"];
+    }else{
+        [self.requestInstance setRequestMethod:@"GET"];
+    }
+    
+    NSString* fileName;
+    NSArray * array = [filesDic allKeys];
+    for (int i = 0 ; i <array.count; i++) {
+        //上传用户名称
+        fileName = [array objectAtIndex:i];
+        //本地保存名称，用于获取本地存储路径
+        NSString* filePath = [TDUtil loadContentPath:[filesDic valueForKey:fileName]];
+        
+//        filePath = [filePath stringByAppendingString:@".jpg"];
+        NSString * uploadFileName =[[filesDic valueForKey:fileName] stringByAppendingString:@".jpg"];
+        
+        [self.requestInstance setFile:filePath withFileName:uploadFileName andContentType:@"jpg" forKey:fileName];
+    }
+    
+    if (delegate) {
+        self.requestInstance.delegate=delegate;
+    }else{
+        self.requestInstance.delegate=self;
+    }
+    
+    if (sel) {
+        [self.requestInstance setDidFinishSelector:sel];
+        [self.requestInstance setDidFailSelector:sel];
+    }
+    if (type==1) {
+        [self.requestInstance startSynchronous];
     }else{
         [self.requestInstance startAsynchronous];
         //        [requestInstance startSynchronous];
@@ -102,16 +159,16 @@
     }
     
     if (delegate) {
-        requestInstance.delegate=delegate;
+        self.requestInstance.delegate=delegate;
     }else{
-        requestInstance.delegate=self;
+        self.requestInstance.delegate=self;
     }
     
     if (sel) {
-        [requestInstance setDidFinishSelector:sel];
+        [self.requestInstance setDidFinishSelector:sel];
     }
     if (type==1) {
-        [requestInstance startSynchronous];
+        [self.requestInstance startSynchronous];
     }else{
         [self.requestInstance startAsynchronous];
         //        [requestInstance startSynchronous];
@@ -143,16 +200,16 @@
         }
     }
     if (delegate) {
-        requestInstance.delegate=delegate;
+        self.requestInstance.delegate=delegate;
     }else{
-        requestInstance.delegate=self;
+        self.requestInstance.delegate=self;
     }
     
     if (sel) {
-        [requestInstance setDidFinishSelector:sel];
+        [self.requestInstance setDidFinishSelector:sel];
     }
     if (type==1) {
-        [requestInstance startSynchronous];
+        [self.requestInstance startSynchronous];
     }else{
         [self.requestInstance startAsynchronous];
         //        [requestInstance startSynchronous];
@@ -180,13 +237,13 @@
     }
     self.requestInstance.timeOutSeconds=10;
     if (delegate) {
-        requestInstance.delegate=delegate;
+        self.requestInstance.delegate=delegate;
     }else{
-        requestInstance.delegate=self;
+        self.requestInstance.delegate=self;
     }
     
     if (type==1) {
-        [requestInstance startSynchronous];
+        [self.requestInstance startSynchronous];
     }else{
         [self.requestInstance startAsynchronous];
         //        [requestInstance startSynchronous];
@@ -206,16 +263,16 @@
     self.requestInstance.timeOutSeconds=5;
     [self.requestInstance setRequestMethod:method];
     if (delegate) {
-        requestInstance.delegate=delegate;
+        self.requestInstance.delegate=delegate;
     }else{
-        requestInstance.delegate=self;
+        self.requestInstance.delegate=self;
     }
     
     if (sel) {
-        [requestInstance setDidFinishSelector:sel];
+        [self.requestInstance setDidFinishSelector:sel];
     }
     if (type==1) {
-        [requestInstance startSynchronous];
+        [self.requestInstance startSynchronous];
     }else{
         [self.requestInstance startAsynchronous];
         //        [requestInstance startSynchronous];
@@ -224,7 +281,7 @@
 
 
 - (void)requestFinished:(ASIHTTPRequest *)request {
-    NSError *error = [requestInstance error];
+    NSError *error = [self.requestInstance error];
     if (!error) {
         NSMutableDictionary* jsonDic = [request.responseString JSONValue];
         if (jsonDic!=nil) {

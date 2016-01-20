@@ -30,7 +30,7 @@
     self.view.backgroundColor=ColorTheme;
     //设置属性
     self.navView.imageView.alpha=1;
-    [self.navView setTitle:@"修改密码"];
+//    [self.navView setTitle:@"修改密码"];
     self.navView.titleLable.textColor=WriteColor;
     
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];

@@ -30,7 +30,7 @@
     self.view.backgroundColor=ColorTheme;
     //设置属性
     self.navView.imageView.alpha=1;
-    [self.navView setTitle:@"注册"];
+//    [self.navView setTitle:@"注册"];
     self.navView.titleLable.textColor=WriteColor;
     
     [self.navView.leftButton setImage:nil forState:UIControlStateNormal];
@@ -45,7 +45,7 @@
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.navView), HEIGHT(self.view)-POS_Y(self.navView))];
     
     scrollView.backgroundColor = ClearColor;
-    scrollView.bounces  = NO;
+    scrollView.bounces  = YES;
     [scrollView setContentSize:CGSizeMake(WIDTH(scrollView), HEIGHT(scrollView)+100)];
     
     [self.view addSubview:scrollView];
@@ -63,7 +63,7 @@
     self.phoneTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.4);
     self.phoneTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.phoneTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.phoneTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
+    self.phoneTextField.layer.cornerRadius = 2;
     self.phoneTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     
     [scrollView addSubview:self.phoneTextField];
@@ -73,6 +73,7 @@
     
     self.codeTextField = [[UITextField alloc]initWithFrame:CGRectMake(X( self.phoneTextField), POS_Y(self.phoneTextField)+10, WIDTH(self.phoneTextField), HEIGHT(self.phoneTextField))];
     self.codeTextField.tag=1005;
+    self.codeTextField.clearButtonMode = UITextFieldViewModeNever;
     self.codeTextField.delegate=self;
     self.codeTextField.font = SYSTEMFONT(16);
     self.codeTextField.textColor = WriteColor;
@@ -82,8 +83,7 @@
     self.codeTextField.keyboardType = UIKeyboardTypeDecimalPad;
     self.codeTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.4);
     self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.codeTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.codeTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
+    self.codeTextField.layer.cornerRadius = 2;
     self.codeTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [scrollView addSubview:self.codeTextField];
     //设置输入框左侧图标
@@ -93,8 +93,8 @@
     self.codeButton.layer.borderWidth = 1;
     self.codeButton.layer.cornerRadius = 5;
     [self.codeButton.titleLabel setFont:SYSTEMFONT(13)];
-    [self.codeButton setBackgroundColor:AppColorTheme];
-    self.codeButton.layer.borderColor = AppColorTheme.CGColor;
+    [self.codeButton setBackgroundColor:ColorCompanyTheme];
+    self.codeButton.layer.borderColor = ColorCompanyTheme.CGColor;
     [self.codeButton setTitle:@"获取验证码" forState:UIControlStateNormal];
     [self.codeButton setTitleColor:WriteColor forState:UIControlStateNormal];
     [self.codeButton addTarget:self action:@selector(sendMessage:) forControlEvents:UIControlEventTouchUpInside];
@@ -138,7 +138,7 @@
     self.passTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.4);
     self.passTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.passTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.passTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
+    self.passTextField.layer.cornerRadius = 2;
     self.passTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [scrollView addSubview:self.passTextField];
     
@@ -157,7 +157,7 @@
     self.passRepeatTextField.borderStyle =UITextBorderStyleNone;
     self.passRepeatTextField.backgroundColor  =RGBACOLOR(203, 203, 203, 0.4);
     self.passRepeatTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.passRepeatTextField.layer.cornerRadius = HEIGHT(self.phoneTextField)/2;
+    self.passRepeatTextField.layer.cornerRadius = 2;
     self.passRepeatTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.passRepeatTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [scrollView addSubview:self.passRepeatTextField];
@@ -181,7 +181,7 @@
     [scrollView addSubview:label];
     
     
-    self.regietButton = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(label)+30, WIDTH(self.view)-60, 40)];
+    self.regietButton = [[UIButton alloc]initWithFrame:CGRectMake(30, POS_Y(label)+60, WIDTH(self.view)-60, 40)];
     self.regietButton.layer.cornerRadius = 5;
     [self.regietButton setTitle:@"立即注册" forState:UIControlStateNormal];
     [self.regietButton addTarget:self action:@selector(doRegistAction:) forControlEvents:UIControlEventTouchUpInside];

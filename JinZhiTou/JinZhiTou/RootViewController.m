@@ -15,6 +15,14 @@
 
 @implementation RootViewController
 
+-(id)init
+{
+    if (self = [super init]) {
+        
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 //    CAGradientLayer *gradient = [CAGradientLayer layer];

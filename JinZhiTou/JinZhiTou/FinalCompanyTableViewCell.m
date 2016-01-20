@@ -23,16 +23,25 @@
         self.imgView.image = IMAGENAMED(@"loading");
         self.imgView.contentMode = UIViewContentModeScaleToFill;
         [view addSubview:self.imgView];
-        [self addSubview:view];
+        [self.contentView addSubview:view];
         //名称
         CGFloat len =WIDTH(self)-153;
-//        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, Y(self.imgView),len,20)];
-//        self.titleLabel.font = SYSTEMFONT(18);
-//        self.titleLabel.textColor = FONT_COLOR_BLACK;
-//        [view addSubview:self.titleLabel];
+        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5,10,len,20)];
+        self.titleLabel.font = SYSTEMFONT(18);
+        self.titleLabel.textColor = FONT_COLOR_BLACK;
+        [view addSubview:self.titleLabel];
+        
+        UIView * lineView = [[UIView alloc]initWithFrame:CGRectMake(X(self.titleLabel)-5, POS_Y(self.titleLabel)+5, WIDTH(self.titleLabel), 2)];
+        lineView.backgroundColor = BackColor;
+        [view addSubview:lineView];
+        
+        self.subTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5,POS_Y(lineView) + 5,len,20)];
+        self.subTitleLabel.font = SYSTEMFONT(14);
+        self.subTitleLabel.textColor = FONT_COLOR_BLACK;
+        [view addSubview:self.subTitleLabel];
         
         //内容
-        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, 5, len,HEIGHT(view))];
+        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.subTitleLabel) + 5, len,20)];
         self.contentLabel.numberOfLines=4;
         self.contentLabel.font = SYSTEMFONT(14);
         self.contentLabel.textColor = FONT_COLOR_GRAY;
@@ -52,7 +61,7 @@
 {
     self->_title=title;
     if (self.title) {
-//        self.titleLabel.text=self.title;
+        self.titleLabel.text=self.title;
     }
     
 }

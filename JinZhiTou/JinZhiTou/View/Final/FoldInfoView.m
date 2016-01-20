@@ -33,19 +33,20 @@
         [self addSubview:_lineView];
         [self addSubview:_contentLabel];
         
-        
-        _imgView.backgroundColor = BlackColor;
         _lineView.backgroundColor = BackColor;
         _titleLabel.textColor = ColorCompanyTheme;
         
         _contentLabel.font = SYSTEMFONT(14);
         
+//        _imgView.contentMode = UIViewContentModeScaleAspectFill;
+        
         
         //自适应布局
         _imgView.sd_layout
-        .leftSpaceToView(self,20)
-        .topSpaceToView(self,10)
-        .widthEqualToHeight(10);
+        .leftSpaceToView(self, 20)
+        .topSpaceToView(self, 12)
+        .widthIs(15)
+        .heightIs(20);
         
         _titleLabel.sd_layout
         .leftSpaceToView(_imgView,5)
@@ -77,7 +78,7 @@
         self->_dic = dic;
         _titleLabel.text = [dic valueForKey:@"title"];
         _contentLabel.text = [dic valueForKey:@"content"];
-        
+        _imgView.image = IMAGENAMED([self.dic valueForKey:@"img"]);
         [self layoutSubviews];
         
     }

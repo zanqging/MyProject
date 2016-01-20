@@ -74,25 +74,10 @@
     imgView.sd_layout
     .spaceToSuperView(UIEdgeInsetsMake(0, 0, 0, 0));
     
-    //头像
-    imgView = [[UIImageView alloc]init];
-    imgView.layer.masksToBounds = YES;
-    imgView.backgroundColor = BlackColor;
-    [imgView setContentMode:UIViewContentModeScaleAspectFit];
-    [imgView sd_setImageWithURL:[self.dic valueForKey:@"photo"] placeholderImage:IMAGENAMED(@"coremember") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
-        [imgView setContentMode:UIViewContentModeScaleToFill];
-    }];
-    
-    [view addSubview:imgView];
-    
-    imgView.sd_layout
-    .widthEqualToHeight(80)
-    .spaceToSuperView(UIEdgeInsetsMake(HEIGHT(view)/2-40, WIDTH(self.view)/2-40, HEIGHT(view)/2-40, 0));
-    imgView.sd_cornerRadiusFromWidthRatio = [NSNumber numberWithDouble:0.5];
 
+    //个人介绍
     _infoFoldView1 = [[FoldInfoView alloc] init];
     [scrollView addSubview:_infoFoldView1];
-    
     
     _infoFoldView1.sd_layout
     .topSpaceToView(view,10)
@@ -100,7 +85,7 @@
     .rightSpaceToView(scrollView,10)
     .heightIs(80);
     
-    
+    //寄语
     _infoFoldView2 = [[FoldInfoView alloc] init];
     [scrollView addSubview:_infoFoldView2];
     
@@ -110,6 +95,7 @@
     .rightEqualToView(_infoFoldView1)
     .heightIs(80);
     
+    //投资规划
     _infoFoldView3 = [[FoldInfoView alloc] init];
     [scrollView addSubview:_infoFoldView3];
     
@@ -119,6 +105,7 @@
     .rightEqualToView(_infoFoldView2)
     .heightIs(200);
     
+    //投资案例
     _infoFoldView4 = [[FoldInfoView alloc] init];
     [scrollView addSubview:_infoFoldView4];
     
@@ -135,40 +122,10 @@
     
     
     
-    
-//    UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(20, POS_Y(view)-40, 90, 40)];
-//    label.font = SYSTEMFONT(16);
-//    label.text = [self.dic valueForKey:@"name"];
-//    
-//    [view addSubview:label];
-//    
-//    label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+5, Y(label), 150, 40)];
-//    label.text = [self.dic valueForKey:@"company"];
-//    label.textColor = ColorTheme;
-//    label.font  = SYSTEMFONT(16);
-//    [view addSubview:label];
-//    
-//    view = [[UIView alloc]initWithFrame:CGRectMake(X(view), POS_Y(view)+10, WIDTH(view), scrollView.contentSize.height)];
-//    view.tag = 10002;
-//    view.backgroundColor = WriteColor;
-//    [scrollView addSubview:view];
-//    
-//    
-//    imgView =[[UIImageView alloc]initWithFrame:CGRectMake(0, 40, WIDTH(view)/2-70, 1)];
-//    imgView.backgroundColor = ColorCompanyTheme;
-//    imgView.tag =1001;
-//    [view addSubview:imgView];
-//    
-//    
-//    NSArray *views = @[];
-//    
-//    [views enumerateObjectsUsingBlock:^(UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//        [scrollView addSubview:obj];
-//    }];
-    
-    [self loadThinkTankDetail];
-    
      [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onDeviceOrientationChange) name:UIDeviceOrientationDidChangeNotification object:nil];
+    
+    //开始加载数据
+    [self loadThinkTankDetail];
 }
 
 -(void)loadThinkTankDetail
@@ -176,6 +133,9 @@
     
     NSString* url = [AUTHDETAIL stringByAppendingFormat:@"%ld/",(long)[[self.dic valueForKey:@"id"] integerValue]];
     [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestThinkTankDetail:)];
+    
+    //显示加载动画
+    self.startLoading = YES;
 }
 
 
@@ -240,6 +200,14 @@
     }
 }
 
+-(void)refresh
+{
+    [super refresh];
+    
+    //重新加载数据
+    [self loadThinkTankDetail];
+}
+
 -(void)back:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -274,21 +242,25 @@
             NSMutableDictionary* dic = [NSMutableDictionary new];
             [dic setValue:@"个人介绍" forKey:@"title"];
             [dic setValue:[dataDic valueForKey:@"profile"] forKey:@"content"];
+            [dic setValue:@"introduce" forKey:@"img"];
             _infoFoldView1.dic = dic;
             
             dic = [NSMutableDictionary new];
             [dic setValue:@"寄语" forKey:@"title"];
             [dic setValue:[dataDic valueForKey:@"signature"] forKey:@"content"];
+            [dic setValue:@"comment" forKey:@"img"];
             _infoFoldView2.dic = dic;
             
             dic = [NSMutableDictionary new];
             [dic setValue:@"投资规划" forKey:@"title"];
             [dic setValue:[dataDic valueForKey:@"investplan"] forKey:@"content"];
+            [dic setValue:@"plan" forKey:@"img"];
             _infoFoldView3.dic = dic;
             
             dic = [NSMutableDictionary new];
             [dic setValue:@"投资案例" forKey:@"title"];
             [dic setValue:[dataDic valueForKey:@"investcase"] forKey:@"content"];
+            [dic setValue:@"case" forKey:@"img"];
             _infoFoldView4.dic = dic;
             
 //            _infoFoldView4.sd_layout
@@ -296,13 +268,19 @@
 //            .leftEqualToView(_infoFoldView3)
 //            .rightEqualToView(_infoFoldView3)
 //            .heightIs(500);
+            self.startLoading = NO;
+        }else{
+            self.isNetRequestError = YES;
         }
+    }else{
+        self.isNetRequestError = YES;
     }
 }
 -(void)requestFailed:(ASIHTTPRequest *)request
 {
     NSString *jsonString = [TDUtil convertGBKDataToUTF8String:request.responseData];
     NSLog(@"返回:%@",jsonString);
+    self.isNetRequestError = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
