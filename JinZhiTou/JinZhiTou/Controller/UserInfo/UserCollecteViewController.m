@@ -9,6 +9,9 @@
 #import "UserCollecteViewController.h"
 #import "MJRefresh.h"
 #import "SwitchSelect.h"
+#import "ThinkTankTableViewCell.h"
+#import "FinalingTableViewCell.h"
+#import "FinalContentTableViewCell.h"
 #import "UserCollecteTableViewCell.h"
 #import "RoadShowDetailViewController.h"
 @interface UserCollecteViewController ()<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,LoadingViewDelegate>
@@ -136,7 +139,7 @@
 
 -(void)addSwitchView
 {
-    NSMutableArray* array=[NSMutableArray arrayWithObjects: @"待融资",@"融资中",@"已融资", nil];
+    NSMutableArray* array=[NSMutableArray arrayWithObjects: @"待融资",@"融资中",@"已融资",@"预选", nil];
     
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), 40)];
      scrollView.backgroundColor =WriteColor;
@@ -229,24 +232,51 @@
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    //声明静态字符串对象，用来标记重用单元格
-    static  NSString* TableDataIdentifier=@"UserCollecteViewCell";
-    //用TableDataIdentifier标记重用单元格
-    UserCollecteTableViewCell* cell=(UserCollecteTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
-    //如果单元格未创建，则需要新建
-    if (cell==nil) {
-        cell =[[UserCollecteTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
+//    static NSString *reuseIdetify = @"FinialListView";
+    NSInteger row = indexPath.row;
+    if (currentSelected !=1003) {
+        //声明静态字符串对象，用来标记重用单元格
+        static  NSString* TableDataIdentifier=@"UserCollecteViewCell";
+        //用TableDataIdentifier标记重用单元格
+        UserCollecteTableViewCell* cell=(UserCollecteTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
+        //如果单元格未创建，则需要新建
+        if (cell==nil) {
+            cell =[[UserCollecteTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
+        }
+
+        NSDictionary* dic = self.dataArray[indexPath.row];
+
+        [cell.imgview sd_setImageWithURL:[dic valueForKey:@"img"] placeholderImage:IMAGENAMED(@"loading")];
+        cell.titleLabel.text = [dic valueForKey:@"company"];
+        cell.start = [dic valueForKey:@"start"];
+        cell.end = [dic valueForKey:@"stop"];
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        tableView.contentSize = CGSizeMake(WIDTH(tableView), 190*self.dataArray.count+100);
+        return cell;
+    }else{
+        static NSString *reuseIdetify = @"FinialThinkView";
+        ThinkTankTableViewCell *cellInstance = (ThinkTankTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
+        if (!cellInstance) {
+            float height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
+            cellInstance = [[ThinkTankTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
+        }
+        
+        NSDictionary* dic = self.dataArray[row];
+        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
+        __block ThinkTankTableViewCell* cell = cellInstance;
+        [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+            if (image) {
+                cell.imgView.contentMode = UIViewContentModeScaleToFill;
+            }
+        }];
+        
+        cellInstance.title = [dic valueForKey:@"abbrevcompany"];
+        cellInstance.content = [dic valueForKey:@"company"];
+        cellInstance.typeDescription =  [NSString stringWithFormat:@"上传时间:%@",[dic valueForKey:@"date"]];
+        cellInstance.selectionStyle=UITableViewCellSelectionStyleDefault;
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        return cellInstance;
     }
-    
-    NSDictionary* dic = self.dataArray[indexPath.row];
-    
-    [cell.imgview sd_setImageWithURL:[dic valueForKey:@"img"] placeholderImage:IMAGENAMED(@"loading")];
-    cell.titleLabel.text = [dic valueForKey:@"company"];
-    cell.start = [dic valueForKey:@"start"];
-    cell.end = [dic valueForKey:@"stop"];
-    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-    tableView.contentSize = CGSizeMake(WIDTH(tableView), 190*self.dataArray.count+100);
-    return cell;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

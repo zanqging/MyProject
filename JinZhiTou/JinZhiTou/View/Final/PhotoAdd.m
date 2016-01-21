@@ -91,6 +91,7 @@
     UIImageView* imageView=(UIImageView*)[self viewWithTag:10001];
     if (imageView) {
         imageView.image = self.image;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
         
         imageView=(UIImageView*)[self viewWithTag:10002];
         imageView.alpha = 0;

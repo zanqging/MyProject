@@ -297,6 +297,19 @@
 }
 -(BOOL)commitData
 {
+    PhotoAdd * instance = [scrollViewPerson viewWithTag:20003];
+    //检测是否已选择身份证
+    if (!instance.image) {
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请选择上传身份证照片" ];
+        return NO;
+    }
+    instance = [scrollViewPerson viewWithTag:20004];
+    //检测是否已选择头像
+    if (!instance.image) {
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请选择上传头像" ];
+        return NO;
+    }
+    
     if (!array || array.count<=0) {
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请选择投资人类型" ];
         return NO;

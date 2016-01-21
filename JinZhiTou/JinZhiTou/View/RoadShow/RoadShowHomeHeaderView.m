@@ -63,7 +63,7 @@
         
         view = [[UIView alloc]initWithFrame:CGRectMake(POS_X(view)+1, Y(view), WIDTH(self)/3,HEIGHT(view))];
         view.backgroundColor = WriteColor;
-        [view addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(notificationAction:)]];
+        [view addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(notionAction:)]];
         [self addSubview:view];
         
         imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(view)/2-15,10,WIDTH(imgView),HEIGHT(imgView))];
@@ -80,7 +80,7 @@
         label.textColor  =FONT_COLOR_GRAY;
         label.backgroundColor  =WriteColor;
         label.userInteractionEnabled  =YES;
-        [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(notificationAction:)]];
+        [label addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(notionAction:)]];
         label.textAlignment = NSTextAlignmentCenter;
         [self addSubview:label];
         
@@ -227,6 +227,8 @@
                         if ([instance.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
                             [instance.delegate roadShowHome:instance controller:controller type:0];
                         }
+                    }else{
+                        [[DialogUtil sharedInstance]showDlg:[UIApplication sharedApplication].windows[0] textOnly:@"暂无详情"];
                     }
                 }else{
                     RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
@@ -326,9 +328,9 @@
 {
     BannerViewController* controller =[[BannerViewController alloc]init];
     controller.title = @"首页";
-    controller.titleStr = @"公告";
     
     NSDictionary *  dic =[self.dataDic valueForKey:@"platform"];
+    controller.titleStr = [dic valueForKey:@"title"];
     controller.url = [NSURL URLWithString:[dic valueForKey:@"url"]];
     if ([_delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
         [_delegate roadShowHome:self controller:controller type:0];
@@ -356,7 +358,6 @@
 {
     BannerViewController* controller =[[BannerViewController alloc]init];
     controller.title = @"首页";
-    controller.titleStr = @"公告";
     
     //新手指南
     Announcement* cement = [[Announcement alloc]init];
@@ -364,6 +365,7 @@
     if(array && array.count>0){
         Announcement* ce = array[0];
         controller.url = [NSURL URLWithString:ce.url];
+        controller.titleStr = ce.title;
         if ([_delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
             [_delegate roadShowHome:self controller:controller type:0];
         }

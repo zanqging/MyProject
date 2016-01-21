@@ -939,6 +939,12 @@
 		45F93B641B637311004526F5 /* UIScrollView+MJRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F93B501B637311004526F5 /* UIScrollView+MJRefresh.m */; };
 		45F93B651B637311004526F5 /* UIView+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F93B521B637311004526F5 /* UIView+MJExtension.m */; };
 		45F93B6A1B638CEB004526F5 /* ProjectInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F93B691B638CEB004526F5 /* ProjectInfoView.m */; };
+		45FAE7421C5069E500ED6516 /* rongzi.png in Resources */ = {isa = PBXBuildFile; fileRef = 45FAE7411C5069E500ED6516 /* rongzi.png */; };
+		45FAE7431C5069E500ED6516 /* rongzi.png in Resources */ = {isa = PBXBuildFile; fileRef = 45FAE7411C5069E500ED6516 /* rongzi.png */; };
+		45FAE7451C50704F00ED6516 /* goroadshow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45FAE7441C50704F00ED6516 /* goroadshow@3x.png */; };
+		45FAE7461C50704F00ED6516 /* goroadshow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 45FAE7441C50704F00ED6516 /* goroadshow@3x.png */; };
+		45FAE7481C50735C00ED6516 /* contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 45FAE7471C50735C00ED6516 /* contact.png */; };
+		45FAE7491C50735C00ED6516 /* contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 45FAE7471C50735C00ED6516 /* contact.png */; };
 		45FCD01F1B75DD4D009AD6E3 /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FCD01E1B75DD4D009AD6E3 /* NSString+SBJSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		45FCD0291B75E15A009AD6E3 /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FCD0221B75E15A009AD6E3 /* SBJSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		45FCD02A1B75E15A009AD6E3 /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FCD0241B75E15A009AD6E3 /* SBJsonBase.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -1788,6 +1794,9 @@
 		45F93B521B637311004526F5 /* UIView+MJExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MJExtension.m"; sourceTree = "<group>"; };
 		45F93B681B638CEB004526F5 /* ProjectInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProjectInfoView.h; path = View/Final/ProjectInfoView.h; sourceTree = "<group>"; };
 		45F93B691B638CEB004526F5 /* ProjectInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProjectInfoView.m; path = View/Final/ProjectInfoView.m; sourceTree = "<group>"; };
+		45FAE7411C5069E500ED6516 /* rongzi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rongzi.png; sourceTree = "<group>"; };
+		45FAE7441C50704F00ED6516 /* goroadshow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "goroadshow@3x.png"; sourceTree = "<group>"; };
+		45FAE7471C50735C00ED6516 /* contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contact.png; sourceTree = "<group>"; };
 		45FCD01D1B75DD4D009AD6E3 /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBJSON.h"; sourceTree = "<group>"; };
 		45FCD01E1B75DD4D009AD6E3 /* NSString+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBJSON.m"; sourceTree = "<group>"; };
 		45FCD0211B75E15A009AD6E3 /* SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJSON.h; sourceTree = "<group>"; };
@@ -2045,6 +2054,7 @@
 				451ED58B1C48874500A135D7 /* credit.png */,
 				451ED5971C488BD400A135D7 /* tel.png */,
 				451ED58C1C48874500A135D7 /* platform_notice.png */,
+				45FAE7471C50735C00ED6516 /* contact.png */,
 				451ED59A1C488BF400A135D7 /* project.png */,
 				4565C2D91C0D802F00BF80D0 /* authing.png */,
 				456ED3901BFC91C90067685A /* empty.png */,
@@ -2056,10 +2066,12 @@
 				4565C2E51C0D8A3B00BF80D0 /* QQ.png */,
 				4565C2E61C0D8A3B00BF80D0 /* wechat.png */,
 				45FD34391BB53DC60065739E /* code.png */,
+				45FAE7441C50704F00ED6516 /* goroadshow@3x.png */,
 				45E8639C1C48E04A00051C3A /* video.png */,
 				45954D031C4F659700137D7D /* case.png */,
 				45954D041C4F659700137D7D /* comment.png */,
 				45954D051C4F659700137D7D /* introduce.png */,
+				45FAE7411C5069E500ED6516 /* rongzi.png */,
 				45954D061C4F659700137D7D /* plan.png */,
 				45E863991C48DDE600051C3A /* upload_emial.png */,
 				45E8639F1C48E8FA00051C3A /* shangchuan.png */,
@@ -3619,6 +3631,7 @@
 				4542898F1C448FE000513DC0 /* UIBarButtonItemArrowLeft@2x.png in Resources */,
 				454289901C448FE000513DC0 /* sex.plist in Resources */,
 				45954D0E1C4F659700137D7D /* plan.png in Resources */,
+				45FAE7491C50735C00ED6516 /* contact.png in Resources */,
 				454289911C448FE000513DC0 /* ImageSelectedOn@3x.png in Resources */,
 				454289921C448FE000513DC0 /* movieFullscreen@2x.png in Resources */,
 				451ED5931C48874C00A135D7 /* annocumment@2x.png in Resources */,
@@ -3660,6 +3673,7 @@
 				454289B11C448FE000513DC0 /* NavBarIconSearchBar2_blue.png in Resources */,
 				454289B21C448FE000513DC0 /* ImageError@2x.png in Resources */,
 				454289B31C448FE000513DC0 /* empty.png in Resources */,
+				45FAE7461C50704F00ED6516 /* goroadshow@3x.png in Resources */,
 				454289B41C448FE000513DC0 /* MJRefresh.bundle in Resources */,
 				454289B51C448FE000513DC0 /* NavBarIconSearchBar_blue@2x.png in Resources */,
 				454289B61C448FE000513DC0 /* PlayButtonOverlayLargeTap@2x.png in Resources */,
@@ -3676,6 +3690,7 @@
 				45E863981C48D53900051C3A /* login.png in Resources */,
 				451ED59C1C488BF400A135D7 /* project.png in Resources */,
 				454289C01C448FE000513DC0 /* movieBackwardSelected@2x.png in Resources */,
+				45FAE7431C5069E500ED6516 /* rongzi.png in Resources */,
 				454289C11C448FE000513DC0 /* NavBarIconSearch_white@2x.png in Resources */,
 				454289C21C448FE000513DC0 /* PlayButtonOverlayLarge@2x.png in Resources */,
 				454289C31C448FE000513DC0 /* moviePause.png in Resources */,
@@ -3720,6 +3735,7 @@
 				4543EB971BD0ABB80041DCBD /* UIBarButtonItemArrowLeft@2x.png in Resources */,
 				45D49D941B82336F00EC529F /* sex.plist in Resources */,
 				45954D0D1C4F659700137D7D /* plan.png in Resources */,
+				45FAE7481C50735C00ED6516 /* contact.png in Resources */,
 				4543EB891BD0ABB80041DCBD /* ImageSelectedOn@3x.png in Resources */,
 				4511CC2B1BA2B6E300A9D00A /* movieFullscreen@2x.png in Resources */,
 				451ED5921C48874C00A135D7 /* annocumment@2x.png in Resources */,
@@ -3761,6 +3777,7 @@
 				451B52C01BA66E3500388E5C /* NavBarIconSearchBar2_blue.png in Resources */,
 				4543EB821BD0ABB80041DCBD /* ImageError@2x.png in Resources */,
 				456ED3921BFC91C90067685A /* empty.png in Resources */,
+				45FAE7451C50704F00ED6516 /* goroadshow@3x.png in Resources */,
 				45F93B611B637311004526F5 /* MJRefresh.bundle in Resources */,
 				451B52BF1BA66E3500388E5C /* NavBarIconSearchBar_blue@2x.png in Resources */,
 				4543EB941BD0ABB80041DCBD /* PlayButtonOverlayLargeTap@2x.png in Resources */,
@@ -3777,6 +3794,7 @@
 				45E863971C48D53900051C3A /* login.png in Resources */,
 				451ED59B1C488BF400A135D7 /* project.png in Resources */,
 				4511CC231BA2B6E300A9D00A /* movieBackwardSelected@2x.png in Resources */,
+				45FAE7421C5069E500ED6516 /* rongzi.png in Resources */,
 				451B52BD1BA66E3500388E5C /* NavBarIconSearch_white@2x.png in Resources */,
 				4543EB911BD0ABB80041DCBD /* PlayButtonOverlayLarge@2x.png in Resources */,
 				4511CC2C1BA2B6E300A9D00A /* moviePause.png in Resources */,

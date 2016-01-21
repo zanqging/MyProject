@@ -73,7 +73,8 @@
     
     self.view.backgroundColor = ColorTheme;
     
-    bottomView = [[RoadShowBottom alloc]initWithFrame:CGRectMake(0, HEIGHT(self.view)-50, WIDTH(self.view), 50)];
+    bottomView = [[RoadShowBottom alloc]initWithFrame:CGRectMake(0, HEIGHT(self.view)-60, WIDTH(self.view), 60)];
+    bottomView.isShowSingle = YES;
     [bottomView.btnFunction addTarget:self action:@selector(goRoadShow:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:bottomView];
     
@@ -575,7 +576,7 @@
             header.amout = [[dataDic valueForKey:@"invest"] stringValue];
             
             //状态
-            NSString* mediaUrl = [dataDic valueForKey:@"video"];
+            NSString* mediaUrl = [dataDic valueForKey:@"vcr"];
             
             NSDictionary* dicStage = [stageDic valueForKey:@"start"];
             header.startDic = [stageDic valueForKey:@"start"];

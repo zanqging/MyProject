@@ -219,7 +219,7 @@ static NSTimeInterval const kINSSearchBarAnimationStepDuration = 0.25;
 			
 		} completion:^(BOOL finished) {
 			
-			[self.searchField becomeFirstResponder];
+//			[self.searchField becomeFirstResponder];
 
 			[UIView animateWithDuration:kINSSearchBarAnimationStepDuration * 2 animations:^{
 				

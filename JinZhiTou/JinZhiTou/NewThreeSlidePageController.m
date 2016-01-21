@@ -9,6 +9,7 @@
 #import "NewThreeSlidePageController.h"
 #import "NewsTag.h"
 #import "WMPageConst.h"
+#import "INSViewController.h"
 #import "MasterViewController.h"
 #import "NewFinialViewController.h"
 
@@ -569,6 +570,30 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
     
     //加入标题
     [self addMenuView];
+}
+
+/**
+ *  进入个人中心
+ *
+ *  @param sender sender
+ */
+-(void)userInfoAction:(id)sender
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"userInfo" object:nil];
+}
+
+/**
+ *  搜索
+ *
+ *  @param sender sender
+ */
+-(void)searchAction:(id)sender
+{
+    INSViewController* controller =[[INSViewController alloc]init];
+    controller.title = self.navView.title;
+    controller.titleContent = @"搜索新三板资讯";
+    controller.type=1;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 -(void)loadData

@@ -14,6 +14,7 @@
 #import "RoadShowHeader.h"
 #import "RoadShowBottom.h"
 #import "VoteViewController.h"
+#import "UIView+SDAutoLayout.h"
 #import "TeamShowViewController.h"
 #import "RoadShowViewController.h"
 #import "FinialApplyViewController.h"
@@ -77,7 +78,7 @@
     
     self.view.backgroundColor = ColorTheme;
     
-    bottomView = [[RoadShowBottom alloc]initWithFrame:CGRectMake(0, HEIGHT(self.view)-50, WIDTH(self.view), 50)];
+    bottomView = [[RoadShowBottom alloc]initWithFrame:CGRectMake(0, HEIGHT(self.view)-60, WIDTH(self.view), 60)];
     [bottomView.btnFunction addTarget:self action:@selector(goRoadShow:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:bottomView];
     
@@ -610,7 +611,7 @@
             
             if (![TDUtil isValideTime:header.industry]) {
                 bottomView.btnFunction.enabled = NO;
-                bottomView.btnFunction.backgroundColor = BACKGROUND_LIGHT_GRAY_COLOR;
+                bottomView.dic = [NSDictionary dictionaryWithObjectsAndKeys:AppColorTheme,@"leftBackColor",ColorTheme,@"rightBackColor",IMAGENAMED(@"contact"),@"leftImage",IMAGENAMED(@"goroadshow"),@"rightImage",nil];
                 [bottomView.btnFunction setTitle:@"尚未开始" forState:UIControlStateNormal];
                 
             }
@@ -712,9 +713,11 @@
 -(void)updateLayout
 {
     if (footer) {
-        [scrollView setContentSize:CGSizeMake(WIDTH(self.view), POS_Y(footer)+20)];
+        [scrollView setupAutoContentSizeWithBottomView:footer bottomMargin:10];
+//        [scrollView setContentSize:CGSizeMake(WIDTH(self.view), POS_Y(footer)+20)];
     }else{
-        [scrollView setContentSize:CGSizeMake(WIDTH(self.view), POS_Y(bussinessModelView)+60)];
+        [scrollView setupAutoContentSizeWithBottomView:bussinessModelView bottomMargin:10];
+//        [scrollView setContentSize:CGSizeMake(WIDTH(self.view), POS_Y(bussinessModelView)+60)];
     }
 }
 

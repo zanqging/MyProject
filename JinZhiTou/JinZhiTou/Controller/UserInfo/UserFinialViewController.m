@@ -11,6 +11,7 @@
 #import "SwitchSelect.h"
 #import "MMDrawerController.h"
 #import "movieViewController.h"
+#import "ThinkTankTableViewCell.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "UserCollecteTableViewCell.h"
 #import "RoadShowDetailViewController.h"
@@ -305,28 +306,41 @@
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    //声明静态字符串对象，用来标记重用单元格
-    NSString* TableDataIdentifier=@"UsefFinialViewCell";
-    //用TableDataIdentifier标记重用单元格
-    UserCollecteTableViewCell* cell=(UserCollecteTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
-    //如果单元格未创建，则需要新建
-    if (cell==nil) {
-        cell =[[UserCollecteTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
-    }
-    
     if (self.selectedIndex==0) {
-        NSDictionary* dic  =self.dataCreateArray[indexPath.row];
-        [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"img"]] placeholderImage:IMAGENAMED(@"loading")];
-        cell.titleLabel.text = [dic valueForKey:@"company"];
-        cell.desclabel.text  =[dic valueForKey:@"desc"];
-        cell.backgroundColor = WriteColor;
-        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-        cell.accessoryType = UITableViewCellAccessoryNone;
-
+        static NSString *reuseIdetify = @"FinialThinkView";
+        ThinkTankTableViewCell *cellInstance = (ThinkTankTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
+        if (!cellInstance) {
+            float height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
+            cellInstance = [[ThinkTankTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
+        }
+        
+        NSDictionary* dic = self.dataCreateArray[indexPath.row];
+        NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
+        __block ThinkTankTableViewCell* cell = cellInstance;
+        [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
+            if (image) {
+                cell.imgView.contentMode = UIViewContentModeScaleToFill;
+            }
+        }];
+        
+        cellInstance.title = [dic valueForKey:@"abbrevcompany"];
+        cellInstance.content = [dic valueForKey:@"company"];
+        cellInstance.typeDescription =  [NSString stringWithFormat:@"上传时间:%@",[dic valueForKey:@"date"]];
+        cellInstance.selectionStyle=UITableViewCellSelectionStyleDefault;
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        return cellInstance;
     }else{
+        //声明静态字符串对象，用来标记重用单元格
+        NSString* TableDataIdentifier=@"UsefFinialViewCell";
+        //用TableDataIdentifier标记重用单元格
+        UserCollecteTableViewCell* cell=(UserCollecteTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
+        //如果单元格未创建，则需要新建
+        if (cell==nil) {
+            cell =[[UserCollecteTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
+        }
+        
         NSDictionary* dic  =self.dataFinialArray[indexPath.row];
-//        NSDictionary* dicStage = [[dic valueForKey:@"stage"] valueForKey:@"start"];
+        //        NSDictionary* dicStage = [[dic valueForKey:@"stage"] valueForKey:@"start"];
         [cell.imgview sd_setImageWithURL:[NSURL URLWithString:[dic valueForKey:@"img"]] placeholderImage:IMAGENAMED(@"loading")];
         cell.titleLabel.text = [dic valueForKey:@"company"];
         cell.start = [dic valueForKey:@"start"];
@@ -334,11 +348,11 @@
         cell.backgroundColor = WriteColor;
         cell.accessoryType = UITableViewCellAccessoryNone;
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        tableView.contentSize = CGSizeMake(WIDTH(tableView), 190*self.dataCreateArray.count+80);
+        return cell;
     }
-    
-    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tableView.contentSize = CGSizeMake(WIDTH(tableView), 190*self.dataCreateArray.count+80);
-    return cell;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

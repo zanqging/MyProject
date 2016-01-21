@@ -83,7 +83,7 @@
     }else if (self.type ==3){
         [self loadCreditKeyWord];
     }
-    
+//    
     [self.searchBarWithoutDelegate showSearchBar:nil];
     
     

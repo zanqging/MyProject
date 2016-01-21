@@ -270,7 +270,7 @@
 //收藏的融资结束
 #define MY_COLLECTE_FINANCED @"collectfinanced/"
 //收藏的投资人
-#define MY_COLLECTE_THINKTANK @"collectthinktank/"
+#define MY_COLLECTE_THINKTANK @"collectupload/"
 //来现场
 #define JOIN_ROADSHOW @"attend/"
 //签到

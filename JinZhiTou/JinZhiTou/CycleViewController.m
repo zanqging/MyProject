@@ -605,7 +605,7 @@
     controller.type=3;
     controller.url =urlStr;
     controller.title=@"圈子";
-    controller.titleStr=@"咨询详情";
+    controller.titleStr=@"资讯详情";
     controller.dic = model.shareDic;
     [self.navigationController pushViewController:controller animated:YES];
 }

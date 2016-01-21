@@ -10,5 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 @interface RoadShowBottom : UIView
 @property(assign,nonatomic)int type;
+@property(assign, nonatomic) BOOL isShowSingle;
+@property (nonatomic, retain) NSDictionary * dic;
 @property(retain,nonatomic)UIButton* btnFunction;
 @end
