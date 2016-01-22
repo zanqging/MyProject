@@ -94,6 +94,10 @@
 #define IMAGENAMED(NAME)        [UIImage imageNamed:NAME]
 
 #define DICVFK(DIC,KEY)        [(DIC) valueForKey:(KEY)]
+#define SETDICVFK(DIC,KEY,VALUE)        [(DIC) setValue:(VALUE) forKey:(KEY)]
+
+//字符串格式化
+#define STRING(FORMAT,VALUE) [NSString stringWithFormat:FORMAT,VALUE]
 
 // 字体大小(常规/粗体)
 #define BOLDSYSTEMFONT(FONTSIZE)[UIFont boldSystemFontOfSize:FONTSIZE]

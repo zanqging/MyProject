@@ -110,8 +110,8 @@
     
     
     [[NSNotificationCenter defaultCenter]postNotificationName:@"publishContent" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:dataDic,@"data", nil]];
-    //[self performSelector:@selector(dissmissController) withObject:nil afterDelay:1];
-    [self dissmissController];
+    [self performSelector:@selector(dissmissController) withObject:nil afterDelay:1];
+//    [self dissmissController];
     
     return true;
 }

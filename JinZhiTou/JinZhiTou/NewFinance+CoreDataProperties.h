@@ -2,7 +2,7 @@
 //  NewFinance+CoreDataProperties.h
 //  JinZhiTou
 //
-//  Created by air on 16/1/4.
+//  Created by air on 16/1/21.
 //  Copyright © 2016年 金指投. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, retain) NSString *src;
 @property (nullable, nonatomic, retain) NSString *title;
 @property (nullable, nonatomic, retain) NSString *url;
+@property (nullable, nonatomic, retain) NewsTag *news_tag;
 
 @end
 

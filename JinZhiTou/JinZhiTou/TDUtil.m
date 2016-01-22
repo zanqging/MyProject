@@ -11,6 +11,7 @@
 #import "NSString+MD5.h"
 #import "UConstants.h"
 #import "MJRefresh.h"
+#import "Reachability.h"
 @implementation TDUtil
 + (UIImage *)createImageWithColor:(UIColor *)color rect:(CGRect)rect
 {
@@ -396,7 +397,7 @@
         dateStr=[dateStr stringByAppendingString:[NSString stringWithFormat:@"-%ld",(long)month]];
     }
     
-   
+    
     if (day<10) {
         dateStr=[dateStr stringByAppendingString:[NSString stringWithFormat:@"-0%ld",(long)day]];
     }else{
@@ -475,10 +476,10 @@
     NSFileManager * fileManager=[NSFileManager defaultManager];  //文件管理
     //filePath=[filePath stringByAppendingFormat:@"/image/%@",fileName];
     if (![fileManager fileExistsAtPath:[filePath stringByAppendingFormat:@"/image/%@",fileName]]) {
-       return  [self saveContentToFile:filePath content:image fileName:fileName  fileManager:fileManager];
+        return  [self saveContentToFile:filePath content:image fileName:fileName  fileManager:fileManager];
     }else{
         //文件已存在
-       return  [self saveContentToFile:filePath content:image fileName:fileName  fileManager:fileManager];
+        return  [self saveContentToFile:filePath content:image fileName:fileName  fileManager:fileManager];
     }
 }
 
@@ -534,7 +535,7 @@
         NSLog(@"%@文件不存在",filePath);
     }else{
         //文件已存在
-//        NSLog(@"%@文件存在",filePath);
+        //        NSLog(@"%@文件存在",filePath);
     }
     return filePath;
 }
@@ -807,7 +808,7 @@
         }else if (i==6){
             middleNum=str;
         }else{
-             [dicRightNum setValue:str forKey:[NSString stringWithFormat:@"%d",i-6]];
+            [dicRightNum setValue:str forKey:[NSString stringWithFormat:@"%d",i-6]];
         }
     }
     
@@ -818,7 +819,7 @@
             str=[str stringByAppendingString:[dicLeftNum valueForKey:[NSString stringWithFormat:@"%d",i]]];
         }else{
             if (i!=6) {
-               str2= [str2 stringByAppendingString:[dicRightNum valueForKey:[NSString stringWithFormat:@"%d",i-6]]];
+                str2= [str2 stringByAppendingString:[dicRightNum valueForKey:[NSString stringWithFormat:@"%d",i-6]]];
             }
         }
     }
@@ -866,9 +867,9 @@
         
         else
             
-            hexStr = [NSString stringWithFormat:@"%@%@",hexStr,newHexStr]; 
-    } 
-    return hexStr; 
+            hexStr = [NSString stringWithFormat:@"%@%@",hexStr,newHexStr];
+    }
+    return hexStr;
 }
 
 +(UIColor*)convertColorWithString:(NSString *)colorStr
@@ -1056,7 +1057,7 @@
     // 上拉刷新
     
     tableView.footer = footer;
-
+    
 }
 
 +(void)collectView:(UICollectionView *)collectionView target:(id)target refreshAction:(SEL)refreshAction loadAction:(SEL)loadAction
@@ -1138,17 +1139,17 @@
     label.text = content;
     label.font = font;
     
-//    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-//    
-//    //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
-//    
-//    [paragraphStyle setLineSpacing:0.f];//调整行间距
-//    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
-//    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
-//    
-//    label.attributedText = attributedString;//ios 6
-//    
-//    [label sizeToFit];
+    //    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    //
+    //    //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
+    //
+    //    [paragraphStyle setLineSpacing:0.f];//调整行间距
+    //    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:content];
+    //    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
+    //
+    //    label.attributedText = attributedString;//ios 6
+    //
+    //    [label sizeToFit];
     
 }
 
@@ -1251,7 +1252,7 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
     BOOL isValid = [predicate evaluateWithObject:timeString];
     return isValid;
-
+    
 }
 
 
@@ -1270,7 +1271,7 @@
         [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [content length])];
         
         label.attributedText = attributedString;//ios 6
-        [label sizeToFit];        
+        [label sizeToFit];
     }
 }
 
@@ -1299,7 +1300,7 @@
  */
 +(void)serverResultJudge:(id )controller dic:(NSMutableDictionary *)dic
 {
- 
+    
     RootViewController* c =(RootViewController*)controller;
     //默认不显示系统错误
     c.isNetRequestError = NO;
@@ -1354,5 +1355,27 @@
     NSString *regex2 = @"^(\\d{14}|\\d{17})(\\d|[xX])$";
     NSPredicate *identityCardPredicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",regex2];
     return [identityCardPredicate evaluateWithObject:identityCard];
+}
+
++ (NetStatus)checkNetworkState {
+    // 1.检测wifi状态
+    Reachability *wifi = [Reachability reachabilityForLocalWiFi];
+    
+    // 2.检测手机是否能上网络(WIFI\3G\2.5G)
+    Reachability *conn = [Reachability reachabilityForInternetConnection];
+    
+    // 3.判断网络状态
+    if ([wifi currentReachabilityStatus] != NotReachable) { // 有wifi
+        NSLog(@"有wifi");
+        return NetStatusWifi;
+        
+    } else if ([conn currentReachabilityStatus] != NotReachable) { // 没有使用wifi, 使用手机自带网络进行上网
+        NSLog(@"使用手机自带网络进行上网");
+        return  NetStatusSelfNet;
+        
+    } else { // 没有网络
+        NSLog(@"没有网络");
+        return NetStatusNone;
+    }
 }
 @end

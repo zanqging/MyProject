@@ -223,15 +223,15 @@
     
     _btnComment.sd_layout
     .rightEqualToView(_contentLabel)
-    .topSpaceToView(_timeLabel,-10)
-    .widthIs(30)
-    .autoHeightRatio(0.5);
+    .topSpaceToView(_timeLabel,-20)
+    .widthIs(40)
+    .autoHeightRatio(0.8);
     
     _btnPrise.sd_layout
     .rightSpaceToView(_btnComment,10)
     .topEqualToView(_btnComment)
-    .widthIs(30)
-    .autoHeightRatio(0.5);
+    .widthIs(40)
+    .autoHeightRatio(0.8);
     
 
     if (model.commentViewHeight!=0.0 || model.commentHeaderViewHeight!=0.0) {

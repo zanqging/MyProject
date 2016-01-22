@@ -50,14 +50,16 @@
 - (void)insertCoreData:(NSMutableArray*)dataArray
 {
 //    NSManagedObjectContext *context = [self managedObjectContext];
-    for (Project *pro in dataArray) {
-        //        Banner *bannerInfo = [NSEntityDescription insertNewObjectForEntityForName:TableName inManagedObjectContext:context];
-        self.tag = pro.tag;
-        self.date  = pro.date;
-        self.imgUrl = pro.imgUrl;
-        self.invest = pro.invest;
-        self.company = self.company;
-        self.planfinance  = pro.planfinance;
+    for (NSDictionary * dic in dataArray) {
+        Project * project = [[Project alloc]init];
+        
+        project.tag = DICVFK(dic, @"tag");
+        project.date  = DICVFK(dic, @"date");
+        project.imgUrl = DICVFK(dic, @"img");
+        project.company = DICVFK(dic, @"company");
+        project.projectId = [DICVFK(dic, @"id") integerValue];
+        project.invest = [NSString stringWithFormat:@"%@",DICVFK(dic, @"invest")];
+        project.planfinance  = [NSString stringWithFormat:@"%@",DICVFK(dic, @"planfinance")];
         
         NSError *error;
         if(![[DataManager shareInstance].context save:&error])
@@ -87,11 +89,18 @@
     NSArray *fetchedObjects = [[DataManager shareInstance].context executeFetchRequest:fetchRequest error:&error];
     NSMutableArray *resultArray = [NSMutableArray array];
     
-    for (Project *pro in fetchedObjects) {
-        NSLog(@"imgUrl:%@  project %@", pro.imgUrl,pro.planfinance);
+    for (NSDictionary *dic in fetchedObjects) {
         
-        if (pro.imgUrl) {
-            [resultArray addObject:pro];
+        if (DICVFK(dic, @"imgUrl")) {
+            NSMutableDictionary * data = [NSMutableDictionary new];
+            SETDICVFK(data,@"tag",DICVFK(dic, @"tag"));
+            SETDICVFK(data,@"date",DICVFK(dic, @"date"));
+            SETDICVFK(data,@"img",DICVFK(dic, @"imgUrl"));
+            SETDICVFK(data,@"company",DICVFK(dic, @"company"));
+            SETDICVFK(data,@"id",STRING(@"%@",DICVFK(dic, @"projectId")));
+            SETDICVFK(data,@"invest",STRING(@"%@",DICVFK(dic, @"invest")));
+            SETDICVFK(data,@"planfinance",STRING(@"%@", DICVFK(dic, @"planfinance")));
+            [resultArray addObject:data];
         }
     }
     return resultArray;
@@ -134,13 +143,13 @@
     [request setPredicate:predicate];//这里相当于sqlite中的查询条件，具体格式参考苹果文档
     
     //https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/Predicates/Articles/pCreating.html
-    NSError *error = nil;
-    NSArray *result = [context executeFetchRequest:request error:&error];//这里获取到的是一个数组，你需要取出你要更新的那个obj
+    //NSError *error = nil;
+    //NSArray *result = [context executeFetchRequest:request error:&error];//这里获取到的是一个数组，你需要取出你要更新的那个obj
     //保存
-    if ([context save:&error]) {
-        //更新成功
-        NSLog(@"更新成功");
-    }
+//    if ([context save:&error]) {
+//        //更新成功
+//        NSLog(@"更新成功");
+//    }
 }
 
 @end

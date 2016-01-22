@@ -370,16 +370,16 @@
     RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
     NSMutableDictionary* dic = [NSMutableDictionary dictionaryWithObject:[NSString stringWithFormat:@"%ld",(long)index] forKey:@"id"];
     controller.type=1;
-    Project* project = [[Project alloc]init];
-    project = [[Project alloc]init];
-    project.imgUrl = [dic valueForKey:@"img"];
-    project.tag = [dic valueForKey:@"tag"];
-    project.company = [dic valueForKey:@"company"];
-    project.projectId = [[dic valueForKey:@"id"] integerValue];
-    project.invest = [NSString stringWithFormat:@"%@",[dic valueForKey:@"invest"]];
-    project.planfinance = [NSString stringWithFormat:@"%@",[dic valueForKey:@"planfinance"]];
+//    Project* project = [[Project alloc]init];
+//    project = [[Project alloc]init];
+//    project.imgUrl = [dic valueForKey:@"img"];
+//    project.tag = [dic valueForKey:@"tag"];
+//    project.company = [dic valueForKey:@"company"];
+//    project.projectId = [[dic valueForKey:@"id"] integerValue];
+//    project.invest = [NSString stringWithFormat:@"%@",[dic valueForKey:@"invest"]];
+//    project.planfinance = [NSString stringWithFormat:@"%@",[dic valueForKey:@"planfinance"]];
     
-    controller.project = project;
+    controller.dic = dic;
 
     controller.title = @"系统通知";
     [self.navigationController pushViewController:controller animated:YES];

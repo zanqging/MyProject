@@ -7,6 +7,7 @@
 //
 
 #import "Platform.h"
+#import "UConstants.h"
 #define TableName @"Platform"
 @implementation Platform
 -(id)init
@@ -49,10 +50,10 @@
 - (void)insertCoreData:(NSMutableArray*)dataArray
 {
 //    NSManagedObjectContext *context = [self managedObjectContext];
-    for (Platform *instance in dataArray) {
+    for (NSDictionary * dic in dataArray) {
         //        Banner *bannerInfo = [NSEntityDescription insertNewObjectForEntityForName:TableName inManagedObjectContext:context];
-        self.key = instance.key;
-        self.value = instance.value;
+        self.key =  DICVFK(dic, @"url");
+        self.value = DICVFK(dic, @"title");
         
         NSError *error;
         if(![[DataManager shareInstance].context save:&error])
@@ -86,6 +87,9 @@
         
         NSLog(@"%@-->%@",pro.key,pro.value);
         if (pro.key && pro.value) {
+            NSMutableDictionary * dic = [NSMutableDictionary new];
+            SETDICVFK(dic, @"title", pro.value);
+            SETDICVFK(dic, @"url", pro.key);
             [resultArray addObject:pro];
         }
     }

@@ -127,12 +127,6 @@
     } constraintBasedActionHandler:nil];
     
     
-    //添加监听
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"reloadData" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContent:) name:@"publish" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContentNotification:) name:@"publishContent" object:nil];
-    
     //加载动画
 //    self.startLoading  =YES;
     //加载离线数据
@@ -1010,5 +1004,21 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    //添加监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"reloadData" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContent:) name:@"publish" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContentNotification:) name:@"publishContent" object:nil];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    //添加监听
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"publish" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"reloadData" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"updateMessageStatus" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"publishContent" object:nil];
 }
 @end
+

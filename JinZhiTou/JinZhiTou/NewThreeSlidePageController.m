@@ -555,7 +555,8 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
     self.menuViewStyle = WMMenuViewStyleLine;
     
     //开始加载
-    [self loadData];
+    [self loadOffLineData];
+    
     
     //初始化出错
     if (!self.childControllersCount) return;
@@ -570,6 +571,68 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
     
     //加入标题
     [self addMenuView];
+}
+
+/**
+ *  加载数据库缓存数据
+ */
+-(void)loadOffLineData
+{
+    NewsTag* newsTag = [[NewsTag alloc]init];
+    NSMutableArray* array = [newsTag selectData:100 andOffset:0];
+    if (array && array.count>0) {
+        self.menuDataArray = array;
+        NSMutableArray * titles = [NSMutableArray new];
+        
+        NSMutableArray * controllerClasses = [NSMutableArray new];
+        
+        for (int i = 0; i<array.count; i++) {
+            
+            [titles addObject:[array[i] valueForKey:@"title"]];
+            
+            [controllerClasses addObject:NewFinialViewController.class];
+            
+        }
+        
+        _titles = titles;
+        
+        _viewControllerClasses  =controllerClasses;
+        
+        float width = WIDTH(self.view) / _titles.count;
+        
+        if (width<70) {
+            
+            width = 70;
+            
+        }
+        
+        
+        
+        NSMutableArray * arr = [NSMutableArray new];
+        
+        for (int i = 0; i < _titles.count; i++) {
+            
+            [arr addObject:@(width)];
+            
+            
+            
+        }
+        
+        self.itemsWidths = arr; // 这里可以设置不同的宽度
+        
+        self.postNotification = YES;
+        
+        [self reloadData];
+        
+        [self postFullyDisplayedNotificationWithCurrentIndex:0];
+        
+        //判断网络
+        if ([TDUtil checkNetworkState] != NetStatusNone) {
+            [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(loadData) userInfo:nil repeats:NO];
+        }
+    }else{
+        [self loadData];
+    }
 }
 
 /**
@@ -598,8 +661,9 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
 
 -(void)loadData
 {
-    self.startLoading  =YES;
-    //    isShowLoadingView  =YES;
+    if (!self.menuDataArray) {
+        self.startLoading  =YES;
+    }
     //头部
     [self loadNewsTag];
 }

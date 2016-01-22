@@ -20,7 +20,7 @@
         
         self.headerBackView  = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height-20)];
         self.headerBackView.backgroundColor = BackColor;
-//        self.headerBackView.image =[TDUtil loadContent:STATIC_USER_BACKGROUND_PIC];
+        self.headerBackView.image =[TDUtil loadContent:USER_STATIC_CYCLE_BG];
         self.headerBackView.layer.masksToBounds  =YES;
         self.headerBackView.contentMode = UIViewContentModeScaleAspectFill;
         [self addSubview:self.headerBackView];

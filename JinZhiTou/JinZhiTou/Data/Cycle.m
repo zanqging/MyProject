@@ -7,9 +7,10 @@
 //
 
 #import "Cycle.h"
-#import "Comment.h"
-#import "Likers.h"
 #import "Pic.h"
+#import "Likers.h"
+#import "Comment.h"
+#import "UConstants.h"
 #define  TableName @"Cycle"
 @implementation Cycle
 -(id)init
@@ -52,41 +53,25 @@
 - (void)insertCoreData:(NSMutableArray*)dataArray
 {
     //    NSManagedObjectContext *context = [self managedObjectContext];
-    for (Cycle *instance in dataArray) {
-        /**
-         @property (nullable, nonatomic, retain) NSNumber *id;
-         @property (nullable, nonatomic, retain) NSString *position;
-         @property (nullable, nonatomic, retain) NSString *datetime;
-         @property (nullable, nonatomic, retain) NSString *name;
-         @property (nullable, nonatomic, retain) NSNumber *is_like;
-         @property (nullable, nonatomic, retain) NSString *addr;
-         @property (nullable, nonatomic, retain) NSNumber *remain_comment;
-         @property (nullable, nonatomic, retain) NSNumber *flag;
-         @property (nullable, nonatomic, retain) NSNumber *remain_like;
-         @property (nullable, nonatomic, retain) NSString *photo;
-         @property (nullable, nonatomic, retain) NSNumber *uid;
-         @property (nullable, nonatomic, retain) NSString *company;
-         @property (nullable, nonatomic, retain) NSString *content;
-         @property (nullable, nonatomic, retain) NSSet<Comment *> *comment;
-         @property (nullable, nonatomic, retain) NSSet<Likers *> *likers;
-         @property (nullable, nonatomic, retain) NSSet<Pic *> *pic;
-         **/
-        self.id = instance.id;
-        self.pic = instance.pic;
-        self.uid = instance.uid;
-        self.name = instance.name;
-        self.addr = instance.addr;
-        self.flag = instance.flag;
-        self.photo = instance.photo;
-        self.share = instance.share;
-        self.likers = instance.likers;
-        self.company = instance.company;
-        self.content = instance.content;
-        self.comment = instance.comment;
-        self.position = instance.position;
-        self.datetime = instance.datetime;
-        self.remain_like = instance.remain_like;
-        self.remain_comment = instance.remain_comment;
+    for (NSDictionary * dic in dataArray) {
+        Cycle * cycle = [[Cycle alloc]init];
+        
+        cycle.id = DICVFK(dic, @"id");
+        cycle.pic = DICVFK(dic, @"pic");
+        cycle.uid = DICVFK(dic, @"uid");
+        cycle.name = DICVFK(dic, @"name");
+        cycle.addr = DICVFK(dic, @"addr");
+        cycle.flag = DICVFK(dic, @"flag");
+        cycle.photo = DICVFK(dic, @"photo");
+        cycle.share = DICVFK(dic, @"share");
+        cycle.likers = DICVFK(dic, @"likers");
+        cycle.company = DICVFK(dic, @"company");
+        cycle.content = DICVFK(dic, @"content");
+        cycle.comment = DICVFK(dic, @"comment");
+        cycle.position = DICVFK(dic, @"position");
+        cycle.datetime = DICVFK(dic, @"datetime");
+        cycle.remain_like = DICVFK(dic, @"remain_like");
+        cycle.remain_comment = DICVFK(dic, @"remain_comment");
         
         NSError *error;
         if(![[DataManager shareInstance].context save:&error])
@@ -119,9 +104,28 @@
     NSArray *fetchedObjects = [[DataManager shareInstance].context executeFetchRequest:fetchRequest error:&error];
     NSMutableArray *resultArray = [NSMutableArray array];
     
-    for (Cycle *pro in fetchedObjects) {
-        if ([pro.id integerValue]!=0 && [pro.uid integerValue]!=0) {
-            [resultArray addObject:pro];
+    for (Cycle *cycle in fetchedObjects) {
+        if ([cycle.id integerValue]!=0 && [cycle.uid integerValue]!=0) {
+            NSMutableDictionary * dic = [NSMutableDictionary new];
+            
+            SETDICVFK(dic, @"id", cycle.id);
+            SETDICVFK(dic, @"pic", cycle.pic);
+            SETDICVFK(dic, @"uid", cycle.uid);
+            SETDICVFK(dic, @"name", cycle.name);
+            SETDICVFK(dic, @"addr", cycle.addr);
+            SETDICVFK(dic, @"flag", cycle.flag);
+            SETDICVFK(dic, @"photo", cycle.photo);
+            SETDICVFK(dic, @"share", cycle.share);
+            SETDICVFK(dic, @"likers", cycle.likers);
+            SETDICVFK(dic, @"company", cycle.company);
+            SETDICVFK(dic, @"content", cycle.content);
+            SETDICVFK(dic, @"comment", cycle.comment);
+            SETDICVFK(dic, @"position", cycle.position);
+            SETDICVFK(dic, @"datetime", cycle.datetime);
+            SETDICVFK(dic, @"remain_like", cycle.remain_like);
+            SETDICVFK(dic, @"remain_comment", cycle.remain_comment);
+            
+            [resultArray addObject:dic];
         }
     }
     return resultArray;

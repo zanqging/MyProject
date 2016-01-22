@@ -42,9 +42,19 @@
 				<string>wx33aa0167f6a81dac</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.jinzht.pro</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>jinzht</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2.1.15</string>
+	<string>2.1.16</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>

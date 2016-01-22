@@ -63,10 +63,10 @@
     //融资进度
     UILabel* labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelTitle), POS_Y(labelTitle)+5, 50, 20)];
     labelProess.font =SYSTEMFONT(14);
-    labelProess.text = @"已筹:";
     labelProess.textColor = FONT_COLOR_GRAY;
     [contentView addSubview:labelProess];
     
+    [TDUtil setLabelMutableText:labelProess content:@"已筹:" lineSpacing:0 headIndent:0];
     
     labelContent = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(labelProess), Y(labelProess), 50, HEIGHT(labelProess))];
     labelContent.font =SYSTEMFONT(14);

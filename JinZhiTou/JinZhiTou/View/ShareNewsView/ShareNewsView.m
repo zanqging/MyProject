@@ -31,11 +31,11 @@
         label.font = SYSTEMFONT(20);
         [contentView addSubview:label];
         
-        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, POS_Y(label), 50, 50)];
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, POS_Y(label)+10, 70, 70)];
         [contentView addSubview:imgView];
         
         
-        titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+5, Y(imgView), WIDTH(contentView)-80, 42)];
+        titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+5, Y(imgView)+25, WIDTH(contentView)-80, HEIGHT(imgView))];
         titleLabel.numberOfLines =2;
         titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [contentView addSubview:titleLabel];
@@ -43,7 +43,7 @@
         
         //分割线
         UIImageView* lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, HEIGHT(contentView)-50, WIDTH(contentView), 1)];
-        lineImgView.backgroundColor=ColorTheme;
+        lineImgView.backgroundColor=AppColorTheme;
         [contentView addSubview:lineImgView];
         
         self.btnCancel = [[UIButton alloc]initWithFrame:CGRectMake(0, POS_Y(lineImgView), WIDTH(contentView)/2-0.5, 50)];
@@ -52,7 +52,7 @@
         [self.btnCancel addTarget:self action:@selector(btnCancel:) forControlEvents:UIControlEventTouchUpInside];
         [contentView addSubview:self.btnCancel];
         
-        textView=[[UITextView alloc]initWithFrame:CGRectMake(10, POS_Y(imgView)+10, WIDTH(self)-20, 40)];
+        textView=[[UITextView alloc]initWithFrame:CGRectMake(10, POS_Y(imgView)+10, WIDTH(self)-40, 40)];
         textView.delegate =self;
         textView.font  = SYSTEMFONT(18);
         textView.text =@"说点什么吧！";
@@ -60,9 +60,6 @@
         textView.returnKeyType  =UIReturnKeyDone;
         [contentView addSubview:textView];
         
-        lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(POS_X(self.btnCancel), POS_Y(lineImgView), 1, 50)];
-        lineImgView.backgroundColor=ColorTheme;
-        [contentView addSubview:lineImgView];
         
         self.btnSure = [[UIButton alloc]initWithFrame:CGRectMake( WIDTH(contentView)/2, Y(self.btnCancel), WIDTH(self.btnCancel), HEIGHT(self.btnCancel))];
         [self.btnSure setTitleColor:AppColorTheme forState:UIControlStateNormal];

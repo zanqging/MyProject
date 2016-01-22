@@ -479,6 +479,8 @@
 #define USER_STATIC_HEADER_PIC @"user_static_header_pic"
 //背景
 #define USER_STATIC_CYCLE_BG @"user_static_cycle_bg"
+//背景url
+#define USER_STATIC_CYCLE_BG_URL @"user_static_cycle_bg_url"
 //用户id
 #define USER_STATIC_USER_ID @"user_static_user_id"
 //==============================第三期App研发接口==============================//
@@ -570,5 +572,11 @@ typedef enum : NSInteger {
     kCameraMoveDirectionLeft
     
 } CameraMoveDirection ;
+
+typedef NS_ENUM(NSInteger, NetStatus) {
+    NetStatusWifi, /// WiFi 网络状态
+    NetStatusSelfNet, /// 手机自带网络
+    NetStatusNone,    /// 无网络状态
+};
 
 #endif

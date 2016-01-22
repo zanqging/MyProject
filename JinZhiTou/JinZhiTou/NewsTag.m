@@ -2,11 +2,14 @@
 //  NewsTag.m
 //  JinZhiTou
 //
-//  Created by air on 16/1/4.
+//  Created by air on 16/1/21.
 //  Copyright © 2016年 金指投. All rights reserved.
 //
 
 #import "NewsTag.h"
+#import "NewFinance.h"
+#import "DataManager.h"
+#import "UConstants.h"
 #define TableName @"NewsTag"
 @implementation NewsTag
 -(id)init
@@ -49,9 +52,12 @@
 - (void)insertCoreData:(NSMutableArray*)dataArray
 {
     //    NSManagedObjectContext *context = [self managedObjectContext];
-    for (NewsTag *instance in dataArray) {
-        self.title = instance.title;
-        self.id = instance.id;
+    for (NSDictionary * dic in dataArray) {
+        NewsTag * newsTag = [[NewsTag alloc]init];
+        
+        newsTag.id = DICVFK(dic, @"id");
+        newsTag.title  = DICVFK(dic, @"title");
+        newsTag.tag_news = DICVFK(dic, @"news");
         
         NSError *error;
         if(![[DataManager shareInstance].context save:&error])
@@ -81,9 +87,17 @@
     NSArray *fetchedObjects = [[DataManager shareInstance].context executeFetchRequest:fetchRequest error:&error];
     NSMutableArray *resultArray = [NSMutableArray array];
     
-    for (NewsTag *pro in fetchedObjects) {
-        if (pro.id && pro.title) {
-            [resultArray addObject:pro];
+    for (NewsTag * news in fetchedObjects) {
+        
+        if (news.title) {
+            NSMutableDictionary * data = [NSMutableDictionary new];
+            SETDICVFK(data,@"key",news.id);
+            SETDICVFK(data,@"title",news.title);
+            SETDICVFK(data,@"news",news.tag_news);
+            
+//            NSArray * array = news.tag_news.allObjects;
+//            NSLog(@"%@",array);
+            [resultArray addObject:data];
         }
     }
     return resultArray;
@@ -113,26 +127,71 @@
     }
 }
 //更新
-- (void)updateData:(NSString*)newsId  withIsLook:(NSString*)islook
+- (void)updateData:(NSString*)newsId withDic:(NSDictionary*)dic;
 {
-    //    NSManagedObjectContext *context = [self managedObjectContext];
+    NSManagedObjectContext *context = [self managedObjectContext];
     
     NSPredicate *predicate = [NSPredicate
-                              predicateWithFormat:@"newsid like[cd] %@",newsId];
+                              predicateWithFormat:@"id = %@",newsId];
     
     //首先你需要建立一个request
     NSFetchRequest * request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:TableName inManagedObjectContext:[DataManager shareInstance].context]];
+    [request setEntity:[NSEntityDescription entityForName:TableName inManagedObjectContext:context]];
     [request setPredicate:predicate];//这里相当于sqlite中的查询条件，具体格式参考苹果文档
     
     //https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/Predicates/Articles/pCreating.html
     NSError *error = nil;
-    NSArray *result = [[DataManager shareInstance].context executeFetchRequest:request error:&error];//这里获取到的是一个数组，你需要取出你要更新的那个obj
+    NSArray *result = [context executeFetchRequest:request error:&error];//这里获取到的是一个数组，你需要取出你要更新的那个obj
+    
+    NewsTag * newsTag = result[0];
+    newsTag.title  = DICVFK(dic, @"title");
+    newsTag.tag_news = DICVFK(dic, @"news");
+    
     //保存
     if ([[DataManager shareInstance].context save:&error]) {
         //更新成功
         NSLog(@"更新成功");
     }
+}
+
+
+-(NSMutableArray *)selectData:(int)pageSize andOffset:(int)currentPage newId:(NSInteger)newId
+{
+    // 限定查询结果的数量
+    //setFetchLimit
+    // 查询的偏移量
+    //setFetchOffset
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    
+    [fetchRequest setFetchLimit:pageSize];
+    [fetchRequest setFetchOffset:currentPage];
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:TableName inManagedObjectContext:[DataManager shareInstance].context];
+    [fetchRequest setEntity:entity];
+    NSError *error;
+    NSArray *fetchedObjects = [[DataManager shareInstance].context executeFetchRequest:fetchRequest error:&error];
+    NSMutableArray *resultArray = [NSMutableArray array];
+    
+    for (NewsTag * news in fetchedObjects) {
+        
+        if (news.title) {
+            NSMutableDictionary * data = [NSMutableDictionary new];
+            SETDICVFK(data,@"key",news.id);
+            SETDICVFK(data,@"title",news.title);
+            SETDICVFK(data,@"news",news.tag_news);
+            
+            NSArray * array = news.tag_news.allObjects;
+            if (array && array.count>0) {
+                if (newId == [news.id integerValue]) {
+                    NSLog(@"log:%@",array);
+                    [resultArray addObject:data];
+                }
+            }
+        }
+    }
+    
+    return resultArray;
 }
 
 @end

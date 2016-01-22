@@ -13,8 +13,7 @@
 
 @interface RoadShowDetailViewController : RootViewController
 @property(assign,nonatomic)int type;
-@property (retain, nonatomic) NSMutableDictionary * dic;
-@property(retain,nonatomic)Project * project;
+@property (retain, nonatomic) NSDictionary * dic;
 @property(retain,nonatomic)NSString* backTitle;
 
 @end

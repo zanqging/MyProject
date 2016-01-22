@@ -22,6 +22,10 @@
  */
 
 #import "CycleViewController.h"
+#import "Pic.h"
+#import "Cycle.h"
+#import "Likers.h"
+#import "Comment.h"
 #import "MJRefresh.h"
 #import "Demo9Model.h"
 #import "DemoVC9Cell.h"
@@ -52,6 +56,7 @@
 {
     CycleHeader* headerView;
     float toolBarHeight;
+    float keyboardhight;
     
     UIButton *sendButton;
     UITextView *textView;
@@ -151,7 +156,6 @@
         blockSelf.toolBar.frame = toolBarFrame;
     } constraintBasedActionHandler:nil];
     
-    
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"reloadData" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContent:) name:@"publish" object:nil];
@@ -159,8 +163,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContentNotification:) name:@"publishContent" object:nil];
     
     //加载数据
-    [self loadData];
-    
+    [self loadOffLineData];
     [self updateNewMessage:nil];
     
 }
@@ -180,6 +183,123 @@
     }
     
 }
+
+/**
+ *  加载离线数据
+ */
+-(void)loadOffLineData
+{
+    Cycle* cycleModel = [[Cycle alloc]init];
+    NSMutableArray* dataArray = [cycleModel selectData:10 andOffset:(int)currentPage];
+    
+    if (dataArray && dataArray.count>0) {
+        NSMutableArray * tempArray = [NSMutableArray new];
+        for (int i = 0; i<dataArray.count; i++) {
+            NSDictionary * dic = dataArray[i];
+            Demo9Model *model = [Demo9Model new];
+            model.name = [dic valueForKey:@"name"];
+            model.address = [dic valueForKey:@"addr"];
+            model.iconName = [dic valueForKey:@"photo"];
+            model.content = [dic valueForKey:@"content"];
+            model.position = [dic valueForKey:@"position"];
+            model.dateTime = [dic valueForKey:@"datetime"];
+            model.id = [[dic valueForKey:@"id"] integerValue];
+            model.flag = [[dic valueForKey:@"flag"] boolValue];
+            model.uid = [[dic valueForKey:@"uid"] integerValue];
+            model.isLike = [[dic valueForKey:@"is_like"] boolValue];
+            
+            
+            //分享
+            Share * dicShare =[dic valueForKey:@"share"];
+            if (dicShare) {
+                NSMutableDictionary * dic = [NSMutableDictionary new];
+                SETDICVFK(dic, @"id", dicShare.id);
+                SETDICVFK(dic, @"title", dicShare.title);
+                SETDICVFK(dic, @"url", dicShare.url);
+                SETDICVFK(dic, @"img", dicShare.img);
+                
+                if (dic && dic.count>0) {
+                    model.shareDic  = dic;
+                }
+            }
+            
+            //图片
+            NSSet<Pic*> * picSets = [dic valueForKey:@"pic"];
+            NSArray * array = picSets.allObjects;
+            if (array && array.count>0) {
+                NSMutableArray * tempArrary = [NSMutableArray new];
+                for (int j  = 0; j<array.count; j++) {
+                    Pic * pic =array[j];
+                    [tempArrary addObject:pic.url];
+                }
+                model.picNamesArray =tempArrary;
+            }
+            
+            //评论列表
+            NSSet<Comment*> * commentSets = [dic valueForKey:@"comment"];
+            array = commentSets.allObjects;
+            if (array && array.count>0) {
+                NSMutableArray * tempArrary = [NSMutableArray new];
+                
+                NSMutableDictionary * tempDic;
+                for (int j  = 0; j<array.count; j++) {
+                    Comment * comment =array[j];
+                    tempDic = [NSMutableDictionary new];
+                    
+                    
+                    SETDICVFK(tempDic, @"uid", comment.uid);
+                    SETDICVFK(tempDic, @"id", comment.id);
+                    SETDICVFK(tempDic, @"name", comment.name);
+                    SETDICVFK(tempDic, @"at_name", comment.atName);
+                    SETDICVFK(tempDic, @"photo", comment.photo);
+                    SETDICVFK(tempDic, @"flag", comment.flag);
+                     SETDICVFK(tempDic, @"content", comment.content);
+                    [tempArrary addObject:tempDic];
+                }
+                model.commentArray = tempArrary;
+                model.commentViewHeight = [self getCommentViewHeight:tempArrary];
+            }
+            
+            
+            //点赞列表
+            //评论列表
+            NSSet<Comment*> * likerSets = [dic valueForKey:@"likers"];
+            array = likerSets.allObjects;
+            if (array && array.count>0) {
+                NSMutableArray * tempArrary = [NSMutableArray new];
+                
+                NSMutableDictionary * tempDic;
+                for (int j  = 0; j<array.count; j++) {
+                    Likers * liker =array[j];
+                    tempDic = [NSMutableDictionary new];
+                    
+                    SETDICVFK(tempDic, @"uid", liker.uid);
+                    SETDICVFK(tempDic, @"id", liker.id);
+                    SETDICVFK(tempDic, @"name", liker.name);
+                    SETDICVFK(tempDic, @"photo", liker.photo);
+                    [tempArrary addObject:tempDic];
+                }
+                model.likersArray = tempArrary;
+                model.commentHeaderViewHeight=[self getCommentHeaderViewHeight:tempArrary];
+            }
+            
+            [tempArray addObject:model];
+        }
+        
+        //状态栏提示
+        [JDStatusBarNotification showWithStatus:STRING(@"已更新%ld条新数据", tempArray.count)  dismissAfter:3.0];
+        self.dataArray = tempArray;
+        
+        //判断网络
+        if ([TDUtil checkNetworkState] != NetStatusNone) {
+            isRefresh = YES;
+            [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(loadData) userInfo:nil repeats:NO];
+        }
+    }else{
+        [self loadData];
+    }
+}
+
 /**
  *  加载数据
  */
@@ -639,7 +759,9 @@
         tv.textColor  =FONT_COLOR_BLACK;
     }
     if ([tv.text containsString:replyContent]) {
-        tv.text=@"";
+        NSString * content = tv.text;
+        content = [content stringByReplacingOccurrencesOfString:replyContent withString:@""];
+        tv.text  = content;
         tv.textColor  =FONT_COLOR_BLACK;
     }else if ([tv.text isEqualToString:@""]){
         tv.text=replyContent;
@@ -757,6 +879,11 @@
             }
             
             
+            if (curentPage == 0 && tempArray && tempArray.count>0) {
+                //缓存离线数据
+                [self storeOfflineData:tempArray];
+            }
+            
             //保存数据
             if (isRefresh) {
                 [self.tableView.header endRefreshing];
@@ -783,6 +910,225 @@
         }
     }else{
         self.isNetRequestError = YES;
+    }
+}
+
+-(void)storeOfflineData:(NSArray*)array
+{
+    //开始进行圈子数据缓存
+    
+    Cycle* cycleModel = [[Cycle alloc]init];
+    
+    //移除先前缓存数据
+    
+    [cycleModel deleteData];
+    
+    Cycle* cycle;
+    
+    NSDictionary* dic;
+    
+    for (int i = 0; i<array.count; i++) {
+        
+        dic = array[i];
+        
+        cycle = [[Cycle alloc]init];
+        
+        cycle.id = [dic valueForKey:@"id"];
+        
+        cycle.flag = [dic valueForKey:@"flag"];
+        
+        cycle.position = [dic valueForKey:@"position"];
+        
+        cycle.name = [dic valueForKey:@"name"];
+        
+        cycle.datetime = [dic valueForKey:@"datetime"];
+        
+        cycle.is_like = [dic valueForKey:@"is_like"];
+        
+        cycle.addr = [dic valueForKey:@"addr"];
+        
+        cycle.remain_comment = [dic valueForKey:@"remain_comment"];
+        
+        cycle.flag = [dic valueForKey:@"flag"];
+        
+        cycle.remain_like = [dic valueForKey:@"remain_like"];
+        
+        cycle.photo = [dic valueForKey:@"photo"];
+        
+        cycle.uid = [dic valueForKey:@"uid"];
+        
+        cycle.company = [dic valueForKey:@"company"];
+        
+        cycle.content = [dic valueForKey:@"content"];
+        
+        
+        
+        //分享
+        
+        NSDictionary* dicShare =[dic valueForKey:@"share"];
+        
+        if (dic) {
+            
+            Share* share = [[Share alloc]init];
+            
+            share.id = [dicShare valueForKey:@"id"];
+            
+            share.url = [dicShare valueForKey:@"url"];
+            
+            share.img = [dicShare valueForKey:@"img"];
+            
+            share.title = [dicShare valueForKey:@"title"];
+            
+            cycle.share = share;
+            
+        }
+        
+        
+        
+        //评论列表
+        
+        NSArray* array = [dic valueForKey:@"comment"];
+        
+        if (array && array.count>0) {
+            
+            Comment* comment;
+            
+            NSMutableSet<Comment*> *commentSet = [[NSMutableSet alloc]init];
+            
+            NSDictionary* commentDic;
+            
+            for (int j = 0; j<array.count; j++) {
+                
+                commentDic = [array objectAtIndex:j];
+                
+                comment = [[Comment alloc]init];
+                
+                comment.id = [NSNumber numberWithInteger:[[commentDic valueForKey:@"id"] integerValue]];
+                
+                comment.uid = [NSNumber numberWithInteger:[[commentDic valueForKey:@"uid"] integerValue]];
+                
+                comment.flag = [NSNumber numberWithInt:[[commentDic valueForKey:@"flag"] intValue]];
+                
+                comment.name = [NSString stringWithFormat:@"%@",[commentDic valueForKey:@"name"]];
+                
+                comment.atName = [NSString stringWithFormat:@"%@",[commentDic valueForKey:@"at_name"]];
+                
+                
+                
+                if ([comment.atName isEqualToString:@"(null)"]) {
+                    
+                    comment.atName = @"";
+                    
+                }
+                
+                comment.photo = [commentDic valueForKey:@"photo"];
+                
+                comment.content = [commentDic valueForKey:@"content"];
+                
+                
+                
+                [commentSet addObject:comment];
+                
+            }
+            
+            cycle.comment = commentSet;
+            
+        }
+        
+        
+        
+        //评论列表
+        
+        array = [dic valueForKey:@"pic"];
+        
+        if (array && array.count>0) {
+            
+            Pic* pic;
+            
+            NSMutableSet<Pic*> *picSet = [[NSMutableSet alloc]init];
+            
+            for (int j = 0; j<array.count; j++) {
+                
+                pic = [[Pic alloc]init];
+                
+                pic.url = [array objectAtIndex:j];
+                
+                [picSet addObject:pic];
+                
+            }
+            
+            cycle.pic = picSet;
+            
+        }
+        
+        
+        
+        //点赞列表
+        
+        array = [dic valueForKey:@"like"];
+        
+        
+        
+        if (array && array.count>0) {
+            
+            Likers* liker;
+            
+            NSMutableSet<Likers*> *likersSet = [[NSMutableSet alloc]init];
+            
+            NSDictionary* likerDic;
+            
+            for (int j = 0; j<array.count; j++) {
+                
+                likerDic = [array objectAtIndex:j];
+                
+                liker = [[Likers alloc]init];
+                
+                liker.id = [NSNumber numberWithInteger:[[likerDic valueForKey:@"id"] integerValue]];
+                
+                liker.uid = [NSNumber numberWithInteger:[[likerDic valueForKey:@"uid"] integerValue]];
+                
+                liker.name = [NSString stringWithFormat:@"%@",[likerDic valueForKey:@"name"]];
+                
+                liker.photo = [likerDic valueForKey:@"photo"];
+                
+                [likersSet addObject:liker];
+                
+                
+                
+                
+                
+//                /**
+//                 
+//                 *  模拟点赞
+//                 
+//                 */
+//                
+                                        for (int m=0; m<10; m++) {
+                
+                                            Likers* l = [[Likers alloc]init];
+                
+                                            l.name = [NSString stringWithFormat:@"陈生珠%d",m];
+                
+                                            [likersSet addObject:l];
+                
+                                        }
+//
+//                /**
+//                 
+//                 *  模拟点赞
+//                 
+//                 */
+                
+                
+                
+            }
+            
+            cycle.likers = likersSet;
+            
+        }
+        
+        [cycle save];
+        
     }
 }
 
@@ -993,5 +1339,75 @@
     [self.tableView.header endRefreshing];
     [self.tableView.footer endRefreshing];
     self.isNetRequestError = YES;
+}
+
+
+#pragma mark - keyboardHight
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self registerForKeyboardNotifications];
+   
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    
+}
+- (void)registerForKeyboardNotifications
+{
+    //使用NSNotificationCenter 鍵盤出現時
+    [[NSNotificationCenter defaultCenter] addObserver:self
+     
+                                             selector:@selector(keyboardWasShown:)
+     
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    
+    //使用NSNotificationCenter 鍵盤隐藏時
+    [[NSNotificationCenter defaultCenter] addObserver:self
+     
+                                             selector:@selector(keyboardWillBeHidden:)
+     
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+    
+}
+
+
+
+//实现当键盘出现的时候计算键盘的高度大小。用于输入框显示位置
+- (void)keyboardWasShown:(NSNotification*)aNotification
+{
+    CGFloat change = [self keyboardEndingFrameHeight:[aNotification userInfo]];
+    CGPoint point = [self.tableView contentOffset];
+    point.y += change;
+//    [self.tableView setContentOffset:point animated:YES];
+    NSIndexPath * indexPath = [self.tableView indexPathForCell:currentSelectedCell];
+    
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+}
+
+//当键盘隐藏的时候
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+{
+    //输入框位置动画加载
+//    CGFloat change = [self keyboardEndingFrameHeight:[aNotification userInfo]];
+//    CGPoint point = [self.tableView contentOffset];
+//    point.y -= change;
+//    [self.tableView setContentOffset:point animated:YES];
+    
+}
+
+-(CGFloat)keyboardEndingFrameHeight:(NSDictionary *)userInfo//计算键盘的高度
+{
+    CGRect keyboardEndingUncorrectedFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey]CGRectValue];
+    CGRect keyboardEndingFrame = [self.view convertRect:keyboardEndingUncorrectedFrame fromView:nil];
+    return keyboardEndingFrame.size.height;
+}
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 @end

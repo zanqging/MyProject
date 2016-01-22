@@ -159,11 +159,11 @@
     Announcement* cement = [[Announcement alloc]init];
     NSArray* array = [cement selectData:100 andOffset:0];
     if(array && array.count>0){
-        Announcement* ce = array[0];
+        NSDictionary * dic = array[0];
         //公告
         UILabel* label = [self viewWithTag:1001];
-        if ([TDUtil isValidString:ce.title]) {
-            label.text = [NSString stringWithFormat:@"%@",ce.title];
+        if ([TDUtil isValidString:DICVFK(dic, @"title")]) {
+            label.text = [NSString stringWithFormat:@"%@",DICVFK(dic, @"title")];
         }
     }
 }
@@ -171,7 +171,6 @@
 -(void)resetBannerData
 {
     //将数据保存至本地数据库
-    //        [banner selectData:10 andOffset:0];
     if (self.bannerArray && self.bannerArray.count>0) {
         //适配数据
         self.viewsArray = [NSMutableArray new];
@@ -180,7 +179,7 @@
         //NSMutableArray* bannerArray = [[NSMutableArray alloc]init];
         for (int  i =0; i<self.bannerArray.count; i++) {
             //<!-- 将banner数据缓存 -->
-            Banner * banner = (Banner*)self.bannerArray[i];
+            NSDictionary * dic = self.bannerArray[i];
             //<!-- 将banner数据缓存 -->
             
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, WIDTH(self), HEIGHT(self.mainScorllView))];
@@ -190,7 +189,7 @@
             
             [self.viewsArray addObject:imageView];
             
-            NSURL * url = [NSURL URLWithString:banner.imgUrl];
+            NSURL * url = [NSURL URLWithString:DICVFK(dic, @"img")];
             
             [imageView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                 imageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -214,11 +213,11 @@
         
         self.mainScorllView.TapActionBlock = ^(NSInteger pageIndex){
             if (pageIndex <= instance.bannerArray.count) {
-                Banner *bannerInstance = instance.bannerArray[pageIndex];
-                NSString* projectId = bannerInstance.project;
-                if (![TDUtil isValidString:projectId]) {
+                NSDictionary * dic = instance.bannerArray[pageIndex];
+                NSString* projectId = STRING(@"%@", DICVFK(dic, @"project"));
+                if (![TDUtil isValidString:projectId] && [projectId integerValue] != 0) {
                     //                NSString* urlStr =[dataArray[pageIndex] valueForKey:@"url"];
-                    NSString* urlStr = bannerInstance.url;
+                    NSString* urlStr = DICVFK(dic, @"url");
                     if (urlStr && ![urlStr isEqualToString:@""]) {
                         BannerViewController* controller =[[BannerViewController alloc]init];
                         controller.titleStr = @"金指投";
@@ -232,9 +231,7 @@
                     }
                 }else{
                     RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
-                    Project* project = [[Project alloc]init];
-                    project.projectId  =[projectId integerValue];
-                    controller.project = project;
+                    controller.dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@",projectId],@"id", nil];
                     controller.title =@"项目";
                     if ([instance.delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
                         [instance.delegate roadShowHome:instance controller:controller type:0];
@@ -267,32 +264,17 @@
         //                self.viewsArray = [NSMutableArray new];
         
         //封装
-        NSMutableArray* bannerArray = [[NSMutableArray alloc]init];
         Banner* bannerModel;
         bannerModel = [[Banner alloc]init];
         //删除本地数据
         [bannerModel deleteData];
-        for (int  i =0; i<dataArray.count; i++) {
-            //<!-- 将banner数据缓存 -->
-            Banner* banner = [[Banner alloc]init];
-            banner.imgUrl =[dataArray[i] valueForKey:@"img"];
-            banner.url = [dataArray[i] valueForKey:@"url"];
-            NSString* projectId =[dataArray[i] valueForKey:@"project"];
-            if (![projectId isKindOfClass:NSNull.class]) {
-                banner.project = [NSString stringWithFormat:@"%ld",[projectId integerValue]];
-            }else{
-                banner.project = @"";
-            }
-            
-            [bannerArray addObject:banner];
-            //<!-- 将banner数据缓存 -->
-        }
-        self.bannerArray = bannerArray;
+        //设置本地数据
+        self.bannerArray = dataArray;
         [self resetBannerData];
         
         bannerModel = [[Banner alloc]init];
         //将数据保存至本地数据库
-        [bannerModel insertCoreData:bannerArray];
+        [bannerModel insertCoreData:dataArray];
         
         Announcement* cement =[[Announcement alloc]init];
         //移除旧数据
@@ -363,9 +345,9 @@
     Announcement* cement = [[Announcement alloc]init];
     NSArray* array = [cement selectData:100 andOffset:0];
     if(array && array.count>0){
-        Announcement* ce = array[0];
-        controller.url = [NSURL URLWithString:ce.url];
-        controller.titleStr = ce.title;
+        NSDictionary * dic = array[0];
+        controller.url = [NSURL URLWithString:DICVFK(dic, @"url")];
+        controller.titleStr = DICVFK(dic, @"title");
         if ([_delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
             [_delegate roadShowHome:self controller:controller type:0];
         }

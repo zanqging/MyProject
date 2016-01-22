@@ -18,6 +18,7 @@
 #import "LoadingView.h"
 #import "GlobalDefine.h"
 #import "NSString+SBJSON.h"
+#include "JDStatusBarNotification.h"
 @interface RootViewController : UIViewController<LoadingViewDelegate>
 @property(assign,nonatomic)int code;
 @property(assign,nonatomic)CGRect loadingViewFrame;

@@ -12,6 +12,8 @@
 #import "ShareView.h"
 #import "MJRefresh.h"
 #import "NewFinance.h"
+#import "UConstants.h"
+#import "NewFinance.h"
 #import "WMPageConst.h"
 #import "SwitchSelect.h"
 #import "INSViewController.h"
@@ -22,6 +24,7 @@
 {
     BOOL isRefresh;  //刷新
     int currentpage; //当前页码
+    NSString * title;
     BOOL isShowLoadingView; //是否显示加载
     NSInteger selectedIndex;
 }
@@ -33,12 +36,11 @@
     [super viewDidLoad];
     self.view.backgroundColor = ColorTheme;
     [self.navView removeFromSuperview];
-    //加载视图区域
-    self.loadingViewFrame = self.view.frame;
+    
     
     CGRect rect;
-    rect=CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.view)-100);
-    self.tableView=[[UITableViewCustomView alloc]initWithFrame:rect style:UITableViewStyleGrouped];
+    rect=CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.view)-150);
+    self.tableView=[[UITableViewCustomView alloc]initWithFrame:rect];
     self.tableView.bounces=YES;
     self.tableView.delegate=self;
     self.tableView.dataSource=self;
@@ -50,7 +52,7 @@
     self.tableView.separatorStyle=UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.tableView];
     
-    [TDUtil tableView:self.tableView target:self refreshAction:@selector(refresh) loadAction:@selector(loadProject)];
+    [TDUtil tableView:self.tableView target:self refreshAction:@selector(refreshProject) loadAction:@selector(loadProject)];
     
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
@@ -58,31 +60,35 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(initWithParent:) name:WMControllerDidAddToSuperViewNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showFinished:) name:WMControllerDidFullyDisplayedNotification object:nil];
+    
+    //加载视图区域
+    self.loadingViewFrame = self.tableView.frame;
 }
 
 -(void)initWithParent:(NSNotification*)notification
 {
     NSDictionary* dic = [notification object];
+    title = [dic valueForKey:@"title"];
     selectedIndex = [[dic valueForKey:@"index"] intValue];
-    
     if (!self.dataArray) {
-        self.startLoading=YES;
         //        [self refresh];
     }
+    //加载离线数据
+//    [self loadOffLineData];
+    
 }
 
 -(void)showFinished:(NSNotification*)notification
 {
     NSDictionary* dic = [notification object];
+    title = [dic valueForKey:@"title"];
     selectedIndex = [[dic valueForKey:@"index"] intValue];
     if (!self.dataArray) {
-        self.startLoading=NO;
-//        [self refresh];
-        //    //加载离线数据
+//        self.startLoading = YES;
+        //加载离线数据
 //        [self loadOffLineData];
-        //    //开始加载
-        [self loadData];
     }
+    
 }
 
 /**
@@ -90,13 +96,41 @@
  */
 -(void)loadOffLineData
 {
-//    NewsTag* newsTag = [[NewsTag alloc]init];
+    NewsTag* newsTag = [[NewsTag alloc]init];
 //    NSMutableArray* array = [newsTag selectData:100 andOffset:0];
-    NewFinance * finance = [[NewFinance alloc]init];
-    self.dataArray = [finance selectData:10 andOffset:currentpage];
-    
-    
-    
+    NSMutableArray* array = [newsTag selectData:100 andOffset:0 newId:selectedIndex];
+    if (array && array.count>0) {
+        NSSet<NewFinance*> *setFinance = [array[0] valueForKey:@"news"];
+        NSArray * array = setFinance.allObjects;
+        NSLog(@"%@",array);
+        NSMutableDictionary *  dic;
+        NSMutableArray * tempArray = [NSMutableArray new];
+        for (int i = 0; i < array.count; i++) {
+            dic = [NSMutableDictionary new];
+            NewFinance * finance = array[i];
+            
+            SETDICVFK(dic, @"id", finance.id);
+            SETDICVFK(dic, @"img", finance.img);
+            SETDICVFK(dic, @"src", finance.src);
+            SETDICVFK(dic, @"url", finance.url);
+            SETDICVFK(dic, @"read", finance.read);
+            SETDICVFK(dic, @"share", finance.share);
+            SETDICVFK(dic, @"title", finance.title);
+            SETDICVFK(dic, @"content", finance.content);
+            SETDICVFK(dic, @"create_datetime", finance.create_datetime);
+            
+            [tempArray addObject:dic];
+        }
+        self.dataArray = tempArray;
+    }else{
+        //只有在网络链接正常时才加载数据
+        if ([TDUtil checkNetworkState] != NetStatusNone) {
+            [self loadData];
+        }else{
+            self.dataArray = nil;
+        }
+    }
+
 }
 -(void)loadData
 {
@@ -164,13 +198,22 @@
 }
 -(void)loadNewsData:(NSInteger)index
 {
-    //添加加载页面
-    NSString* str = [NEWS stringByAppendingFormat:@"%ld/%d/",(long)index,currentpage];
-    [self.httpUtil getDataFromAPIWithOps:str type:0 delegate:self sel:@selector(requestNewsData:) method:@"GET"];
-    
-    if (isShowLoadingView) {
-        self.startLoading = YES;
-        self.isTransparent = YES;
+    if ([TDUtil checkNetworkState] != NetStatusNone) {
+        //添加加载页面
+        NSString* str = [NEWS stringByAppendingFormat:@"%ld/%d/",(long)index,currentpage];
+        [self.httpUtil getDataFromAPIWithOps:str type:0 delegate:self sel:@selector(requestNewsData:) method:@"GET"];
+        
+        if (!self.dataArray) {
+            self.startLoading = YES;
+        }
+    }else{
+        if (!self.dataArray) {
+            self.dataArray = nil;
+        }else{
+            [self.tableView.header endRefreshing];
+            [self.tableView.footer endRefreshing];
+            [self.tableView reloadData];
+        }
     }
 }
 
@@ -188,13 +231,13 @@
     NSDictionary* dic  = self.dataArray[indexPath.row];
     NSURL* url = [NSURL URLWithString:[dic valueForKey:@"url"]];
     self.webViewController.title  = @"新三板";
-    self.webViewController.titleStr = @"咨询详情";
+    self.webViewController.titleStr = @"资讯详情";
     self.webViewController.type = 3;
     self.webViewController.url = url;
     self.webViewController.dic = dic;
     [self.navigationController pushViewController:self.webViewController animated:YES];
     NSString* serverUrl = [NEWS_READ_COUNT stringByAppendingFormat:@"%@/",[dic valueForKey:@"id"]];
-    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:self sel:nil];
+    [self.httpUtil getDataFromAPIWithOps:serverUrl postParam:nil type:0 delegate:nil sel:nil];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -215,21 +258,18 @@
         cell =[[NewFinialTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier];
     }
     
-//    NSDictionary* dic = self.dataArray[indexPath.row];
-    NewFinance* finance = self.dataArray[indexPath.row];
-//    NSURL* url = [dic valueForKey:@"img"];
-    NSURL* url = [NSURL URLWithString:finance.img];
+    NSDictionary* dic = self.dataArray[indexPath.row];
+    NSURL* url = [dic valueForKey:@"img"];
     cell.backgroundColor = BackColor;
     [cell.imgview sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading")];
-    cell.source = finance.src;
-    cell.titleLabel.text = finance.title;
-    cell.typeLabel.text = finance.content;
-    cell.dateTime = finance.create_datetime;
-    cell.colletcteLabel.text = [finance.share stringValue];
-    cell.priseLabel.text = [finance.read stringValue];
+    cell.source = DICVFK(dic, @"src");
+    cell.titleLabel.text = DICVFK(dic, @"title");
+    cell.typeLabel.text = DICVFK(dic, @"content");
+    cell.dateTime = DICVFK(dic, @"create_datetime");
+    cell.colletcteLabel.text = STRING(@"%@", DICVFK(dic, @"share"));
+    cell.priseLabel.text = STRING(@"%@", DICVFK(dic, @"read"));
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tableView.contentSize = CGSizeMake(WIDTH(tableView), 140*self.dataArray.count+5);
     return cell;
 }
 
@@ -259,14 +299,14 @@
     if (self.dataArray.count<=0) {
         self.tableView.isNone = YES;
     }else{
+        self.startLoading = NO;
         self.tableView.isNone = NO;
-        [self.tableView reloadData];
     }
+    [self.tableView reloadData];
 }
 //==============================刷新功能区域开始==============================//
--(void)refresh
+-(void)refreshProject
 {
-//    [super refresh];
     
     if (self.tableView.header.isRefreshing) {
         [self.tableView.header endRefreshing];
@@ -287,6 +327,21 @@
 //    self.isTransparent  =NO;
 }
 
+-(void)refresh
+{
+    [super refresh];
+    
+    //刷新页码为
+    currentpage = 0;
+    isRefresh  = YES;
+    isShowLoadingView = NO;
+    self.isEndOfPageSize  =NO;
+    if (selectedIndex==0) {
+        selectedIndex=1;
+    }
+    [self loadNewsData:selectedIndex];
+}
+
 //==============================刷新功能区域结束==============================//
 //==============================网络请求区域开始==============================//
 -(void)requestNewsData:(ASIHTTPRequest *)request{
@@ -302,44 +357,46 @@
                 self.isEndOfPageSize  =YES;
             }
             
-            NewFinance* newFinanceModel = [[NewFinance alloc]init];
+            
             NSMutableArray* tempArray;
             tempArray = [jsonDic valueForKey:@"data"];
-            
-            if (isRefresh) {
-                [newFinanceModel deleteData];
-            }
-            
-            NewFinance* finance;
-            NSDictionary* dic;
-            
-            NSMutableArray* dataArray = [[NSMutableArray alloc]init];
-            for (int i = 0; i<tempArray.count; i++) {
-                dic = tempArray[i];
-                finance = [[NewFinance alloc]init];
-                finance.id =[dic valueForKey:@"id"];
-                finance.img =[dic valueForKey:@"img"];
-                finance.src =[dic valueForKey:@"src"];
-                finance.url =[dic valueForKey:@"url"];
-                finance.read =[dic valueForKey:@"read"];
-                finance.share =[dic valueForKey:@"share"];
-                finance.title =[dic valueForKey:@"title"];
-                finance.content =[dic valueForKey:@"content"];
-                finance.create_datetime =[dic valueForKey:@"create_datetime"];
+            //目前只缓存一页
+            if (currentpage==0) {
+                NewFinance* finance;
+                NSDictionary* dic;
                 
-                [dataArray addObject:finance];
-                //保存
-                [finance save];
+                NSMutableSet<NewFinance*> *newsSet = [[NSMutableSet alloc]init];
+                for (int i = 0; i<tempArray.count; i++) {
+                    dic = tempArray[i];
+                    finance = [[NewFinance alloc]init];
+                    finance.id =[dic valueForKey:@"id"];
+                    finance.img =[dic valueForKey:@"img"];
+                    finance.src =[dic valueForKey:@"src"];
+                    finance.url =[dic valueForKey:@"url"];
+                    finance.read =[dic valueForKey:@"read"];
+                    finance.share =[dic valueForKey:@"share"];
+                    finance.title =[dic valueForKey:@"title"];
+                    finance.content =[dic valueForKey:@"content"];
+                    finance.create_datetime =[dic valueForKey:@"create_datetime"];
+                    
+                    [newsSet addObject:finance];
+                }
+                NSMutableDictionary * tempDic = [NSMutableDictionary new];
+                [tempDic setValue:title forKey:@"title"];
+                [tempDic setValue:newsSet forKey:@"news"];
+                NewsTag * newsTag = [[NewsTag alloc]init];
+                [newsTag updateData:STRING(@"%ld", selectedIndex) withDic:tempDic];
             }
             
             if (isRefresh) {
-                self.dataArray = dataArray;
+                self.dataArray = tempArray;
             }else{
                 if (!self.dataArray) {
-                    self.dataArray = dataArray;
+                    self.dataArray = tempArray;
+                }else{
+                    [self.dataArray addObjectsFromArray:tempArray];
+                    [self.tableView reloadData];                    
                 }
-                [self.dataArray addObjectsFromArray:dataArray];
-                [self.tableView reloadData];
             }
 
             
@@ -392,22 +449,25 @@
         if ([code intValue] == 0 || [code intValue] ==2) {
             NSMutableArray* array = [jsonDic valueForKey:@"data"];
             
-            if (array && array.count>0) {
+            if (array && array.count>0 && currentpage==0) {
                 NewsTag* newstagModel = [[NewsTag alloc]init];
                 //移除数据
                 [newstagModel deleteData];
+//                
+//                NSMutableArray* dataArray  =[[NSMutableArray alloc]init];
+//                
+//                for (int i = 0; i<array.count; i++) {
+//                    NewsTag* newtag = [[NewsTag alloc]init];
+//                    newtag.title = [array[i] valueForKey:@"value"];
+//                    newtag.id = [array[i] valueForKey:@"key"];
+//                    
+//                    [dataArray addObject:newtag];
+//                    //保存数据
+//                    [newtag save];
+//                }
+                newstagModel = [[NewsTag alloc]init];
+                [newstagModel insertCoreData:array];
                 
-                NSMutableArray* dataArray  =[[NSMutableArray alloc]init];
-                
-                for (int i = 0; i<array.count; i++) {
-                    NewsTag* newtag = [[NewsTag alloc]init];
-                    newtag.title = [array[i] valueForKey:@"value"];
-                    newtag.id = [array[i] valueForKey:@"key"];
-                    
-                    [dataArray addObject:newtag];
-                    //保存数据
-                    [newtag save];
-                }
             }
             
             //添加监听
@@ -467,6 +527,10 @@
     }
     NSIndexPath *selected = [self.tableView indexPathForSelectedRow];
     if(selected) [self.tableView deselectRowAtIndexPath:selected animated:YES];
+    
+    if (!self.dataArray) {
+        [self loadOffLineData];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

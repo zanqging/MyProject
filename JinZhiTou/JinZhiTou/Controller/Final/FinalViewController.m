@@ -214,7 +214,7 @@
         project.invest = [NSString stringWithFormat:@"%@",[dic valueForKey:@"invest"]];
         project.planfinance = [NSString stringWithFormat:@"%@",[dic valueForKey:@"planfinance"]];
         
-        controller.project = project;
+//        controller.project = project;
 
         controller.type=1;
         controller.title = self.navView.title;

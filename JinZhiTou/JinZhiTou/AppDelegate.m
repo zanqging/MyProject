@@ -377,10 +377,8 @@ fetchCompletionHandler:(void
 -(void)loadProjectDetail:(NSInteger)index
 {
     RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
-    Project* project =[[Project  alloc]init];
-    project.projectId = index;
     controller.type=1;
-    controller.project = project;
+    controller.dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%ld",index], nil];
     controller.title = @"首页";
     [self.iNav pushViewController:controller animated:YES];
 }

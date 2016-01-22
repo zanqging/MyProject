@@ -7,6 +7,7 @@
 //
 
 #import "Banner.h"
+#import "UConstants.h"
 #define TableName @"Banner"
 @implementation Banner
 -(id)init
@@ -49,11 +50,12 @@
 - (void)insertCoreData:(NSMutableArray*)dataArray
 {
     NSManagedObjectContext *context = [self managedObjectContext];
-    for (Banner *banner in dataArray) {
-//        Banner *bannerInfo = [NSEntityDescription insertNewObjectForEntityForName:TableName inManagedObjectContext:context];
-        self.url  = banner.url;
-        self.imgUrl = banner.imgUrl;
-        self.project = banner.project;
+    for (NSDictionary *dic in dataArray) {
+        Banner * banner = [[Banner alloc]init];
+        
+        banner.url  = DICVFK(dic, @"url");
+        banner.imgUrl = DICVFK(dic, @"img");
+        banner.project = STRING(@"%@", DICVFK(dic, @"project"));
         
         NSError *error;
         if(![context save:&error])
@@ -85,7 +87,11 @@
     
     for (Banner *banner in fetchedObjects) {
         if (banner.imgUrl && banner.project) {
-            [resultArray addObject:banner];
+            NSMutableDictionary * dic = [NSMutableDictionary new];
+            SETDICVFK(dic, @"url", banner.url);
+            SETDICVFK(dic, @"img", banner.imgUrl);
+            SETDICVFK(dic, @"project", banner.project);
+            [resultArray addObject:dic];
         }
     }
     return resultArray;

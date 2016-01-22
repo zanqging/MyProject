@@ -2,17 +2,19 @@
 //  NewFinance.h
 //  JinZhiTou
 //
-//  Created by air on 16/1/4.
+//  Created by air on 16/1/21.
 //  Copyright © 2016年 金指投. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "DataManager.h"
+
+@class NewsTag;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NewFinance : NSManagedObject
+
 /**
  *  保存结果
  *

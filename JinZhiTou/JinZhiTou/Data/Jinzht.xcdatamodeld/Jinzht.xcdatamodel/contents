@@ -85,10 +85,12 @@
         <attribute name="src" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="news_tag" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NewsTag" inverseName="tag_news" inverseEntity="NewsTag" syncable="YES"/>
     </entity>
     <entity name="NewsTag" representedClassName="NewsTag" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="tag_news" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="NewFinance" inverseName="news_tag" inverseEntity="NewFinance" syncable="YES"/>
     </entity>
     <entity name="Pic" representedClassName="Pic" syncable="YES">
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
@@ -141,6 +143,7 @@
     <elements>
         <element name="Announcement" positionX="-162" positionY="27" width="128" height="75"/>
         <element name="Banner" positionX="0" positionY="45" width="128" height="88"/>
+        <element name="Comment" positionX="-171" positionY="81" width="128" height="163"/>
         <element name="Cycle" positionX="-18" positionY="27" width="128" height="298"/>
         <element name="Finance" positionX="-54" positionY="-9" width="128" height="75"/>
         <element name="Financed" positionX="-153" positionY="45" width="128" height="150"/>
@@ -148,16 +151,15 @@
         <element name="HomeInfo" positionX="18" positionY="63" width="128" height="45"/>
         <element name="InvestorC" positionX="-126" positionY="126" width="128" height="120"/>
         <element name="InvestorP" positionX="-135" positionY="117" width="128" height="135"/>
-        <element name="NewFinance" positionX="-36" positionY="9" width="128" height="180"/>
-        <element name="NewsTag" positionX="-171" positionY="81" width="128" height="75"/>
+        <element name="Likers" positionX="-162" positionY="90" width="128" height="120"/>
+        <element name="NewFinance" positionX="-36" positionY="9" width="128" height="195"/>
+        <element name="NewsTag" positionX="-171" positionY="81" width="128" height="90"/>
+        <element name="Pic" positionX="-153" positionY="99" width="128" height="73"/>
         <element name="Platform" positionX="-171" positionY="18" width="128" height="75"/>
         <element name="PreProject" positionX="-144" positionY="81" width="128" height="165"/>
         <element name="Project" positionX="-414" positionY="18" width="128" height="150"/>
+        <element name="Share" positionX="-180" positionY="162" width="128" height="120"/>
         <element name="ThinkTank" positionX="-117" positionY="135" width="128" height="120"/>
         <element name="WaitForFinance" positionX="-306" positionY="204" width="128" height="120"/>
-        <element name="Comment" positionX="-171" positionY="81" width="128" height="163"/>
-        <element name="Likers" positionX="-162" positionY="90" width="128" height="120"/>
-        <element name="Pic" positionX="-153" positionY="99" width="128" height="73"/>
-        <element name="Share" positionX="-180" positionY="162" width="128" height="120"/>
     </elements>
 </model>

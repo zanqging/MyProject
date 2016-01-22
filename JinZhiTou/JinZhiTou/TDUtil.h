@@ -504,4 +504,12 @@
  */
 + (BOOL) validateIdentityCard: (NSString *)identityCard;
 
+/**
+ *  判断网络运行状态
+ *
+ *  @return 网络状态
+ */
++ (NetStatus)checkNetworkState;
+
+
 @end

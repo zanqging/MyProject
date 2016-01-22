@@ -99,7 +99,7 @@
         NSInteger lines = [TDUtil convertToInt:content]/16;
         if (lines<=4) {
             [self.expandImgView setAlpha:0];
-            [self setFrame:CGRectMake(X(self), Y(self), WIDTH(self), 70)];
+            [self setFrame:CGRectMake(X(self), Y(self), WIDTH(self), 90)];
             
             CGRect frame = self.labelContent.frame;
             frame.size.height = HEIGHT(self)-10;

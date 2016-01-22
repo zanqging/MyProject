@@ -2,12 +2,16 @@
 //  NewFinance.m
 //  JinZhiTou
 //
-//  Created by air on 16/1/4.
+//  Created by air on 16/1/21.
 //  Copyright © 2016年 金指投. All rights reserved.
 //
 
 #import "NewFinance.h"
+#import "NewsTag.h"
+#import "UConstants.h"
+#import "DataManager.h"
 #define TableName @"NewFinance"
+
 @implementation NewFinance
 -(id)init
 {
@@ -49,17 +53,35 @@
 - (void)insertCoreData:(NSMutableArray*)dataArray
 {
     //    NSManagedObjectContext *context = [self managedObjectContext];
-    for (NewFinance *instance in dataArray) {
-        //        Banner *bannerInfo = [NSEntityDescription insertNewObjectForEntityForName:TableName inManagedObjectContext:context];
-        self.create_datetime = instance.create_datetime;
-        self.url = instance.url;
-        self.content  = instance.content;
-        self.img = instance.img;
-        self.title = instance.title;
-        self.read = instance.read;
-        self.share = instance.share;
-        self.id = instance.id;
-        self.src = instance.src;
+    for (NSDictionary * dic in dataArray) {
+        NewFinance * newsFinance = [[NewFinance alloc]init];
+        /**
+         *  @property (nullable, nonatomic, retain) NSString *content;
+         @property (nullable, nonatomic, retain) NSString *create_datetime;
+         @property (nullable, nonatomic, retain) NSNumber *id;
+         @property (nullable, nonatomic, retain) NSString *img;
+         @property (nullable, nonatomic, retain) NSNumber *read;
+         @property (nullable, nonatomic, retain) NSNumber *share;
+         @property (nullable, nonatomic, retain) NSString *src;
+         @property (nullable, nonatomic, retain) NSString *title;
+         @property (nullable, nonatomic, retain) NSString *url;
+         @property (nullable, nonatomic, retain) NewsTag *news_tag;
+         *
+         *  @param dic   <#dic description#>
+         *  @param @"id" <#@"id" description#>
+         *
+         *  @return <#return value description#>
+         */
+        
+        newsFinance.id = DICVFK(dic, @"id");
+        newsFinance.src = DICVFK(dic, @"src");
+        newsFinance.img = DICVFK(dic, @"img");
+        newsFinance.url = DICVFK(dic, @"url");
+        newsFinance.read  = DICVFK(dic, @"read");
+        newsFinance.share = DICVFK(dic, @"share");
+        newsFinance.title  = DICVFK(dic, @"title");
+        newsFinance.content = DICVFK(dic, @"content");
+        newsFinance.news_tag = DICVFK(dic, @"news_tag");
         
         NSError *error;
         if(![[DataManager shareInstance].context save:&error])
@@ -89,9 +111,21 @@
     NSArray *fetchedObjects = [[DataManager shareInstance].context executeFetchRequest:fetchRequest error:&error];
     NSMutableArray *resultArray = [NSMutableArray array];
     
-    for (NewFinance *pro in fetchedObjects) {
-        if (pro.content && pro.src) {
-            [resultArray addObject:pro];
+    for (NewFinance *news in fetchedObjects) {
+        
+        if (news.img) {
+            NSMutableDictionary * data = [NSMutableDictionary new];
+            
+            SETDICVFK(data,@"id",news.id);
+            SETDICVFK(data,@"src",news.src);
+            SETDICVFK(data,@"img",news.img);
+            SETDICVFK(data,@"url",news.url);
+            SETDICVFK(data,@"read",STRING(@"%@", news.read));
+            SETDICVFK(data,@"share",STRING(@"%@", news.share));
+            SETDICVFK(data,@"title",news.title);
+            SETDICVFK(data,@"content",news.content);
+            SETDICVFK(data,@"news_tag",news.news_tag);
+            [resultArray addObject:data];
         }
     }
     return resultArray;
@@ -123,23 +157,23 @@
 //更新
 - (void)updateData:(NSString*)newsId  withIsLook:(NSString*)islook
 {
-    //    NSManagedObjectContext *context = [self managedObjectContext];
+    NSManagedObjectContext *context = [self managedObjectContext];
     
     NSPredicate *predicate = [NSPredicate
                               predicateWithFormat:@"newsid like[cd] %@",newsId];
     
     //首先你需要建立一个request
     NSFetchRequest * request = [[NSFetchRequest alloc] init];
-    [request setEntity:[NSEntityDescription entityForName:TableName inManagedObjectContext:[DataManager shareInstance].context]];
+    [request setEntity:[NSEntityDescription entityForName:TableName inManagedObjectContext:context]];
     [request setPredicate:predicate];//这里相当于sqlite中的查询条件，具体格式参考苹果文档
     
     //https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/Predicates/Articles/pCreating.html
-    NSError *error = nil;
-    NSArray *result = [[DataManager shareInstance].context executeFetchRequest:request error:&error];//这里获取到的是一个数组，你需要取出你要更新的那个obj
+    //NSError *error = nil;
+    //NSArray *result = [context executeFetchRequest:request error:&error];//这里获取到的是一个数组，你需要取出你要更新的那个obj
     //保存
-    if ([[DataManager shareInstance].context save:&error]) {
-        //更新成功
-        NSLog(@"更新成功");
-    }
+    //    if ([context save:&error]) {
+    //        //更新成功
+    //        NSLog(@"更新成功");
+    //    }
 }
 @end

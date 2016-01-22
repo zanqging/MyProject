@@ -249,16 +249,7 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     NSMutableDictionary* dic = [[notification valueForKey:@"userInfo"] valueForKey:@"data"];
     RoadShowDetailViewController* controller=[[RoadShowDetailViewController alloc]init];
     controller.title = self.navView.title;
-    Project* project = [[Project alloc]init];
-    project = [[Project alloc]init];
-    project.imgUrl = [dic valueForKey:@"img"];
-    project.tag = [dic valueForKey:@"tag"];
-    project.company = [dic valueForKey:@"company"];
-    project.projectId = [[dic valueForKey:@"id"] integerValue];
-    project.invest = [NSString stringWithFormat:@"%@",[dic valueForKey:@"invest"]];
-    project.planfinance = [NSString stringWithFormat:@"%@",[dic valueForKey:@"planfinance"]];
-    
-    controller.project = project;
+    controller.dic = dic;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -285,29 +276,16 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
             dataArray  = [[self.dataDic valueForKey:@"data"] valueForKey:@"project"];
             
             //保存离线数据
-            NSMutableArray* projectArray = [[NSMutableArray alloc]init];
+//            NSMutableArray* projectArray = [[NSMutableArray alloc]init];
 
             Project* projectModel;
             projectModel = [[Project alloc]init];
             //移除缓存数据
             [projectModel  deleteData];
-            //遍历数据
-            for (int i=0; i<dataArray.count; i++) {
-                Project * project = [[Project alloc]init];
-                project.imgUrl = [dataArray[i] valueForKey:@"img"];
-                project.tag = [dataArray[i] valueForKey:@"tag"];
-                project.company = [dataArray[i] valueForKey:@"company"];
-                project.projectId = [[dataArray[i] valueForKey:@"id"] integerValue];
-                project.invest = [NSString stringWithFormat:@"%@",[dataArray[i] valueForKey:@"invest"]];
-                project.planfinance = [NSString stringWithFormat:@"%@",[dataArray[i] valueForKey:@"planfinance"]];
-                [projectArray addObject:project];
-            }
-            
             //替换本地数据
-            dataArray  =projectArray;
             projectModel = [[Project alloc]init];
             //缓存离线数据
-            [projectModel insertCoreData:projectArray];
+            [projectModel insertCoreData:dataArray];
             //刷新tableView
             [self.tableView reloadData];
 //            self.startLoading = NO;
@@ -361,7 +339,7 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
     controller.type=1;
     controller.title = self.navView.title;
-    controller.project = dataArray[indexPath.row];
+    controller.dic = dataArray[indexPath.row];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -381,11 +359,11 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     }
     
     NSInteger row = indexPath.row;
-    Project* project = [dataArray objectAtIndex:row];
-    [cellInstance setImageName:project.imgUrl];
-    [cellInstance setHasFinance:project.planfinance];
-    [cellInstance setCompanyName:project.company];
-    [cellInstance setDateTime:project.date];
+    NSDictionary * dic = [dataArray objectAtIndex:row];
+    [cellInstance setImageName:DICVFK(dic, @"img")];
+    [cellInstance setHasFinance:DICVFK(dic, @"planfinance")];
+    [cellInstance setCompanyName:DICVFK(dic, @"company")];
+    [cellInstance setDateTime:DICVFK(dic, @"date")];
     
     cellInstance.selectionStyle = UITableViewCellSelectionStyleDefault;
     [self.tableView setContentSize:CGSizeMake(WIDTH(tableViewInstance), dataArray.count*105+HEIGHT(headerView)+5)];

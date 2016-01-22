@@ -7,6 +7,7 @@
 //
 
 #import "Announcement.h"
+#import "UConstants.h"
 #define TableName @"Announcement"
 @implementation Announcement
 -(id)init
@@ -49,10 +50,10 @@
 - (void)insertCoreData:(NSMutableArray*)dataArray
 {
     NSManagedObjectContext *context = [self managedObjectContext];
-    for (Announcement *instance in dataArray) {
+    for (NSDictionary *dic in dataArray) {
         //        Banner *bannerInfo = [NSEntityDescription insertNewObjectForEntityForName:TableName inManagedObjectContext:context];
-        self.title = instance.title;
-        self.url = instance.url;
+        self.title = DICVFK(dic, @"title");
+        self.url = DICVFK(dic, @"url");
         
         NSError *error;
         if(![context save:&error])
@@ -85,7 +86,10 @@
     for (Announcement *pro in fetchedObjects) {
         
         if (pro.title) {
-            [resultArray addObject:pro];
+            NSMutableDictionary * dic = [NSMutableDictionary new];
+            SETDICVFK(dic,@"title" , pro.title);
+            SETDICVFK(dic, @"url" , pro.url);
+            [resultArray addObject:dic];
         }
     }
     return resultArray;

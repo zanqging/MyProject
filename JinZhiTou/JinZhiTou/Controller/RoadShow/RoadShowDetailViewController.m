@@ -265,7 +265,7 @@
 //收藏
 -(void)collect
 {
-    NSInteger index = self.project.projectId;
+    NSInteger index = [DICVFK(self.dic, @"id") integerValue];
     NSString* url = [COLLECTE stringByAppendingFormat:@"%ld/",(long)index];
     index=0;
     if (isCollectSelected) {
@@ -284,7 +284,7 @@
 //点赞
 -(void)prise
 {
-    NSInteger index = self.project.projectId;
+    NSInteger index = [DICVFK(self.dic, @"id") integerValue];
     NSString* url = [PRISE stringByAppendingFormat:@"%ld/",(long)index];
     index=0;
     if (isPriseSelected) {
@@ -321,8 +321,8 @@
 
     self.startLoading  =YES;
     
-    if (self.project) {
-        NSString* url = [PROJECT_DETAIL stringByAppendingFormat:@"%ld/",self.project.projectId];
+    if (self.dic) {
+        NSString* url = [PROJECT_DETAIL stringByAppendingFormat:@"%ld/",[DICVFK(self.dic, @"id") integerValue]];
         [self.httpUtil getDataFromAPIWithOps:url type:0 delegate:self sel:@selector(requestProjectDetail:) method:@"GET"];
     }
     
@@ -472,7 +472,7 @@
         [self FinanceListViewController:nil];
     }else if (tag==10004 || tag==10005){
         TeamShowViewController* controller = [[TeamShowViewController alloc]init];
-        controller.projectId =  self.project.projectId;;
+        controller.projectId =  [DICVFK(self.dic, @"id") integerValue];
         [self.navigationController pushViewController:controller animated:YES];
         
     }else{
@@ -493,7 +493,7 @@
 {
     WeiboViewControlle* controller = [[WeiboViewControlle alloc]init];
     controller.titleStr = @"项目详情";
-    controller.project_id = self.project.projectId;;
+    controller.project_id = [DICVFK(self.dic, @"id") integerValue];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -713,10 +713,10 @@
 -(void)updateLayout
 {
     if (footer) {
-        [scrollView setupAutoContentSizeWithBottomView:footer bottomMargin:10];
+        [scrollView setupAutoContentSizeWithBottomView:footer bottomMargin:40];
 //        [scrollView setContentSize:CGSizeMake(WIDTH(self.view), POS_Y(footer)+20)];
     }else{
-        [scrollView setupAutoContentSizeWithBottomView:bussinessModelView bottomMargin:10];
+        [scrollView setupAutoContentSizeWithBottomView:bussinessModelView bottomMargin:70];
 //        [scrollView setContentSize:CGSizeMake(WIDTH(self.view), POS_Y(bussinessModelView)+60)];
     }
 }
@@ -806,7 +806,7 @@
                             if([auth boolValue]){
                                 UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
                                 FinialPlanViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinancePlanViewController"];
-                                controller.projectId =self.project.projectId;;
+                                controller.projectId = [DICVFK(self.dic, @"id") integerValue];
                                 [self.navigationController pushViewController:controller animated:YES];
                             }else if(![auth boolValue]){
                                 [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您的投资人身份认证未审核通过，请先联系客服",@"msg",@"",@"cancel",@"确定",@"sure",@"4",@"type",self,@"vController", nil]];
@@ -825,7 +825,7 @@
                             if([auth boolValue]){
                                 UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
                                 FinialPersonTableViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinanceListViewController"];
-                                controller.projectId = self.project.projectId;
+                                controller.projectId = [DICVFK(self.dic, @"id") integerValue];
                                 [self.navigationController pushViewController:controller animated:YES];
                             }else if(![auth boolValue]){
                                 [[NSNotificationCenter defaultCenter]postNotificationName:@"alert" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"您的投资人身份认证未审核通过，请先联系客服",@"msg",@"",@"cancel",@"确定",@"sure",@"4",@"type",self,@"vController", nil]];
@@ -844,13 +844,13 @@
                         }else{
                             if([auth boolValue]){
                                 if (self.type ==1) {
-                                    NSString* url = [JOIN_ROADSHOW stringByAppendingFormat:@"%ld/",self.project.projectId];
+                                    NSString* url = [JOIN_ROADSHOW stringByAppendingFormat:@"%ld/", [DICVFK(self.dic, @"id") integerValue]];
                                     [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestJoinroadShow:)];
                                 }else{
                                     UIStoryboard* storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
                                     FinialApplyViewController* controller = (FinialApplyViewController*)[storyBoard instantiateViewControllerWithIdentifier:@"FinialApply"];
                                     controller.titleStr = self.navView.title;
-                                    controller.projectId = self.project.projectId;
+                                    controller.projectId = [DICVFK(self.dic, @"id") integerValue];
                                     [self.navigationController pushViewController:controller animated:YES];
                                 }
                             }else if(![auth boolValue]){
@@ -864,7 +864,7 @@
             }else{
                 UIStoryboard* board =[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
                 FinialPersonTableViewController* controller = [board instantiateViewControllerWithIdentifier:@"FinanceListViewController"];
-                controller.projectId = self.project.projectId;
+                controller.projectId = [DICVFK(self.dic, @"id") integerValue];
                 [self.navigationController pushViewController:controller animated:YES];
             }
             
