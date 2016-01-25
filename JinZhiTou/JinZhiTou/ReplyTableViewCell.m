@@ -44,6 +44,7 @@
 {
     
     _view1 = [UILabel new];
+    _view1.backgroundColor = ClearColor;
     _view1.textColor = [UIColor blackColor];
     _view1.font = [UIFont systemFontOfSize:13];
     _view1.numberOfLines=0;
@@ -118,6 +119,7 @@
 //        .autoHeightRatio(0);
         
 //        [self setupAutoHeightWithBottomView:_view1 bottomMargin:12];
+        [self layoutSubviews];
         [self setupAutoHeightWithBottomView:_view1 bottomMargin:2];
     }
 }

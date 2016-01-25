@@ -30,6 +30,6 @@
 @property(assign,nonatomic)BOOL isNetRequestError;
 @property(retain,nonatomic)NSMutableDictionary* dataDic;
 
--(void)refresh;
--(void)resetLoadingView;
+- (void) refresh;
+- (void) resetLoadingView;
 @end

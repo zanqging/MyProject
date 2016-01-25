@@ -38,15 +38,14 @@
         
         _contentLabel.font = SYSTEMFONT(14);
         
-//        _imgView.contentMode = UIViewContentModeScaleAspectFill;
+        _imgView.contentMode = UIViewContentModeScaleAspectFill;
         
         
         //自适应布局
         _imgView.sd_layout
         .leftSpaceToView(self, 20)
         .topSpaceToView(self, 12)
-        .widthIs(15)
-        .heightIs(20);
+        .widthIs(15);
         
         _titleLabel.sd_layout
         .leftSpaceToView(_imgView,5)

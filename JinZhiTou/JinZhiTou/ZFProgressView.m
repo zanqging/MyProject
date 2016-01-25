@@ -67,7 +67,7 @@
 -(void) layoutViews:(ZFProgressViewStyle)style
 {
     [self.progressLabel setTextColor:[UIColor whiteColor]];
-    if (style == ZFProgressViewStyleTimerSegment) {
+    if (self.type == 1) {
         self.progressLabel.text = @"0";
     }else{
         self.progressLabel.text = @"0%";
@@ -210,14 +210,19 @@
             if (angle >= M_PI *2) {
                 angle = M_PI *2;
             }
-            UIBezierPath *path1 = [UIBezierPath bezierPathWithArcCenter:CGPointMake(self.center.x - self.frame.origin.x,
-                                                                                    self.center.y - self.frame.origin.y)
-                                                                 radius:(self.bounds.size.width - _progressLineWidth)/ 2 - _offset
-                                                             startAngle:-M_PI_2 +(i *_GapWidth * M_PI / 180.0)
-                                                               endAngle:-M_PI_2 + angle
-                                                              clockwise:YES];
+            CGPoint point = CGPointMake(self.center.x - self.frame.origin.x,
+                                        self.center.y - self.frame.origin.y);
             
+            float startAngle = -M_PI_2 +(i *_GapWidth * M_PI / 180.0);
+            float endAngle = -M_PI_2 + angle;
+            UIBezierPath *path1 = [UIBezierPath bezierPathWithArcCenter:point
+                                                                 radius:(self.bounds.size.width - _progressLineWidth)/ 2 - _offset
+                                                             startAngle:startAngle
+                                                               endAngle:endAngle
+                                                              clockwise:YES];
             [path appendPath:path1];
+            
+            
             
         }
 
@@ -362,7 +367,7 @@
         _timer = nil;
         return;
     }
-    if (self.style == ZFProgressViewStyleTimerSegment) {
+    if (self.type == 1) {
         _progressLabel.text = [NSString stringWithFormat:@"%.0f",_Percentage];
     }else{
         _progressLabel.text = [NSString stringWithFormat:@"%.2f%%",sumSteps *100];

@@ -26,6 +26,7 @@
         
         
         UIImageView* imgView = [[UIImageView alloc]initWithFrame:CGRectMake(30, HEIGHT(self)/2-75, WIDTH(self)-60,150)];
+        imgView.tag = 1001;
         imgView.layer.cornerRadius = 5;
         imgView.layer.borderWidth = 0.5;
         imgView.backgroundColor = WriteColor;
@@ -67,6 +68,8 @@
         .rightSpaceToView(self,40)
         .topSpaceToView(imageView,65)
         .autoHeightRatio(0);
+        messageLabel.sd_layout
+        .minHeightIs(40);
         
         imgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(imgView), POS_Y(messageLabel)+15, WIDTH(imgView), 1)];
         imgView.backgroundColor = BackColor;
@@ -135,6 +138,12 @@
     .rightSpaceToView(self, 0)
     .widthIs(WIDTH(self))
     .topSpaceToView(messageLabel, 20);
+    
+//    [self layoutSubviews];
+//    
+//    UIView * view  = [self viewWithTag:1001];
+//    [view setHeight:POS_Y(self.shureButton)+10];
+    
     
 }
 

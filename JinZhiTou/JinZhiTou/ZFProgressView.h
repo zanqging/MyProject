@@ -13,7 +13,6 @@ typedef NS_ENUM(NSInteger, ZFProgressViewStyle) {
     ZFProgressViewStyleSquareSegment,
     ZFProgressViewStyleRoundSegment,
     ZFProgressViewStyleImageSegment,
-    ZFProgressViewStyleTimerSegment,
 };
 
 IB_DESIGNABLE
@@ -45,6 +44,9 @@ IB_DESIGNABLE
 @property (nonatomic) CGFloat timeDuration;
 //样式
 @property (nonatomic,assign) ZFProgressViewStyle style;
+
+//样式
+@property (nonatomic,assign) int type; //扩展
 
 
 /*

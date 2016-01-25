@@ -18,6 +18,10 @@
 		4501ABBF1BEDEABA006EA357 /* UserInfoConfigController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4501ABBE1BEDEABA006EA357 /* UserInfoConfigController.m */; };
 		45041AC01BFACCE9007A299A /* UserInfoAuthController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45041ABF1BFACCE9007A299A /* UserInfoAuthController.m */; };
 		45041ACC1BFAD91B007A299A /* passed.png in Resources */ = {isa = PBXBuildFile; fileRef = 45041ACB1BFAD91B007A299A /* passed.png */; };
+		45084D561C52859700EEE77D /* UITableView+SDAutoTableViewCellHeight.m in Sources */ = {isa = PBXBuildFile; fileRef = 45084D531C52859700EEE77D /* UITableView+SDAutoTableViewCellHeight.m */; };
+		45084D571C52859700EEE77D /* UITableView+SDAutoTableViewCellHeight.m in Sources */ = {isa = PBXBuildFile; fileRef = 45084D531C52859700EEE77D /* UITableView+SDAutoTableViewCellHeight.m */; };
+		45084D581C52859700EEE77D /* UIView+SDAutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 45084D551C52859700EEE77D /* UIView+SDAutoLayout.m */; };
+		45084D591C52859700EEE77D /* UIView+SDAutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 45084D551C52859700EEE77D /* UIView+SDAutoLayout.m */; };
 		450876281B8F6414006EFC1A /* StartPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 450876271B8F6414006EFC1A /* StartPageViewController.m */; };
 		4508762D1B8F644E006EFC1A /* SlideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4508762A1B8F644E006EFC1A /* SlideView.m */; };
 		450876311B8F647C006EFC1A /* SlideViewStartPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 450876301B8F647C006EFC1A /* SlideViewStartPage.m */; };
@@ -94,6 +98,8 @@
 		451B52C11BA66E3500388E5C /* NavBarIconSearchBar2_blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 451B52B91BA66E3500388E5C /* NavBarIconSearchBar2_blue@2x.png */; };
 		451B52C41BA66F5500388E5C /* NavBarIconSearchCircle_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 451B52C21BA66F5500388E5C /* NavBarIconSearchCircle_blue.png */; };
 		451B52C51BA66F5500388E5C /* NavBarIconSearchCircle_blue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 451B52C31BA66F5500388E5C /* NavBarIconSearchCircle_blue@2x.png */; };
+		451CF01D1A54C78B00EEC164 /* CycleCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451CF01C1A54C78B00EEC164 /* CycleCommentView.m */; };
+		451CF01E1A54C78B00EEC164 /* CycleCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451CF01C1A54C78B00EEC164 /* CycleCommentView.m */; };
 		451ED58D1C48874500A135D7 /* credit.png in Resources */ = {isa = PBXBuildFile; fileRef = 451ED58B1C48874500A135D7 /* credit.png */; };
 		451ED58E1C48874500A135D7 /* credit.png in Resources */ = {isa = PBXBuildFile; fileRef = 451ED58B1C48874500A135D7 /* credit.png */; };
 		451ED58F1C48874500A135D7 /* platform_notice.png in Resources */ = {isa = PBXBuildFile; fileRef = 451ED58C1C48874500A135D7 /* platform_notice.png */; };
@@ -179,8 +185,6 @@
 		45423AA21C3F8C7000A72857 /* ReplyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45423A911C3F8C7000A72857 /* ReplyTableViewCell.m */; };
 		45423AA51C3F8C7000A72857 /* SDWeiXinPhotoContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45423A931C3F8C7000A72857 /* SDWeiXinPhotoContainerView.m */; };
 		45423AA81C3F8C7000A72857 /* ShareTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45423A951C3F8C7000A72857 /* ShareTableViewCell.m */; };
-		45423AB01C3F8C9300A72857 /* UITableView+SDAutoTableViewCellHeight.m in Sources */ = {isa = PBXBuildFile; fileRef = 45423AAD1C3F8C9300A72857 /* UITableView+SDAutoTableViewCellHeight.m */; };
-		45423AB31C3F8C9300A72857 /* UIView+SDAutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 45423AAF1C3F8C9300A72857 /* UIView+SDAutoLayout.m */; };
 		45423ABE1C3F8D2300A72857 /* SDBrowserImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45423AB81C3F8D2300A72857 /* SDBrowserImageView.m */; };
 		45423AC11C3F8D2300A72857 /* SDPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 45423ABA1C3F8D2300A72857 /* SDPhotoBrowser.m */; };
 		45423AC41C3F8D2300A72857 /* SDWaitingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45423ABD1C3F8D2300A72857 /* SDWaitingView.m */; };
@@ -477,7 +481,6 @@
 		454289461C448FE000513DC0 /* FunctionTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 451F48A41B53690F00C91B4A /* FunctionTabBarItem.m */; };
 		454289471C448FE000513DC0 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 458A337C1B7AFA5D00381963 /* LoadingView.m */; };
 		454289481C448FE000513DC0 /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F09B571B86297B0065D873 /* ASIDataDecompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		454289491C448FE000513DC0 /* UIView+SDAutoLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 45423AAF1C3F8C9300A72857 /* UIView+SDAutoLayout.m */; };
 		4542894A1C448FE000513DC0 /* FinialAuthTraceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45A2ADB51B72823800751F78 /* FinialAuthTraceViewController.m */; };
 		4542894B1C448FE000513DC0 /* DialogUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F09B3E1B86297B0065D873 /* DialogUtil.m */; };
 		4542894C1C448FE000513DC0 /* WMProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 451538151C3E422300C2F08F /* WMProgressView.m */; };
@@ -497,7 +500,6 @@
 		4542895A1C448FE000513DC0 /* Share.m in Sources */ = {isa = PBXBuildFile; fileRef = 45778FC81C3B75C500FF8691 /* Share.m */; };
 		4542895B1C448FE000513DC0 /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FCD04A1B75E216009AD6E3 /* UIImageView+HighlightedWebCache.m */; };
 		4542895C1C448FE000513DC0 /* CycleScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F8290B1B6B1A630044F6F0 /* CycleScrollView.m */; };
-		4542895D1C448FE000513DC0 /* UITableView+SDAutoTableViewCellHeight.m in Sources */ = {isa = PBXBuildFile; fileRef = 45423AAD1C3F8C9300A72857 /* UITableView+SDAutoTableViewCellHeight.m */; };
 		4542895E1C448FE000513DC0 /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 45FCD02F1B75E216009AD6E3 /* MKAnnotationView+WebCache.m */; };
 		4542895F1C448FE000513DC0 /* UILabel+Data.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EADB1BD08DCB0041DCBD /* UILabel+Data.m */; };
 		454289601C448FE000513DC0 /* UIImage+MWPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 4543EB051BD08E100041DCBD /* UIImage+MWPhotoBrowser.m */; };
@@ -800,6 +802,8 @@
 		45888B8F1C511B2900A35476 /* NewsTag+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45888B871C511B2900A35476 /* NewsTag+CoreDataProperties.m */; };
 		4589D8A81B96D44E004D7A37 /* PrivacyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4589D8A71B96D44E004D7A37 /* PrivacyViewController.m */; };
 		458A337D1B7AFA5D00381963 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 458A337C1B7AFA5D00381963 /* LoadingView.m */; };
+		458B39D71C532C1D007FE2B8 /* RS_SliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 458B39D61C532C1D007FE2B8 /* RS_SliderView.m */; };
+		458B39D81C532C1D007FE2B8 /* RS_SliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 458B39D61C532C1D007FE2B8 /* RS_SliderView.m */; };
 		458C9E1E1BD52BEC00F66916 /* UIReplyLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 458C9E1D1BD52BEC00F66916 /* UIReplyLabel.m */; };
 		4591F37C1A54D81C0079E1D0 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4591F37B1A54D81C0079E1D0 /* DataManager.m */; };
 		45954D011C4F277D00137D7D /* NewThreeSlidePageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45954D001C4F277D00137D7D /* NewThreeSlidePageController.m */; };
@@ -854,6 +858,8 @@
 		45D49D941B82336F00EC529F /* sex.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45D49D881B82336F00EC529F /* sex.plist */; };
 		45D49D951B82336F00EC529F /* jobType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45D49D891B82336F00EC529F /* jobType.plist */; };
 		45DD8EA41BF4393C00921673 /* CreditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DD8EA31BF4393C00921673 /* CreditTableViewCell.m */; };
+		45DE17371C55FB5C009080AC /* ProjectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DE17361C55FB5C009080AC /* ProjectTableViewCell.m */; };
+		45DE17381C55FB5C009080AC /* ProjectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DE17361C55FB5C009080AC /* ProjectTableViewCell.m */; };
 		45DEACEE1B437879001EDA5D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DEACED1B437879001EDA5D /* main.m */; };
 		45DEACF11B437879001EDA5D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DEACF01B437879001EDA5D /* AppDelegate.m */; };
 		45DEACF91B437879001EDA5D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45DEACF81B437879001EDA5D /* Images.xcassets */; };
@@ -997,6 +1003,10 @@
 		45041ABE1BFACCE9007A299A /* UserInfoAuthController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserInfoAuthController.h; path = Controller/Company/UserInfoAuthController.h; sourceTree = "<group>"; };
 		45041ABF1BFACCE9007A299A /* UserInfoAuthController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserInfoAuthController.m; path = Controller/Company/UserInfoAuthController.m; sourceTree = "<group>"; };
 		45041ACB1BFAD91B007A299A /* passed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = passed.png; sourceTree = "<group>"; };
+		45084D521C52859700EEE77D /* UITableView+SDAutoTableViewCellHeight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+SDAutoTableViewCellHeight.h"; sourceTree = "<group>"; };
+		45084D531C52859700EEE77D /* UITableView+SDAutoTableViewCellHeight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+SDAutoTableViewCellHeight.m"; sourceTree = "<group>"; };
+		45084D541C52859700EEE77D /* UIView+SDAutoLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SDAutoLayout.h"; sourceTree = "<group>"; };
+		45084D551C52859700EEE77D /* UIView+SDAutoLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SDAutoLayout.m"; sourceTree = "<group>"; };
 		450876261B8F6414006EFC1A /* StartPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StartPageViewController.h; sourceTree = "<group>"; };
 		450876271B8F6414006EFC1A /* StartPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StartPageViewController.m; sourceTree = "<group>"; };
 		450876291B8F644E006EFC1A /* SlideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideView.h; sourceTree = "<group>"; };
@@ -1115,6 +1125,8 @@
 		451B52B91BA66E3500388E5C /* NavBarIconSearchBar2_blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavBarIconSearchBar2_blue@2x.png"; sourceTree = "<group>"; };
 		451B52C21BA66F5500388E5C /* NavBarIconSearchCircle_blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NavBarIconSearchCircle_blue.png; sourceTree = "<group>"; };
 		451B52C31BA66F5500388E5C /* NavBarIconSearchCircle_blue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "NavBarIconSearchCircle_blue@2x.png"; sourceTree = "<group>"; };
+		451CF01B1A54C78B00EEC164 /* CycleCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CycleCommentView.h; path = Cycle/CommentView/CycleCommentView.h; sourceTree = "<group>"; };
+		451CF01C1A54C78B00EEC164 /* CycleCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CycleCommentView.m; path = Cycle/CommentView/CycleCommentView.m; sourceTree = "<group>"; };
 		451ED58B1C48874500A135D7 /* credit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = credit.png; sourceTree = "<group>"; };
 		451ED58C1C48874500A135D7 /* platform_notice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = platform_notice.png; sourceTree = "<group>"; };
 		451ED5911C48874C00A135D7 /* annocumment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "annocumment@2x.png"; sourceTree = "<group>"; };
@@ -1267,10 +1279,6 @@
 		45423A931C3F8C7000A72857 /* SDWeiXinPhotoContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDWeiXinPhotoContainerView.m; sourceTree = "<group>"; };
 		45423A941C3F8C7000A72857 /* ShareTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareTableViewCell.h; sourceTree = "<group>"; };
 		45423A951C3F8C7000A72857 /* ShareTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareTableViewCell.m; sourceTree = "<group>"; };
-		45423AAC1C3F8C9300A72857 /* UITableView+SDAutoTableViewCellHeight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+SDAutoTableViewCellHeight.h"; sourceTree = "<group>"; };
-		45423AAD1C3F8C9300A72857 /* UITableView+SDAutoTableViewCellHeight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+SDAutoTableViewCellHeight.m"; sourceTree = "<group>"; };
-		45423AAE1C3F8C9300A72857 /* UIView+SDAutoLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SDAutoLayout.h"; sourceTree = "<group>"; };
-		45423AAF1C3F8C9300A72857 /* UIView+SDAutoLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SDAutoLayout.m"; sourceTree = "<group>"; };
 		45423AB71C3F8D2300A72857 /* SDBrowserImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDBrowserImageView.h; sourceTree = "<group>"; };
 		45423AB81C3F8D2300A72857 /* SDBrowserImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDBrowserImageView.m; sourceTree = "<group>"; };
 		45423AB91C3F8D2300A72857 /* SDPhotoBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDPhotoBrowser.h; sourceTree = "<group>"; };
@@ -1560,6 +1568,8 @@
 		4589D8A71B96D44E004D7A37 /* PrivacyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrivacyViewController.m; sourceTree = "<group>"; };
 		458A337B1B7AFA5D00381963 /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoadingView.h; path = View/LoadingView.h; sourceTree = "<group>"; };
 		458A337C1B7AFA5D00381963 /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoadingView.m; path = View/LoadingView.m; sourceTree = "<group>"; };
+		458B39D51C532C1D007FE2B8 /* RS_SliderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RS_SliderView.h; path = "../../../../../../Downloads/RS_SliderView-master/RS_SliderView/source/RS_SliderView.h"; sourceTree = "<group>"; };
+		458B39D61C532C1D007FE2B8 /* RS_SliderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RS_SliderView.m; path = "../../../../../../Downloads/RS_SliderView-master/RS_SliderView/source/RS_SliderView.m"; sourceTree = "<group>"; };
 		458C9E1C1BD52BEC00F66916 /* UIReplyLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIReplyLabel.h; path = ../UIReplyLabel.h; sourceTree = "<group>"; };
 		458C9E1D1BD52BEC00F66916 /* UIReplyLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIReplyLabel.m; path = ../UIReplyLabel.m; sourceTree = "<group>"; };
 		4591F37A1A54D81C0079E1D0 /* DataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataManager.h; sourceTree = "<group>"; };
@@ -1639,6 +1649,8 @@
 		45D49D891B82336F00EC529F /* jobType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = jobType.plist; sourceTree = "<group>"; };
 		45DD8EA21BF4393C00921673 /* CreditTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreditTableViewCell.h; sourceTree = "<group>"; };
 		45DD8EA31BF4393C00921673 /* CreditTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreditTableViewCell.m; sourceTree = "<group>"; };
+		45DE17351C55FB5C009080AC /* ProjectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectTableViewCell.h; sourceTree = "<group>"; };
+		45DE17361C55FB5C009080AC /* ProjectTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectTableViewCell.m; sourceTree = "<group>"; };
 		45DEACE81B437879001EDA5D /* 金指投发布.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "金指投发布.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45DEACEC1B437879001EDA5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45DEACED1B437879001EDA5D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -2047,6 +2059,15 @@
 			path = AFNetworking;
 			sourceTree = "<group>";
 		};
+		451CF01A1A54C73500EEC164 /* CommentView */ = {
+			isa = PBXGroup;
+			children = (
+				451CF01B1A54C78B00EEC164 /* CycleCommentView.h */,
+				451CF01C1A54C78B00EEC164 /* CycleCommentView.m */,
+			);
+			name = CommentView;
+			sourceTree = "<group>";
+		};
 		451ED59D1C48960A00A135D7 /* SlidePageContoller */ = {
 			isa = PBXGroup;
 			children = (
@@ -2438,6 +2459,7 @@
 		45423A871C3F8C5B00A72857 /* NewCycle */ = {
 			isa = PBXGroup;
 			children = (
+				451CF01A1A54C73500EEC164 /* CommentView */,
 				45423B071C3FA46100A72857 /* ShareContentView */,
 				45423AB61C3F8D2300A72857 /* SDPhotoBrowser */,
 				45423AAB1C3F8C9300A72857 /* SDAutoLayout */,
@@ -2462,10 +2484,10 @@
 		45423AAB1C3F8C9300A72857 /* SDAutoLayout */ = {
 			isa = PBXGroup;
 			children = (
-				45423AAC1C3F8C9300A72857 /* UITableView+SDAutoTableViewCellHeight.h */,
-				45423AAD1C3F8C9300A72857 /* UITableView+SDAutoTableViewCellHeight.m */,
-				45423AAE1C3F8C9300A72857 /* UIView+SDAutoLayout.h */,
-				45423AAF1C3F8C9300A72857 /* UIView+SDAutoLayout.m */,
+				45084D521C52859700EEE77D /* UITableView+SDAutoTableViewCellHeight.h */,
+				45084D531C52859700EEE77D /* UITableView+SDAutoTableViewCellHeight.m */,
+				45084D541C52859700EEE77D /* UIView+SDAutoLayout.h */,
+				45084D551C52859700EEE77D /* UIView+SDAutoLayout.m */,
 			);
 			path = SDAutoLayout;
 			sourceTree = "<group>";
@@ -2796,6 +2818,7 @@
 		45631F831B5A4B7B009FA35D /* tools */ = {
 			isa = PBXGroup;
 			children = (
+				458B39D41C532C11007FE2B8 /* SliderView */,
 				4599DB721C51E68B007AC3CD /* JDStatusBarNotification */,
 				459B6F121C4C88F800B3A503 /* JHTickerView */,
 				451ED59D1C48960A00A135D7 /* SlidePageContoller */,
@@ -2940,6 +2963,8 @@
 			children = (
 				45F829481B6C64DB0044F6F0 /* FinialPersonTableViewCell.h */,
 				45F829491B6C64DB0044F6F0 /* FinialPersonTableViewCell.m */,
+				45DE17351C55FB5C009080AC /* ProjectTableViewCell.h */,
+				45DE17361C55FB5C009080AC /* ProjectTableViewCell.m */,
 				458631F51B65C98D00F06688 /* FinalKindTableViewCell.h */,
 				458631F61B65C98D00F06688 /* FinalKindTableViewCell.m */,
 				45158BA11BF96A920095CB91 /* FinalingTableViewCell.h */,
@@ -2976,6 +3001,15 @@
 				458115671B803F7D006EEBBC /* ProgressTraceView.m */,
 			);
 			name = LoadingView;
+			sourceTree = "<group>";
+		};
+		458B39D41C532C11007FE2B8 /* SliderView */ = {
+			isa = PBXGroup;
+			children = (
+				458B39D51C532C1D007FE2B8 /* RS_SliderView.h */,
+				458B39D61C532C1D007FE2B8 /* RS_SliderView.m */,
+			);
+			name = SliderView;
 			sourceTree = "<group>";
 		};
 		4599DB721C51E68B007AC3CD /* JDStatusBarNotification */ = {
@@ -3940,6 +3974,7 @@
 				454288641C448FE000513DC0 /* DetailViewController.m in Sources */,
 				454288651C448FE000513DC0 /* MJRefreshBackFooter.m in Sources */,
 				454288661C448FE000513DC0 /* UserInfoHeader.m in Sources */,
+				45DE17381C55FB5C009080AC /* ProjectTableViewCell.m in Sources */,
 				454288671C448FE000513DC0 /* AFSecurityPolicy.m in Sources */,
 				454288681C448FE000513DC0 /* RoadShowDetailViewController.m in Sources */,
 				454288691C448FE000513DC0 /* UIImage+Crop.m in Sources */,
@@ -3968,6 +4003,7 @@
 				454288801C448FE000513DC0 /* WeChatBindController.m in Sources */,
 				4575D7081C4DE47700CE598E /* ReplyMessageViewController.m in Sources */,
 				454288821C448FE000513DC0 /* AuthTraceTableViewCell.m in Sources */,
+				451CF01E1A54C78B00EEC164 /* CycleCommentView.m in Sources */,
 				45011ABC1C4A2A64002B6F3A /* PersonalFinanceAuthViewController.m in Sources */,
 				454288831C448FE000513DC0 /* CompanyFinial.m in Sources */,
 				454288841C448FE000513DC0 /* LikersModel.m in Sources */,
@@ -4153,6 +4189,7 @@
 				4542892E1C448FE000513DC0 /* ASIAuthenticationDialog.m in Sources */,
 				4542892F1C448FE000513DC0 /* MenuView.m in Sources */,
 				454289301C448FE000513DC0 /* NSString+MD5.m in Sources */,
+				45084D571C52859700EEE77D /* UITableView+SDAutoTableViewCellHeight.m in Sources */,
 				454289311C448FE000513DC0 /* ALMoviePlayerController.m in Sources */,
 				454289321C448FE000513DC0 /* ResetPasswordViewController.m in Sources */,
 				454289331C448FE000513DC0 /* ViewController_bak.m in Sources */,
@@ -4171,6 +4208,7 @@
 				4542893F1C448FE000513DC0 /* UIImage+RoundedCorner.m in Sources */,
 				459B6F291C4CD6AF00B3A503 /* PreProjectDetailViewController.m in Sources */,
 				454289401C448FE000513DC0 /* ASIInputStream.m in Sources */,
+				45084D591C52859700EEE77D /* UIView+SDAutoLayout.m in Sources */,
 				454289411C448FE000513DC0 /* QNCrc32.m in Sources */,
 				454289421C448FE000513DC0 /* UserTypeTableViewCell.m in Sources */,
 				454289431C448FE000513DC0 /* ReplyTableViewCell.m in Sources */,
@@ -4179,7 +4217,6 @@
 				454289461C448FE000513DC0 /* FunctionTabBarItem.m in Sources */,
 				454289471C448FE000513DC0 /* LoadingView.m in Sources */,
 				454289481C448FE000513DC0 /* ASIDataDecompressor.m in Sources */,
-				454289491C448FE000513DC0 /* UIView+SDAutoLayout.m in Sources */,
 				4542894A1C448FE000513DC0 /* FinialAuthTraceViewController.m in Sources */,
 				4542894B1C448FE000513DC0 /* DialogUtil.m in Sources */,
 				459B6F161C4C891500B3A503 /* JHTickerView.m in Sources */,
@@ -4193,6 +4230,7 @@
 				454289531C448FE000513DC0 /* UserInfoConfigController.m in Sources */,
 				454289541C448FE000513DC0 /* WaterFLayout.m in Sources */,
 				454289551C448FE000513DC0 /* ShowCommentViewController.m in Sources */,
+				458B39D81C532C1D007FE2B8 /* RS_SliderView.m in Sources */,
 				45888B8B1C511B2900A35476 /* NewFinance+CoreDataProperties.m in Sources */,
 				454289561C448FE000513DC0 /* FinalContentTableViewCell.m in Sources */,
 				454289571C448FE000513DC0 /* WeiboData.m in Sources */,
@@ -4201,7 +4239,6 @@
 				4542895A1C448FE000513DC0 /* Share.m in Sources */,
 				4542895B1C448FE000513DC0 /* UIImageView+HighlightedWebCache.m in Sources */,
 				4542895C1C448FE000513DC0 /* CycleScrollView.m in Sources */,
-				4542895D1C448FE000513DC0 /* UITableView+SDAutoTableViewCellHeight.m in Sources */,
 				4542895E1C448FE000513DC0 /* MKAnnotationView+WebCache.m in Sources */,
 				4542895F1C448FE000513DC0 /* UILabel+Data.m in Sources */,
 				454289601C448FE000513DC0 /* UIImage+MWPhotoBrowser.m in Sources */,
@@ -4312,6 +4349,7 @@
 				45D27B8C1BC631ED00ECD9D7 /* DetailViewController.m in Sources */,
 				45F93B541B637311004526F5 /* MJRefreshBackFooter.m in Sources */,
 				45326EF81B732A7F0044F8C1 /* UserInfoHeader.m in Sources */,
+				45DE17371C55FB5C009080AC /* ProjectTableViewCell.m in Sources */,
 				4517CDBD1B78C7ED00EFBB6A /* AFSecurityPolicy.m in Sources */,
 				45E811FB1B6717D1009F840D /* RoadShowDetailViewController.m in Sources */,
 				45FE76CF1BD742AE002D4F04 /* UIImage+Crop.m in Sources */,
@@ -4340,6 +4378,7 @@
 				457F70EC1BF56C91004241A0 /* WeChatBindController.m in Sources */,
 				4575D7071C4DE47700CE598E /* ReplyMessageViewController.m in Sources */,
 				45A2ADB31B72811200751F78 /* AuthTraceTableViewCell.m in Sources */,
+				451CF01D1A54C78B00EEC164 /* CycleCommentView.m in Sources */,
 				45011ABB1C4A2A64002B6F3A /* PersonalFinanceAuthViewController.m in Sources */,
 				45A2AD9A1B7109F100751F78 /* CompanyFinial.m in Sources */,
 				4572FE2E1C3D0C520059FE3F /* LikersModel.m in Sources */,
@@ -4525,6 +4564,7 @@
 				45F09C6D1B86297B0065D873 /* ASIAuthenticationDialog.m in Sources */,
 				45E189C21B7909CF0082225E /* MenuView.m in Sources */,
 				45326F131B74432C0044F8C1 /* NSString+MD5.m in Sources */,
+				45084D561C52859700EEE77D /* UITableView+SDAutoTableViewCellHeight.m in Sources */,
 				4511CC1E1BA2B6E300A9D00A /* ALMoviePlayerController.m in Sources */,
 				456ED38F1BFC3C220067685A /* ResetPasswordViewController.m in Sources */,
 				4543EAE31BD08DCB0041DCBD /* ViewController_bak.m in Sources */,
@@ -4543,6 +4583,7 @@
 				45495BD21B60DA02007A17FD /* UIImage+RoundedCorner.m in Sources */,
 				459B6F281C4CD6AF00B3A503 /* PreProjectDetailViewController.m in Sources */,
 				45F09C731B86297B0065D873 /* ASIInputStream.m in Sources */,
+				45084D581C52859700EEE77D /* UIView+SDAutoLayout.m in Sources */,
 				452609AA1BDF0963006776B2 /* QNCrc32.m in Sources */,
 				4532717F1B74902F0044F8C1 /* UserTypeTableViewCell.m in Sources */,
 				45423AA21C3F8C7000A72857 /* ReplyTableViewCell.m in Sources */,
@@ -4551,7 +4592,6 @@
 				451F48A51B53690F00C91B4A /* FunctionTabBarItem.m in Sources */,
 				458A337D1B7AFA5D00381963 /* LoadingView.m in Sources */,
 				45F09C6F1B86297B0065D873 /* ASIDataDecompressor.m in Sources */,
-				45423AB31C3F8C9300A72857 /* UIView+SDAutoLayout.m in Sources */,
 				45A2ADB61B72823800751F78 /* FinialAuthTraceViewController.m in Sources */,
 				45F09C651B86297B0065D873 /* DialogUtil.m in Sources */,
 				459B6F151C4C891500B3A503 /* JHTickerView.m in Sources */,
@@ -4565,6 +4605,7 @@
 				4501ABBF1BEDEABA006EA357 /* UserInfoConfigController.m in Sources */,
 				45ECCF001B61FED40013CA73 /* WaterFLayout.m in Sources */,
 				45E2DDCF1B68CA13008F2942 /* ShowCommentViewController.m in Sources */,
+				458B39D71C532C1D007FE2B8 /* RS_SliderView.m in Sources */,
 				45888B8A1C511B2900A35476 /* NewFinance+CoreDataProperties.m in Sources */,
 				458631FA1B66226000F06688 /* FinalContentTableViewCell.m in Sources */,
 				45F09B851B86297B0065D873 /* WeiboData.m in Sources */,
@@ -4573,7 +4614,6 @@
 				45778FCC1C3B75C500FF8691 /* Share.m in Sources */,
 				45FCD05C1B75E216009AD6E3 /* UIImageView+HighlightedWebCache.m in Sources */,
 				45F8290C1B6B1A630044F6F0 /* CycleScrollView.m in Sources */,
-				45423AB01C3F8C9300A72857 /* UITableView+SDAutoTableViewCellHeight.m in Sources */,
 				45FCD04F1B75E216009AD6E3 /* MKAnnotationView+WebCache.m in Sources */,
 				4543EAE21BD08DCB0041DCBD /* UILabel+Data.m in Sources */,
 				4543EB0E1BD08E100041DCBD /* UIImage+MWPhotoBrowser.m in Sources */,
@@ -4755,8 +4795,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shaanxi gold investment enterprise management consulting Co., Ltd. (PT9XT89LQL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shaanxi gold investment enterprise management consulting Co., Ltd. (PT9XT89LQL)";
 				ENABLE_NS_ASSERTIONS = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4772,7 +4812,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "4d968a7d-7d21-4423-864d-7dc311070046";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -4783,8 +4823,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Shaanxi gold investment enterprise management consulting Co., Ltd. (PT9XT89LQL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shaanxi gold investment enterprise management consulting Co., Ltd. (PT9XT89LQL)";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4799,7 +4839,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinzht.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "4d968a7d-7d21-4423-864d-7dc311070046";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

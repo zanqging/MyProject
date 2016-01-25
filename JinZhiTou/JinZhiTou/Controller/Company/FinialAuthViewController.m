@@ -304,11 +304,21 @@
         return NO;
     }
     instance = [scrollViewPerson viewWithTag:20004];
-    //检测是否已选择头像
-    if (!instance.image) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请选择上传头像" ];
-        return NO;
+    
+    if (self.type!=1) {
+        //检测是否已选择头像
+        if (!instance.image) {
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请选择上传头像" ];
+            return NO;
+        }
+        
+        NSString * introduceStr = nameTextField.text;
+        if (![TDUtil isValidString:introduceStr]) {
+            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请输入个人介绍" ];
+            return NO;
+        }  
     }
+    
     
     if (!array || array.count<=0) {
         [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请选择投资人类型" ];
@@ -687,6 +697,9 @@
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
         }
         self.startLoading  = NO;
+    }else{
+        self.startLoading  = NO;
+        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"网络请求错误，请检查网络连接!"];
     }
 }
 

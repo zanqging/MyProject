@@ -42,7 +42,6 @@
     self.loadingViewFrame  =CGRectMake(0, 0, WIDTH(self.view), HEIGHT(self.view)-100);
     [self addPersonalView];
     
-    [self loadData];
     //认证信息
     [self authInfo];
 }
@@ -55,12 +54,12 @@
 
 -(void)loadData
 {
-    self.startLoading  =YES;
     [self.httpUtil getDataFromAPIWithOps:USERINFO postParam:nil type:0 delegate:self sel:@selector(requestFinished:)];
 }
 
 -(void)authInfo
 {
+    self.startLoading = YES;
     [self.httpUtil getDataFromAPIWithOps:@"myauth/" postParam:nil type:0 delegate:self sel:@selector(requestAuthFinished:)];
 }
 
@@ -249,13 +248,6 @@
     [view addSubview:lineView];
     
     
-//    UIButton* btnAction =[[UIButton alloc]initWithFrame:CGRectMake(60, POS_Y(view)+20, WIDTH(scrollView)-120, 35)];
-//    btnAction.layer.cornerRadius =5;
-//    btnAction.backgroundColor = ColorTheme;
-//    [btnAction setTitle:@"提交资料" forState:UIControlStateNormal];
-//    [btnAction addTarget:self action:@selector(commitData) forControlEvents:UIControlEventTouchUpInside];
-//    [scrollView addSubview:btnAction];
-    
     imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)-170, POS_Y(view)-90, 140, 140)];
     imgView.tag=1001;
     imgView.contentMode = UIViewContentModeScaleAspectFill;
@@ -264,6 +256,7 @@
     NSString * auth = [data valueForKey:@"auth"];
     if (![auth boolValue]) {
         label = [[UILabel alloc]initWithFrame:CGRectMake(0, POS_Y(view)+30, WIDTH(self.view), 50)];
+        label.tag = 10001;
         label.text = @"修改";
         label.backgroundColor  =WriteColor;
         label.userInteractionEnabled = YES;
@@ -299,67 +292,6 @@
     [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil userInfo:[NSDictionary dictionaryWithObject:self forKey:@"viewController"]];
 }
 
-
--(BOOL)commitData
-{
-//    if (!isUploadID) {
-//        [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"请先上传身份证" ];
-//        return NO;
-//    }
-    NSString* userName;
-    NSString* userType;
-    NSString* company;
-    NSString* IDNumber;
-    NSString* address;
-    
-    IDNumber  =IDTextField.text;
-    userName = nameTextField.text;
-    address  =addressTextField.text;
-    company  = companyTextField.text;
-    userType = positionTextField.text;
-    
-    if (![TDUtil isValidString:userName]) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:nameTextField.placeholder];
-        return NO;
-    }
-    
-    if (![TDUtil isValidString:IDNumber]) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:IDTextField.placeholder];
-        return NO;
-    }else{
-        if (![TDUtil validateIdentityCard:IDNumber]) {
-            [[DialogUtil sharedInstance]showDlg:self.view textOnly:@"身份证号输入错误"];
-            return NO;
-        }
-    }
-    
-    if (![TDUtil isValidString:address]) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:addressTextField.placeholder];
-        return NO;
-    }
-    
-    if (![TDUtil isValidString:company]) {
-        
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:companyTextField.placeholder];
-        return NO;
-    }
-    if (![TDUtil isValidString:userType]) {
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:positionTextField.placeholder];
-        return NO;
-    }
-    
-    
-    
-    
-    NSMutableDictionary* dataDic = [[NSMutableDictionary alloc]init];
-    [dataDic setValue:address forKey:@"addr"];
-    [dataDic setValue:userName forKey:@"name"];
-    [dataDic setValue:IDNumber forKey:@"idno"];
-    [dataDic setValue:company forKey:@"company"];
-    [dataDic setValue:userType forKey:@"position"];
-    [self.httpUtil getDataFromAPIWithOps:@"userinfo/" postParam:dataDic type:0 delegate:self sel:@selector(requestUserInfo:)];
-    return YES;
-}
 
 #pragma lookPhotoDetail
 -(void)lookPhotoDetail:(UITapGestureRecognizer*)recognizer
@@ -468,14 +400,20 @@
         NSString* auth = (NSString*)[tempDic valueForKey:@"auth"];
         
         UIImageView* imgView = [self.view viewWithTag:1001];
+        UILabel * label =[scrollView viewWithTag:10001];
         if ([auth isKindOfClass:NSNull.class]) {
             imgView.image = IMAGE(@"authing", @"png");
         }else{
             if ([auth isKindOfClass:NSString.class]) {
                 if ([auth isEqualToString:@""]) {
-                    [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil userInfo:[NSDictionary dictionaryWithObject:self forKey:@"viewController"]];
+//                    [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil userInfo:[NSDictionary dictionaryWithObject:self forKey:@"viewController"]];
                 }
+                
+//                imgView.image = IMAGE(@"authing", @"png");
             }else{
+                label.alpha = 0;
+                label.userInteractionEnabled = NO;
+                
                 if ([auth boolValue]) {
                    imgView.image = IMAGE(@"passed", @"png");
                 }else if(![auth boolValue]){
@@ -487,23 +425,8 @@
             }
         }
     }
-}
-
--(void)requestUserInfo:(ASIHTTPRequest*)request
-{
-    NSString* jsonString =[TDUtil convertGBKDataToUTF8String:request.responseData];
-    NSLog(@"返回:%@",jsonString);
     
-    NSMutableDictionary* dic = [jsonString JSONValue];
-    
-    if (dic!=nil) {
-        NSString* code =[dic valueForKey:@"code"];
-        if ([code integerValue]==0) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"showAuth" object:nil userInfo:[NSDictionary dictionaryWithObject:self forKey:@"viewController"]];
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }
-        [[DialogUtil sharedInstance]showDlg:self.view textOnly:[dic valueForKey:@"msg"]];
-    }
+    [self loadData];
 }
 //*********************************************************网络请求结束*****************************************************//
 

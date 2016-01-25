@@ -29,6 +29,7 @@
 @interface AppDelegate ()<UIAlertViewDelegate>
 {
     HttpUtils* httpUtils;
+    UIWindow *m_brightnessWindow;
 }
 @end
 
@@ -162,7 +163,11 @@
     [APService setupWithOption:launchOptions];
     
     //添加监听
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(sliderValueChanged:) name:@"brightbess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(login) name:@"login" object:nil];
+    
+    [self performSelectorOnMainThread:@selector(installBrightnessWindow) withObject:nil waitUntilDone:NO];
+    
     return YES;
 }
 
@@ -518,4 +523,24 @@ fetchCompletionHandler:(void
     }
 }
 
+//========================扩展功能========================================//
+- (void)sliderValueChanged:(NSNotification *)notification
+{
+    NSDictionary * userInfo = notification.userInfo;
+    float value = [DICVFK(userInfo, @"value") floatValue];
+    [UIView animateWithDuration:2 animations:^{
+        m_brightnessWindow.alpha = 1.0 - value;
+    }];
+}
+
+- (void)installBrightnessWindow
+{
+    m_brightnessWindow = [[UIWindow alloc] initWithFrame:self.window.frame];
+    m_brightnessWindow.windowLevel = UIWindowLevelStatusBar + 1;
+    m_brightnessWindow.userInteractionEnabled = NO;
+    m_brightnessWindow.backgroundColor = [UIColor blackColor];
+    m_brightnessWindow.alpha = 0;
+    m_brightnessWindow.hidden = NO;
+}
+//========================扩展功能========================================//
 @end

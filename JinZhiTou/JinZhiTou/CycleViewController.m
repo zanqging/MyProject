@@ -82,7 +82,7 @@
     //==============================导航栏区域 设置==============================//
     [self.navView setTitle:@"金指投"];
     self.navView.titleLable.textColor=WriteColor;
-    [self.navView.leftButton setImage:IMAGENAMED(@"shuruphone") forState:UIControlStateNormal];
+    [self.navView.leftButton setImage:IMAGENAMED(@"home") forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     
     [self.navView.rightButton setImage:IMAGENAMED(@"circle_publish") forState:UIControlStateNormal];
@@ -257,7 +257,6 @@
                     [tempArrary addObject:tempDic];
                 }
                 model.commentArray = tempArrary;
-                model.commentViewHeight = [self getCommentViewHeight:tempArrary];
             }
             
             
@@ -280,7 +279,6 @@
                     [tempArrary addObject:tempDic];
                 }
                 model.likersArray = tempArrary;
-                model.commentHeaderViewHeight=[self getCommentHeaderViewHeight:tempArrary];
             }
             
             [tempArray addObject:model];
@@ -469,21 +467,27 @@
 {
     DemoVC9Cell *cell = [tableView dequeueReusableCellWithIdentifier:kDemoVC9CellId];
 //    if (!cell) {
-    cell =[[DemoVC9Cell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kDemoVC9CellId];
+        cell =[[DemoVC9Cell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kDemoVC9CellId];
 //    }
     cell.delegate = self;
     
     cell.model = self.dataArray[indexPath.row];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+//    NSLog(@"%@",cell.description);
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // >>>>>>>>>>>>>>>>>>>>> * cell自适应 * >>>>>>>>>>>>>>>>>>>>>>>>
-    CGFloat h = [self cellHeightForIndexPath:indexPath cellContentViewWidth:[UIScreen mainScreen].bounds.size.width];
-//    NSLog(@"%ld-->%f",indexPath.row,h);
-    return h;
+//    id model = self.dataArray[indexPath.row];
+//    CGFloat h = [self.tableView cellHeightForIndexPath:indexPath model:model keyPath:@"model" cellClass:[DemoVC9Cell class]  contentViewWidth:[UIScreen mainScreen].bounds.size.width];
+////    NSLog(@"%ld-->%f",indexPath.row,h);
+//    return h;
+//    // 获取cell高度
+//    //return [self.tableView cellHeightForIndexPath:indexPath model:model keyPath:@"model" cellClass:[DemoVC9Cell class]  contentViewWidth:[UIScreen mainScreen].bounds.size.width];
+    return [self cellHeightForIndexPath:indexPath cellContentViewWidth:[UIScreen mainScreen].bounds.size.width];
 }
 
 - (CGFloat)cellHeightForIndexPath:(NSIndexPath *)indexPath cellContentViewWidth:(CGFloat)width
@@ -644,10 +648,11 @@
         if ([[dic valueForKey:@"is_like"] boolValue]) {
             Demo9Model* model = self.dataArray[indexPath.row];
             NSMutableArray* array = [NSMutableArray arrayWithArray:model.likersArray];
-            [array insertObject:dic atIndex:0];
-            model.likersArray = array;
-            model.commentHeaderViewHeight = [self getCommentHeaderViewHeight:array];
-            self.dataArray[indexPath.row] = model;
+            if (![model.likersArray containsObject:dic]) {
+                [array insertObject:dic atIndex:0];
+                model.likersArray = array;
+                self.dataArray[indexPath.row] = model;
+            }
         }else{
             Demo9Model* model = self.dataArray[indexPath.row];
             NSMutableArray* array = [NSMutableArray arrayWithArray:model.likersArray];
@@ -660,7 +665,6 @@
             //设置为没有点赞
             model.isLike = NO;
             model.likersArray = array;
-            model.commentHeaderViewHeight = [self getCommentHeaderViewHeight:array];
             self.dataArray[indexPath.row] = model;
         }
         [self.tableView reloadData];
@@ -674,7 +678,6 @@
     NSIndexPath* inPath = [self.tableView indexPathForCell:weiboTableViewCell];
     Demo9Model* modelInstance = [self.dataArray objectAtIndex:inPath.row];
     modelInstance.commentArray = model.commentArray;
-    modelInstance.commentViewHeight = [self getCommentViewHeight:modelInstance.commentArray];
     
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:inPath] withRowAnimation:UITableViewRowAnimationFade];
     
@@ -856,14 +859,10 @@
                 //评论列表
                 array = [dic valueForKey:@"comment"];
                 model.commentArray = array;
-                model.commentViewHeight = [self getCommentViewHeight:array];
                 
                 //点赞列表
                 array = [dic valueForKey:@"like"];
                 model.likersArray = array;
-                model.commentHeaderViewHeight=[self getCommentHeaderViewHeight:array];
-                
-                
                 [modelArray addObject:model];
             }
             
@@ -1102,16 +1101,16 @@
 //                 *  模拟点赞
 //                 
 //                 */
+////                
+//                                        for (int m=0; m<10; m++) {
 //                
-                                        for (int m=0; m<10; m++) {
-                
-                                            Likers* l = [[Likers alloc]init];
-                
-                                            l.name = [NSString stringWithFormat:@"陈生珠%d",m];
-                
-                                            [likersSet addObject:l];
-                
-                                        }
+//                                            Likers* l = [[Likers alloc]init];
+//                
+//                                            l.name = [NSString stringWithFormat:@"陈生珠%d",m];
+//                
+//                                            [likersSet addObject:l];
+//                
+//                                        }
 //
 //                /**
 //                 
@@ -1130,94 +1129,6 @@
         [cycle save];
         
     }
-}
-
--(CGFloat)getCommentViewHeight:(NSArray*)array
-{
-    if (array && array.count>0) {
-        float height=0;
-        NSDictionary* dicTemp;
-        for(int i = 0;i<array.count;i++){
-            dicTemp = array[i];
-            UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 0)];
-            label.numberOfLines=0;
-            label.lineBreakMode = NSLineBreakByClipping;
-            
-            //开始组装
-            NSString* name = [dicTemp valueForKey:@"name"];
-            NSString* atName = [dicTemp valueForKey:@"atname"];
-            NSString* suffix = @":";
-            NSString* content = [dicTemp valueForKey:@"content"];
-            NSString* str = @"";
-            if (name) {
-                str =[str stringByAppendingString:name];
-            }
-            
-            if ([TDUtil isValidString:atName] ) {
-                str = [str stringByAppendingFormat:@"回复%@%@",atName,suffix];
-            }else{
-                str = [str stringByAppendingFormat:@"%@",suffix];
-            }
-            
-            str = [str stringByAppendingFormat:@" %@",content];
-            
-            NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-            
-            //注意，每一行的行间距分两部分，topSpacing和bottomSpacing。
-            
-            [paragraphStyle setLineSpacing:5];//调整行间距
-            //    [paragraphStyle setAlignment:NSTextAlignmentLeft];
-            [paragraphStyle setFirstLineHeadIndent:0];
-            [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
-            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:str];
-            [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [str length])];
-            
-            [attributedString addAttribute:NSForegroundColorAttributeName value:ColorCompanyTheme range:NSMakeRange(0, [name length])];
-            
-            if ([TDUtil isValidString:atName]) {
-                [attributedString addAttribute:NSForegroundColorAttributeName value:ColorCompanyTheme range:NSMakeRange([name length]+2, [atName length])];
-            }
-            
-            label.attributedText = attributedString;//ios 6
-            [label sizeToFit];
-            
-            if (HEIGHT(label)<30 && i==0) {
-                height+=20;
-            }else{
-                height+=HEIGHT(label)-5;
-            }
-            
-        }
-        return height;
-    }
-    return 0;
-}
-
--(CGFloat)getCommentHeaderViewHeight:(NSArray*)array
-{
-    if (array && array.count>0) {
-        NSString* str=@"    ";
-        NSDictionary* dicTemp;
-        for (int i = 0; i<array.count; i++) {
-            dicTemp = array[i];
-            if (i!=array.count-1) {
-                str = [str stringByAppendingFormat:@"%@,",[dicTemp valueForKey:@"name"]];
-            }else{
-                str = [str stringByAppendingFormat:@"%@",[dicTemp valueForKey:@"name"]];
-            }
-        }
-        
-        
-        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), 0)];
-        label.numberOfLines=0;
-        label.lineBreakMode = NSLineBreakByWordWrapping;
-        [TDUtil setLabelMutableText:label content:str lineSpacing:0 headIndent:0];
-        
-        float height = HEIGHT(label);
-        
-        return height;
-    }
-    return 0;
 }
 
 
@@ -1271,7 +1182,6 @@
             [array insertObject:dicTemp atIndex:0];
             
             model.commentArray = array;
-            model.commentViewHeight = [self getCommentViewHeight:array];
             self.dataArray[indexPath.row] = model;
             [self.tableView reloadData];
         }
@@ -1317,12 +1227,10 @@
             //评论列表
             array = [dataDic valueForKey:@"comment"];
             model.commentArray = array;
-            model.commentViewHeight = [self getCommentViewHeight:array];
             
             //点赞列表
             array = [dataDic valueForKey:@"like"];
             model.likersArray = array;
-            model.commentHeaderViewHeight=[self getCommentHeaderViewHeight:array];
             
             [self.dataArray replaceObjectAtIndex:0 withObject:model];
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];

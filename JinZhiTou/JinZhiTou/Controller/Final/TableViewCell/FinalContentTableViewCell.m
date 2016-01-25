@@ -26,24 +26,46 @@
         [view addSubview:self.imgView];
         [self addSubview:view];
         //名称
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+10, Y(self.imgView)+10, 150, 21)];
-        self.titleLabel.font = SYSTEMFONT(16);
-        self.titleLabel.textColor = FONT_COLOR_BLACK;
+        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, Y(self.imgView), 150, 21)];
+        self.titleLabel.font = SYSTEMFONT(18);
+        self.titleLabel.textColor = AppColorTheme;
         [view addSubview:self.titleLabel];
+        UIImageView * lineView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel), WIDTH(self.titleLabel), 1)];
+        lineView.backgroundColor = BackColor;
+        [view addSubview:lineView];
         
-        UILabel* label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel)+5, 50, 25)];
+        UIImageView* iconImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(lineView)+5, 15, 15)];
+        iconImgView.contentMode = UIViewContentModeScaleAspectFill;
+        iconImgView.image = IMAGENAMED(@"name");
+        [view addSubview:iconImgView];
+        
+        UILabel* label  = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(iconImgView)+2, POS_Y(lineView)+2.5, WIDTH(self.titleLabel)-15, 20)];
         label.tag =1001;
-        label.font = SYSTEMFONT(14);
+        label.font = SYSTEMFONT(12);
         label.textColor  = FONT_COLOR_GRAY;
-        [TDUtil setLabelMutableText:label content:@"行业领域:" lineSpacing:0 headIndent:0];
+        label.lineBreakMode = NSLineBreakByTruncatingTail;
         [view addSubview:label];
         
+        iconImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(label)+3, 15, 15)];
+        iconImgView.contentMode = UIViewContentModeScaleAspectFill;
+        iconImgView.image = IMAGENAMED(@"address");
+        [view addSubview:iconImgView];
         
-        label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(label)+10, 50, 25)];
+        label  = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(iconImgView)+2, POS_Y(label)+3, 50, 20)];
         label.tag =1002;
-        label.font = SYSTEMFONT(14);
+        label.font = SYSTEMFONT(12);
         label.textColor  = FONT_COLOR_GRAY;
-        [TDUtil setLabelMutableText:label content:@"路演时间:" lineSpacing:0 headIndent:0];
+        [view addSubview:label];
+        
+        iconImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(label), 15, 15)];
+        iconImgView.contentMode = UIViewContentModeScaleAspectFill;
+        iconImgView.image = IMAGENAMED(@"time1");
+        [view addSubview:iconImgView];
+        
+        label  = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(iconImgView)+2, POS_Y(label), 50, 20)];
+        label.tag =1003;
+        label.font = SYSTEMFONT(12);
+        label.textColor  = FONT_COLOR_GRAY;
         [view addSubview:label];
     
 
@@ -78,16 +100,24 @@
    
 }
 
+-(void)setAddress:(NSString *)address
+{
+    self->_address = address;
+    if (self.address) {
+        UILabel* label = (UILabel*)[view viewWithTag:1002];
+        label.font  = SYSTEMFONT(12);
+        [TDUtil setLabelMutableText:label content:self.address lineSpacing:0 headIndent:0];
+    }
+}
+
 -(void)setTypeDescription:(NSString *)typeDescription
 {
     self->_typeDescription=typeDescription;
     if (self.typeDescription) {
         UILabel* label = (UILabel*)[view viewWithTag:1001];
-        UILabel* valueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 50, HEIGHT(label))];
-        valueLabel.font  = SYSTEMFONT(14);
-        valueLabel.textColor = AppColorTheme;
-        [TDUtil setLabelMutableText:valueLabel content:self.typeDescription lineSpacing:0 headIndent:0];
-        [view addSubview:valueLabel];
+        label.font  = SYSTEMFONT(12);
+        label.text = self.typeDescription;
+//        [TDUtil setLabelMutableText:label content:self.typeDescription lineSpacing:0 headIndent:0];
     }
 }
 
@@ -95,12 +125,11 @@
 {
     self->_roadShowTime  =roadShowTime;
     if (self.roadShowTime) {
-        UILabel* label = (UILabel*)[view viewWithTag:1002];
-        UILabel* valueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 50, HEIGHT(label))];
-        valueLabel.textColor = AppColorTheme;
-        valueLabel.font  = SYSTEMFONT(14);
-        [TDUtil setLabelMutableText:valueLabel content:self.roadShowTime lineSpacing:0 headIndent:0];
-        [view addSubview:valueLabel];
+        UILabel* label = (UILabel*)[view viewWithTag:1003];
+        label.font  = SYSTEMFONT(12);
+        
+        NSString * content = [NSString stringWithFormat:@"路演时间: %@",self.roadShowTime];
+        [TDUtil setLabelMutableText:label content:content lineSpacing:0 headIndent:0];
     }
 }
 @end

@@ -57,40 +57,66 @@
     //标题
     labelTitle = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(imgView)+5, Y(imgView)+5, WIDTH(contentView)-150, 25)];
     labelTitle.font = SYSTEMFONT(15);
-    labelTitle.textColor = FONT_COLOR_BLACK;
+    labelTitle.textColor = AppColorTheme;
     [contentView addSubview:labelTitle];
     
+    UIImageView * lineView = [[UIImageView alloc]initWithFrame:CGRectMake(X(labelTitle), POS_Y(labelTitle), WIDTH(labelTitle), 1)];
+    lineView.backgroundColor = BackColor;
+    [contentView addSubview:lineView];
+    
+    UIImageView* iconImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(labelTitle), POS_Y(labelTitle)+5, 15, 15)];
+    iconImgView.contentMode = UIViewContentModeScaleAspectFill;
+    iconImgView.image = IMAGENAMED(@"financed1");
+    [contentView addSubview:iconImgView];
+    
     //融资进度
-    UILabel* labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelTitle), POS_Y(labelTitle)+5, 50, 20)];
-    labelProess.font =SYSTEMFONT(14);
+    UILabel* labelProess = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(iconImgView)+5, POS_Y(labelTitle)+5, 50, 20)];
+    labelProess.font =SYSTEMFONT(12);
     labelProess.textColor = FONT_COLOR_GRAY;
     [contentView addSubview:labelProess];
     
-    [TDUtil setLabelMutableText:labelProess content:@"已筹:" lineSpacing:0 headIndent:0];
+    [TDUtil setLabelMutableText:labelProess content:@"已筹金额:" lineSpacing:0 headIndent:0];
     
     labelContent = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(labelProess), Y(labelProess), 50, HEIGHT(labelProess))];
-    labelContent.font =SYSTEMFONT(14);
-    labelContent.textColor = ColorTheme2;
+    labelContent.font =SYSTEMFONT(12);
+    labelContent.textColor = FONT_COLOR_GRAY;
     [contentView addSubview:labelContent];
 
-    
+    iconImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(labelTitle), POS_Y(labelProess)+5, 15, 15)];
+    iconImgView.contentMode = UIViewContentModeScaleAspectFill;
+    iconImgView.image = IMAGENAMED(@"time1");
+    [contentView addSubview:iconImgView];
     
     labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelProess), POS_Y(labelProess)+5, 70, 20)];
-    labelProess.text = @"众筹时间:";
-    labelProess.font =SYSTEMFONT(14);
+    labelProess.font =SYSTEMFONT(12);
     labelProess.textColor = FONT_COLOR_GRAY;
+    [TDUtil setLabelMutableText:labelProess content:@"众筹时间:" lineSpacing:0 headIndent:0];
     [contentView addSubview:labelProess];
 
-   
-    
     labelDateTime = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(labelProess), Y(labelProess), 150, HEIGHT(labelProess))];
-    labelDateTime.font =SYSTEMFONT(14);
-    labelDateTime.textColor = ColorTheme2;
+    labelDateTime.font =SYSTEMFONT(12);
+    labelDateTime.textColor = FONT_COLOR_GRAY;
     [contentView addSubview:labelDateTime];
     
-    [contentView setFrame:CGRectMake(10, 5, WIDTH(self.contentView)-20, POS_Y(labelDateTime)+15)];
-    [imgView setFrame:CGRectMake(5, 5, 130, HEIGHT(contentView)-10)];
+    iconImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(labelTitle), POS_Y(labelProess)+5, 15, 15)];
+    iconImgView.contentMode = UIViewContentModeScaleAspectFill;
+    iconImgView.image = IMAGENAMED(@"industory");
+    [contentView addSubview:iconImgView];
     
+    labelProess = [[UILabel alloc]initWithFrame:CGRectMake(X(labelProess), POS_Y(labelProess)+5, 70, 20)];
+    labelProess.font =SYSTEMFONT(12);
+    labelProess.textColor = FONT_COLOR_GRAY;
+    [TDUtil setLabelMutableText:labelProess content:@"所属行业:" lineSpacing:0 headIndent:0];
+    [contentView addSubview:labelProess];
+    
+    labelIndustory = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(labelProess), Y(labelProess), 150, HEIGHT(labelProess))];
+    labelIndustory.font =SYSTEMFONT(12);
+    labelIndustory.textColor = FONT_COLOR_GRAY;
+    [contentView addSubview:labelIndustory];
+    
+    
+    [contentView setFrame:CGRectMake(10, 5, WIDTH(self.contentView)-20, POS_Y(labelIndustory)+15)];
+    [imgView setFrame:CGRectMake(5, 5, 130, HEIGHT(contentView)-10)];
 }
 
 -(void)setHasFinance:(NSString *)hasFinance
@@ -123,6 +149,14 @@
     if (dateTime && ![dateTime isEqualToString:@""]) {
         self->_dateTime  =dateTime;
         labelDateTime.text = self.dateTime;
+    }
+}
+
+-(void)setIndustory:(NSString *)industory
+{
+    self->_industory = industory;
+    if (industory) {
+        labelIndustory.text = self.industory;
     }
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

@@ -25,22 +25,22 @@
         [view addSubview:self.imgView];
         [self addSubview:view];
         //名称
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, Y(self.imgView)+20, 130, 21)];
-        self.titleLabel.font = SYSTEMFONT(16);
-        self.titleLabel.textColor = FONT_COLOR_RED;
+        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, Y(self.imgView)+15, 130, 21)];
+        self.titleLabel.font = SYSTEMFONT(12);
+        self.titleLabel.textColor = FONT_COLOR_BLACK;
         [view addSubview:self.titleLabel];
         
         //描述
         self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, POS_Y(self.titleLabel), WIDTH(self)/2-10, 21)];
-        self.contentLabel.font = SYSTEMFONT(14);
+        self.contentLabel.font = SYSTEMFONT(12);
         self.contentLabel.textColor = FONT_COLOR_BLACK;
         [view addSubview:self.contentLabel];
         
         //描述
         self.typeLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+15, POS_Y(self.contentLabel), WIDTH(self.contentLabel)+10, 21)];
         self.typeLabel.numberOfLines = 3;
-        self.typeLabel.font = SYSTEMFONT(13);
-        self.typeLabel.textColor = FONT_COLOR_GRAY;
+        self.typeLabel.font = SYSTEMFONT(12);
+        self.typeLabel.textColor = FONT_COLOR_BLACK;
         self.typeLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [view addSubview:self.typeLabel];
         //
@@ -49,6 +49,15 @@
         [self.imgView setFrame:CGRectMake(5, 5, 130,HEIGHT(view)-10)];
         
         self.backgroundColor = BackColor;
+        
+        UIView * view1 = [[UIView alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, 5, WIDTH(view) - 145, HEIGHT(view)-10)];
+        view1.backgroundColor = ClearColor;
+        view1.layer.cornerRadius = 2;
+        view1.layer.borderColor = BackColor.CGColor;
+        view1.layer.borderWidth = 1;
+        
+        [view addSubview:view1];
+        
     }
     return self;
 }
@@ -61,7 +70,7 @@
 {
     self->_title=title;
     if (self.title) {
-        self.titleLabel.text=self.title;
+        self.titleLabel.text=[NSString stringWithFormat:@"NAME:%@",self.title];
     }
     
 }
@@ -70,7 +79,7 @@
 {
     self->_content=content;
     if (self.content) {
-        self.contentLabel.text=self.content;
+        self.contentLabel.text=[NSString stringWithFormat:@"DUTIES:%@",self.content];
     }
 }
 
@@ -78,7 +87,7 @@
 {
     self->_typeDescription=typeDescription;
     if (self.typeDescription) {
-        self.typeLabel.text=self.typeDescription;
+        self.typeLabel.text=[NSString stringWithFormat:@"COMPANY:%@",self.typeDescription];
     }
 }
 

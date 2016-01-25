@@ -34,6 +34,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
+        _modelTableview = [UITableView new];
         _cacheDictionary = [NSMutableDictionary new];
     }
     return self;
@@ -49,11 +50,11 @@
     return self;
 }
 
-- (instancetype)initWithCellClasses:(NSArray<Class> *)cellClassArray
+- (instancetype)initWithCellClasses:(NSArray *)cellClassArray
 {
     if (self = [super init]) {
         _modelTableview = [UITableView new];
-        [cellClassArray enumerateObjectsUsingBlock:^(Class  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [cellClassArray enumerateObjectsUsingBlock:^(Class obj, NSUInteger idx, BOOL *stop) {
             [self registerCellWithCellClass:obj];
         }];
         _cacheDictionary = [NSMutableDictionary new];
@@ -91,17 +92,49 @@
     [_cacheDictionary removeAllObjects];
 }
 
-- (CGFloat)cellHeightForIndexPath:(NSIndexPath *)indexPath model:(id)model keyPath:(NSString *)keyPath
+- (void)clearHeightCacheOfIndexPaths:(NSArray *)indexPaths
+{
+    [indexPaths enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger idx, BOOL *stop) {
+        NSString *cacheKey = [NSString stringWithFormat:@"%ld%ld", (long)indexPath.section, (long)indexPath.row];
+        [_cacheDictionary removeObjectForKey:cacheKey];
+    }];
+}
+
+- (NSNumber *)heightCacheForIndexPath:(NSIndexPath *)indexPath
 {
     NSString *cacheKey = [NSString stringWithFormat:@"%ld%ld", (long)indexPath.section, (long)indexPath.row];
-    NSNumber *cacheHeight = [_cacheDictionary objectForKey:cacheKey];
+    return (NSNumber *)[_cacheDictionary objectForKey:cacheKey];
+}
+
+- (CGFloat)cellHeightForIndexPath:(NSIndexPath *)indexPath model:(id)model keyPath:(NSString *)keyPath
+{
+    
+    NSNumber *cacheHeight = [self heightCacheForIndexPath:indexPath];
     if (cacheHeight) {
         return [cacheHeight floatValue];
     } else {
+        if (!self.modelCell) {
+            return 0;
+        }
+        
         if (model && keyPath) {
             [self.modelCell setValue:model forKey:keyPath];
         }
+        
+        
+#ifdef SDDebugWithAssert
+        /*
+         如果程序卡在了这里说明你的cell还没有调用“setupAutoHeightWithBottomView:(UIView *)bottomView bottomMargin:(CGFloat)bottomMargin”方法或者你传递的bottomView为nil，请检查并修改。例：
+         
+         //注意：bottomView不能为nil
+         [cell setupAutoHeightWithBottomView:bottomView bottomMargin:bottomMargin];
+         */
+        NSAssert(self.modelCell.sd_bottomViewsArray.count, @">>>>>> 你的cell还没有调用“setupAutoHeightWithBottomView:(UIView *)bottomView bottomMargin:(CGFloat)bottomMargin”方法或者你传递的bottomView为nil，请检查并修改");
+        
+#endif
+    
         [self.modelCell.contentView layoutSubviews];
+        NSString *cacheKey = [NSString stringWithFormat:@"%ld%ld", (long)indexPath.section, (long)indexPath.row];
         [_cacheDictionary setObject:@(self.modelCell.autoHeight) forKey:cacheKey];
         return self.modelCell.autoHeight;
     }
@@ -125,9 +158,9 @@
 
 - (void)setContentViewWidth:(CGFloat)contentViewWidth
 {
-    if (_contentViewWidth != contentViewWidth) {
-        [self clearHeightCache];
-    }
+    if (_contentViewWidth == contentViewWidth) return;
+    
+    [self clearHeightCache];
     _contentViewWidth = contentViewWidth;
     
     self.modelCell.contentView.width = self.contentViewWidth;
@@ -141,9 +174,16 @@
 + (void)load {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        Method reloadData = class_getInstanceMethod(self, @selector(reloadData));
-        Method sd_reloadData = class_getInstanceMethod(self, @selector(sd_reloadData));
-        method_exchangeImplementations(reloadData, sd_reloadData);
+        
+        NSArray *selStringsArray = @[@"reloadData", @"reloadRowsAtIndexPaths:withRowAnimation:"];
+        
+        [selStringsArray enumerateObjectsUsingBlock:^(NSString *selString, NSUInteger idx, BOOL *stop) {
+            NSString *mySelString = [@"sd_" stringByAppendingString:selString];
+        
+            Method originalMethod = class_getInstanceMethod(self, NSSelectorFromString(selString));
+            Method myMethod = class_getInstanceMethod(self, NSSelectorFromString(mySelString));
+            method_exchangeImplementations(originalMethod, myMethod);
+        }];
     });
 }
 
@@ -152,6 +192,13 @@
     [self.cellAutoHeightManager clearHeightCache];
     [self sd_reloadData];
 }
+
+- (void)sd_reloadRowsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation
+{
+    [self.cellAutoHeightManager clearHeightCacheOfIndexPaths:indexPaths];
+    [self sd_reloadRowsAtIndexPaths:indexPaths withRowAnimation:animation];
+}
+
 /*
  * 下一步即将实现的功能
  
@@ -165,11 +212,6 @@
  [self sd_deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
  }
  
- - (void)sd_reloadRowsAtIndexPaths:(NSArray<NSIndexPath *> *)indexPaths withRowAnimation:(UITableViewRowAnimation)animation
- {
- [self sd_reloadRowsAtIndexPaths:indexPaths withRowAnimation:animation];
- }
- 
  - (void)sd_moveRowAtIndexPath:(NSIndexPath *)indexPath toIndexPath:(NSIndexPath *)newIndexPath
  {
  [self sd_moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
@@ -177,7 +219,7 @@
  
  */
 
-- (void)startAutoCellHeightWithCellClass:(Class)cellClass contentViewWidth:(CGFloat)contentViewWidth
+- (void)startAutoCellHeightWithCellClass:(Class)cellClass contentViewWidth:(CGFloat)contentViewWidth NS_DEPRECATED(10_0, 10_4, 6_0, 6_0)
 {
     if (!self.cellAutoHeightManager) {
         self.cellAutoHeightManager = [SDCellAutoHeightManager managerWithCellClass:cellClass];
@@ -185,7 +227,7 @@
     self.cellAutoHeightManager.contentViewWidth = contentViewWidth;
 }
 
-- (void)startAutoCellHeightWithCellClasses:(NSArray<Class> *)cellClassArray contentViewWidth:(CGFloat)contentViewWidth
+- (void)startAutoCellHeightWithCellClasses:(NSArray *)cellClassArray contentViewWidth:(CGFloat)contentViewWidth NS_DEPRECATED(10_0, 10_4, 6_0, 6_0)
 {
     if (!self.cellAutoHeightManager) {
         self.cellAutoHeightManager = [[SDCellAutoHeightManager alloc] initWithCellClasses:cellClassArray];
@@ -193,13 +235,24 @@
     self.cellAutoHeightManager.contentViewWidth = contentViewWidth;
 }
 
-- (CGFloat)cellHeightForIndexPath:(NSIndexPath *)indexPath model:(id)model keyPath:(NSString *)keyPath
+- (CGFloat)cellHeightForIndexPath:(NSIndexPath *)indexPath model:(id)model keyPath:(NSString *)keyPath NS_DEPRECATED(10_0, 10_4, 6_0, 6_0)
 {
     return [self.cellAutoHeightManager cellHeightForIndexPath:indexPath model:model keyPath:keyPath];
 }
 
-- (CGFloat)cellHeightForIndexPath:(NSIndexPath *)indexPath model:(id)model keyPath:(NSString *)keyPath cellClass:(Class)cellClass
+- (CGFloat)cellHeightForIndexPath:(NSIndexPath *)indexPath model:(id)model keyPath:(NSString *)keyPath cellClass:(Class)cellClass NS_DEPRECATED(10_0, 10_4, 6_0, 6_0)
 {
+    return [self.cellAutoHeightManager cellHeightForIndexPath:indexPath model:model keyPath:keyPath cellClass:cellClass];
+}
+
+- (CGFloat)cellHeightForIndexPath:(NSIndexPath *)indexPath model:(id)model keyPath:(NSString *)keyPath cellClass:(Class)cellClass contentViewWidth:(CGFloat)contentViewWidth
+{
+    if (!self.cellAutoHeightManager) {
+        self.cellAutoHeightManager = [[SDCellAutoHeightManager alloc] init];
+    }
+    
+    self.cellAutoHeightManager.contentViewWidth = contentViewWidth;
+    
     return [self.cellAutoHeightManager cellHeightForIndexPath:indexPath model:model keyPath:keyPath cellClass:cellClass];
 }
 
@@ -220,20 +273,7 @@
 
 - (CGFloat)cellHeightForIndexPath:(NSIndexPath *)indexPath cellContentViewWidth:(CGFloat)width
 {
-    
-    if (!self.tableView.cellAutoHeightManager) {
-        self.tableView.cellAutoHeightManager = [[SDCellAutoHeightManager alloc] init];
-    }
-    if (self.tableView.cellAutoHeightManager.contentViewWidth != width) {
-        self.tableView.cellAutoHeightManager.contentViewWidth = width;
-        [self.tableView.cellAutoHeightManager clearHeightCache];
-    }
-    UITableViewCell *cell = [self.tableView.dataSource tableView:self.tableView cellForRowAtIndexPath:indexPath];
-    self.tableView.cellAutoHeightManager.modelCell = cell;
-    if (cell.contentView.width != width) {
-        cell.contentView.width = width;
-    }
-    return [[self.tableView cellAutoHeightManager] cellHeightForIndexPath:indexPath model:nil keyPath:nil];
+    return [self cellHeightForIndexPath:indexPath cellContentViewWidth:width tableView:self.tableView];
 }
 
 @end
@@ -248,6 +288,9 @@
     if (tableView.cellAutoHeightManager.contentViewWidth != width) {
         tableView.cellAutoHeightManager.contentViewWidth = width;
         [tableView.cellAutoHeightManager clearHeightCache];
+    }
+    if ([tableView.cellAutoHeightManager heightCacheForIndexPath:indexPath]) {
+        return [[tableView.cellAutoHeightManager heightCacheForIndexPath:indexPath] floatValue];
     }
     UITableViewCell *cell = [tableView.dataSource tableView:tableView cellForRowAtIndexPath:indexPath];
     tableView.cellAutoHeightManager.modelCell = cell;

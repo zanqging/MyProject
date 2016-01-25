@@ -43,11 +43,22 @@
         
         [self loadData];
         
-        //添加更改偷袭那个的监听
+        //添加更改
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(loadData) name:@"changePic" object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeUserPic:) name:@"changeUserPic" object:nil];
+        
     }
     return self;
 }
+
+-(void)changeUserPic:(NSDictionary*)dic
+{
+    UIImage* img = [[dic valueForKey:@"userInfo"] valueForKey:@"img"];
+    if (img) {
+        self.headerView.image = img;
+    }
+}
+
 
 -(void)loadData
 {

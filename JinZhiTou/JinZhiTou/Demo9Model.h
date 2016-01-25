@@ -40,7 +40,5 @@
 @property (nonatomic, strong) NSArray *picNamesArray;
 @property (nonatomic, strong) NSArray *likersArray;
 @property (nonatomic, strong) NSArray *commentArray;
-@property (nonatomic, assign) float commentViewHeight;
-@property (nonatomic, assign) float commentHeaderViewHeight;
 
 @end

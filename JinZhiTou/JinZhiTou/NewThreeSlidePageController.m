@@ -534,7 +534,7 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
     //设置标题
     [self.navView setTitle:@"金指投"];
     self.navView.titleLable.textColor=WriteColor;
-    [self.navView.leftButton setImage:IMAGENAMED(@"shuruphone") forState:UIControlStateNormal];
+    [self.navView.leftButton setImage:IMAGENAMED(@"home") forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     
     [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];

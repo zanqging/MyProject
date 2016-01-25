@@ -9,6 +9,7 @@
 #import "WMTableViewController.h"
 #import "TDUtil.h"
 #import "WMPageConst.h"
+#import "ProjectTableViewCell.h"
 #import "FinalingTableViewCell.h"
 #import "ThinkTankTableViewCell.h"
 #import "ThinkTankViewController.h"
@@ -243,9 +244,10 @@
             
             
             cellInstance.backgroundColor = ClearColor;
-            cellInstance.title = [dic valueForKey:@"company"];
+            cellInstance.title = [dic valueForKey:@"abbrevcompany"];
             cellInstance.roadShowTime = [dic valueForKey:@"date" ];
-            cellInstance.typeDescription = [dic valueForKey:@"tag"];
+            cellInstance.typeDescription = [dic valueForKey:@"company"];
+            cellInstance.address = DICVFK(dic, @"addr");
             cellInstance.selectionStyle=UITableViewCellSelectionStyleDefault;
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
@@ -268,24 +270,24 @@
             float progress =([[dic valueForKey:@"invest"] floatValue]*100)/[[dic valueForKey:@"planfinance"] floatValue];
             NSString* progressStr= [NSString stringWithFormat:@"%.2f",progress];
             progressStr= [progressStr stringByAppendingString:@"%"];
-            cellInstance.title = [dic valueForKey:@"company"];
+            cellInstance.title = [dic valueForKey:@"abbrevcompany"];
             cellInstance.progress = progressStr;
-            cellInstance.assist =  [NSString stringWithFormat:@"%@人",[dic valueForKey:@"investor"]];
+            cellInstance.assist =  [NSString stringWithFormat:@"%@",[dic valueForKey:@"tag"]];
             cellInstance.hasFinanceAccount =  [dic valueForKey:@"invest"];;
             cellInstance.selectionStyle=UITableViewCellSelectionStyleDefault;
             tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             return cellInstance;
         }else{
             static NSString *reuseIdetify = @"FinialThinkView";
-            ThinkTankTableViewCell *cellInstance = (ThinkTankTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
+            ProjectTableViewCell *cellInstance = (ProjectTableViewCell*)[tableView dequeueReusableCellWithIdentifier:reuseIdetify];
             if (!cellInstance) {
                 float height =[self tableView:tableView heightForRowAtIndexPath:indexPath];
-                cellInstance = [[ThinkTankTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
+                cellInstance = [[ProjectTableViewCell alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.tableView), height)];
             }
             
             NSDictionary* dic = self.dataArray[row];
             NSURL* url = [NSURL URLWithString:[dic valueForKey:@"img"]];
-            __block ThinkTankTableViewCell* cell = cellInstance;
+            __block ProjectTableViewCell* cell = cellInstance;
             [cellInstance.imgView sd_setImageWithURL:url placeholderImage:IMAGENAMED(@"loading") completed:^(UIImage* image,NSError* error,SDImageCacheType cacheType,NSURL* imageUrl){
                 if (image) {
                     cell.imgView.contentMode = UIViewContentModeScaleToFill;

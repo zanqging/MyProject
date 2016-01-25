@@ -523,7 +523,7 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
     self.navView.delegate  = self;
     self.navView.menuArray  =[NSMutableArray arrayWithArray:menuArray];
     self.navView.titleLable.textColor=WriteColor;
-    [self.navView.leftButton setImage:IMAGENAMED(@"shuruphone") forState:UIControlStateNormal];
+    [self.navView.leftButton setImage:IMAGENAMED(@"home") forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     [self.navView.rightTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(searchAction:)]];
     [self.navView.rightButton setImage:IMAGENAMED(@"sousuobai") forState:UIControlStateNormal];

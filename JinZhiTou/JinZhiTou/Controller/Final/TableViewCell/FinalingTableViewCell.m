@@ -25,30 +25,48 @@
         [view addSubview:self.imgView];
         [self addSubview:view];
         //名称
-        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+10, Y(self.imgView)+10, 150, 21)];
-        self.titleLabel.font = SYSTEMFONT(16);
-        self.titleLabel.textColor = FONT_COLOR_BLACK;
+        self.titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, Y(self.imgView)+5, 150, 21)];
+        self.titleLabel.font = SYSTEMFONT(18);
+        self.titleLabel.textColor = AppColorTheme;
         [view addSubview:self.titleLabel];
         
-        UILabel* label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel), 50, 25)];
+        UIImageView * lineImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel), WIDTH(self.titleLabel), 1)];
+        lineImgView.backgroundColor = BackColor;
+        [view addSubview:lineImgView];
+        
+        UIImageView* iconImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.titleLabel)+5, 15, 15)];
+        iconImgView.contentMode = UIViewContentModeScaleAspectFill;
+        iconImgView.image = IMAGENAMED(@"progress");
+        [view addSubview:iconImgView];
+        
+        UILabel* label  = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(iconImgView)+2, POS_Y(self.titleLabel)+5, 50, 25)];
         label.tag =1001;
-        label.font = SYSTEMFONT(14);
+        label.font = SYSTEMFONT(12);
         label.textColor  = FONT_COLOR_GRAY;
         [TDUtil setLabelMutableText:label content:@"进度:" lineSpacing:0 headIndent:0];
         [view addSubview:label];
         
         
-        label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(label)+5, 50, 25)];
+        iconImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(iconImgView), POS_Y(label)+5, 15, 15)];
+        iconImgView.contentMode = UIViewContentModeScaleAspectFill;
+        iconImgView.image = IMAGENAMED(@"industory");
+        [view addSubview:iconImgView];
+        
+        label  = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(iconImgView)+2, POS_Y(label)+5, 50, 25)];
         label.tag =1002;
-        label.font = SYSTEMFONT(14);
+        label.font = SYSTEMFONT(12);
         label.textColor  = FONT_COLOR_GRAY;
-        [TDUtil setLabelMutableText:label content:@"支持:" lineSpacing:0 headIndent:0];
+        [TDUtil setLabelMutableText:label content:@"行业:" lineSpacing:0 headIndent:0];
         [view addSubview:label];
         
+        iconImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(iconImgView), POS_Y(label)+5, 15, 15)];
+        iconImgView.contentMode = UIViewContentModeScaleAspectFill;
+        iconImgView.image = IMAGENAMED(@"financed");
+        [view addSubview:iconImgView];
         
-        label  = [[UILabel alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(label)+5, 50, 25)];
+        label  = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(iconImgView)+2, POS_Y(label)+5, 50, 25)];
         label.tag =1003;
-        label.font = SYSTEMFONT(14);
+        label.font = SYSTEMFONT(12);
         label.textColor  = FONT_COLOR_GRAY;
         [TDUtil setLabelMutableText:label content:@"已筹:" lineSpacing:0 headIndent:0];
         [view addSubview:label];
@@ -81,8 +99,8 @@
     if (self.progress) {
         UILabel* label = (UILabel*)[view viewWithTag:1001];
         UILabel* valueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 50, HEIGHT(label))];
-        valueLabel.font  = SYSTEMFONT(14);
-        valueLabel.textColor = AppColorTheme;
+        valueLabel.font  = SYSTEMFONT(12);
+        valueLabel.textColor = FONT_COLOR_GRAY;
         [TDUtil setLabelMutableText:valueLabel content:self.progress lineSpacing:0 headIndent:0];
         [view addSubview:valueLabel];
     }
@@ -94,8 +112,8 @@
     if (self.assist) {
         UILabel* label = (UILabel*)[view viewWithTag:1002];
         UILabel* valueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 50, HEIGHT(label))];
-        valueLabel.textColor = AppColorTheme;
-        valueLabel.font  = SYSTEMFONT(14);
+        valueLabel.textColor = FONT_COLOR_GRAY;
+        valueLabel.font  = SYSTEMFONT(12);
         [TDUtil setLabelMutableText:valueLabel content:self.assist lineSpacing:0 headIndent:0];
         [view addSubview:valueLabel];
     }
@@ -107,8 +125,8 @@
     if (self.hasFinanceAccount) {
         UILabel* label = (UILabel*)[view viewWithTag:1003];
         UILabel* valueLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label), Y(label), 50, HEIGHT(label))];
-        valueLabel.textColor = AppColorTheme;
-        valueLabel.font  = SYSTEMFONT(14);
+        valueLabel.textColor = FONT_COLOR_GRAY;
+        valueLabel.font  = SYSTEMFONT(12);
         [TDUtil setLabelMutableText:valueLabel content:self.hasFinanceAccount lineSpacing:0 headIndent:0];
         [view addSubview:valueLabel];
     }

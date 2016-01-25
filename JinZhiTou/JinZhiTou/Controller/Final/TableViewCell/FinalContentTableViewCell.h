@@ -14,15 +14,12 @@
     UILabel* itemLabel;
     UILabel* itemValueLabel;
 }
-@property (retain,nonatomic) UIImageView *imgView;
-@property (retain, nonatomic)UILabel *titleLabel;
-
 @property(retain,nonatomic)NSString* title;
-//@property(retain,nonatomic)NSString* content;
+@property (retain, nonatomic)UILabel *titleLabel;
+@property (retain, nonatomic) NSString * address;
 @property(retain,nonatomic)NSString* roadShowTime;
+@property (retain,nonatomic) UIImageView *imgView;
 @property(retain,nonatomic)NSString* typeDescription;
-//@property(retain,nonatomic)NSDictionary* start;
-//@property(retain,nonatomic)NSDictionary* end;
 
 @end
 

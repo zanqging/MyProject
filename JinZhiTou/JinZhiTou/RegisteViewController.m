@@ -93,8 +93,8 @@
     self.codeButton.layer.borderWidth = 1;
     self.codeButton.layer.cornerRadius = 5;
     [self.codeButton.titleLabel setFont:SYSTEMFONT(13)];
-    [self.codeButton setBackgroundColor:ColorCompanyTheme];
-    self.codeButton.layer.borderColor = ColorCompanyTheme.CGColor;
+    [self.codeButton setBackgroundColor:AppColorTheme];
+    self.codeButton.layer.borderColor = AppColorTheme.CGColor;
     [self.codeButton setTitle:@"获取验证码" forState:UIControlStateNormal];
     [self.codeButton setTitleColor:WriteColor forState:UIControlStateNormal];
     [self.codeButton addTarget:self action:@selector(sendMessage:) forControlEvents:UIControlEventTouchUpInside];

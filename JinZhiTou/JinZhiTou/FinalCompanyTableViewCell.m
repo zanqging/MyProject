@@ -35,13 +35,23 @@
         lineView.backgroundColor = BackColor;
         [view addSubview:lineView];
         
-        self.subTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5,POS_Y(lineView) + 5,len,20)];
+        UIImageView * iconImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(lineView)+10, 10, 10)];
+        iconImgView.image = IMAGENAMED(@"companyname");
+        iconImgView.contentMode = UIViewContentModeScaleAspectFill;
+        [view addSubview:iconImgView];
+        
+        self.subTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(iconImgView)+2,POS_Y(lineView) + 5,len,20)];
         self.subTitleLabel.font = SYSTEMFONT(14);
         self.subTitleLabel.textColor = FONT_COLOR_BLACK;
         [view addSubview:self.subTitleLabel];
         
+        iconImgView = [[UIImageView alloc]initWithFrame:CGRectMake(X(self.titleLabel), POS_Y(self.subTitleLabel)+10, 10, 10)];
+        iconImgView.image = IMAGENAMED(@"location");
+        iconImgView.contentMode = UIViewContentModeScaleAspectFill;
+        [view addSubview:iconImgView];
+        
         //内容
-        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(self.imgView)+5, POS_Y(self.subTitleLabel) + 5, len,20)];
+        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(iconImgView)+2, POS_Y(self.subTitleLabel) + 5, len,20)];
         self.contentLabel.numberOfLines=4;
         self.contentLabel.font = SYSTEMFONT(14);
         self.contentLabel.textColor = FONT_COLOR_GRAY;

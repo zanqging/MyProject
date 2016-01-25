@@ -291,11 +291,12 @@
         ZFProgressView *progress1 = [[ZFProgressView alloc] initWithFrame:CGRectMake(WIDTH(self)/2+WIDTH(self)/16, POS_Y(introduceImgview)+5, 40, 40)];
         
         progress1.tag = 6001;
+        progress1.type = 1;
         [self addSubview:progress1];
+        
         [progress1 setProgressStrokeColor:[UIColor redColor]];
         [progress1 setBackgroundStrokeColor:[UIColor lightGrayColor]];
         [progress1 setDigitTintColor:[UIColor greenColor]];
-        [progress1 setStyle:ZFProgressViewStyleTimerSegment];
         [progress1 setFont:SYSTEMFONT(12)];
         [progress1 setProgressLineWidth:3];
         [progress1 setBackgourndLineWidth:3];

@@ -53,7 +53,7 @@
     self.navView.imageView.alpha=0;
     [self.navView setTitle:@"金指投"];
     self.navView.titleLable.textColor=WriteColor;
-    [self.navView.leftButton setImage:IMAGENAMED(@"shuruphone") forState:UIControlStateNormal];
+    [self.navView.leftButton setImage:IMAGENAMED(@"home") forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(userInfoAction:)]];
     //==============================TabBarItem 设置==============================//
 
@@ -346,7 +346,7 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
 
 -(CGFloat)tableView:(UITableView *)tableViewInstance heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 105;
+    return 115;
 }
 -(UITableViewCell*)tableView:(UITableView *)tableViewInstance cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -364,9 +364,10 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     [cellInstance setHasFinance:DICVFK(dic, @"planfinance")];
     [cellInstance setCompanyName:DICVFK(dic, @"company")];
     [cellInstance setDateTime:DICVFK(dic, @"date")];
+    [cellInstance setIndustory:DICVFK(dic, @"tag")];
     
     cellInstance.selectionStyle = UITableViewCellSelectionStyleDefault;
-    [self.tableView setContentSize:CGSizeMake(WIDTH(tableViewInstance), dataArray.count*105+HEIGHT(headerView)+5)];
+    [self.tableView setContentSize:CGSizeMake(WIDTH(tableViewInstance), dataArray.count*115+HEIGHT(headerView)+5)];
     return cellInstance;
 }
 

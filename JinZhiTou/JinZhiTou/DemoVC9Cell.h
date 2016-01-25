@@ -24,6 +24,7 @@
 #import <UIKit/UIKit.h>
 #import "GlobalDefine.h"
 #import "UConstants.h"
+#import "CycleCommentView.h"
 #import "UIImageView+WebCache.h"
 #import "UITableView+SDAutoTableViewCellHeight.h"
 @class Demo9Model;
@@ -39,7 +40,7 @@
 
 @end
 
-@interface DemoVC9Cell : UITableViewCell<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
+@interface DemoVC9Cell : UITableViewCell<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate,CycleCommentDelegate>
 
 @property (nonatomic, strong) Demo9Model *model;
 @property (nonatomic, retain) NSArray* dataArray;

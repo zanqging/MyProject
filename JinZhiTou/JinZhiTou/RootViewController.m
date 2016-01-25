@@ -42,6 +42,9 @@
     self.navView.imageView.alpha  = 0;
     self.navView.titleLable.textColor=WriteColor;
     [self.view addSubview:self.navView];
+    
+    //改变亮度
+//    [self sliderValueChanged:0];
 }
 
 - (void)didReceiveMemoryWarning {
