@@ -23,6 +23,7 @@
  */
 
 #import "SDWeiXinPhotoContainerView.h"
+#import "TDUtil.h"
 #import "UConstants.h"
 #import "GlobalDefine.h"
 #import "UIView+SDAutoLayout.h"
@@ -67,7 +68,7 @@
         if ([obj isKindOfClass:UIImage.class]) {
             [imageView setImage:(UIImage*)obj];
         }else{
-            [imageView sd_setImageWithURL:[NSURL URLWithString:obj] placeholderImage:IMAGENAMED(@"loading")];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:obj] placeholderImage:IMAGENAMED(@"loadingempty")];
         }
         imageView.frame = CGRectMake(columnIndex * (itemW + margin), rowIndex * (itemH + margin), itemW, itemH);
         [self addSubview:imageView];

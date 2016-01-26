@@ -715,6 +715,13 @@ static NSString *MMDrawerOpenSideKey = @"MMDrawerOpenSide";
 	[self setupGestureRecognizers];
 }
 
+
+-(void)pushController:(NSNotification *)notion
+{
+    NSDictionary * dic  = notion.userInfo;
+    UIViewController * controller = [dic valueForKey:@"viewController"];
+    [self.navigationController pushViewController:controller animated:YES];
+}
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.centerViewController beginAppearanceTransition:YES animated:animated];
@@ -738,6 +745,8 @@ static NSString *MMDrawerOpenSideKey = @"MMDrawerOpenSide";
     else if(self.openSide == MMDrawerSideRight) {
         [self.rightDrawerViewController endAppearanceTransition];
     }
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(pushController:) name:@"pushController" object:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
@@ -749,6 +758,8 @@ static NSString *MMDrawerOpenSideKey = @"MMDrawerOpenSide";
     else if (self.openSide == MMDrawerSideRight) {
         [self.rightDrawerViewController beginAppearanceTransition:NO animated:animated];
     }
+    
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"pushController" object:nil];
 }
 
 -(void)viewDidDisappear:(BOOL)animated{

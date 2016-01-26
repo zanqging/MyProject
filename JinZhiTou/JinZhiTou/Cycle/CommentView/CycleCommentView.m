@@ -208,7 +208,7 @@
         _labelPrise.text = str;
         
         if (![str isEqualToString:@"    "]) {
-            _iconImgView.image = IMAGENAMED(@"gossip_like_normal");
+            _iconImgView.image = IMAGENAMED(@"comment");
             _iconImgView.sd_layout
             .widthIs(10)
             .heightIs(10)

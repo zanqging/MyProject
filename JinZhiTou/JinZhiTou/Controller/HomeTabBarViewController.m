@@ -19,7 +19,6 @@
 #import "LoadingView.h"
 #import "LoadingUtil.h"
 #import "GlobalDefine.h"
-#import "RS_SliderView.h"
 #import "NSString+SBJSON.h"
 #import <MessageUI/MessageUI.h>
 #import "SlidePageController.h"
@@ -32,7 +31,7 @@
 #import "ReplyMessageViewController.h"
 #import "UserInfoAuthSlideController.h"
 #import "UserInfoSettingViewController.h"
-@interface HomeTabBarViewController ()<SphereMenuDelegate,MFMessageComposeViewControllerDelegate,ASIHTTPRequestDelegate,UIAlertViewDelegate,RSliderViewDelegate>
+@interface HomeTabBarViewController ()<SphereMenuDelegate,MFMessageComposeViewControllerDelegate,ASIHTTPRequestDelegate,UIAlertViewDelegate>
 {
     BOOL isShow;
     HttpUtils* httpUtils;
@@ -43,7 +42,6 @@
     
     UIViewController* vController;
 }
-@property (retain, nonatomic) RS_SliderView *horSlider;  //亮度调整
 @end
 
 @implementation HomeTabBarViewController
@@ -113,73 +111,7 @@
     
     //初始化数据
     [self loadData];
-    
-    //自动监测时间，设置夜间模式
-    if([TDUtil isArrivedTime:@" 20:00:00"] || ![TDUtil isArrivedTime:@" 06:00:00"]){
-        [self adjustBrightnessCheck];
-    }
 }
-
--(void)adjustBrightnessCheck
-{
-    CGRect rect = CGRectMake(20, HEIGHT(self.view)/2, self.view.frame.size.width - 40, 70);
-    self.horSlider = [[RS_SliderView alloc] initWithFrame:rect andOrientation:Horizontal];
-    self.horSlider.delegate = self;
-    [self.horSlider setColorsForBackground:WriteColor
-                           foreground:[UIColor colorWithRed:0.0 green:106.0/255.0 blue:95.0/255.0 alpha:1.0]
-                               handle:[UIColor colorWithRed:0.0 green:205.0/255.0 blue:184.0/255.0 alpha:1.0]
-                               border:[UIColor colorWithRed:0.0 green:205.0/255.0 blue:184.0/255.0 alpha:1.0]];
-    [self.horSlider setValue:1.0 withAnimation:YES completion:^(BOOL finished) {
-        
-    }];
-    self.horSlider.label.text = @"夜间模式打开中...";
-    self.horSlider.label.font = [UIFont fontWithName:@"Helvetica" size:25];
-    self.horSlider.label.textColor = [UIColor colorWithRed:0.0 green:205.0/255.0 blue:184.0/255.0 alpha:1.0];
-    [self.horSlider setFrame:CGRectMake(CGRectGetMidX(rect), CGRectGetMidY(rect), 0, 0)];
-    [self.view addSubview:self.horSlider];
-    
-    [UIView animateWithDuration:1 animations:^{
-        [self.horSlider setFrame:CGRectMake(20, HEIGHT(self.view)/2, self.view.frame.size.width - 40, 70)];
-        self.horSlider.alpha = 1;
-    } completion:^(BOOL finished) {
-        [NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(adjustBrightness:) userInfo:[NSDictionary dictionaryWithObject:self.horSlider forKey:@"slider"] repeats:NO];
-    }];
-    
-}
-
-- (void) adjustBrightness:(NSTimer *) timer
-{
-    __block HomeTabBarViewController * SelfInstance = self;
-    [self.horSlider setValue:0.3 withAnimation:YES completion:^(BOOL finished) {
-        [SelfInstance sliderValueChanged:SelfInstance.horSlider];
-        if (finished) {
-            SelfInstance.horSlider.label.text = @"夜间模式已打开";
-            
-            [UIView animateWithDuration:1.5 animations:^{
-                [SelfInstance.horSlider setFrame:CGRectMake(CGRectGetMidX(FRAME(SelfInstance.horSlider)), CGRectGetMidY(FRAME(SelfInstance.horSlider)), 0, 0)];
-                SelfInstance.horSlider.alpha = 0;
-            } completion:^(BOOL finished) {
-                if (finished) {
-                    [SelfInstance.horSlider removeFromSuperview];
-                }
-            }];
-        }
-    }];
-}
-
-
--(void)sliderValueChanged:(RS_SliderView *)sender {
-    NSLog(@"Value Changed: %f", sender.value);
-    
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"brightbess" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:STRING(@"%f", sender.value),@"value", nil]];
-}
-
--(void)sliderValueChangeEnded:(RS_SliderView *)sender {
-    NSLog(@"Touсh ended: %f", sender.value);
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"brightbess" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:STRING(@"%f", sender.value),@"value", nil]];
-}
-
-
 
 -(void)loadData
 {

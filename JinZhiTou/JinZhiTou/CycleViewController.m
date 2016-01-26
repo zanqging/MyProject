@@ -161,10 +161,21 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContent:) name:@"publish" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(publishContentNotification:) name:@"publishContent" object:nil];
+     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
     
     //加载数据
     [self loadOffLineData];
     [self updateNewMessage:nil];
+    
+}
+
+-(void)userInteractionEnabled:(NSDictionary*)dic
+
+{
+    
+    BOOL isUserInteractionEnabled = [[[dic valueForKey:@"userInfo"] valueForKey:@"userInteractionEnabled"] boolValue];
+    
+    self.view.userInteractionEnabled = isUserInteractionEnabled;
     
 }
 

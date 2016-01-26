@@ -21,6 +21,7 @@
 #import "RoadShowHomeHeaderView.h"
 #import "FinialAuthViewController.h"
 #import "UserInfoConfigController.h"
+#import "UserInfoConfigController.h"
 #import "RoadShowHomeTableViewCell.h"
 #import "RoadShowDetailViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
@@ -85,10 +86,7 @@
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
     
     NSUserDefaults* dataDefaults = [NSUserDefaults standardUserDefaults];
-    if (![[dataDefaults valueForKey:@"auth"] boolValue]) {
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showAuthView:) name:@"showAuth" object:nil];
-    }
-    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showAuthView:) name:@"showAuth" object:nil];
 
     if (![[dataDefaults valueForKey:@"info"] boolValue]) {
         [self announViewShow:nil];
@@ -319,7 +317,13 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     FinialAuthViewController* controller = [[FinialAuthViewController alloc]init];
     controller.type = index;
     controller.titleStr = @"首页";
-    [c.navigationController pushViewController:controller animated:YES];
+    if (![c isKindOfClass:UserInfoConfigController.class]) {
+        [c.navigationController pushViewController:controller animated:YES];
+    }else{
+    
+//        [self.navigationController pushViewController:controller animated:YES];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"pushController" object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:controller,@"viewController", nil]];
+    }
 }
 
 //==============================RoadShowDelegate==============================//

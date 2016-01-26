@@ -137,11 +137,7 @@
     if ([TDUtil isValidString:imageName]) {
         self->_imageName = imageName;
         
-        [imgView sd_setImageWithPreviousCachedImageWithURL:[NSURL URLWithString:self.imageName] andPlaceholderImage:IMAGENAMED(@"loading") options:SDWebImageProgressiveDownload progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-//            NSLog(@"开始下载:%ld",expectedSize/receivedSize);
-        } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-
-        }];
+        [imgView sd_setImageWithURL:[NSURL URLWithString:self.imageName] placeholderImage:IMAGENAMED(@"loading")];
     }
 }
 -(void)setDateTime:(NSString *)dateTime

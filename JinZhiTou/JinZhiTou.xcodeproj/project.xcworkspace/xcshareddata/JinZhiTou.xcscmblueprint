@@ -1,21 +1,22 @@
 {
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "FD29E35D1DA35FF732391D60F451527322FE4F10",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
     "1a0beb16-39a9-491a-8432-0dfbb1476d54++7897" : {
 
     }
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "1a0beb16-39a9-491a-8432-0dfbb1476d54++7897" : 0,
-    "FD29E35D1DA35FF732391D60F451527322FE4F10" : 0
+    "FD29E35D1DA35FF732391D60F451527322FE4F10" : 0,
+    "1a0beb16-39a9-491a-8432-0dfbb1476d54++7897" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "B005D000-0B53-4E8D-AC8D-25118606DE69",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "1a0beb16-39a9-491a-8432-0dfbb1476d54++7897" : "JinZhiTou\/JinZhiTou\/Camera\/UIImage-Extensions\/",
-    "FD29E35D1DA35FF732391D60F451527322FE4F10" : ""
+    "FD29E35D1DA35FF732391D60F451527322FE4F10" : "",
+    "1a0beb16-39a9-491a-8432-0dfbb1476d54++7897" : "MyProject\/JinZhiTou\/JinZhiTou\/Camera\/UIImage-Extensions\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "JinZhiTou",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
-  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "JinZhiTou.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "JinZhiTou\/JinZhiTou.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/svn.duapp.com\/appid9kgedf0yca",

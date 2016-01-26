@@ -606,7 +606,6 @@
 		454289C71C448FE000513DC0 /* movieEndFullscreen.png in Resources */ = {isa = PBXBuildFile; fileRef = 4511CC101BA2B6E300A9D00A /* movieEndFullscreen.png */; };
 		454289C81C448FE000513DC0 /* moviePlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 4511CC1A1BA2B6E300A9D00A /* moviePlay.png */; };
 		454289C91C448FE000513DC0 /* TencentOpenApi_IOS_Bundle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 45CA5C761C43A60D00727F98 /* TencentOpenApi_IOS_Bundle.bundle */; };
-		454289CA1C448FE000513DC0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45DEACF81B437879001EDA5D /* Images.xcassets */; };
 		454289CB1C448FE000513DC0 /* ImageSelectedOff@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4543EB651BD0ABB80041DCBD /* ImageSelectedOff@3x.png */; };
 		454289CC1C448FE000513DC0 /* NavBarIconSearchBar_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 451B52B61BA66E3500388E5C /* NavBarIconSearchBar_blue.png */; };
 		454289CD1C448FE000513DC0 /* city.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45D49D7A1B82336F00EC529F /* city.plist */; };
@@ -802,8 +801,6 @@
 		45888B8F1C511B2900A35476 /* NewsTag+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 45888B871C511B2900A35476 /* NewsTag+CoreDataProperties.m */; };
 		4589D8A81B96D44E004D7A37 /* PrivacyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4589D8A71B96D44E004D7A37 /* PrivacyViewController.m */; };
 		458A337D1B7AFA5D00381963 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 458A337C1B7AFA5D00381963 /* LoadingView.m */; };
-		458B39D71C532C1D007FE2B8 /* RS_SliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 458B39D61C532C1D007FE2B8 /* RS_SliderView.m */; };
-		458B39D81C532C1D007FE2B8 /* RS_SliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 458B39D61C532C1D007FE2B8 /* RS_SliderView.m */; };
 		458C9E1E1BD52BEC00F66916 /* UIReplyLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 458C9E1D1BD52BEC00F66916 /* UIReplyLabel.m */; };
 		4591F37C1A54D81C0079E1D0 /* DataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4591F37B1A54D81C0079E1D0 /* DataManager.m */; };
 		45954D011C4F277D00137D7D /* NewThreeSlidePageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45954D001C4F277D00137D7D /* NewThreeSlidePageController.m */; };
@@ -857,12 +854,15 @@
 		45D49D931B82336F00EC529F /* ZHTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 45D49D871B82336F00EC529F /* ZHTableViewController.m */; };
 		45D49D941B82336F00EC529F /* sex.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45D49D881B82336F00EC529F /* sex.plist */; };
 		45D49D951B82336F00EC529F /* jobType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45D49D891B82336F00EC529F /* jobType.plist */; };
+		45DD73A41C57575800CAA976 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45DD73A31C57575800CAA976 /* Images.xcassets */; };
+		45DD73A51C57575800CAA976 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45DD73A31C57575800CAA976 /* Images.xcassets */; };
+		45DD73AA1C575E5F00CAA976 /* loadingempty.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 45DD73A91C575E5F00CAA976 /* loadingempty.jpg */; };
+		45DD73AB1C575E5F00CAA976 /* loadingempty.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 45DD73A91C575E5F00CAA976 /* loadingempty.jpg */; };
 		45DD8EA41BF4393C00921673 /* CreditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DD8EA31BF4393C00921673 /* CreditTableViewCell.m */; };
 		45DE17371C55FB5C009080AC /* ProjectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DE17361C55FB5C009080AC /* ProjectTableViewCell.m */; };
 		45DE17381C55FB5C009080AC /* ProjectTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DE17361C55FB5C009080AC /* ProjectTableViewCell.m */; };
 		45DEACEE1B437879001EDA5D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DEACED1B437879001EDA5D /* main.m */; };
 		45DEACF11B437879001EDA5D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DEACF01B437879001EDA5D /* AppDelegate.m */; };
-		45DEACF91B437879001EDA5D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45DEACF81B437879001EDA5D /* Images.xcassets */; };
 		45DED8901BA021A000B4D393 /* IndustoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DED88F1BA021A000B4D393 /* IndustoryView.m */; };
 		45DED8931BA021D800B4D393 /* IndustoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 45DED8921BA021D800B4D393 /* IndustoryTableViewCell.m */; };
 		45E189AF1B78F53B0082225E /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45E189AE1B78F53B0082225E /* CoreVideo.framework */; };
@@ -1647,6 +1647,8 @@
 		45D49D871B82336F00EC529F /* ZHTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHTableViewController.m; sourceTree = "<group>"; };
 		45D49D881B82336F00EC529F /* sex.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = sex.plist; sourceTree = "<group>"; };
 		45D49D891B82336F00EC529F /* jobType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = jobType.plist; sourceTree = "<group>"; };
+		45DD73A31C57575800CAA976 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		45DD73A91C575E5F00CAA976 /* loadingempty.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = loadingempty.jpg; sourceTree = "<group>"; };
 		45DD8EA21BF4393C00921673 /* CreditTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreditTableViewCell.h; sourceTree = "<group>"; };
 		45DD8EA31BF4393C00921673 /* CreditTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreditTableViewCell.m; sourceTree = "<group>"; };
 		45DE17351C55FB5C009080AC /* ProjectTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectTableViewCell.h; sourceTree = "<group>"; };
@@ -1656,7 +1658,6 @@
 		45DEACED1B437879001EDA5D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		45DEACEF1B437879001EDA5D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		45DEACF01B437879001EDA5D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		45DEACF81B437879001EDA5D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		45DED88E1BA021A000B4D393 /* IndustoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IndustoryView.h; path = View/IndustoryView.h; sourceTree = "<group>"; };
 		45DED88F1BA021A000B4D393 /* IndustoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IndustoryView.m; path = View/IndustoryView.m; sourceTree = "<group>"; };
 		45DED8911BA021D800B4D393 /* IndustoryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IndustoryTableViewCell.h; path = View/IndustoryTableViewCell.h; sourceTree = "<group>"; };
@@ -2080,6 +2081,7 @@
 		451F488B1B53604900C91B4A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				45DD73A31C57575800CAA976 /* Images.xcassets */,
 				45041ACB1BFAD91B007A299A /* passed.png */,
 				4565C2F41C0D96C300BF80D0 /* failed.png */,
 				4565C2F11C0D964F00BF80D0 /* auth.png */,
@@ -2100,6 +2102,7 @@
 				4565C2E61C0D8A3B00BF80D0 /* wechat.png */,
 				45FD34391BB53DC60065739E /* code.png */,
 				45FAE7441C50704F00ED6516 /* goroadshow@3x.png */,
+				45DD73A91C575E5F00CAA976 /* loadingempty.jpg */,
 				45E8639C1C48E04A00051C3A /* video.png */,
 				45954D031C4F659700137D7D /* case.png */,
 				45954D041C4F659700137D7D /* comment.png */,
@@ -3150,7 +3153,6 @@
 				450876261B8F6414006EFC1A /* StartPageViewController.h */,
 				450876271B8F6414006EFC1A /* StartPageViewController.m */,
 				4543EB291BD0AAAC0041DCBD /* Assets */,
-				45DEACF81B437879001EDA5D /* Images.xcassets */,
 				45DEACEB1B437879001EDA5D /* Supporting Files */,
 				4500828D1B4A5ABD00AAF722 /* Main.storyboard */,
 			);
@@ -3740,6 +3742,7 @@
 				454289B71C448FE000513DC0 /* failed.png in Resources */,
 				454289B81C448FE000513DC0 /* ImageSelectedOff.png in Resources */,
 				454289B91C448FE000513DC0 /* NavBarIconSearchCircle_blue.png in Resources */,
+				45DD73AB1C575E5F00CAA976 /* loadingempty.jpg in Resources */,
 				454289BA1C448FE000513DC0 /* NavBarIconSearch_blue.png in Resources */,
 				454289BB1C448FE000513DC0 /* VideoOverlay.png in Resources */,
 				454289BC1C448FE000513DC0 /* VideoOverlay@2x.png in Resources */,
@@ -3753,6 +3756,7 @@
 				45FAE7431C5069E500ED6516 /* rongzi.png in Resources */,
 				454289C11C448FE000513DC0 /* NavBarIconSearch_white@2x.png in Resources */,
 				454289C21C448FE000513DC0 /* PlayButtonOverlayLarge@2x.png in Resources */,
+				45DD73A51C57575800CAA976 /* Images.xcassets in Resources */,
 				454289C31C448FE000513DC0 /* moviePause.png in Resources */,
 				45954D0A1C4F659700137D7D /* comment.png in Resources */,
 				454289C41C448FE000513DC0 /* NavBarIconSearch_blue@2x.png in Resources */,
@@ -3761,7 +3765,6 @@
 				454289C71C448FE000513DC0 /* movieEndFullscreen.png in Resources */,
 				454289C81C448FE000513DC0 /* moviePlay.png in Resources */,
 				454289C91C448FE000513DC0 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
-				454289CA1C448FE000513DC0 /* Images.xcassets in Resources */,
 				454289CB1C448FE000513DC0 /* ImageSelectedOff@3x.png in Resources */,
 				454289CC1C448FE000513DC0 /* NavBarIconSearchBar_blue.png in Resources */,
 				454289CD1C448FE000513DC0 /* city.plist in Resources */,
@@ -3844,6 +3847,7 @@
 				4565C2F51C0D96C300BF80D0 /* failed.png in Resources */,
 				4543EB841BD0ABB80041DCBD /* ImageSelectedOff.png in Resources */,
 				451B52C41BA66F5500388E5C /* NavBarIconSearchCircle_blue.png in Resources */,
+				45DD73AA1C575E5F00CAA976 /* loadingempty.jpg in Resources */,
 				451B52BA1BA66E3500388E5C /* NavBarIconSearch_blue.png in Resources */,
 				4543EB9F1BD0ABB80041DCBD /* VideoOverlay.png in Resources */,
 				4543EBA01BD0ABB80041DCBD /* VideoOverlay@2x.png in Resources */,
@@ -3857,6 +3861,7 @@
 				45FAE7421C5069E500ED6516 /* rongzi.png in Resources */,
 				451B52BD1BA66E3500388E5C /* NavBarIconSearch_white@2x.png in Resources */,
 				4543EB911BD0ABB80041DCBD /* PlayButtonOverlayLarge@2x.png in Resources */,
+				45DD73A41C57575800CAA976 /* Images.xcassets in Resources */,
 				4511CC2C1BA2B6E300A9D00A /* moviePause.png in Resources */,
 				45954D091C4F659700137D7D /* comment.png in Resources */,
 				451B52BB1BA66E3500388E5C /* NavBarIconSearch_blue@2x.png in Resources */,
@@ -3865,7 +3870,6 @@
 				4511CC241BA2B6E300A9D00A /* movieEndFullscreen.png in Resources */,
 				4511CC2E1BA2B6E300A9D00A /* moviePlay.png in Resources */,
 				45CA5C781C43A60D00727F98 /* TencentOpenApi_IOS_Bundle.bundle in Resources */,
-				45DEACF91B437879001EDA5D /* Images.xcassets in Resources */,
 				4543EB861BD0ABB80041DCBD /* ImageSelectedOff@3x.png in Resources */,
 				451B52BE1BA66E3500388E5C /* NavBarIconSearchBar_blue.png in Resources */,
 				45D49D8B1B82336F00EC529F /* city.plist in Resources */,
@@ -4230,7 +4234,6 @@
 				454289531C448FE000513DC0 /* UserInfoConfigController.m in Sources */,
 				454289541C448FE000513DC0 /* WaterFLayout.m in Sources */,
 				454289551C448FE000513DC0 /* ShowCommentViewController.m in Sources */,
-				458B39D81C532C1D007FE2B8 /* RS_SliderView.m in Sources */,
 				45888B8B1C511B2900A35476 /* NewFinance+CoreDataProperties.m in Sources */,
 				454289561C448FE000513DC0 /* FinalContentTableViewCell.m in Sources */,
 				454289571C448FE000513DC0 /* WeiboData.m in Sources */,
@@ -4605,7 +4608,6 @@
 				4501ABBF1BEDEABA006EA357 /* UserInfoConfigController.m in Sources */,
 				45ECCF001B61FED40013CA73 /* WaterFLayout.m in Sources */,
 				45E2DDCF1B68CA13008F2942 /* ShowCommentViewController.m in Sources */,
-				458B39D71C532C1D007FE2B8 /* RS_SliderView.m in Sources */,
 				45888B8A1C511B2900A35476 /* NewFinance+CoreDataProperties.m in Sources */,
 				458631FA1B66226000F06688 /* FinalContentTableViewCell.m in Sources */,
 				45F09B851B86297B0065D873 /* WeiboData.m in Sources */,

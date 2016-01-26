@@ -569,8 +569,19 @@ static CGFloat kWMMarginToNavigationItem = 6.0;
     
     //添加监听
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateNewMessage:) name:@"updateMessageStatus" object:nil];
+     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userInteractionEnabled:) name:@"userInteractionEnabled" object:nil];
     
     [self updateNewMessage:nil];
+}
+
+-(void)userInteractionEnabled:(NSDictionary*)dic
+
+{
+    
+    BOOL isUserInteractionEnabled = [[[dic valueForKey:@"userInfo"] valueForKey:@"userInteractionEnabled"] boolValue];
+    
+    self.view.userInteractionEnabled = isUserInteractionEnabled;
+    
 }
 
 /**

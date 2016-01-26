@@ -163,7 +163,6 @@
     [APService setupWithOption:launchOptions];
     
     //添加监听
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(sliderValueChanged:) name:@"brightbess" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(login) name:@"login" object:nil];
     
     [self performSelectorOnMainThread:@selector(installBrightnessWindow) withObject:nil waitUntilDone:NO];
@@ -234,8 +233,22 @@
 -(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     NSLog(@"%@",url.host);
-    //return [WXApi handleOpenURL:url delegate:self];
-    return [TencentOAuth HandleOpenURL:url] || [WXApi handleOpenURL:url delegate:self];
+    if ([sourceApplication isEqualToString:@"com.apple.mobilesafari"] || [sourceApplication isEqualToString:@"com.apple.MobileSMS"]) {
+        if ([url.host containsString:@"project"] || [url.host containsString:@"projectId"] || [url.host containsString:@"projectDetail"]) {
+            NSArray *array = [[NSString stringWithFormat:@"%@",url] componentsSeparatedByString:@"/"]; //从字符A中分隔成2个元素的数组
+            id obj = array[array.count-2];
+            if ((NSInteger)obj) {
+                NSInteger index = [obj integerValue];
+                [self loadProjectDetail:index];
+            }
+        }else{
+            NSString * urlStr = [[NSString stringWithFormat:@"%@",url] stringByReplacingOccurrencesOfString:@"jinzht://" withString:@""];
+            [self loadWebViewDetail:[NSURL URLWithString:urlStr]];
+        }
+        return true;
+    }else{
+        return [TencentOAuth HandleOpenURL:url] || [WXApi handleOpenURL:url delegate:self];
+    }
 }
 
 
@@ -383,7 +396,7 @@ fetchCompletionHandler:(void
 {
     RoadShowDetailViewController* controller = [[RoadShowDetailViewController alloc]init];
     controller.type=1;
-    controller.dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%ld",index], nil];
+    controller.dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%ld",index],@"id", nil];
     controller.title = @"首页";
     [self.iNav pushViewController:controller animated:YES];
 }

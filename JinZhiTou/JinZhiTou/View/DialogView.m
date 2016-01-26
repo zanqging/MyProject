@@ -59,7 +59,7 @@
         messageLabel = [[UILabel alloc]initWithFrame:CGRectMake(X(imgView)+10, POS_Y(imgView)-90, WIDTH(imgView)-20, 40)];
         messageLabel.numberOfLines = 0;
         messageLabel.font = SYSTEMFONT(14);
-        messageLabel.textAlignment = NSTextAlignmentJustified;
+        messageLabel.textAlignment = NSTextAlignmentCenter;
         messageLabel.lineBreakMode = NSLineBreakByWordWrapping;
         [self addSubview:messageLabel];
         

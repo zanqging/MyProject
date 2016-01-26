@@ -157,38 +157,41 @@
     //==============================滚动时图子视图添加开始==============================//
     
     //==============================微信登录开始==============================//
-    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, HEIGHT(self.view)-100, WIDTH(self.view)/2-50, 1)];
-    imgView.backgroundColor  =[TDUtil colorWithHexString:@"b4bdc8"];;
-    [scrollView addSubview:imgView];
-    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)-WIDTH(imgView)-10, Y(imgView), WIDTH(imgView), HEIGHT(imgView))];
-    imgView.backgroundColor  =[TDUtil colorWithHexString:@"b4bdc8"];
-    [scrollView addSubview:imgView];
     
-    imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2-20, Y(imgView)-50, 40, 40)];
-    imgView.image =IMAGENAMED(@"WeChatLogo");
-    imgView.layer.cornerRadius = 5;
-    imgView.layer.masksToBounds=YES;
-    imgView.userInteractionEnabled  =YES;
-    [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(WeChatAction:)]];
-    [scrollView addSubview:imgView];
+    if ([WXApi isWXAppInstalled]) {
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, HEIGHT(self.view)-100, WIDTH(self.view)/2-50, 1)];
+        imgView.backgroundColor  =[TDUtil colorWithHexString:@"b4bdc8"];;
+        [scrollView addSubview:imgView];
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)-WIDTH(imgView)-10, Y(imgView), WIDTH(imgView), HEIGHT(imgView))];
+        imgView.backgroundColor  =[TDUtil colorWithHexString:@"b4bdc8"];
+        [scrollView addSubview:imgView];
+        
+        imgView = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH(self.view)/2-20, Y(imgView)-50, 40, 40)];
+        imgView.image =IMAGENAMED(@"WeChatLogo");
+        imgView.layer.cornerRadius = 5;
+        imgView.layer.masksToBounds=YES;
+        imgView.userInteractionEnabled  =YES;
+        [imgView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(WeChatAction:)]];
+        [scrollView addSubview:imgView];
+        
+        label = [[UILabel alloc]initWithFrame:CGRectMake(X(imgView)-20, POS_Y(imgView), WIDTH(imgView)+40, 21)];
+        label.textColor = WriteColor;
+        label.text = @"微信登录";
+        label.font  =SYSTEMFONT(14);
+        label.textAlignment = NSTextAlignmentCenter;
+        [scrollView addSubview:label];
+        
+    }
     
-    label = [[UILabel alloc]initWithFrame:CGRectMake(X(imgView)-20, POS_Y(imgView), WIDTH(imgView)+40, 21)];
-    label.textColor = WriteColor;
-    label.text = @"微信登录";
-    label.font  =SYSTEMFONT(14);
-    label.textAlignment = NSTextAlignmentCenter;
-    [scrollView addSubview:label];
-    
+    //监听
     label = [[UILabel alloc]initWithFrame:CGRectMake(0, HEIGHT(self.view)-30, WIDTH(self.view), 21)];
     label.textColor = WriteColor;
     label.text = @"金指投";
     label.font  =SYSTEMFONT(14);
     label.textAlignment = NSTextAlignmentCenter;
-    [scrollView addSubview:label];
+    [self.view addSubview:label];
     //==============================微信登录结束==============================//
-    
-    //监听
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getAccess_token:) name:@"WeChatBind" object:nil];
+
     
     //加载本地默认数据
     [self loadDefaultData];
@@ -252,7 +255,9 @@
 //                self.access_token.text = [dic objectForKey:@"access_token"];
 //                self.openid.text = [dic objectForKey:@"openid"];
                 openId =[dic objectForKey:@"openid"];
-                [self getUserInfo:[dic objectForKey:@"access_token"] openId:[dic objectForKey:@"openid"]];
+                if (openId) {
+                    [self getUserInfo:[dic objectForKey:@"access_token"] openId:openId];
+                }
                 
             }else{
                 self.startLoading =NO;
@@ -622,8 +627,16 @@
             self.navigationController.interactivePopGestureRecognizer.enabled = YES;
         }
     }
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(getAccess_token:) name:@"WeChatBind" object:nil];
 }
 
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
 /**
  *  释放内存空间
  */

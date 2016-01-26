@@ -365,6 +365,22 @@
         NSString* code = [jsonDic valueForKey:@"code"];
         if ([code intValue] == 0) {
             NSUserDefaults* data =[NSUserDefaults standardUserDefaults];
+            NSString* auth =[[jsonDic valueForKey:@"data"] valueForKey:@"auth"];
+            /**
+             *  auth 判断用户是否已经认证: ""--> 从未提交认证信息，None-->后端正在审核中，true-->认证成功，false-->认证失败
+             */
+            if ([auth isKindOfClass:NSNull.class]) {
+                auth = @"None";
+            }else if (auth){
+                if ([auth boolValue]) {
+                    auth = @"true";
+                }else{
+                    auth  = @"false";
+                }
+            }
+            
+            [data setValue:(NSString*)auth forKey:@"auth"];
+            [data setValue:[[jsonDic valueForKey:@"data"] valueForKey:@"info"] forKey:@"info"];
             [data setValue:@"YES" forKey:@"isLogin"];
             [data setValue:self.nameTextField.text forKey:STATIC_USER_DEFAULT_DISPATCH_PHONE];
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:[jsonDic valueForKey:@"msg"]];
@@ -390,10 +406,9 @@
                  if(block){
                      block(drawerController, drawerSide, percentVisible);
                  }
-                 
              }];
             [self.navigationController pushViewController:self.drawerController animated:YES];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self removeFromParentViewController];
         }else{
             NSString* msg =[jsonDic valueForKey:@"msg"];
             [[DialogUtil sharedInstance]showDlg:self.view textOnly:msg];
