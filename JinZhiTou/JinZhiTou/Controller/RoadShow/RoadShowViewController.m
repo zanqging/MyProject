@@ -366,7 +366,7 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     NSDictionary * dic = [dataArray objectAtIndex:row];
     [cellInstance setImageName:DICVFK(dic, @"img")];
     [cellInstance setHasFinance:DICVFK(dic, @"planfinance")];
-    [cellInstance setCompanyName:DICVFK(dic, @"company")];
+    [cellInstance setCompanyName:DICVFK(dic, @"abbrevcompany")];
     [cellInstance setDateTime:DICVFK(dic, @"date")];
     [cellInstance setIndustory:DICVFK(dic, @"tag")];
     

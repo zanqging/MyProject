@@ -294,7 +294,7 @@
         progress1.type = 1;
         [self addSubview:progress1];
         
-        [progress1 setProgressStrokeColor:[UIColor redColor]];
+        [progress1 setProgressStrokeColor:[TDUtil colorWithHexString:@"33c6d6"]];
         [progress1 setBackgroundStrokeColor:[UIColor lightGrayColor]];
         [progress1 setDigitTintColor:[UIColor greenColor]];
         [progress1 setFont:SYSTEMFONT(12)];
@@ -318,7 +318,7 @@
         
         progress2.tag = 6002;
         [self addSubview:progress2];
-        [progress2 setProgressStrokeColor:[UIColor redColor]];
+        [progress2 setProgressStrokeColor:[TDUtil colorWithHexString:@"33c6d6"]];
         [progress2 setBackgroundStrokeColor:[UIColor lightGrayColor]];
         [progress2 setDigitTintColor:[UIColor greenColor]];
         [progress2 setFont:SYSTEMFONT(8)];

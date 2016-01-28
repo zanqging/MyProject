@@ -79,7 +79,7 @@
 {
     self->_content=content;
     if (self.content) {
-        self.contentLabel.text=[NSString stringWithFormat:@"DUTIES:%@",self.content];
+        self.contentLabel.text=[NSString stringWithFormat:@"COMPANY:%@",self.content];
     }
 }
 
@@ -87,7 +87,7 @@
 {
     self->_typeDescription=typeDescription;
     if (self.typeDescription) {
-        self.typeLabel.text=[NSString stringWithFormat:@"COMPANY:%@",self.typeDescription];
+        self.typeLabel.text=[NSString stringWithFormat:@"DUTIES:%@",self.typeDescription];
     }
 }
 

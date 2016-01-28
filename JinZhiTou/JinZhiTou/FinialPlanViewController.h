@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIView+SDAutoLayout.h"
 #import "RootViewController.h"
-
+#import "UITableViewCustomView.h"
+#import "UITableView+SDAutoTableViewCellHeight.h"
 @interface FinialPlanViewController : RootViewController
-@property(assign,nonatomic)NSInteger projectId;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property(assign,nonatomic) NSInteger projectId;
+@property (retain, nonatomic) UITableView *tableView;
 
 @end

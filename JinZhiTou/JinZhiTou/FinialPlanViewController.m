@@ -7,7 +7,7 @@
 //
 
 #import "FinialPlanViewController.h"
-#import "FinialPersonTableViewCell.h"
+#import "FinialPlanTableViewCell.h"
 @interface FinialPlanViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     NSMutableArray* dataArray;
@@ -34,13 +34,15 @@
     [self.navView.leftButton setTitle:@"项目详情" forState:UIControlStateNormal];
     [self.navView.leftTouchView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(back:)]];
     
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, POS_Y(self.navView), WIDTH(self.view), HEIGHT(self.view)-kTopBarHeight-kStatusBarHeight)];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.backgroundColor = BackColor;
-    [self.tableView setTableHeaderView:[[UIView alloc]initWithFrame:CGRectMake(0, 0, WIDTH(self.view), 30)]];
+    [self.tableView setTableHeaderView:[[UIView alloc]initWithFrame:CGRectZero]];
     [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
+    [self.view addSubview:self.tableView];
     //加载数据
     [self loadData];
     
@@ -53,11 +55,26 @@
 -(void)loadData
 {
     dataArray = [[NSMutableArray alloc]init];
-    [dataArray addObject:@"融资额度"];
-    [dataArray addObject:@"融资方式"];
-    [dataArray addObject:@"释放比例"];
-    [dataArray addObject:@"资金用途"];
-    [dataArray addObject:@"退出方式"];
+    NSMutableDictionary * dic = [NSMutableDictionary new];
+    SETDICVFK(dic, @"img", @"plan_icon1");
+    SETDICVFK(dic, @"title", @"融资额度: ");
+    [dataArray addObject:dic];
+    dic = [NSMutableDictionary new];
+    SETDICVFK(dic, @"img", @"plan_icon2");
+    SETDICVFK(dic, @"title", @"融资方式: ");
+    [dataArray addObject:dic];
+    dic = [NSMutableDictionary new];
+    SETDICVFK(dic, @"img", @"plan_icon3");
+    SETDICVFK(dic, @"title", @"释放比例: ");
+    [dataArray addObject:dic];
+    dic = [NSMutableDictionary new];
+    SETDICVFK(dic, @"img", @"plan_icon4");
+    SETDICVFK(dic, @"title", @"资金用途: ");
+    [dataArray addObject:dic];
+    dic = [NSMutableDictionary new];
+    SETDICVFK(dic, @"img", @"plan_icon5");
+    SETDICVFK(dic, @"title", @"退出方式: ");
+    [dataArray addObject:dic];
     //加载视图
     NSString* url = [FINANCE_PLAN stringByAppendingFormat:@"%ld/",(long)self.projectId];
     [self.httpUtil getDataFromAPIWithOps:url postParam:nil type:0 delegate:self sel:@selector(requestFinacePlan:)];
@@ -80,32 +97,33 @@
     //声明静态字符串对象，用来标记重用单元格
     NSString* TableDataIdentifier=@"FinalPersonCell";
     //用TableDataIdentifier标记重用单元格
-    FinialPersonTableViewCell* cell=(FinialPersonTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
+    FinialPlanTableViewCell* cell=(FinialPlanTableViewCell*)[tableView dequeueReusableCellWithIdentifier:TableDataIdentifier];
     if (!cell) {
-        cell = [[FinialPersonTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier ];
+        cell = [[FinialPlanTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableDataIdentifier ];
         cell.backgroundColor=WriteColor;
     }
     
     if (dicData) {
         NSInteger row = indexPath.row;
         
-        cell.titleLabel.text = dataArray[row];
+        cell.dic = dataArray[row];
         double share2give = [[dicData valueForKey:@"share2give"] doubleValue];
         switch (row) {
             case 0:
-                cell.rightLabel.text = [[[dicData valueForKey:@"planfinance"] stringValue] stringByAppendingString:@"万"];
+                cell.title = [[[dicData valueForKey:@"planfinance"] stringValue] stringByAppendingString:@"万"];
                 break;
             case 1:
-                cell.rightLabel.text = @"股权融资";
+                cell.title = @"股权融资";
                 break;
             case 2:
-                cell.rightLabel.text = [[NSString stringWithFormat:@"%.2f",share2give] stringByAppendingString:@"%"];
+                cell.title = [[NSString stringWithFormat:@"%.2f",share2give] stringByAppendingString:@"%"];
                 break;
             case 3:
-                cell.textView.text  =[dicData valueForKey:@"usage"];
+                cell.title = @"";
+                cell.content  =[dicData valueForKey:@"usage"];
                 break;
             case 4:
-                cell.rightLabel.text = [dicData valueForKey:@"quitway"];
+                cell.title = [dicData valueForKey:@"quitway"];
                 break;
             default:
                 break;
@@ -114,7 +132,6 @@
     
     
     //绘制虚线
-    [cell layoutPre];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
@@ -132,18 +149,26 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSInteger row = indexPath.row;
-    if (row!=3) {
-        return 44;
-    }else{
-        UILabel* label = [[UILabel alloc]initWithFrame:CGRectMake(25, 0, WIDTH(self.view)-35, 0)];
-        label.numberOfLines=0;
-        label.lineBreakMode = NSLineBreakByWordWrapping;
-        NSString* content = [dicData valueForKey:@"usage"];
-        [TDUtil setLabelMutableText:label content:content lineSpacing:0 headIndent:5];
-        
-        return HEIGHT(label)+44;
+    float h = [self cellHeightForIndexPath:indexPath cellContentViewWidth:[UIScreen mainScreen].bounds.size.width];
+    return h;
+}
+
+- (CGFloat)cellHeightForIndexPath:(NSIndexPath *)indexPath cellContentViewWidth:(CGFloat)width
+{
+    
+    if (!self.tableView.cellAutoHeightManager) {
+        self.tableView.cellAutoHeightManager = [[SDCellAutoHeightManager alloc] init];
     }
+    if (self.tableView.cellAutoHeightManager.contentViewWidth != width) {
+        self.tableView.cellAutoHeightManager.contentViewWidth = width;
+        [self.tableView.cellAutoHeightManager clearHeightCache];
+    }
+    UITableViewCell *cell = [self.tableView.dataSource tableView:self.tableView cellForRowAtIndexPath:indexPath];
+    self.tableView.cellAutoHeightManager.modelCell = cell;
+    if (cell.contentView.width != width) {
+        cell.contentView.width = width;
+    }
+    return [[self.tableView cellAutoHeightManager] cellHeightForIndexPath:indexPath model:nil keyPath:nil];
 }
 
 #pragma ASIHttpRequester

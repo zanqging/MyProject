@@ -22,6 +22,7 @@
         [self addSubview:_label];
         
         _label.font = SYSTEMFONT(12);
+        _label.textAlignment = NSTextAlignmentCenter;
         
         _imgView.layer.cornerRadius = WIDTH(self)/4+5;
         _imgView.layer.masksToBounds = YES;
