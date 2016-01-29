@@ -51,12 +51,12 @@
 {
 //    NSManagedObjectContext *context = [self managedObjectContext];
     for (NSDictionary * dic in dataArray) {
-        //        Banner *bannerInfo = [NSEntityDescription insertNewObjectForEntityForName:TableName inManagedObjectContext:context];
-        self.key =  DICVFK(dic, @"url");
-        self.value = DICVFK(dic, @"title");
+        Platform * platForm = [[Platform alloc] init];
+        platForm.key = DICVFK(dic, @"url");
+        platForm.value = DICVFK(dic, @"title");
         
         NSError *error;
-        if(![[DataManager shareInstance].context save:&error])
+        if(![platForm save])
         {
             NSLog(@"不能保存：%@",[error localizedDescription]);
         }
@@ -90,7 +90,7 @@
             NSMutableDictionary * dic = [NSMutableDictionary new];
             SETDICVFK(dic, @"title", pro.value);
             SETDICVFK(dic, @"url", pro.key);
-            [resultArray addObject:pro];
+            [resultArray addObject:dic];
         }
     }
     return resultArray;
@@ -134,7 +134,7 @@
     
     //https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/Predicates/Articles/pCreating.html
     NSError *error = nil;
-    NSArray *result = [[DataManager shareInstance].context executeFetchRequest:request error:&error];//这里获取到的是一个数组，你需要取出你要更新的那个obj
+//    NSArray *result = [[DataManager shareInstance].context executeFetchRequest:request error:&error];//这里获取到的是一个数组，你需要取出你要更新的那个obj
     //保存
     if ([[DataManager shareInstance].context save:&error]) {
         //更新成功

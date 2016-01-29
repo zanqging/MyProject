@@ -364,11 +364,12 @@ void soundCompleteCallback(SystemSoundID soundID,void * clientData){
     
     NSInteger row = indexPath.row;
     NSDictionary * dic = [dataArray objectAtIndex:row];
+    
     [cellInstance setImageName:DICVFK(dic, @"img")];
-    [cellInstance setHasFinance:DICVFK(dic, @"planfinance")];
-    [cellInstance setCompanyName:DICVFK(dic, @"abbrevcompany")];
     [cellInstance setDateTime:DICVFK(dic, @"date")];
     [cellInstance setIndustory:DICVFK(dic, @"tag")];
+    [cellInstance setHasFinance:DICVFK(dic, @"invest")];
+    [cellInstance setCompanyName:DICVFK(dic, @"abbrevcompany")];
     
     cellInstance.selectionStyle = UITableViewCellSelectionStyleDefault;
     [self.tableView setContentSize:CGSizeMake(WIDTH(tableViewInstance), dataArray.count*115+HEIGHT(headerView)+5)];

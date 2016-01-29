@@ -75,8 +75,6 @@
         label = [[UILabel alloc]initWithFrame:CGRectMake(POS_X(label)+1, Y(label), WIDTH(label), HEIGHT(label))];
         label.tag=1002;
         label.font=SYSTEMFONT(14);
-        //        label.layer.cornerRadius = 5;
-        //        label.layer.masksToBounds= YES;
         label.textColor  =FONT_COLOR_GRAY;
         label.backgroundColor  =WriteColor;
         label.userInteractionEnabled  =YES;
@@ -98,8 +96,6 @@
         label.tag=1003;
         label.text = @"征信查询";
         label.font=SYSTEMFONT(14);
-        //        label.layer.cornerRadius = 5;
-        //        label.layer.masksToBounds= YES;
         label.textColor  =FONT_COLOR_GRAY;
         label.backgroundColor  =WriteColor;
         label.userInteractionEnabled  =YES;
@@ -162,6 +158,18 @@
         NSDictionary * dic = array[0];
         //公告
         UILabel* label = [self viewWithTag:1001];
+        if ([TDUtil isValidString:DICVFK(dic, @"title")]) {
+            label.text = [NSString stringWithFormat:@"%@",DICVFK(dic, @"title")];
+        }
+    }
+    
+    //融资播报
+    Platform * platForm = [[Platform alloc]init];
+    array = [platForm selectData:100 andOffset:0];
+    if (array && array.count>0) {
+        NSDictionary * dic = array[0];
+        //播报
+        UILabel * label = [self viewWithTag:1002];
         if ([TDUtil isValidString:DICVFK(dic, @"title")]) {
             label.text = [NSString stringWithFormat:@"%@",DICVFK(dic, @"title")];
         }
@@ -298,44 +306,49 @@
         label =[self viewWithTag:1002];
         NSDictionary * platDic =[self.dataDic valueForKey:@"platform"];
         label.text = [platDic valueForKey:@"title"];
+        
+        //缓存融资播报信息
+        Platform * platForm = [[Platform alloc] init];
+        //删除缓存数据
+        [platForm deleteData];
+        
+        //保存数据
+        [platForm insertCoreData:[NSMutableArray arrayWithObject:platDic]];
+        
     }
 }
 
 /**
  *  融资播报
  *
- *  @param sender sender
+ *  @param sender 触发实例
  */
 -(void)notionAction:(id)sender
 {
     BannerViewController* controller =[[BannerViewController alloc]init];
     controller.title = @"首页";
     
-    NSDictionary *  dic =[self.dataDic valueForKey:@"platform"];
-    controller.titleStr = [dic valueForKey:@"title"];
-    controller.url = [NSURL URLWithString:[dic valueForKey:@"url"]];
-    if ([_delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
-        [_delegate roadShowHome:self controller:controller type:0];
+    //融资播报
+    Platform * platForm = [[Platform alloc]init];
+    NSMutableArray * array = [platForm selectData:100 andOffset:0];
+    if (array && array.count>0) {
+        NSDictionary * dic = array[0];
+        //播报
+        if ([TDUtil isValidString:DICVFK(dic, @"title")]) {
+            controller.titleStr = [dic valueForKey:@"title"];
+            controller.url = [NSURL URLWithString:[dic valueForKey:@"url"]];
+            if ([_delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+                [_delegate roadShowHome:self controller:controller type:0];
+            }
+        }
     }
-    
 }
 
 /**
- *  企业征信查询
+ *  新手指南
  *
- *  @param sender sender
+ *  @param sender 触发实例
  */
--(void)creditSearchAction:(id)sender
-{
-    INSViewController* controller =[[INSViewController alloc]init];
-    controller.type = 3;
-    controller.title = @"首页";
-    controller.titleContent = @"企业征信查询";
-    if ([_delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
-        [_delegate roadShowHome:self controller:controller type:0];
-    }
-}
-
 -(void)notificationAction:(id)sender
 {
     BannerViewController* controller =[[BannerViewController alloc]init];
@@ -355,6 +368,25 @@
     
     
 }
+
+
+
+/**
+ *  企业征信查询
+ *
+ *  @param sender sender
+ */
+-(void)creditSearchAction:(id)sender
+{
+    INSViewController* controller =[[INSViewController alloc]init];
+    controller.type = 3;
+    controller.title = @"首页";
+    controller.titleContent = @"企业征信查询";
+    if ([_delegate respondsToSelector:@selector(roadShowHome:controller:type:)]) {
+        [_delegate roadShowHome:self controller:controller type:0];
+    }
+}
+
 
 
 -(void)requestCallService:(ASIHTTPRequest*)request
